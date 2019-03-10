@@ -87,12 +87,12 @@
 <meta property="og:site_name" content="BraveY">
 <meta property="og:description" content="Bigdatabench 4.0 MPI版本 安装">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://bravey.github.io/2018/06/23/BigdataBench-deploy/runcc.png">
+<meta property="og:image" content="https://bravey.github.io/2018/06/23/BigdataBench-deploy/BigdataBench-deploy/runcc.png">
 <meta property="og:updated_time" content="2018-06-23T09:02:03.338Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="BigdataBench deploy">
 <meta name="twitter:description" content="Bigdatabench 4.0 MPI版本 安装">
-<meta name="twitter:image" content="https://bravey.github.io/2018/06/23/BigdataBench-deploy/runcc.png">
+<meta name="twitter:image" content="https://bravey.github.io/2018/06/23/BigdataBench-deploy/BigdataBench-deploy/runcc.png">
 
 
 
@@ -419,7 +419,7 @@
 </ol>
 <p>至此安装理论上已经成功。但仍然遇到了其他问题</p>
 <h2 id="Perminsion-denied问题"><a href="#Perminsion-denied问题" class="headerlink" title="Perminsion denied问题"></a>Perminsion denied问题</h2><p>最开始的安装包是从windows下面考过去的结果生成cc的数据后无法运行执行脚本</p>
-<p><img src="/2018/06/23/BigdataBench-deploy/runcc.png" alt=""></p>
+<p><img src="BigdataBench-deploy\runcc.png" alt=""></p>
 <p>原因是此时的run_connectedComponents已经不是可执行文件了（不是绿色的）需要<code>chmod a+x run_connectedComponents</code>来将文件的权限修改为可执行文件权限（修改后变为绿色）</p>
 <p>后面wget下载后解压配置之后直接就是可执行文件！</p>
 <h2 id="ldd-程序-动态链接库缺失"><a href="#ldd-程序-动态链接库缺失" class="headerlink" title="ldd 程序 动态链接库缺失"></a>ldd 程序 动态链接库缺失</h2><p><code>[root@hw073 ConnectedComponent]# ldd run_connectedComponents</code><br><code>linux-vdso.so.1 =&gt;  (0x00007ffdfc8d4000)</code><br><code>librt.so.1 =&gt; /lib64/librt.so.1 (0x0000003156e00000)</code><br><code>libpthread.so.0 =&gt; /lib64/libpthread.so.0 (0x0000003156a00000)</code></p>
@@ -554,7 +554,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -567,7 +567,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
@@ -620,7 +620,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
