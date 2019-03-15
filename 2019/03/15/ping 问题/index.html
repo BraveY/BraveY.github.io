@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="BraveY">
 <meta property="og:description" content="ping 无法连接外网">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-15T05:53:26.782Z">
+<meta property="og:updated_time" content="2019-03-15T06:29:16.082Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ping 无法连接外网">
 <meta name="twitter:description" content="ping 无法连接外网">
@@ -365,7 +365,7 @@
 <p>原因是route没有配置网关，gateway是空着的。</p>
 <h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>通过查看其他可以正常访问的节点的路由信息，得知网关节点为：172.18.0.254。因此增加默认网关节点配置。</p>
 <p>执行命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip route add default via 172.18.0.254 dev eth0</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">route add default  gw 172.18.0.254</span><br></pre></td></tr></table></figure>
 <p>再次查看路由信息：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">hw076:~ # route</span><br><span class="line">Kernel IP routing table</span><br><span class="line">Destination     Gateway         Genmask         Flags Metric Ref    Use Iface</span><br><span class="line">default         172.18.0.254    0.0.0.0         UG    0      0        0 eth0</span><br><span class="line">loopback        *               255.0.0.0       U     0      0        0 lo</span><br><span class="line">link-local      *               255.255.0.0     U     0      0        0 eth0</span><br><span class="line">172.18.0.0      *               255.255.0.0     U     0      0        0 eth0</span><br></pre></td></tr></table></figure>
 <p>再次ping8.8.8.8显示正常，问题解决。</p>
