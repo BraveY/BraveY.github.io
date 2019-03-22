@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="BraveY">
 <meta property="og:description" content="Redis设计与实现读书笔记为了做Redis相关实验，在网上粗略看了Redis设计与实现的电子版，感觉收获很多，但是因为是旧版，所以买了第二版，重读第二次。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-22T01:54:43.399Z">
+<meta property="og:updated_time" content="2019-03-22T02:44:25.538Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis设计与实现读书笔记——第二章SDS">
 <meta name="twitter:description" content="Redis设计与实现读书笔记为了做Redis相关实验，在网上粗略看了Redis设计与实现的电子版，感觉收获很多，但是因为是旧版，所以买了第二版，重读第二次。">
@@ -503,6 +503,7 @@
 <p><code>1&lt;&lt;5</code>   计算出来就是2^5 次方。1是int型，4byte32位。最低8bit位的二进制为：00000001 左移5位后变成了：00100000 对应的十进制既是32。</p>
 <p>计算n个bit位的最大值：(1&lt;&lt;n) -1</p>
 <p>但是需要注意位数不够的情况。因为1是int型，只有32个bit。所以在左移32个bit时，需要使用long long int型。用1ll来表示，此时1ll为64个bit。</p>
+<p>还得考虑机器是否为64位机器，在32位机器上LONG_MAX = 2147483647L，64位机器上LONG_MAX = 9223372036854775807L 。不论32位机器还是64位机器上 LLONG_MAX 都是9223372036854775807L 。所以当LONG_MAX == LLONG_MAX 说明字长为64bit。加上条件编译，说明在32位机器上不使用sdshdr32而直接跳到了sdshdr64，仅仅在64位机器上使用sdshdr32。原因是什么？还没想通</p>
 <h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><ol>
 <li>为什么Redis需要自己实现字符串功能，而不直接使用c语言的传统字符串？<ul>
 <li>见第二节。</li>
@@ -514,6 +515,7 @@
 <li>数组内存大小为分配的的长度*数组类型的内存大小</li>
 </ul>
 </li>
+<li>为什么redis 在32位机器上不使用sdshdr32？ </li>
 </ol>
 
       
