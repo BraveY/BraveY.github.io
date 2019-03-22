@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="make学习开始阅读redis源码，都说redis很简单，源码不多。但是源码包下载下来后却发现不知道从何处入手，有那么多文件和源码。后面查找资料才发现阅读源码的第一步就是阅读Makefile，项目如何构建和源码间的关联都写在了Makefile文件中。之前没有接触过Makefile，记录下Make的学习。 makefile的格式 概述 makefile 文件由一系列rules组成 rules的格式为">
+<meta name="description" content="make学习开始阅读redis源码，都说redis很简单，源码不多。但是源码包下载下来后却发现不知道从何处入手，有那么多文件和源码。后面查找资料才发现阅读源码的第一步就是阅读Makefile，项目如何构建和源码间的关联都写在了Makefile文件中。之前没有接触过Makefile，记录下Make的学习。">
 <meta name="keywords" content="make">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Make学习">
 <meta property="og:url" content="https://bravey.github.io/2018/10/09/make学习/index.html">
 <meta property="og:site_name" content="BraveY">
-<meta property="og:description" content="make学习开始阅读redis源码，都说redis很简单，源码不多。但是源码包下载下来后却发现不知道从何处入手，有那么多文件和源码。后面查找资料才发现阅读源码的第一步就是阅读Makefile，项目如何构建和源码间的关联都写在了Makefile文件中。之前没有接触过Makefile，记录下Make的学习。 makefile的格式 概述 makefile 文件由一系列rules组成 rules的格式为">
+<meta property="og:description" content="make学习开始阅读redis源码，都说redis很简单，源码不多。但是源码包下载下来后却发现不知道从何处入手，有那么多文件和源码。后面查找资料才发现阅读源码的第一步就是阅读Makefile，项目如何构建和源码间的关联都写在了Makefile文件中。之前没有接触过Makefile，记录下Make的学习。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-20T15:03:24.113Z">
+<meta property="og:updated_time" content="2019-03-22T01:54:11.067Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Make学习">
-<meta name="twitter:description" content="make学习开始阅读redis源码，都说redis很简单，源码不多。但是源码包下载下来后却发现不知道从何处入手，有那么多文件和源码。后面查找资料才发现阅读源码的第一步就是阅读Makefile，项目如何构建和源码间的关联都写在了Makefile文件中。之前没有接触过Makefile，记录下Make的学习。 makefile的格式 概述 makefile 文件由一系列rules组成 rules的格式为">
+<meta name="twitter:description" content="make学习开始阅读redis源码，都说redis很简单，源码不多。但是源码包下载下来后却发现不知道从何处入手，有那么多文件和源码。后面查找资料才发现阅读源码的第一步就是阅读Makefile，项目如何构建和源码间的关联都写在了Makefile文件中。之前没有接触过Makefile，记录下Make的学习。">
 
 
 
@@ -354,6 +354,7 @@
 
       
         <h1 id="make学习"><a href="#make学习" class="headerlink" title="make学习"></a>make学习</h1><p>开始阅读redis源码，都说redis很简单，源码不多。但是源码包下载下来后却发现不知道从何处入手，有那么多文件和源码。后面查找资料才发现阅读源码的第一步就是阅读Makefile，项目如何构建和源码间的关联都写在了Makefile文件中。之前没有接触过Makefile，记录下Make的学习。</p>
+<a id="more"></a>
 <h2 id="makefile的格式"><a href="#makefile的格式" class="headerlink" title="makefile的格式"></a>makefile的格式</h2><ol>
 <li><p>概述</p>
 <p>makefile 文件由一系列rules组成 rules的格式为：</p>

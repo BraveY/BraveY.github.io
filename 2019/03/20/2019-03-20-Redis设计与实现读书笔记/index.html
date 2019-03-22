@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Redis设计与实现读书笔记为了做Redis相关实验，在网上粗略看了Redis设计与实现的电子版，感觉收获很多，但是因为是旧版，所以买了第二版，重读第二次。 第二章 简单动态字符串简介 字符串值的键值对在底层都是由SDS实现的。 sds的功能： 存储字符串值 用作缓冲区 AOF模块缓冲区 客户端状态的输入缓冲区      2.1 SDS的定义文件：sds.h/sdshdr 结构体  书中的为3.0">
+<meta name="description" content="Redis设计与实现读书笔记为了做Redis相关实验，在网上粗略看了Redis设计与实现的电子版，感觉收获很多，但是因为是旧版，所以买了第二版，重读第二次。">
 <meta name="keywords" content="redis,源码阅读">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis设计与实现读书笔记——第二章SDS">
 <meta property="og:url" content="https://bravey.github.io/2019/03/20/2019-03-20-Redis设计与实现读书笔记/index.html">
 <meta property="og:site_name" content="BraveY">
-<meta property="og:description" content="Redis设计与实现读书笔记为了做Redis相关实验，在网上粗略看了Redis设计与实现的电子版，感觉收获很多，但是因为是旧版，所以买了第二版，重读第二次。 第二章 简单动态字符串简介 字符串值的键值对在底层都是由SDS实现的。 sds的功能： 存储字符串值 用作缓冲区 AOF模块缓冲区 客户端状态的输入缓冲区      2.1 SDS的定义文件：sds.h/sdshdr 结构体  书中的为3.0">
+<meta property="og:description" content="Redis设计与实现读书笔记为了做Redis相关实验，在网上粗略看了Redis设计与实现的电子版，感觉收获很多，但是因为是旧版，所以买了第二版，重读第二次。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-22T01:51:29.213Z">
+<meta property="og:updated_time" content="2019-03-22T01:54:43.399Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis设计与实现读书笔记——第二章SDS">
-<meta name="twitter:description" content="Redis设计与实现读书笔记为了做Redis相关实验，在网上粗略看了Redis设计与实现的电子版，感觉收获很多，但是因为是旧版，所以买了第二版，重读第二次。 第二章 简单动态字符串简介 字符串值的键值对在底层都是由SDS实现的。 sds的功能： 存储字符串值 用作缓冲区 AOF模块缓冲区 客户端状态的输入缓冲区      2.1 SDS的定义文件：sds.h/sdshdr 结构体  书中的为3.0">
+<meta name="twitter:description" content="Redis设计与实现读书笔记为了做Redis相关实验，在网上粗略看了Redis设计与实现的电子版，感觉收获很多，但是因为是旧版，所以买了第二版，重读第二次。">
 
 
 
@@ -354,6 +354,7 @@
 
       
         <h1 id="Redis设计与实现读书笔记"><a href="#Redis设计与实现读书笔记" class="headerlink" title="Redis设计与实现读书笔记"></a>Redis设计与实现读书笔记</h1><p>为了做Redis相关实验，在网上粗略看了Redis设计与实现的电子版，感觉收获很多，但是因为是旧版，所以买了第二版，重读第二次。</p>
+<a id="more"></a>
 <h2 id="第二章-简单动态字符串"><a href="#第二章-简单动态字符串" class="headerlink" title="第二章 简单动态字符串"></a>第二章 简单动态字符串</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><ol>
 <li>字符串值的键值对在底层都是由SDS实现的。</li>
 <li>sds的功能：<ol>
