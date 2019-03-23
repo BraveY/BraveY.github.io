@@ -647,53 +647,14 @@
 
       
         
-          
-            <h1 id="使用YCSB-评测redis性能"><a href="#使用YCSB-评测redis性能" class="headerlink" title="使用YCSB 评测redis性能"></a>使用YCSB 评测redis性能</h1><h2 id="安装YCSB"><a href="#安装YCSB" class="headerlink" title="安装YCSB"></a>安装YCSB</h2><ol>
-<li><p>安装java和maven</p>
-<ol>
-<li><p>机子已经有了java，所以只用安装maven Ubuntu安装命令为：</p>
-<p><code>sudo apt-get install maven</code></p>
-</li>
-</ol>
-</li>
-<li><p>安装YCSB </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git clone http://github.com/brianfrankcooper/YCSB.git</span><br><span class="line">cd YCSB</span><br><span class="line">mvn -pl com.yahoo.ycsb:redis-binding -am clean package</span><br></pre></td></tr></table></figure>
-<p>必须是gitclone的源码包才能执行mvn 命令。wget或者curl下来包是已经编译好了的无需执行mvn命令。</p>
-</li>
-<li><p><code>mvn -pl com.yahoo.ycsb:redis-binding -am clean package</code> 报错：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[INFO] Scanning for projects...</span><br><span class="line">[ERROR] [ERROR] Could not find the selected project in the reactor: com.yahoo.ycsb:redis-binding @ </span><br><span class="line">[ERROR] Could not find the selected project in the reactor: com.yahoo.ycsb:redis-binding -&gt; [Help 1]</span><br><span class="line">[ERROR] </span><br><span class="line">[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.</span><br><span class="line">[ERROR] Re-run Maven using the -X switch to enable full debug logging.</span><br><span class="line">[ERROR] </span><br><span class="line">[ERROR] For more information about the errors and possible solutions, please read the following articles:</span><br><span class="line">[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MavenExecutionException</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>原因：此命令是在gitclone后未编译的时候使用的。而我之前是下载的编译好的tar.gz包，解压后是已经编译好了的。所以再次执行编译的命令时会报错。</p>
-<h2 id="使用YCSB"><a href="#使用YCSB" class="headerlink" title="使用YCSB"></a>使用YCSB</h2><p>将redis-server启动后开始使用YCSB</p>
-<h3 id="设置数据库"><a href="#设置数据库" class="headerlink" title="设置数据库"></a>设置数据库</h3><p>需要先创建<code>usertable</code>的表，因为YCSB客户端默认是对<code>usertable</code> 进行操作。Redis将数据存储在内存中，不需要相关操作。</p>
-<h3 id="选择合适的DB-interface"><a href="#选择合适的DB-interface" class="headerlink" title="选择合适的DB interface"></a>选择合适的DB interface</h3><p>YCSB的操作是通过DB interface来实现的。最基本的DB interface是<code>com.yahoo.ycsb.BasicDB</code>，会将输出输出到<code>System.out</code>里。可以通过继承DB interface来自定义DB interface，也可以使用原有的DB interface。Redis不需要此步操作。</p>
-<h3 id="选择合适的负载"><a href="#选择合适的负载" class="headerlink" title="选择合适的负载"></a>选择合适的负载</h3><p>YCSB提供了6种负载，负载在worloads目录下。详情见<a href="https://github.com/brianfrankcooper/YCSB/wiki/Core-Workloads" target="_blank" rel="noopener">https://github.com/brianfrankcooper/YCSB/wiki/Core-Workloads</a></p>
-<ol>
-<li><strong>Workload A: Update heavy workload</strong> 读写比例为： 50/50 混合负载 </li>
-<li><strong>Workload A: Update heavy workload</strong> 读写比例为：95/5  读为主的负载</li>
-<li><strong>Workload C: Read only</strong>  100% 的读  只读负载</li>
-<li><strong>Workload D: Read latest workload</strong>  读取最近的数据负载</li>
-<li><strong>Workload E: Short ranges</strong>  小范围的查询负载</li>
-<li><strong>Workload F: Read-modify-write</strong> 读修改写负载</li>
-</ol>
-<p>自定义负载：参考<a href="https://github.com/brianfrankcooper/YCSB/wiki/Implementing-New-Workloads" target="_blank" rel="noopener">https://github.com/brianfrankcooper/YCSB/wiki/Implementing-New-Workloads</a></p>
-<p>可以通过修改参数文件或者新建java类来实现</p>
-<p>需要注意的是YCSB的读写负载是针对哈希类型的数据而不是简单的字符串</p>
-<h3 id="指定需要的运行参数"><a href="#指定需要的运行参数" class="headerlink" title="指定需要的运行参数"></a>指定需要的运行参数</h3><p>主要是指定redis的ip ，端口，密码等。</p>
-<p>命令如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/ycsb load redis -s -P workloads/workloada -p &quot;redis.host=127.0.0.1&quot; -p &quot;redis.port=6379&quot; &gt; outputLoad.txt</span><br></pre></td></tr></table></figure>
-<p><code>-s</code> : <strong>status</strong>.十秒打印一次状态</p>
-<h3 id="加载负载"><a href="#加载负载" class="headerlink" title="加载负载"></a>加载负载</h3><p>命令如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/ycsb load redis -s -P workloads/workloada &gt; outputLoad.txt</span><br></pre></td></tr></table></figure>
-<h3 id="运行负载"><a href="#运行负载" class="headerlink" title="运行负载"></a>运行负载</h3><p>命令如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/ycsb run redis -s -P workloads/workloada &gt; outputRun.txt</span><br></pre></td></tr></table></figure>
-<p>可以使用basic数据库来打印YCSB向数据库中写入的具体数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bin/ycsb.sh load basic -P workloads/workloada</span><br><span class="line">bin/ycsb.sh run basic -P workloads/workloada</span><br></pre></td></tr></table></figure>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://datawine.github.io/2018/12/11/YCSB%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0/" target="_blank" rel="noopener">https://datawine.github.io/2018/12/11/YCSB%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0/</a></p>
-<p><a href="https://github.com/brianfrankcooper/YCSB/tree/master/redis" target="_blank" rel="noopener">https://github.com/brianfrankcooper/YCSB/tree/master/redis</a>  </p>
-
-          
+          <h1 id="使用YCSB-评测redis性能"><a href="#使用YCSB-评测redis性能" class="headerlink" title="使用YCSB 评测redis性能"></a>使用YCSB 评测redis性能</h1><p>YCSB是雅虎推出的可以评测许多主流数据库性能的基准测试，其中包括Redis。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/03/12/使用YCSB 评测redis性能/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
