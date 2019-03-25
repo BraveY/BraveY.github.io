@@ -89,7 +89,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://bravey.github.io/2019/03/22/Redis源码阅读——SDS/2019-03-22-Redis源码阅读——SDS/memset.png">
 <meta property="og:image" content="https://bravey.github.io/2019/03/22/Redis源码阅读——SDS/2019-03-22-Redis源码阅读——SDS/sds.png">
-<meta property="og:updated_time" content="2019-03-25T14:32:58.451Z">
+<meta property="og:updated_time" content="2019-03-25T14:36:48.607Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis源码阅读——SDS">
 <meta name="twitter:description" content="Redis源码阅读——SDS参考Redis设计与实现 以及网上博客阅读Redis源码。">
@@ -410,7 +410,7 @@
 <p>memset源码为：<a href="https://github.com/gcc-mirror/gcc/blob/master/libgcc/memset.c" target="_blank" rel="noopener">https://github.com/gcc-mirror/gcc/blob/master/libgcc/memset.c</a></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Public domain.  */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stddef.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> *</span><br><span class="line"><span class="built_in">memset</span> (<span class="keyword">void</span> *dest, <span class="keyword">int</span> val, <span class="keyword">size_t</span> len)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">char</span> *ptr = dest; <span class="comment">// 用char来限定每次指针+1只移动一个字节。</span></span><br><span class="line">  <span class="keyword">while</span> (len-- &gt; <span class="number">0</span>)</span><br><span class="line">    *ptr++ = val;</span><br><span class="line">  <span class="keyword">return</span> dest;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>假设<code>hdrlen+initlen+1</code> 为8 ，经过memset后，从sh首字节开始共有8个字节都被置为0。</p>
-<p><img src="memset.png" alt=""></p>
+<p><img src=".\memset.png" alt=""></p>
 <p>指针的类型时用来确定指针需要从寻址多少个字节。比如int * 指针说明指针存储的地址朝后面偏移3个字节才是这个int类型的所有数据。即指针存储的地址时起点，而终点是由类型来确定的。</p>
 <p>随后用switch语句对不同类型的sdshdr设置初始值。</p>
 <p>首先是sdshdr5</p>
@@ -430,7 +430,7 @@
 <p>memcpy源码为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/* Public domain.  */</span><br><span class="line">#include &lt;stddef.h&gt;</span><br><span class="line"></span><br><span class="line">void *</span><br><span class="line">memcpy (void *dest, const void *src, size_t len)</span><br><span class="line">&#123;</span><br><span class="line">  char *d = dest;</span><br><span class="line">  const char *s = src;</span><br><span class="line">  while (len--)</span><br><span class="line">    *d++ = *s++;</span><br><span class="line">  return dest;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>整个过程中的三个指针sh,s,fp对应关系如下图</p>
-<p><img src="sds.png" alt=""></p>
+<p><img src=".\sds.png" alt=""></p>
 </li>
 </ol>
 <h2 id="销毁"><a href="#销毁" class="headerlink" title="销毁"></a>销毁</h2><p>销毁使用sdsfree来实现</p>
