@@ -31,6 +31,6 @@ env:
   - GH_REF: github.com/BraveY/BraveY.github.io.git
 notifications:
   email:
-  - yanglangjing@hotmail.com
+  - lsz_yky@163.com
   on_success: change
   on_failure: always
