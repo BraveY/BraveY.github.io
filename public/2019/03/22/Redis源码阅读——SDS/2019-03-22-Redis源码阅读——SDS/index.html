@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta name="google-site-verification" content="hDujO4MQUB7U9ir-4VXM5PW4fDFSq0-7G-LBX-Lh86M" />
+<meta name="baidu-site-verification" content="V7x8njxk5u" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="redis,源码阅读," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Redis源码阅读——SDS参考Redis设计与实现 以及网上博客阅读Redis源码。">
+<meta name="keywords" content="redis,源码阅读">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis源码阅读——SDS">
+<meta property="og:url" content="https://bravey.github.io/2019/03/22/Redis源码阅读——SDS/2019-03-22-Redis源码阅读——SDS/index.html">
+<meta property="og:site_name" content="BraveY">
+<meta property="og:description" content="Redis源码阅读——SDS参考Redis设计与实现 以及网上博客阅读Redis源码。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1553525055/blog/memset.png">
+<meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1553525055/blog/sds.png">
+<meta property="og:updated_time" content="2019-03-26T01:06:55.205Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis源码阅读——SDS">
+<meta name="twitter:description" content="Redis源码阅读——SDS参考Redis设计与实现 以及网上博客阅读Redis源码。">
+<meta name="twitter:image" content="https://res.cloudinary.com/bravey/image/upload/v1553525055/blog/memset.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://bravey.github.io/2019/03/22/Redis源码阅读——SDS/2019-03-22-Redis源码阅读——SDS/"/>
+
+
+
+
+
+  <title>Redis源码阅读——SDS | BraveY</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BraveY</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://bravey.github.io/2019/03/22/Redis源码阅读——SDS/2019-03-22-Redis源码阅读——SDS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BraveY">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://imgsrc.baidu.com/forum/w%3D580/sign=9ef55a639e22720e7bcee2f24bcb0a3a/072032adcbef7609dc34669e28dda3cc7dd99ecc.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BraveY">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Redis源码阅读——SDS</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-22T15:58:45+08:00">
+                2019-03-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/源码阅读/" itemprop="url" rel="index">
+                    <span itemprop="name">源码阅读</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/03/22/Redis源码阅读——SDS/2019-03-22-Redis源码阅读——SDS/" class="leancloud_visitors" data-flag-title="Redis源码阅读——SDS">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Redis源码阅读——SDS"><a href="#Redis源码阅读——SDS" class="headerlink" title="Redis源码阅读——SDS"></a>Redis源码阅读——SDS</h1><p>参考Redis设计与实现 以及网上博客阅读Redis源码。</p>
+<a id="more"></a>
+<p>SDS相关知识点见读书笔记。</p>
+<h2 id="创建和销毁"><a href="#创建和销毁" class="headerlink" title="创建和销毁"></a>创建和销毁</h2><p>为了能够对sds进行相关API的测试，因此把sds模块单独提出来。阅读Redis的Makefile发现，编译sds模块需要的源文件包括<code>sds.c</code>, <code>sds.h</code> <code>zmalloc.c</code> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">test-sds: sds.c sds.h</span><br><span class="line">        $(REDIS_CC) sds.c zmalloc.c -DSDS_TEST_MAIN $(FINAL_LIBS) -o /tmp/sds_test</span><br><span class="line">        /tmp/sds_test</span><br></pre></td></tr></table></figure>
+<p>但是实际编译后会发现会报很多函数未定义的错。原因是redis源码里面sds的内存分配、释放、重分配这些函数是封装成zmalloc,zfee这些函数的，只单纯的把zmalloc.c提取出来是远远不够的。后面发现redis的作者已经把sds给单独提出来了。包括三个源文件<code>sds.c</code>,<code>sds.h</code>,<code>sdsalloc.h</code> 因此执行如下操作即可单独把redis的sds模块提取出来。</p>
+<h3 id="提取sds模块"><a href="#提取sds模块" class="headerlink" title="提取sds模块"></a>提取sds模块</h3><ol>
+<li><p>新建redis_sds测试目录</p>
+<p>选择合适的目录下新建</p>
+<p><code>mkdir redis_sds</code></p>
+</li>
+<li><p>复制源文件至redis_sds目录下</p>
+<p>在redis源码的src目录下执行：</p>
+<p><code>cp sds.c ~/redis_sds/</code></p>
+<p><code>cp sds.h ~/redis_sds/</code></p>
+<p><code>cp sdsalloc.h ~/redis_sds/</code></p>
+</li>
+<li><p>修改sdsalloc.h </p>
+<p>复制过来的sdsalloc.h 将sds模块的内存函数封装为使用zmalloc函数。为了简化处理直接使用libc的malloc函数来进行内存管理，同时将zmalloc.h给注释掉。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//#include "zmalloc.h"</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> s_malloc malloc</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> s_realloc realloc</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> s_free free</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>新建主函数</p>
+<p>新建主函数sds_test.c</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"sds.c"</span></span></span><br><span class="line"><span class="comment">//#include "sds.h"</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span> </span>&#123;</span><br><span class="line">    sds s = sdsnew(<span class="string">"Hello World!"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Length:%d, Type:%d\n"</span>, sdslen(s), sdsReqType(sdslen(s)));</span><br><span class="line"></span><br><span class="line">    s = sdscat(s, <span class="string">"The length of this sentence is greater than 32 bytes"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Length:%d, Type:%d\n"</span>, sdslen(s), sdsReqType(sdslen(s)));</span><br><span class="line"></span><br><span class="line">    sdsfree(s);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>直接include sds.c 即可，因为如果#include “sds.h” 的话，sdsReqType这个函数并没有在sds.h里面声明，而且因为sdsReqType的申明是：</p>
+<p><code>static inline char sdsReqType(size_t string_size) {</code>  有static限制所以不能在sds.h中先声明，所以为了简单就直接#include 了sds.c了</p>
+</li>
+<li><p>编译  </p>
+<p>为了方便重复编译，所以写了个简单的Makefile。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">test : sds_test.c sds.h sds.c sdsalloc.h</span><br><span class="line">        gcc -o sdstest sds_test.c</span><br></pre></td></tr></table></figure>
+<p>只需要编译sds_test.c 即可。因为sds_test.c 里面是直接#include sds.c 了所以再</p>
+<p><code>gcc -o sdstest sds_test.c sds.c</code> 会将sds.c 里面的函数重复编译两次，造成Multiple definition 问题。</p>
+<p>之后只需要执行make命令就可以生成可执行文件sdstest。</p>
+<p>执行后输出为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./sdstest </span><br><span class="line">Length:12, Type:0</span><br><span class="line">Length:64, Type:1</span><br></pre></td></tr></table></figure>
+<h3 id="sds的创建"><a href="#sds的创建" class="headerlink" title="sds的创建"></a>sds的创建</h3><p>通过<code>sdsnew</code> 来创建了一个sds。sdsnew源码为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Create a new sds string starting from a null terminated C string. */</span></span><br><span class="line"><span class="function">sds <span class="title">sdsnew</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *init)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//使用？条件判断符来简化if语句对NULL的判断，直接使用strlen来返回字符指针的长度。</span></span><br><span class="line">    <span class="keyword">size_t</span> initlen = (init == <span class="literal">NULL</span>) ? <span class="number">0</span> : <span class="built_in">strlen</span>(init); </span><br><span class="line">    <span class="keyword">return</span> sdsnewlen(init, initlen);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>需要注意的是字符数组和字符指针是有区别的：字符指针的数据是存放在进程的虚拟地址空间的程序代码和数据段，是只读的不能修改。字符数组存放的字符串数据是存放在用户栈的，是可以更改的。且字符指针的数据没有”\0”这个结束符。</p>
+<p>参考博客讲的很好：<a href="https://blog.csdn.net/on_1y/article/details/13030439" target="_blank" rel="noopener">https://blog.csdn.net/on_1y/article/details/13030439</a></p>
+<p><code>sdsnew</code> 通过把字符串长度和字符串传递给<code>sdsnewlen</code>，来完成创建。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/* Create a new sds string with the content specified by the 'init' pointer</span></span><br><span class="line"><span class="comment"> * and 'initlen'.</span></span><br><span class="line"><span class="comment"> * If NULL is used for 'init' the string is initialized with zero bytes.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * The string is always null-termined (all the sds strings are, always) so</span></span><br><span class="line"><span class="comment"> * even if you create an sds string with:</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * mystring = n("abc",3);</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * You can print the string with printf() as there is an implicit \0 at the</span></span><br><span class="line"><span class="comment"> * end of the string. However the string is binary safe and can contain</span></span><br><span class="line"><span class="comment"> * \0 characters in the middle, as the length is stored in the sds header. */</span></span><br><span class="line"><span class="function">sds <span class="title">sdsnewlen</span><span class="params">(<span class="keyword">const</span> <span class="keyword">void</span> *init, <span class="keyword">size_t</span> initlen)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">void</span> *sh;</span><br><span class="line">    sds s;</span><br><span class="line">    <span class="keyword">char</span> type = sdsReqType(initlen);  <span class="comment">//返回字符串对应的type</span></span><br><span class="line">    <span class="comment">/* Empty strings are usually created in order to append. Use type 8</span></span><br><span class="line"><span class="comment">     * since type 5 is not good at this. */</span></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    空字符串使用sdshdr8来存储，而不是sdshdr5,（虽然长度小于32），因为sdshdr5不适合扩容。</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">if</span> (type == SDS_TYPE_5 &amp;&amp; initlen == <span class="number">0</span>) type = SDS_TYPE_8;</span><br><span class="line">    <span class="keyword">int</span> hdrlen = sdsHdrSize(type); <span class="comment">// 返回对应类型的sdsheader长度。</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> *fp; <span class="comment">/* flags pointer. */</span></span><br><span class="line"></span><br><span class="line">    sh = s_malloc(hdrlen+initlen+<span class="number">1</span>); <span class="comment">// 申请头部+字符串+NULL的大小。(单位为byte)</span></span><br><span class="line">    <span class="keyword">if</span> (!init)</span><br><span class="line">        <span class="built_in">memset</span>(sh, <span class="number">0</span>, hdrlen+initlen+<span class="number">1</span>); <span class="comment">// 将sh后面对应大小的字节全部置为0；</span></span><br><span class="line">    <span class="keyword">if</span> (sh == <span class="literal">NULL</span>) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    s = (<span class="keyword">char</span>*)sh+hdrlen; <span class="comment">//s指针指向字符串的首字节。</span></span><br><span class="line">    fp = ((<span class="keyword">unsigned</span> <span class="keyword">char</span>*)s)<span class="number">-1</span>; <span class="comment">// fp指针指向flag</span></span><br><span class="line">    <span class="keyword">switch</span>(type) &#123;  <span class="comment">// 初始化sdshdr</span></span><br><span class="line">        <span class="keyword">case</span> SDS_TYPE_5: &#123;</span><br><span class="line">            *fp = type | (initlen &lt;&lt; SDS_TYPE_BITS);<span class="comment">// 设置flag这个字节的具体值</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">case</span> SDS_TYPE_8: &#123;</span><br><span class="line">            SDS_HDR_VAR(<span class="number">8</span>,s); <span class="comment">// 获取header指针sh</span></span><br><span class="line">            sh-&gt;len = initlen; <span class="comment">//header中len的初始</span></span><br><span class="line">            sh-&gt;alloc = initlen; <span class="comment">//header 中alloc的初试</span></span><br><span class="line">            *fp = type;  <span class="comment">//flag 的初始。</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">case</span> SDS_TYPE_16: &#123;</span><br><span class="line">            SDS_HDR_VAR(<span class="number">16</span>,s);</span><br><span class="line">            sh-&gt;len = initlen;</span><br><span class="line">            sh-&gt;alloc = initlen;</span><br><span class="line">            *fp = type; </span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">case</span> SDS_TYPE_32: &#123;</span><br><span class="line">            SDS_HDR_VAR(<span class="number">32</span>,s);</span><br><span class="line">            sh-&gt;len = initlen;</span><br><span class="line">            sh-&gt;alloc = initlen;</span><br><span class="line">            *fp = type;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">case</span> SDS_TYPE_64: &#123;</span><br><span class="line">            SDS_HDR_VAR(<span class="number">64</span>,s);</span><br><span class="line">            sh-&gt;len = initlen;</span><br><span class="line">            sh-&gt;alloc = initlen;</span><br><span class="line">            *fp = type;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (initlen &amp;&amp; init)</span><br><span class="line">        <span class="built_in">memcpy</span>(s, init, initlen); <span class="comment">// 将字符串拷贝到s(也就是buf数组)</span></span><br><span class="line">    s[initlen] = <span class="string">'\0'</span>; <span class="comment">//在字符串后面添加终止符</span></span><br><span class="line">    <span class="keyword">return</span> s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>char type = sdsReqType(initlen);</code> 获取sds类型，源码分析在读书笔记里面有记录。源码为</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">char</span> <span class="title">sdsReqType</span><span class="params">(<span class="keyword">size_t</span> string_size)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (string_size &lt; <span class="number">1</span>&lt;&lt;<span class="number">5</span>) <span class="comment">// string_size &lt; 2^5</span></span><br><span class="line">        <span class="keyword">return</span> SDS_TYPE_5;</span><br><span class="line">    <span class="keyword">if</span> (string_size &lt; <span class="number">1</span>&lt;&lt;<span class="number">8</span>)  <span class="comment">//string_size &lt; 2^8</span></span><br><span class="line">        <span class="keyword">return</span> SDS_TYPE_8;</span><br><span class="line">    <span class="keyword">if</span> (string_size &lt; <span class="number">1</span>&lt;&lt;<span class="number">16</span>)	<span class="comment">//string_size &lt; 2^16</span></span><br><span class="line">        <span class="keyword">return</span> SDS_TYPE_16;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> (LONG_MAX == LLONG_MAX)</span></span><br><span class="line">    <span class="keyword">if</span> (string_size &lt; <span class="number">1l</span>l&lt;&lt;<span class="number">32</span>)  <span class="comment">//string_size &lt; 2^32</span></span><br><span class="line">        <span class="keyword">return</span> SDS_TYPE_32;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    <span class="keyword">return</span> SDS_TYPE_64; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>采用左移来计算对应多少位的范围，而不是用2^5 这样的乘法。<strong>直接移位比使用幂来计算快很多</strong>。</p>
+<p><code>1&lt;&lt;5</code>   计算出来就是2^5 次方。1是int型，4byte32位。最低8bit位的二进制为：00000001 左移5位后变成了：00100000 对应的十进制既是32。</p>
+<p>计算n个bit位的最大值：(1&lt;&lt;n) -1</p>
+<p>但是需要注意位数不够的情况。因为1是int型，只有32个bit。所以在左移32个bit时，需要使用long long int型。用1ll来表示，此时1ll为64个bit。</p>
+<p>还得考虑机器是否为64位机器，在32位机器上LONG_MAX = 2147483647L，64位机器上LONG_MAX = 9223372036854775807L 。不论32位机器还是64位机器上 LLONG_MAX 都是9223372036854775807L 。所以当LONG_MAX == LLONG_MAX 说明字长为64bit。加上条件编译，说明在32位机器上不使用sdshdr32而直接跳到了sdshdr64，仅仅在64位机器上使用sdshdr32。原因是什么？还没想通</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">sdsHdrSize</span><span class="params">(<span class="keyword">char</span> type)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span>(type&amp;SDS_TYPE_MASK) &#123;</span><br><span class="line">        <span class="keyword">case</span> SDS_TYPE_5:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">sizeof</span>(struct sdshdr5);</span><br><span class="line">        <span class="keyword">case</span> SDS_TYPE_8:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">sizeof</span>(struct sdshdr8);</span><br><span class="line">        <span class="keyword">case</span> SDS_TYPE_16:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">sizeof</span>(struct sdshdr16);</span><br><span class="line">        <span class="keyword">case</span> SDS_TYPE_32:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">sizeof</span>(struct sdshdr32);</span><br><span class="line">        <span class="keyword">case</span> SDS_TYPE_64:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">sizeof</span>(struct sdshdr64);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为struct里面的buf数组是柔性数组，计算结构体的大小的时候不会计算在内。</p>
+<p><code>memset(sh, 0, hdrlen+initlen+1);</code>  memset函数会将sh中当前位置后面的<code>hdrlen+initlen+1</code>个字节全部置于0。 注意sh指向的是<code>hdrlen+initlen+1</code> 个字节的首个字节。（sh指针存储的地址就是首个字节的地址。） </p>
+<p>memset源码为：<a href="https://github.com/gcc-mirror/gcc/blob/master/libgcc/memset.c" target="_blank" rel="noopener">https://github.com/gcc-mirror/gcc/blob/master/libgcc/memset.c</a></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Public domain.  */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stddef.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> *</span><br><span class="line"><span class="built_in">memset</span> (<span class="keyword">void</span> *dest, <span class="keyword">int</span> val, <span class="keyword">size_t</span> len)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">char</span> *ptr = dest; <span class="comment">// 用char来限定每次指针+1只移动一个字节。</span></span><br><span class="line">  <span class="keyword">while</span> (len-- &gt; <span class="number">0</span>)</span><br><span class="line">    *ptr++ = val;</span><br><span class="line">  <span class="keyword">return</span> dest;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>假设<code>hdrlen+initlen+1</code> 为8 ，经过memset后，从sh首字节开始共有8个字节都被置为0。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1553525055/blog/memset.png" alt=""></p>
+<p>指针的类型时用来确定指针需要从寻址多少个字节。比如int * 指针说明指针存储的地址朝后面偏移3个字节才是这个int类型的所有数据。即指针存储的地址时起点，而终点是由类型来确定的。</p>
+<p>随后用switch语句对不同类型的sdshdr设置初始值。</p>
+<p>首先是sdshdr5</p>
+<p> <code>*fp = type | (initlen &lt;&lt; SDS_TYPE_BITS)</code> 使用移位和或操作的方式来对8个bit位赋值。(不得不感慨这些操作真的是太巧妙了)</p>
+<p>假设initlen为3。则initlen的二进制为0000 0011（应该是8byte（64位机器）或者4byte（32位机器），为了简单用1byte的二进制表示）而SDS_TYPE_BITS 为3。所以先将initlen 左移3个bit 变成0000 0001 1000(共有8byte或者4byte)。再与type进行或运算。type为0000 0000 进行或运算后，得到的内容是8bit的，因为type是char类型，即0001 1000 。</p>
+<p>其他sdshdr类型的设置都差不多，详解下sdshdr8.</p>
+<p><code>SDS_HDR_VAR(8,s)</code>  <code>SDS_HDR_VAR</code> 是个宏定义的函数</p>
+<p><code>#define SDS_HDR_VAR(T,s) struct sdshdr##T *sh = (void*)((s)-(sizeof(struct sdshdr##T)));</code></p>
+<p>采用宏定义函数的好处是</p>
+<ol>
+<li>能够减少额外的开销 因为如果写成普通函数的话，函数的调用会在用户栈开辟空间，形参压栈，返回时还需要释放栈，可想而知的开销。使用宏定义函数则在代码规模和速度方面都比函数更胜一筹。宏定义的本质就是替换，所以在使用宏定义函数的地方，执行的时候相当于是在直接执行<code>struct sdshdr##T *sh = (void*)((s)-(sizeof(struct sdshdr##T)))</code> 这句代码</li>
+<li>函数的参数必须被声明为一种特定的类型，所以它只能在类型合适的表达式上使用。而宏定义则可以用于整形、长整形、单浮点型、双浮点型以及其他任何可以用“&gt;”操作符比较值大小的类型，也就是说，宏是与类型无关的。（有点C++模版类的感觉）</li>
+</ol>
+<p>宏定义函数中的## 是（token-pasting）<strong>符号连接操作符</strong> 直接将形参T链接到sdshdr上面。也就是sdshdrT。</p>
+<p>所以这句代码也就很简单了，将字符串指针s向后移动header的大小，也就得到了header的指针。（不过有个疑问是为什么还要重新获取headr的地址，最开始不就是指向了header吗？，难道memset是直接对sh进行操作的？测试过了，memset不会修改sh的地址，所以应该是为了再次确保sh一定指向header）</p>
+<p>解释一下：SDS_HDR_VAR 的作用是将sh的类型修改为结构体指针，因为之前sh 一直都是空指针，(虽然指针的指向地址是headr，但是没有限定它类型)不然后面没法用sh-&gt;len, sh-&gt;alloc 来访问对应的结构体成员。</p>
+<p>最开始创建的时候alloc 和len是一样大的，没有分配多余空间）</p>
+<p><code>memcpy(s, init, initlen);</code> 函数将init的前initlen个字符拷贝给s。</p>
+<p>memcpy源码为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/* Public domain.  */</span><br><span class="line">#include &lt;stddef.h&gt;</span><br><span class="line"></span><br><span class="line">void *</span><br><span class="line">memcpy (void *dest, const void *src, size_t len)</span><br><span class="line">&#123;</span><br><span class="line">  char *d = dest;</span><br><span class="line">  const char *s = src;</span><br><span class="line">  while (len--)</span><br><span class="line">    *d++ = *s++;</span><br><span class="line">  return dest;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>整个过程中的三个指针sh,s,fp对应关系如下图</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1553525055/blog/sds.png" alt=""></p>
+</li>
+</ol>
+<h2 id="销毁"><a href="#销毁" class="headerlink" title="销毁"></a>销毁</h2><p>销毁使用sdsfree来实现</p>
+<p>源码为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Free an sds string. No operation is performed if 's' is NULL. */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">sdsfree</span><span class="params">(sds s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (s == <span class="literal">NULL</span>) <span class="keyword">return</span>;</span><br><span class="line">    s_free((<span class="keyword">char</span>*)s-sdsHdrSize(s[<span class="number">-1</span>]));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>s[-1],就是指针s向后移动移位，也就是flag的位置。将s移动到sh的位置，释放sh指针也就释放了整个sds内存。</p>
+<p>疑惑：sh指针在sdsnewlen函数中是个局部变量，在sdsnewlen函数中是自动释放的，这里并没有传递sh指针为什么也可以释放对应的空间？</p>
+<p>自己想了下：malloc 函数传递的参数是需要分配的内存大小(len)，返回的是指针也就是地址。free()函数只用将malloc函数返回的指针(地址)作为参数传入，就可以释放之前该地址分配到的内存空间。而地址只是首地址，总共的偏移量（大小），应该是由操作系统在内存分配的时候就记录了的。</p>
+<p>博客中记录：申请的时候实际上占用的内存要比申请的大。因为超出的空间是用来记录对这块内存的管理信息。额外的空间用来记录管理信息——分配块的长度，指向下一个分配块的指针等等。果然malloc的时候用来一个struct来记录分配的信息。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">mem_control_block</span> &#123;</span> </span><br><span class="line">  <span class="keyword">int</span> is_available;    <span class="comment">//一般来说应该是一个可用空间的首地址，但这里英文单词却显示出空间是否可用的一个标记</span></span><br><span class="line">  <span class="keyword">int</span> size;            <span class="comment">//这是实际空间的大小 </span></span><br><span class="line">  &#125;;</span><br></pre></td></tr></table></figure>
+<p><a href="http://www.cnblogs.com/hanyonglu/archive/2011/04/28/2031271.html" target="_blank" rel="noopener">http://www.cnblogs.com/hanyonglu/archive/2011/04/28/2031271.html</a></p>
+<p>free()就是根据这个结构体的信息来释放malloc()申请的空间</p>
+<p>另外的疑惑：释放完空间后，s 指针不用把它指向null吗？  </p>
+<p>暂时就只是创建和销毁的源码把，看了两天，阅读源码真的是酣畅淋漓，收获良多。学到了很多奇妙的C技巧，还对操作系统的知识有了更具象的理解。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://blog.csdn.net/yangbodong22011/article/details/78419966" target="_blank" rel="noopener">https://blog.csdn.net/yangbodong22011/article/details/78419966</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis/" rel="tag"># redis</a>
+          
+            <a href="/tags/源码阅读/" rel="tag"># 源码阅读</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/20/2019-03-20-Redis设计与实现读书笔记/" rel="next" title="Redis设计与实现读书笔记——第二章SDS">
+                <i class="fa fa-chevron-left"></i> Redis设计与实现读书笔记——第二章SDS
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/26/2019-03-26-使用Travis-CI自动部署博客/" rel="prev" title="使用Travis-CI自动部署博客">
+                使用Travis-CI自动部署博客 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://imgsrc.baidu.com/forum/w%3D580/sign=9ef55a639e22720e7bcee2f24bcb0a3a/072032adcbef7609dc34669e28dda3cc7dd99ecc.jpg"
+                alt="BraveY" />
+            
+              <p class="site-author-name" itemprop="name">BraveY</p>
+              <p class="site-description motion-element" itemprop="description">To the time to life, rather than to life in time</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis源码阅读——SDS"><span class="nav-number">1.</span> <span class="nav-text">Redis源码阅读——SDS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建和销毁"><span class="nav-number">1.1.</span> <span class="nav-text">创建和销毁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提取sds模块"><span class="nav-number">1.1.1.</span> <span class="nav-text">提取sds模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sds的创建"><span class="nav-number">1.1.2.</span> <span class="nav-text">sds的创建</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#销毁"><span class="nav-number">1.2.</span> <span class="nav-text">销毁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">1.3.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BraveY</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("W6nLzKg0cpOi9OkACkaXg3YB-gzGzoHsz", "0M7O0e3b6oEuphDr3yhQLx3E");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
