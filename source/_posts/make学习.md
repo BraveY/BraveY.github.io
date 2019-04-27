@@ -186,7 +186,7 @@ tags:
 
       这里当执行`make default` 时会转到`make all` 因为default：all 这个target没有隐式规则。所以最后会执行commands。
 
-   2.   忽略命令的出错，可以在Makefile的命令行前加一个减号"-"(在Tab键之后)，标记为不管命令出不出错都认为是成功的。如：     
+   2. 忽略命令的出错，可以在Makefile的命令行前加一个减号"-"(在Tab键之后)，标记为不管命令出不出错都认为是成功的。如：     
 
       ```
       clean:        
@@ -195,9 +195,39 @@ tags:
 
    3. `include filename` 将filename中的内容导入，如果找不到会停止make， `-include filename` 则不会停止make。 
 
+## 几种等号
+
+= 是最基本的赋值
+:= 是覆盖之前的值
+?= 是如果没有被赋值过就赋予等号后面的值
++= 是添加等号后面的值
+
+=与:= 的区别
+
+ =：make会将整个makefile展开后，再决定变量的值。也就是说，变量的值将会是整个makefile中最后被指定的值。例子为：
+
+```makefile
+     x = foo
+     y = $(x) bar
+     x = xyz
+```
+
+y的值将会是 xyz bar ，而不是 foo bar 。因为展开后最终变成的是xyz
+
+:=表示变量的值决定于它在makefile中的位置，而不是整个makefile展开后的最终值。
+
+```makefile
+ x := foo
+ y := $(x) bar
+ x := xyz
+```
+
+y的值将会是 foo bar ，而不是 xyz bar 了。
+
 ## 参考资料：
 
 1. http://www.ruanyifeng.com/blog/2015/02/make.html
 2. https://gist.github.com/isaacs/62a2d1825d04437c6f08 makefile文件教程
 3. https://www.gnu.org/software/make/manual/make.html GNUmake手册
+4. <https://blog.csdn.net/shouso888/article/details/7226030> 等号解释
 
