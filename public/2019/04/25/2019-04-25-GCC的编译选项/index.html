@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="BraveY">
 <meta property="og:description" content="GCC的编译选项Makefile 中的gcc的编译选项有很多，因此学习记录下。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-04-25T07:10:18.591Z">
+<meta property="og:updated_time" content="2019-04-26T09:21:08.019Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GCC的编译选项">
 <meta name="twitter:description" content="GCC的编译选项Makefile 中的gcc的编译选项有很多，因此学习记录下。">
@@ -452,6 +452,10 @@
 <td>取消前一个参数的功能,所以一般在-Idir之后使用</td>
 </tr>
 <tr>
+<td>-llib</td>
+<td>指定编译的时候使用的库，gcc -lcurses hello.c 使用库curses进行编译</td>
+</tr>
+<tr>
 <td>-std=</td>
 <td>编译的标准,包括GNU99，c++11,c99,等等</td>
 </tr>
@@ -480,6 +484,14 @@
 <td>此选项将尽量使用动态库，所以生成文件比较小，但是需要系统由动态库.</td>
 </tr>
 <tr>
+<td>-shared</td>
+<td>创建一个动态链接库（不指定的话输出的是obj文件）gcc -fPIC -shared func.c -o libfunc.s</td>
+</tr>
+<tr>
+<td>-rdynamic</td>
+<td>动态连接符号信息，用于动态连接功能。所有符号添加到动态符号表中（目的是能够通过使用 dlopen 来实现向后跟踪）</td>
+</tr>
+<tr>
 <td>-pedantic</td>
 <td>用于保证代码规范满足ISO C和ISO C++标准, 不允许使用任何扩展以及不满足ISO C和C++的代码, 遵守 -std 选项指定的标准</td>
 </tr>
@@ -493,6 +505,7 @@
 </tr>
 </tbody>
 </table>
+<p>ar -r libhello.a hello.o  #这里的ar相当于tar的作用，将多个目标打包。 makefile中用于创建静态链接库（就是把多个目标文件打包成一个）</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://blog.csdn.net/navyhu/article/details/46788559" target="_blank" rel="noopener">https://blog.csdn.net/navyhu/article/details/46788559</a></p>
 <p><a href="https://blog.csdn.net/woshinia/article/details/11060797&gt;" target="_blank" rel="noopener">https://blog.csdn.net/woshinia/article/details/11060797&gt;</a></p>
 <p><a href="https://gcc.gnu.org/onlinedocs/" target="_blank" rel="noopener">https://gcc.gnu.org/onlinedocs/</a></p>
@@ -537,6 +550,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/26/2019-04-26-Redis-Makefile注解/" rel="prev" title="Redis Makefile注解">
+                Redis Makefile注解 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -620,7 +637,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -642,7 +659,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">25</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
