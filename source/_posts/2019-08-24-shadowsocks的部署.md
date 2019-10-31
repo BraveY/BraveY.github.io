@@ -95,6 +95,14 @@ firewall-cmd --reload
 firewall-cmd --list-ports
 ```
 
+## 客户端设置
+
+我使用的是win10 可以从：<https://github.com/shadowsocks/shadowsocks-windows> 下载
+
+MacOS：<https://github.com/shadowsocks/ShadowsocksX-NG/releases> 
+
+在服务器设置界面依次添加IPV6的地址、端口、密码、加密方式就可以使用IPV6进行白嫖了。
+
 ## 参考
 
 <https://github.com/shadowsocks/shadowsocks/tree/master> 
