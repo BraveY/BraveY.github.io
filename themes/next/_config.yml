@@ -144,8 +144,8 @@ social_icons:
   enable: true
   icons_only: false
   transition: false
-  知乎： zhihu
-  CSDN： cuttlefish
+  知乎: zhihu
+  CSDN: cuttlefish
 
 # Blog rolls
 links_icon: link
