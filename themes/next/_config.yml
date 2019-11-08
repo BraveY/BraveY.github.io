@@ -130,7 +130,7 @@ social:
   GitHub: https://github.com/BraveY || github
   E-Mail: mailto:kaiyongyang@gmail.com || envelope
   知乎: https://www.zhihu.com/people/yang-shan-zhi-14 || zhihu
-  CSDN: https://blog.csdn.net/qq_33620071
+  CSDN: https://blog.csdn.net/qq_33620071 || cuttlefish
   #Google: https://plus.google.com/yourname || google
   #Twitter: https://twitter.com/yourname || twitter
   #FB Page: https://www.facebook.com/yourname || facebook
@@ -144,6 +144,8 @@ social_icons:
   enable: true
   icons_only: false
   transition: false
+  知乎： zhihu
+  CSDN： cuttlefish
 
 # Blog rolls
 links_icon: link
@@ -700,7 +702,7 @@ pace_theme: pace-theme-minimal
 canvas_nest: false
 
 # three_waves
-three_waves: false
+three_waves: true
 
 # canvas_lines
 canvas_lines: false
