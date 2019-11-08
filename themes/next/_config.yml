@@ -129,8 +129,8 @@ scheme: Gemini
 social:
   GitHub: https://github.com/BraveY || github
   E-Mail: mailto:kaiyongyang@gmail.com || envelope
-  知乎: https://www.zhihu.com/people/yang-shan-zhi-14 || zhihu
-  CSDN: https://blog.csdn.net/qq_33620071 || cuttlefish
+  知乎: https://www.zhihu.com/people/yang-shan-zhi-14 || book
+  CSDN: https://blog.csdn.net/qq_33620071 || blog
   #Google: https://plus.google.com/yourname || google
   #Twitter: https://twitter.com/yourname || twitter
   #FB Page: https://www.facebook.com/yourname || facebook
@@ -144,8 +144,8 @@ social_icons:
   enable: true
   icons_only: false
   transition: false
-  知乎: book
-  CSDN: blog
+  # 知乎: book
+  # CSDN: blog
 
 # Blog rolls
 links_icon: link
