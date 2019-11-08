@@ -130,6 +130,7 @@ social:
   GitHub: https://github.com/BraveY || github
   E-Mail: mailto:kaiyongyang@gmail.com || envelope
   知乎: https://www.zhihu.com/people/yang-shan-zhi-14 || zhihu
+  CSDN: https://blog.csdn.net/qq_33620071
   #Google: https://plus.google.com/yourname || google
   #Twitter: https://twitter.com/yourname || twitter
   #FB Page: https://www.facebook.com/yourname || facebook
@@ -148,9 +149,9 @@ social_icons:
 links_icon: link
 links_title: Links
 links_layout: block
-links_layout: inline
-links:
-  My CSDN Blog: https://blog.csdn.net/qq_33620071
+#links_layout: inline
+# links:
+#   My CSDN Blog: https://blog.csdn.net/qq_33620071
 
 # Sidebar Avatar
 # in theme directory(source/images): /images/avatar.gif
