@@ -1,17 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://bravey.github.io/2019/11/07/2019-11-07-Clementine%E6%95%99%E7%A8%8B/</loc>
+    <lastmod>2019-11-07</lastmod>
+  </url>  <url>
+    <loc>https://bravey.github.io/2019/08/24/2019-08-24-shadowsocks%E7%9A%84%E9%83%A8%E7%BD%B2/</loc>
+    <lastmod>2019-10-31</lastmod>
+  </url>  <url>
+    <loc>https://bravey.github.io/2019/10/31/2019-10-31-%E5%86%85%E5%B5%8C%E6%B1%87%E7%BC%96/</loc>
+    <lastmod>2019-10-31</lastmod>
+  </url>  <url>
+    <loc>https://bravey.github.io/2019/10/14/2019-10-14-%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E4%B8%BB%E8%A6%81%E5%85%83%E7%B4%A0/</loc>
+    <lastmod>2019-10-15</lastmod>
+  </url>  <url>
+    <loc>https://bravey.github.io/2018/04/17/ceph%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/</loc>
+    <lastmod>2019-10-14</lastmod>
+  </url>  <url>
+    <loc>https://bravey.github.io/2018/06/23/BigdataBench-deploy/</loc>
+    <lastmod>2019-10-14</lastmod>
+  </url>  <url>
+    <loc>https://bravey.github.io/2019/10/07/2019-10-07-%E9%80%86%E5%BA%8F%E5%AF%B9%E7%9A%84%E8%AE%A1%E6%95%B0/</loc>
+    <lastmod>2019-10-07</lastmod>
+  </url>  <url>
+    <loc>https://bravey.github.io/2019/09/19/2019-09-19-%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%AC%ACK%E5%A4%A7%E7%9A%84%E6%95%B0/</loc>
+    <lastmod>2019-09-19</lastmod>
+  </url>  <url>
+    <loc>https://bravey.github.io/2019/09/08/2019-09-08-%E5%AE%9E%E6%A8%A1%E5%BC%8F%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F/</loc>
+    <lastmod>2019-09-08</lastmod>
+  </url>  <url>
+    <loc>https://bravey.github.io/2019/04/17/2019-04-17-%E9%9D%92%E8%9B%99%E8%B7%B3%E5%8F%B0%E9%98%B6%E9%97%AE%E9%A2%98/</loc>
+    <lastmod>2019-09-04</lastmod>
+  </url>  <url>
+    <loc>https://bravey.github.io/2018/10/09/make%E5%AD%A6%E4%B9%A0/</loc>
+    <lastmod>2019-04-28</lastmod>
+  </url>  <url>
     <loc>https://bravey.github.io/2019/04/26/2019-04-26-Redis-Makefile%E6%B3%A8%E8%A7%A3/</loc>
     <lastmod>2019-04-27</lastmod>
   </url>  <url>
     <loc>https://bravey.github.io/2019/04/25/2019-04-25-GCC%E7%9A%84%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9/</loc>
     <lastmod>2019-04-26</lastmod>
-  </url>  <url>
-    <loc>https://bravey.github.io/2018/10/09/make%E5%AD%A6%E4%B9%A0/</loc>
-    <lastmod>2019-04-26</lastmod>
-  </url>  <url>
-    <loc>https://bravey.github.io/2019/04/17/2019-04-17-%E9%9D%92%E8%9B%99%E8%B7%B3%E5%8F%B0%E9%98%B6%E9%97%AE%E9%A2%98/</loc>
-    <lastmod>2019-04-25</lastmod>
   </url>  <url>
     <loc>https://bravey.github.io/2019/03/27/2019-03-27-Redis-%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E5%AD%97%E5%85%B8/</loc>
     <lastmod>2019-04-21</lastmod>
@@ -58,16 +85,10 @@
     <loc>https://bravey.github.io/2019/03/15/ping%20%E9%97%AE%E9%A2%98/</loc>
     <lastmod>2019-03-26</lastmod>
   </url>  <url>
-    <loc>https://bravey.github.io/2018/04/17/ceph%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/</loc>
-    <lastmod>2019-03-26</lastmod>
-  </url>  <url>
     <loc>https://bravey.github.io/2019/03/10/apt-get%20install%20%E5%A4%B1%E8%B4%A5/</loc>
     <lastmod>2019-03-26</lastmod>
   </url>  <url>
     <loc>https://bravey.github.io/2018/07/09/Linux%20%E5%91%BD%E4%BB%A4%20%E5%AD%A6%E4%B9%A0/</loc>
-    <lastmod>2019-03-26</lastmod>
-  </url>  <url>
-    <loc>https://bravey.github.io/2018/06/23/BigdataBench-deploy/</loc>
     <lastmod>2019-03-26</lastmod>
   </url>
 </urlset>

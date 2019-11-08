@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="BraveY">
 <meta property="og:description" content="ceph 部署文档">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-26T05:30:52.801Z">
+<meta property="og:updated_time" content="2019-10-14T01:39:40.411Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ceph 部署文档">
 <meta name="twitter:description" content="ceph 部署文档">
@@ -400,7 +400,7 @@
 <p>Host controller<br>        Hostname gd92<br>        User cephuser<br>Host object1<br>        Hostname gd93<br>        User cephuser<br>Host object2<br>        Hostname hw101<br>        User cephuser<br>Host object3<br>        Hostname gd95<br>        User cephuser<br>Host object4<br>        Hostname gd66<br>        User cephuser</p>
 <p>生成密钥并拷贝到4个osd节点上，无需拷贝到controller节点</p>
 <hr>
-<h1 id="3安装ceph"><a href="#3安装ceph" class="headerlink" title="3安装ceph"></a>3安装ceph</h1><p>主要参考链接：这些链接的操作大都一致，部分的顺序会有变化。</p>
+<h1 id="3-安装ceph"><a href="#3-安装ceph" class="headerlink" title="3.安装ceph"></a>3.安装ceph</h1><p>主要参考链接：这些链接的操作大都一致，部分的顺序会有变化。</p>
 <p><a href="https://linux.cn/article-8182-1.html#4_10238" target="_blank" rel="noopener">https://linux.cn/article-8182-1.html#4_10238</a></p>
 <p><a href="https://blog.csdn.net/styshoo/article/details/55471132" target="_blank" rel="noopener">https://blog.csdn.net/styshoo/article/details/55471132</a></p>
 <p><a href="https://blog.csdn.net/styshoo/article/details/58572816" target="_blank" rel="noopener">https://blog.csdn.net/styshoo/article/details/58572816</a></p>
@@ -551,7 +551,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -562,7 +562,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -573,7 +573,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">39</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -606,7 +606,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ceph-部署文档"><span class="nav-number">1.</span> <span class="nav-text">ceph 部署文档</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-配置所有节点"><span class="nav-number">2.</span> <span class="nav-text">1.配置所有节点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建ceph用户"><span class="nav-number">2.1.</span> <span class="nav-text">创建ceph用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装配置NTP"><span class="nav-number">2.2.</span> <span class="nav-text">安装配置NTP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置hosts文件"><span class="nav-number">2.3.</span> <span class="nav-text">配置hosts文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-配置ssh服务器"><span class="nav-number">3.</span> <span class="nav-text">2. 配置ssh服务器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3安装ceph"><span class="nav-number">4.</span> <span class="nav-text">3安装ceph</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#部署监控节点出现的问题"><span class="nav-number">4.1.</span> <span class="nav-text">部署监控节点出现的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署osd节点出现的问题"><span class="nav-number">4.2.</span> <span class="nav-text">部署osd节点出现的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署rgw节点出现的问题"><span class="nav-number">4.3.</span> <span class="nav-text">部署rgw节点出现的问题</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ceph-部署文档"><span class="nav-number">1.</span> <span class="nav-text">ceph 部署文档</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-配置所有节点"><span class="nav-number">2.</span> <span class="nav-text">1.配置所有节点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建ceph用户"><span class="nav-number">2.1.</span> <span class="nav-text">创建ceph用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装配置NTP"><span class="nav-number">2.2.</span> <span class="nav-text">安装配置NTP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置hosts文件"><span class="nav-number">2.3.</span> <span class="nav-text">配置hosts文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-配置ssh服务器"><span class="nav-number">3.</span> <span class="nav-text">2. 配置ssh服务器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-安装ceph"><span class="nav-number">4.</span> <span class="nav-text">3.安装ceph</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#部署监控节点出现的问题"><span class="nav-number">4.1.</span> <span class="nav-text">部署监控节点出现的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署osd节点出现的问题"><span class="nav-number">4.2.</span> <span class="nav-text">部署osd节点出现的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署rgw节点出现的问题"><span class="nav-number">4.3.</span> <span class="nav-text">部署rgw节点出现的问题</span></a></li></ol></li></ol></div>
             
 
           </div>
