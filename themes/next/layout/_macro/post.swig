@@ -333,7 +333,11 @@
     {#####################}
     {### END POST BODY ###}
     {#####################}
-
+<div>
+    {% if not is_index %}
+        {% include 'my-copyright.swig' %}
+    {% endif %}
+</div>
     {% if theme.wechat_subscriber.enabled and not is_index %}
       <div>
         {% include 'wechat-subscriber.swig' %}
