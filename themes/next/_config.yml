@@ -126,9 +126,11 @@ scheme: Gemini
 # Key is the link label showing to end users.
 # Value before `||` delimeter is the target permalink.
 # Value after `||` delimeter is the name of FontAwesome icon. If icon (with or without delimeter) is not specified, globe icon will be loaded.
-#social:
-  #GitHub: https://github.com/yourname || github
-  #E-Mail: mailto:yourname@gmail.com || envelope
+social:
+  GitHub: https://github.com/BraveY || github
+  E-Mail: mailto:kaiyongyang@gmail.com || envelope
+  知乎: https://www.zhihu.com/people/yang-shan-zhi-14
+  CSDN: https://blog.csdn.net/qq_33620071
   #Google: https://plus.google.com/yourname || google
   #Twitter: https://twitter.com/yourname || twitter
   #FB Page: https://www.facebook.com/yourname || facebook
@@ -360,8 +362,8 @@ han: false
 
 # Disqus
 disqus:
-  enable: false
-  shortname:
+  enable: true
+  shortname: bravey
   count: true
 
 # Hypercomments
