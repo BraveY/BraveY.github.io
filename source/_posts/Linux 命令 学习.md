@@ -5,6 +5,7 @@ categories: Linux
 tags: 
 - Linux
 - command
+copyright: true
 ---
 
 # Linux 命令学习wc命令

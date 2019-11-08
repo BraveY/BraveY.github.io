@@ -3,6 +3,7 @@ title: BigdataBench deploy
 date: 2018-06-23 16:55:45
 categories: deploy
 tags: bigdatabench
+copyright: true
 ---
 
 # Bigdatabench 4.0 MPI版本 安装

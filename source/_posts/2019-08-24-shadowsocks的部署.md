@@ -6,6 +6,7 @@ tags:
 - shadowsocks
 - 翻墙
 - ipv6
+copyright: true
 ---
 
 # shadowsocks 的部署

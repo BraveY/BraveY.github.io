@@ -4,6 +4,7 @@ date: 2018-10-09 22:51:57
 categories: 编程语言
 tags:
 - make
+copyright: true
 ---
 
 # make学习

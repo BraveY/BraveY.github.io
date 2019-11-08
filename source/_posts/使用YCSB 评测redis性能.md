@@ -5,6 +5,7 @@ categories:
 tags:
 - redis
 - benchmark
+copyright: true
 ---
 
 # 使用YCSB 评测redis性能

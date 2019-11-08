@@ -5,6 +5,7 @@ categories: Linux
 tags:
 - shell
 - redis
+copyright: true
 ---
 
 ## 使用shell脚本遍历redis数据库中的所有kv对

@@ -5,6 +5,7 @@ categories: Linux
 tags: 
 - Linux 
 - 运维
+copyright: true
 ---
 
 ## apt-get install失败

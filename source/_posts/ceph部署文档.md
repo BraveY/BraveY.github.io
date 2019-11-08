@@ -3,6 +3,7 @@ title: ceph 部署文档
 date: 2018-04-17 17:36:03
 categories: deploy
 tags: ceph
+copyright: true
 ---
 
 # ceph 部署文档

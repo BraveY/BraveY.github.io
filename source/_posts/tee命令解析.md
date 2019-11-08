@@ -5,6 +5,7 @@ categories: Linux
 tags: 
 - Linux
 - command
+copyright: true
 ---
 
 # make 2>&1 | tee log.txt 命令解析

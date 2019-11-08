@@ -3,6 +3,7 @@ title: Linux shell脚本计算运行时间
 date: 2019-04-10 23:27:45
 categories: Linux
 tags: shell
+copyright: true
 ---
 
 # Linux shell脚本计算运行时间

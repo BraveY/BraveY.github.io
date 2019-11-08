@@ -5,6 +5,7 @@ categories: 源码阅读
 tags:
 - redis
 - Makefile
+copyright: true
 ---
 
 # Redis Makefile注解
