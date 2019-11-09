@@ -68,7 +68,7 @@
 
   </div>
   
-  {% include '_third-party/copy-code.swig' %}
+
   {% include '_scripts/vendors.swig' %}
   {% include '_scripts/commons.swig' %}
 
