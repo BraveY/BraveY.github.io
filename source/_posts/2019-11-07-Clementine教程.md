@@ -4,7 +4,7 @@ date: 2019-11-07 10:42:24
 categories: 数据挖掘
 tags:
 - Clementine
-copyright: true
+copyright: false
 ---
 
 # Clementine教程
