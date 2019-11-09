@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://bravey.github.io/2019-10-31-%E5%86%85%E5%B5%8C%E6%B1%87%E7%BC%96.html</loc>
+    <lastmod>2019-11-09</lastmod>
+  </url>  <url>
     <loc>https://bravey.github.io/2019-09-19-%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%AC%ACK%E5%A4%A7%E7%9A%84%E6%95%B0.html</loc>
     <lastmod>2019-11-09</lastmod>
   </url>  <url>
@@ -83,9 +86,6 @@
     <lastmod>2019-11-08</lastmod>
   </url>  <url>
     <loc>https://bravey.github.io/ceph%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3.html</loc>
-    <lastmod>2019-11-08</lastmod>
-  </url>  <url>
-    <loc>https://bravey.github.io/2019-10-31-%E5%86%85%E5%B5%8C%E6%B1%87%E7%BC%96.html</loc>
     <lastmod>2019-11-08</lastmod>
   </url>  <url>
     <loc>https://bravey.github.io/2019-08-24-shadowsocks%E7%9A%84%E9%83%A8%E7%BD%B2.html</loc>
