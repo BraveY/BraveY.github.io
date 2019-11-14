@@ -1,5 +1,5 @@
 ---
-title: make 2>&1 | tee log.txt 命令解析
+title: tee命令解析
 date: 2018-06-23 17:21:19
 categories: Linux
 tags: 
