@@ -1,6 +1,443 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>分类与预测</title>
+    <url>/2019-11-17-%E5%88%86%E7%B1%BB%E4%B8%8E%E9%A2%84%E6%B5%8B.html</url>
+    <content><![CDATA[<h1 id="分类与预测"><a href="#分类与预测" class="headerlink" title="分类与预测"></a>分类与预测</h1><h2 id="分类与预测的差别"><a href="#分类与预测的差别" class="headerlink" title="分类与预测的差别"></a>分类与预测的差别</h2><p>分类对给定的数据集一般是离散的，确定这些数据对应类别。而预测是对连续的数据，根据历史数据来预测未知的数据或者缺失值等。</p>
+<p>分类的过程分为两步：</p>
+<ul>
+<li><p>模型构建</p>
+<p>使用训练数据集对模型进行训练，模型可以被表示为一些分类的规则集合，决策树或者是数学公式。</p>
+</li>
+<li><p>模型使用</p>
+<p>先使用模型来对测试数据进行分类，如果准确率能够接受则使用模型去对没有标注过的数据进行分类。</p>
+</li>
+</ul>
+<p>分类属于有监督学习，训练的数据是经过标注的。聚类属于无监督学习训练数据未经过标注不知道样本的标签。</p>
+<a id="more"></a>
+<p>在进行分类和预测之前需要对数据进行预处理包括数据清洗来处理噪声和缺失值，相关性分析来进行特征提取，数据转换比如归一化等。</p>
+<p>对于分类方法的评测指标有：准确性，速度，鲁棒性，可规模性（硬盘数据），可解释性等</p>
+<h2 id="决策树"><a href="#决策树" class="headerlink" title="决策树"></a>决策树</h2><p>决策树是一个类似于流程图的树结构；其中，每个内部结点表示在一个属性上的测试，每个分枝代表一个测试输出，而每个树叶结点代表类或类分布。树的最顶层结点是根结点。给定数据经过决策树不同节点的决策最终走到叶子节点，从而完成了对数据的分类。决策树不需要任何领域知识也不需要参数，适合探测式知识发现。</p>
+<p>决策数的构建分为两步：</p>
+<ul>
+<li>树的构建 从根节点开始递归的选择属性进行建树</li>
+<li>剪枝 ：减去反映噪声或者离群点的分枝</li>
+</ul>
+<h3 id="构建决策树"><a href="#构建决策树" class="headerlink" title="构建决策树"></a>构建决策树</h3><p>算法伪代码为：</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1574086256/blog/Data%20Mining/decision_tree_code.jpg" alt=""></p>
+<p>三个参数D是输入的数据集,attribute_list是输入数据中的属性集合和Atrribute_selection_method是指定选择属性的启发式过程，可以选择信息增益或者是基尼指数Gini index。</p>
+<p>步骤为：</p>
+<ol>
+<li><p>首先从根节点N开始，根节点中的数据是原始的需要分类的原始数据集。</p>
+</li>
+<li><p>如果D中的数据都属于同一类，那么根节点N变成叶子节点，标记为这一类。</p>
+</li>
+<li><p>否则，调用Atrribute_selection_method来选择最佳的分裂属性，并给出分裂子集。理想情况下希望分裂子集尽可能的纯，也就是希望分裂自己尽可能的都属于同一类。</p>
+</li>
+<li><p>用选出来的分裂属性在节点N上进行划分，并输出划分的数据子集。并把分裂属性从属性列表中删除。</p>
+<ol>
+<li>选出来的属性是离散值的话，有多少个取值就产生多少个分支</li>
+<li>连续值的话选择一个分裂值，大于这个分裂值为一个分支，小于等于为另外一个分支</li>
+<li>离散值而且必须是二叉树的话：属于这个值为一个分支，否则为另外一个分支</li>
+</ol>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1574086256/blog/Data%20Mining/split_choice.jpg" alt=""></p>
+</li>
+<li><p>对于每一个删除了最佳分裂属性的输出的子集$D_j$ 递归的调用算法。</p>
+</li>
+<li><p>递归的终止条件：</p>
+<ol>
+<li>数据集D都属于同一类</li>
+<li>属性列表为空，使用数据集中的多数类来标记节点。<strong>（多数投票）</strong></li>
+<li>如果一个分支的数据$D_j$为空，则新增加一个叶子节点，用父节点数据集D中的多数类来标记它。</li>
+</ol>
+</li>
+<li><p>返回决策数的节点N</p>
+</li>
+</ol>
+<h3 id="属性选择度量"><a href="#属性选择度量" class="headerlink" title="属性选择度量"></a>属性选择度量</h3><p>很明显，决策树的关键点是怎么选择分裂的属性。有如下三种方式。</p>
+<h4 id="信息增益"><a href="#信息增益" class="headerlink" title="信息增益"></a>信息增益</h4><p>ID3这种决策树方法使用。</p>
+<p>先计算数据集D的熵：</p>
+<script type="math/tex; mode=display">
+Info(D)=-\sum_{i=1}^{m}p_ilog_2(p_i)</script><p>假设数据集中D有m个类别${C_1,C_2\dots C_m}$，那么每一类的概率可以用所占的比例$p_i=\dfrac{count(C_i)}{count(D)}$来估计。</p>
+<p>假设属性A 具有v 个不同值${a_1 ,…, a_v}$。可以用属性A 将S 划分为v 个子集${S_1 ,…, S_v}$；其中，<br>$S_j$ 包含S 中这样一些样本，它们在A 上具有值$a_j$。如果A 选作测试属性,则获得的信息增益,也就是划分成了子集后的熵为：</p>
+<script type="math/tex; mode=display">
+Info_A(D)=\sum_{j=1}^{v}\dfrac{|D_j|}{|D|}\times Info(D_j)</script><p>信息增益定义为原来的的信息需求（近基于类比例）与新的信息需求（对A划分后）之间的差：</p>
+<script type="math/tex; mode=display">
+Gain(A)=Info(D)-Info_A(D)</script><p>具有最高信息增益的属性是最佳分裂属性。可以这样理解，划分后越纯那么整个状态越不混乱，也就是熵越低。所以选择划分后熵最低而信息增益最高的属性。</p>
+<h4 id="信息增益率"><a href="#信息增益率" class="headerlink" title="信息增益率"></a>信息增益率</h4><p>信息增益偏向有许多输出的测试，它倾向于选择具有大量值的属性。比如按照唯一的标识符id来划分，每个划分出来的都只包含一个数据都是纯的，但是这样的划分显然没有作用。</p>
+<p>C4.5使用增益率来进行选择分裂属性。增益率用分裂信息值将信息增益归一化。</p>
+<script type="math/tex; mode=display">
+SplitInfo_A(D)=-\sum_{j=1}^{v}\dfrac{|D_j|}{|D|}\times log_2(\dfrac{|D_j|}{D})</script><p>分裂信息值代表由训练数据集D根据属性A划分v个分区后，这v个分区的熵。前面的$Info_A(D)$是对每个分区还计算了一下分区里面的熵然后进行加权，而这里是全局地看待这v个分局而进行的计算。</p>
+<p>增益率定义为：</p>
+<script type="math/tex; mode=display">
+GainRate(A)=\dfrac{Gain(A)}{SplitInfo_A(D)}</script><p>选择具有最大增益率的属性作为分裂属性。</p>
+<h4 id="基尼指数"><a href="#基尼指数" class="headerlink" title="基尼指数"></a>基尼指数</h4><p>基尼指数在CART中使用，基尼指数度量数据集的不纯度，定义为：</p>
+<script type="math/tex; mode=display">
+Gini(D)=1-\sum_{i=1}^{m}p_i^2</script><p>$p_i=\dfrac{|C_i|}{|D|}$依然用每一类的比例来估计。基尼指数考虑每个属性的二元划分，根据属性A划分成两个两个子集$D_1,D_2$在这种划分下的基尼指数为：</p>
+<script type="math/tex; mode=display">
+Gini_A(D)=\dfrac{|D_1|}{|D|}Gini(D_1)+\dfrac{|D_2|}{|D|}Gini(D_2)</script><p>选择具有最低的基尼指数作为分裂属性。  </p>
+<h3 id="决策树决策规则"><a href="#决策树决策规则" class="headerlink" title="决策树决策规则"></a>决策树决策规则</h3><p>构建好了决策树后，决策规则使用IF-THEN的语句来表示。<img src="https://res.cloudinary.com/bravey/image/upload/v1574086256/blog/Data%20Mining/decision_tree_rules.jpg" alt=""></p>
+<p>比如上图的决策规则是：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">IF age is Middle_aged THEN buys_computer = yes</span><br><span class="line">IF age is youth AND student = no THEN buys_computer = no</span><br><span class="line">IF age is youth AND student = yes THEN buys_computer = yes</span><br><span class="line">IF age is senior AND credit_rating=excellent THEN buys_computer = no</span><br><span class="line">IF age is senior AND credit_rating=fair THEN buys_computer = yes</span><br></pre></td></tr></table></figure>
+<p>有多少个叶子节点相应的有多少决策规则，在到达叶子节点的路径上有多少个节点就有多少个并列的条件。</p>
+<h3 id="过拟合与树剪枝"><a href="#过拟合与树剪枝" class="headerlink" title="过拟合与树剪枝"></a>过拟合与树剪枝</h3><p>在创建决策树时，由于数据中的噪声和离群点，许多分支反映的是训练数据中的异常。使用剪枝的方法来处理这种过拟合的问题。</p>
+<h4 id="先剪枝"><a href="#先剪枝" class="headerlink" title="先剪枝"></a>先剪枝</h4><p>先剪枝prepruning方法提前停止树的创建。比如设定一个阈值当信息增益等度量超过阈值则分裂，不超过就停止分裂，用投票的方法确定标签。但是阈值的设置比较困难，所以不常用。</p>
+<h4 id="后剪枝"><a href="#后剪枝" class="headerlink" title="后剪枝"></a>后剪枝</h4><p>后剪枝postpruning方法从完全创建好了的决策树进行剪枝。剪去后也依然使用投票的方法来确定标签。</p>
+<p>CART使用<strong>代价复杂度</strong>剪枝算法，C4.5使用<strong>悲观剪枝</strong>的方法。二者都是根据错误率，简单说就是如果减去这个分支后错误率提升不大就可以减去。</p>
+<h3 id="决策树评价"><a href="#决策树评价" class="headerlink" title="决策树评价"></a>决策树评价</h3><p>比其他的分类方法有着相对更快的学习速度，能够转换成容易理解的决策规则，准确率也能接受，而且也可以适用于大规模的数据。</p>
+<h2 id="贝叶斯分类"><a href="#贝叶斯分类" class="headerlink" title="贝叶斯分类"></a>贝叶斯分类</h2><p>朴素贝叶斯分类发假定一个属性值在给定类上的影响独立于其他属性的值，这个假定称为类条件独立性。做这个假定是为了简化计算，因而称之为朴素的。</p>
+<h3 id="贝叶斯定理"><a href="#贝叶斯定理" class="headerlink" title="贝叶斯定理"></a>贝叶斯定理</h3><p>贝叶斯定理用来求解后验概率。公式为：</p>
+<script type="math/tex; mode=display">
+P(H|X)=\dfrac{P(H)P(X|H)}{P(X)}</script><p>X是数据样本，分类未知。H是对X的分类的假设，比如X属于C类。P(H)是猜测的类的概率，P(X)是观察到的样本X的概率，而P(H|X)是在给定H的假设下，观察到X样本的概率。</p>
+<h3 id="朴素贝叶斯分类"><a href="#朴素贝叶斯分类" class="headerlink" title="朴素贝叶斯分类"></a>朴素贝叶斯分类</h3><h4 id="工作过程"><a href="#工作过程" class="headerlink" title="工作过程"></a>工作过程</h4><ol>
+<li><p>训练数据集D中一个样本X向量用一个n维的列向量$[x_1,x_2\dots x_n]^T$来表示它对应的n个属性$[A_1,A_2\dots A_n]$的测量值。</p>
+</li>
+<li><p>假定有m个类$C_1,C_2\dots C_n$,将X预测为拥有最高后验概率的类。</p>
+<script type="math/tex; mode=display">
+max(P(C_i|X))=max(\dfrac{P(X|C_i)P(C_i)}{P(X)})</script></li>
+<li><p>因为$P(X)$是常数，所以只用最大化$P(X|C_i)P(C_i)$ $P(C_i)$用类的频率来估计</p>
+</li>
+<li><p>在类条件独立的假定下有：</p>
+<script type="math/tex; mode=display">
+P(X|C_i)=\prod_{k=1}^nP(x_k|C_i)=P(x_1|C_i)P(x_2|C_i)\dots P(x_n|C_i)</script><p>$x_k$表示样本X向量对应的第k个属性$A_k$的值。</p>
+<ol>
+<li><p>如果$A_k$是分类属性，那么$P(x_k|C_i)$是D中属性$A_k$的值为$x_k$的$C_i$类的元组数除以D中$C_i$的数目 </p>
+</li>
+<li><p>如果$A_k$是连续值，则假定连续值服从均值为$\mu$,标准差为$\sigma$的高斯分布。</p>
+<script type="math/tex; mode=display">
+g(x,\mu,\sigma)=\dfrac{1}{\sqrt{2\pi}\sigma}e^{-\dfrac{(x-\mu)^2}{2\sigma^2}}</script><p>所以可以得到：</p>
+<script type="math/tex; mode=display">
+P(x_k|C_i)=g(x_k,\mu_{C_i},\sigma_{C_i})</script></li>
+</ol>
+</li>
+<li><p>对每一类都分别计算$P(X|C_i)P(C_i)$ 最后选择最大的作为这个样本的分类。</p>
+</li>
+</ol>
+<h4 id="零概率值的解决"><a href="#零概率值的解决" class="headerlink" title="零概率值的解决"></a>零概率值的解决</h4><p>在做连乘的时候如果有一个的概率为0，那么整个计算结果都为0。可以假设训练数据集很大，将每个取值的计数都加1而造成的概率估计可以忽略不计。这样就可以避免出现零概率的情况，称之为<strong>拉普拉斯估计或这拉普拉斯校准法</strong></p>
+<h3 id="评价"><a href="#评价" class="headerlink" title="评价"></a>评价</h3><p>朴素贝叶斯的优势：比较容易实现，在大多数情况可以取得好结果。缺点是：因为做了属性互相独立的假设，因此会降低准确率。而且实际上，大部分属性之间并不互相独立。</p>
+<p>可以使用贝叶斯信念网络来处理。</p>
+<h2 id="BP神经网络"><a href="#BP神经网络" class="headerlink" title="BP神经网络"></a>BP神经网络</h2><h3 id="多层前馈神经网络"><a href="#多层前馈神经网络" class="headerlink" title="多层前馈神经网络"></a>多层前馈神经网络</h3><p>后向传播算法Back propagation在多层前馈神经网络上学习。由输入层、一个或多个隐藏层和一个输出层组成。</p>
+<p><img src="/2019-11-17-分类与预测.htm/Users\BraveY\Documents\BraveY\blog\images\data mining\multi_layer_feed_forward_network.jpg" alt=""></p>
+<p>输入层的单元称作输入单元，隐藏层和输出层单元称作输出单元或者神经节点。输入向量输入进输入单元，然后加权同时地提供给隐藏层的输出单元。在全连接的情况下每一层单元与前后层单元都会有相应的权重，因为权重不会回馈到输入节点，所以称为前馈的。因此一次输入就完成输出。</p>
+<h3 id="网络拓扑的定义"><a href="#网络拓扑的定义" class="headerlink" title="网络拓扑的定义"></a>网络拓扑的定义</h3><p>应该设计多少层隐藏层，每一层有多少单元，输入层单元应该有多少，是否全连接等都是网络拓扑需要考虑的。</p>
+<p>需要先对输入值进行归一化，将值落入[0,1]之间。离散值的属性可以进行重新编码，让每一个域值都有一个输入单元。如果属性A有3个可能的值${a_0, a_1, a_2}$那么就需要设计3个输入单元$I_0, I_1,I_2$，输入单元$I_1$为1对应属性$A=a_1$。</p>
+<p>如果进行分类的话如果只有两类那么输出单元只用一个就可以了，多于2类的情况每一类都有一个输出单元。</p>
+<p>隐藏层单元数目的设计，没有明确的规定，通过反复实验的过程，来确定。一般选择一个隐藏层就可以了，权重的初始值也会影响结果的准确率。</p>
+<h2 id="后向传播"><a href="#后向传播" class="headerlink" title="后向传播"></a>后向传播</h2><h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><p>后向传播通过迭代地处理训练数据，把每个样本的网络预测值与实际已知的目标值相比较。对每个训练样本，修改网络的权重使得网络预测和实际目标值之间的均方误差最小。修改后向进行，从输出层一直传递到输入层的，因此叫做后向传播。</p>
+<p>算法伪代码为：</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1574086256/blog/Data%20Mining/bp_code.jpg" alt=""></p>
+<p>步骤为：</p>
+<p><strong>初始化权重：</strong>权重被初始化为小随机数（比如-1到1，或者-0.5到0.5），偏倚bias也初始化为小随机数。</p>
+<p><strong>向前传播输入</strong>：输入单元的输出就是输入值。隐藏层和输出层单元的净输入用上一层输入的线性组合计算。输出单元的输出用激活函数计算，激活函数是logistic或这S型sigmoid函数,激活函数将较大的输入值域映射到区间[0,1]</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1574086256/blog/Data%20Mining/bpnn_io.jpg" alt=""></p>
+<p>隐藏层或者输出层单元j其输入为如下，其中$w_{ij}$是上层单元i到单元j的权重，$O_i$是上一层单元的输出，$\theta_j$是单元j的偏倚。偏倚用来充当阈值，改变单元的活性</p>
+<script type="math/tex; mode=display">
+I_j=\sum_{i}w_{ij}O_i+\theta_j</script><p>单元j的输出$O_j$为：</p>
+<script type="math/tex; mode=display">
+O_j=\dfrac{1}{1+e^{I_j}}</script><p><strong>向后传播误差</strong>：通过更新权重和反映网络预测误差的偏倚，向后传播误差。对于输出层单元j，误差如下，其中$O_j$ 是单元j的实际输出， $T_j$ 是j给定训练样本的实际目标值，$O_j(1-O_j)$是逻辑斯提函数的导数。</p>
+<script type="math/tex; mode=display">
+Err_j=O_j(1-O_j)(T_j-O_j)</script><p>隐藏层单元j的误差，考虑下一层中j连接的单元的误差加权和。误差如下：</p>
+<script type="math/tex; mode=display">
+Err_j=O_j(1-O_j)\sum_kErr_kw_{jk}</script><p>其中$w_{jk}$是下一层单元k与单元j的连接权重，而$Err_k$是单元k的误差。</p>
+<p>更新权重和偏倚，以反映误差的传播。权重更新公式如下，其中$\Delta w_{ij}$是权重的改变量。</p>
+<script type="math/tex; mode=display">
+\begin{split}
+\Delta w_{ij}&=l\times Err_jO_i\\
+w_{ij}&=w_{ij}+\Delta w_{ij}
+\end{split}</script><p>变量l是<strong>学习率</strong>，通常去[0,1]之间的常数值。学习率帮助避免陷入决策空间的局部极小，并有助于找到全局最小。学习率太低的话，学习将进行的很慢。学习率太高的话，可能出现在不适当的解之间的摆动。一种调整规则是将学习率设置为迭代次数的倒数。</p>
+<p>偏倚的更新公式为：其中$\Delta \theta_{ij}$是偏倚的改变量。</p>
+<script type="math/tex; mode=display">
+\begin{split}
+\Delta \theta_{ij}&=l\times Err_j\\
+\theta_{ij}&=\theta_{ij}+\Delta \theta_{ij}
+\end{split}</script><p>更新的策略有实例更新：每处理一个样本就更新权重和偏倚。周期更新为处理玩所有样本后再更新。实例更新通常产生更准确的结果。</p>
+<p><strong>终止条件：</strong></p>
+<ul>
+<li>前一周期所有的$\Delta w_{ij}$都太小，小于某个阈值</li>
+<li>前一周其误分类的数据百分比小于某个阈值</li>
+<li>超过预先指定的周期数。实践中权重收敛可能需要数十万个周期。</li>
+</ul>
+<p>和决策树一样，神经网络也可以剪枝，去除那些影响很小的连接。</p>
+<h3 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h3><p>优点：</p>
+<ul>
+<li>对噪声的高容忍</li>
+<li>对连续值的良好适配</li>
+<li>对真实数据的良好处理</li>
+<li>效果很好</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>很长的训练时间</li>
+<li>要求大量的参数</li>
+<li>解释性很差</li>
+</ul>
+<h2 id="其他分类方法"><a href="#其他分类方法" class="headerlink" title="其他分类方法"></a>其他分类方法</h2><p>包括KNN、集成学习比如（Baggin、Boosting）</p>
+<h2 id="预测"><a href="#预测" class="headerlink" title="预测"></a>预测</h2><p>线性回归模型、多项式回归模型、广义线性模型、对数线性模型（针对分类数据）</p>
+<h2 id="准确率和误差的衡量"><a href="#准确率和误差的衡量" class="headerlink" title="准确率和误差的衡量"></a>准确率和误差的衡量</h2><p>使用混淆矩阵confusion matrix来表示分类的情况。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1574086256/blog/Data%20Mining/confusion_matrix.jpg" alt=""></p>
+<p>准确率和错误率表示为：</p>
+<script type="math/tex; mode=display">
+\begin{split}
+Accuracy&=\dfrac{(true\_pos+true\_neg)}{pos+neg}\\
+Error rate&=1-Accuracy
+\end{split}</script><p>还有其他几个指标</p>
+<script type="math/tex; mode=display">
+\begin{split}
+sensitivity&=\dfrac{true\_pos}{pos} /* 真阳的识别率*/\\
+specificity&=\dfrac{true\_neg}{neg} /* 真阴的识别率*/\\
+precision&=\dfrac{true\_pos}{true\_pos+true\_neg} /* 预测的精度*/\\
+\end{split}</script><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《数据挖掘概念与技术》第3版 第八章分类：基本概念 第九章 分类高级方法</p>
+]]></content>
+      <categories>
+        <category>数据挖掘</category>
+      </categories>
+      <tags>
+        <tag>课程</tag>
+        <tag>国科大</tag>
+        <tag>分类</tag>
+        <tag>贝叶斯</tag>
+        <tag>神经网络</tag>
+        <tag>决策树</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据预处理</title>
+    <url>/2019-11-16-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86.html</url>
+    <content><![CDATA[<h1 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h1><h2 id="为什么数据预处理"><a href="#为什么数据预处理" class="headerlink" title="为什么数据预处理"></a>为什么数据预处理</h2><p>原始数据可能掺杂着噪音、空值或者不正确、不一致、充满冗余值等。没有高质量的数据，很难挖掘出高质量的规则，因此需要数据预处理。数据预处理主要有：数据清洗、数据集成、数据归约、数据离散等几个任务。</p>
+<a id="more"></a>
+<h2 id="数据描述"><a href="#数据描述" class="headerlink" title="数据描述"></a>数据描述</h2><p>得到一份数据后，需要先对数据进行一个大概的认识，主要从中心趋势和发散特征两方面统计进行描述。</p>
+<h3 id="中心趋势度量"><a href="#中心趋势度量" class="headerlink" title="中心趋势度量"></a>中心趋势度量</h3><h4 id="平均值-mean"><a href="#平均值-mean" class="headerlink" title="平均值 mean"></a>平均值 mean</h4><p>均值又分为：</p>
+<ul>
+<li><p>算术均值</p>
+<p> $\bar x=\frac{1}{n}\sum_{i=1}^{n}x_i$</p>
+</li>
+<li><p>加权均值</p>
+<p>$\bar x= \frac{\sum_{i=1}^{n}w_ix_i}{\sum_{i=1}^{n}w_i}$</p>
+</li>
+<li><p>截尾均值 Trimmed mean</p>
+<p>均值对极端数据比如离群点很敏感。因此截取高低两端的一部分数据后再计算均值，但是截去的部分不能太多不超过$20\%$</p>
+</li>
+</ul>
+<h4 id="中位数-median"><a href="#中位数-median" class="headerlink" title="中位数 median"></a>中位数 median</h4><p>对于倾斜（非对称）数据，数据中心的更好度量是中位数。</p>
+<p>假定数据有序，则当n为奇数时中位数是中间的值，当n为偶数的时候，中位数不唯一，可以是中间两个值和之间的任意值。如果属性是数值属性，那么一般约定取中间两个值的平均值。</p>
+<h4 id="众数-mode"><a href="#众数-mode" class="headerlink" title="众数 mode"></a>众数 mode</h4><p>另一种中心趋势的度量方法，众数是集合中出现最频繁的值。数据可能会有多个众数，如果最高频的值有多个的时候。如果每个数据值近出现一次，是没有众数的。</p>
+<p>有一个、两个、三个众数的分别称为：单峰的(unimodal)、双峰的（bimodal）和三峰的（trimodal）</p>
+<h4 id="中列数-midrange"><a href="#中列数-midrange" class="headerlink" title="中列数 midrange"></a>中列数 midrange</h4><p>中列数是数据集的最大和最小值的平均值。</p>
+<h4 id="对称与倾斜"><a href="#对称与倾斜" class="headerlink" title="对称与倾斜"></a>对称与倾斜</h4><p>完全对称的数据分布的单峰频率曲线中，均值、中位数和众数三者是相同的中心值。</p>
+<p>不对称的情况分为：</p>
+<ul>
+<li>正倾斜：众数小于中位数</li>
+<li>负倾斜：众数大于中位数</li>
+</ul>
+<p>如下所示,最上方是对称的，左下是正倾斜的，右下是负倾斜的。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573992640/blog/Data%20Mining/symmetric_skewed.jpg" alt=""></p>
+<h3 id="数据散布度量"><a href="#数据散布度量" class="headerlink" title="数据散布度量"></a>数据散布度量</h3><h4 id="极差、四分位数和四分位数极差"><a href="#极差、四分位数和四分位数极差" class="headerlink" title="极差、四分位数和四分位数极差"></a>极差、四分位数和四分位数极差</h4><p><strong>极差（range）</strong>：最大值与最小值之差。</p>
+<p>有序数据值下的数据集合的第k 个百分位数是具有如下性质的值x：数据项的百分之k 在x 上或低于x。在中位数M上或低于M 的值对应于第50 个百分位数。</p>
+<p><strong>四分位数</strong>将数据分为4段总共有3个四分位数，Q1是第25个百分位数，Q2即是Median是第50个百分位数，Q3是第75个百分位数。</p>
+<p>100-分位数通常称为百分位数，它们把数据分成100个大小相等的连贯集。中位数、四分位数和百分位数是使用最广泛的分位数。</p>
+<p>第一个和第三个四分位数之间的距离是分布的一种简单度量，它给出被数据的中间一半<br>所覆盖的范围。该距离称为中间<strong>四分位数极差（IQR）</strong>：$IQR=Q_3-Q_1$</p>
+<h4 id="五数概括、盒图与离群点"><a href="#五数概括、盒图与离群点" class="headerlink" title="五数概括、盒图与离群点"></a>五数概括、盒图与离群点</h4><p><strong>离群点(Outlier)</strong>：与$Q_1$或者$Q_3$这两个分位数的值超过$1.5IQR$</p>
+<p>五数概括使用最小值、$Q_1$ 、中位数、$Q_3$、最大值来概述数据的中心与散布。</p>
+<p>可以使用盒图来体现五数概括 。</p>
+<ul>
+<li>盒的端点在四分位数上，使得盒的长度是中间四分位数区间IQR</li>
+<li>中位数用盒内的线标记</li>
+<li>盒外的两条线（称作胡须）延伸到最小（Minimum）和最大（Maximum）观测值。如果最大最小值超过$1.5IQR$，那么只延伸到这个部分。</li>
+</ul>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573992640/blog/Data%20Mining/box_plot.jpg" alt=""></p>
+<p>如上图所示，最大值超过了$1.5IQR$所以只延伸到了$1.5IQR$，而超过$1.5IQR$部分的被标记为离群点。</p>
+<h4 id="方差、标准差"><a href="#方差、标准差" class="headerlink" title="方差、标准差"></a>方差、标准差</h4><p>方差Variance与标准差Standard deviation指出数据分布的散布程度。</p>
+<p>总体方差的计算：$\sigma^2=\frac{1}{n}\sum_{i=1}^{n}(x_i-\mu)^2={\frac{1}{n}\sum_{i=1}^{n}x_i^2}-{\mu}^2$</p>
+<p>样本方差的计算：$s^2=\frac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar x)^2={\frac{1}{n-1}（\sum_{i=1}^{n}x_i^2}-\frac{1}{n}\sum_{i=1}^{n}x_i^2）$</p>
+<p>$\mu$是总体数据的平均值，而$\bar x$是总体数据中的一部分样本的均值，可以用样本的均值来估计总体的均值。样本方差是无偏估计的，<a href="https://www.zhihu.com/question/20099757" target="_blank" rel="noopener">样本方差与总体方差的差别</a></p>
+<p>标准差是方差的平方根，就是$\sigma$或者s。它的性质是：</p>
+<ul>
+<li>$\sigma$<strong>度量关于平均值的发散</strong>，仅当选择平均值作为中心度量时使用。</li>
+<li>仅当不存在发散时，即当所有的观测值都相同时，$\sigma=0$。否则，$\sigma&gt;0$。</li>
+</ul>
+<h3 id="数据描述的图形表示"><a href="#数据描述的图形表示" class="headerlink" title="数据描述的图形表示"></a>数据描述的图形表示</h3><h4 id="直方图"><a href="#直方图" class="headerlink" title="直方图"></a>直方图</h4><p>直方图Histogram 或者频率直方图Frequency histograms 针对单变量，对于比较单变量观测组，它可能不如分位数图、q-q 图和盒图方法有效。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573992639/blog/Data%20Mining/histogram.jpg" alt=""></p>
+<h4 id="分位数图"><a href="#分位数图" class="headerlink" title="分位数图"></a>分位数图</h4><p>分位数图Quantile Plot每个观测值$x_i$与一个百分数$f_i$配对，指出大约$f_i \times 100\%$的数据小于值$x_i$，“大约”是因为可能没有一个精确的小数值$f_i$，使得数据的$f_i\%$小于或等于$x_i$。0.25 分位数对应于Q1，0.50 分位数对应于中位数，而0.75 分位数对应于Q3。</p>
+<p>$f_i$的定义：$f_i=\frac{i-0.5}{N}$这些数由$\frac{1}{2N}$（稍大于0）到$1-\frac{1}{2N}$（稍小于1），以相同的步长1/n 递增。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573992640/blog/Data%20Mining/Quantile_Plot.jpg" alt=""></p>
+<h4 id="分位数-分位数图"><a href="#分位数-分位数图" class="headerlink" title="分位数-分位数图"></a>分位数-分位数图</h4><p>分位数-分位数图Quantile-Quantile Plot，或q-q 图对着另一个的对应分位数，绘制一个单变量分布的分位数。它是一种强有力的直观表示工具，使得用户可以观察从一个分布到另一个是否有漂移。![]<a href="https://res.cloudinary.com/bravey/image/upload/v1573992640/blog/Data%20Mining/qq_plot.jpg" target="_blank" rel="noopener">https://res.cloudinary.com/bravey/image/upload/v1573992640/blog/Data%20Mining/qq_plot.jpg</a>)</p>
+<p>部门1的分布相对于部门2有一个漂移，更趋向于部门2，说明部门2的单价趋向于比部门1高。</p>
+<h4 id="散点图"><a href="#散点图" class="headerlink" title="散点图"></a>散点图</h4><p>散点图(scatter plot)是确定两个量化变量之间看上去是否有联系、模式或趋势的最有效的图形方法之一。</p>
+<p>它观察的是<strong>双变量</strong>，可以观察点簇和离群点，或者考察相关性。正相关x随着y的增加而增加，负相关x随着y的增长而减少。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573992640/blog/Data%20Mining/scatter_plot.jpg" alt=""></p>
+<h2 id="数据清洗"><a href="#数据清洗" class="headerlink" title="数据清洗"></a>数据清洗</h2><h4 id="缺失值"><a href="#缺失值" class="headerlink" title="缺失值"></a>缺失值</h4><ul>
+<li>忽略元组</li>
+<li>人工填写缺值</li>
+<li>使用全局常量填充 ：比如Unknown </li>
+<li>所有样本的中心值填充：均值或者中位数 均值要求数据对称分布，倾斜分布用中位数</li>
+<li>给定元组的分类相同的样本的均值或者中位数</li>
+<li>最可能的值：使用贝叶斯推理、回归、决策数等进行预测。 前面几种是有偏的，这种方法最常用。</li>
+</ul>
+<h4 id="噪声数据"><a href="#噪声数据" class="headerlink" title="噪声数据"></a>噪声数据</h4><h5 id="分箱"><a href="#分箱" class="headerlink" title="分箱"></a>分箱</h5><p>分箱方法通过考察“邻居”（即，周围的值）来平滑存储数据的值。存储的值被分布到一些“桶”或箱中。由于分箱方法导致值相邻，因此它进行局部平滑。</p>
+<p>要求数据有序，有三种方法：</p>
+<ul>
+<li><strong>箱均值光滑</strong>：箱中的每一个值被替换为箱中的均值</li>
+<li><strong>箱中位数光滑：</strong>箱中的每一个值被替换为箱中的中位数</li>
+<li><strong>箱边界光滑：</strong>边界为箱中的最大与最小值，每个值被替换为距离其最近的边界值。</li>
+</ul>
+<p>而箱子的分发有<strong>等频</strong>：每个箱子中的样本数目一样。<strong>等宽</strong>：按照取值范围将样本划分，每个箱子中的取值范围一致，比如样本数据取值为[0,10]那么可以按照等宽为2，把[0,2),[2,4)这样的取值范围来把样本划分到对应区间所在的范围中。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573992639/blog/Data%20Mining/bin.jpg" alt=""></p>
+<h5 id="回归"><a href="#回归" class="headerlink" title="回归"></a>回归</h5><p>用函数拟合数据来光滑数据，将离拟合曲线远的数据标记为噪声数据。</p>
+<h5 id="聚类"><a href="#聚类" class="headerlink" title="聚类"></a>聚类</h5><p>使用聚类分析后，检测出离群点，然后把离群点标记为噪声数据。</p>
+<h2 id="数据转换"><a href="#数据转换" class="headerlink" title="数据转换"></a>数据转换</h2><h3 id="归一化-规范化"><a href="#归一化-规范化" class="headerlink" title="归一化/规范化"></a>归一化/规范化</h3><h4 id="最大-最小归一化"><a href="#最大-最小归一化" class="headerlink" title="最大-最小归一化"></a>最大-最小归一化</h4><p>对原始数据进行线性变换，映射到新的区间[new_min, new_max]中去。这种方法保持了原始数据之间的联系。</p>
+<script type="math/tex; mode=display">
+v_i'=\frac{v_i-min_A}{max_A-min_A}(new\_max_A-new\_min_A)</script><h4 id="z-score归一化"><a href="#z-score归一化" class="headerlink" title="z-score归一化"></a>z-score归一化</h4><p>新的值使用均值和标准差进行映射。$\bar A$和$\sigma_A$ 分别是样本的均值和他的标准差。</p>
+<script type="math/tex; mode=display">
+v_i'=\frac{v_i-\bar A}{\sigma_A}</script><h4 id="小数定标归一化"><a href="#小数定标归一化" class="headerlink" title="小数定标归一化"></a>小数定标归一化</h4><p>小数定标归一化 Normalization by decimal scaling。移动原来的小数点的位置来进行归一化。</p>
+<script type="math/tex; mode=display">
+v_i'=\dfrac{v_i}{10^j}</script><p>j是让$Max(|v_i’|&lt;1)$的最小整数，比如如果是254，那么j取3就可以让其为0.254小于1。</p>
+<h2 id="冗余与相关性分析"><a href="#冗余与相关性分析" class="headerlink" title="冗余与相关性分析"></a>冗余与相关性分析</h2><p>一个属性可以由另外的属性导出，那么另外的属性就是冗余的。有些冗余可以通过<strong>相关性分析</strong>来检测</p>
+<h3 id="数值数据的相关系数"><a href="#数值数据的相关系数" class="headerlink" title="数值数据的相关系数"></a>数值数据的相关系数</h3><p>相关系数Correlation coefficient也称作皮尔森积矩系数Pearson’s product moment coefficient估计两个属性A,B的相关度。</p>
+<script type="math/tex; mode=display">
+r_{A.B}=\dfrac{\sum_{i=1}^{n}(a_i-\bar A)(b_i-\bar B)}{(n-1)\sigma_A\sigma_B}=\dfrac{\sum_{i=1}^{n}(a_ib_i)-n\bar A\bar B}{(n-1)\sigma_A\sigma_b}</script><p>$-1\le r_{A,B}\le 1$ ,$r_{A,B}&gt;0$ A和B两个属性正相关，A的值随着B的值增长而增长。$r_{A,B}&lt;0$为负相关，A的值随着B的值增长而减少。该值越大，一个属性蕴涵另一个的可能性越大。因此，一个很大的值表明A（或B）可以作为冗余而被去掉。如果结果值等于0，则A 和B 是独立的，它们之间不相关。可以参见前述的散点图。</p>
+<h3 id="分类数据的-chi-2-相关检验"><a href="#分类数据的-chi-2-相关检验" class="headerlink" title="分类数据的$\chi^2$相关检验"></a>分类数据的$\chi^2$相关检验</h3><p>分类数据Categorical Data中，两类数据可以通过$\chi^2$卡方检验来发现它们的相关性。计算公式为：</p>
+<script type="math/tex; mode=display">
+\begin{split}
+&\chi^2=\sum_{i=1}^{c}\sum_{j=1}^{r}\dfrac{o_{ij}-e_{ij}}{e_{ij}}\\\\
+&e_{ij}=\dfrac{count(A=a_i)\times count(B=b_j)}{n}
+\end{split}</script><p>$o_{ij}$ 是联合事件$(A_i,B_j)$的观测频度也就是实际频数，而$e_{ij}$ 是$(A_i,B_j)$的期望值。n是总的数据样本数。使用相依表来表示数据。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573992639/blog/Data%20Mining/rely_table.jpg" alt=""></p>
+<p>图中括号中的是每个单元的预测值。总共抽取1500个样本，因此n=1500。A类是否喜欢看小说有两类取值，B类性别也有两类取值，因此c=2，r=2。计算单元（男，小说）的预测值有：</p>
+<script type="math/tex; mode=display">
+e_{11}=\dfrac{count(男)\times count(小说)}{n}=\dfrac{300\times450}{1500}=90</script><p>其他几个单元的预测值都在括号中。因此可以计算出：</p>
+<script type="math/tex; mode=display">
+\chi^2=\dfrac{(250-90)^2}{90}+\dfrac{(50-210)^2}{210}+\dfrac{(200-360)^2}{360}+\dfrac{(1000-840)^2}{840}=507.93</script><p>对于这个2*2的表，自由度为（2-1)(2-1)=1。对于自由度1，在0.001的置信水平下，查表得到拒绝假设的值是10.828。算出来的值大与它，因此认为性别和爱看小说不是独立的，是强相关的。</p>
+<h2 id="数据归约"><a href="#数据归约" class="headerlink" title="数据归约"></a>数据归约</h2><p>数据归约技术 Data Reduction可以用来得到数据集的归约表示，它小得多，但仍接近地保持原数据的完整性。</p>
+<p>分为：</p>
+<ul>
+<li>维规约：降维</li>
+<li>数量规约：用替代的、较小的的数据形式替换原始数据。比如只存放数据的模型参数</li>
+<li>数据压缩：通过变换将原始数据压缩，不损失原来的信息叫做无损，否则是有损</li>
+</ul>
+<h3 id="维规约"><a href="#维规约" class="headerlink" title="维规约"></a>维规约</h3><h4 id="小波变换"><a href="#小波变换" class="headerlink" title="小波变换"></a>小波变换</h4><p>DWT）是一种线性信号处理技术，当用于数据向量D 时，将它转换成不同的数值向量小波系数D’。两个向量具有相同的长度。虽然变换后向量维度一样，但是可以仅存放一小部分最强的小波系数，就能保留近似的压缩数据。DWT提供比离散傅利叶DFT更好的有损压缩，DWT 将提供原数据更精确的近似。因此，对于等价的近似，DWT 比DFT 需要的空间小。不像DFT，小波空间局部性相当好，有助于保留局部细节。</p>
+<p>该方法如下：</p>
+<ol>
+<li>输入数据向量的长度L 必须是2 的整数幂。必要时，通过在数据向量后添加0，这一条件可以满足。</li>
+<li>每个变换涉及应用两个函数。第一个使用某种数据平滑，如求和或加权平均。第二个进行加权差分，产生数据的细节特征。</li>
+<li>两个函数作用于输入数据对，产生两个长度为L/2 的数据集。一般地，它们分别代表输入数据的平滑后或低频的版本和它的高频内容。</li>
+<li>两个函数递归地作用于前面循环得到的数据集，直到结果数据集的长度为2。</li>
+<li>由以上迭代得到的数据集中选择值，指定其为数据变换的小波系数。</li>
+</ol>
+<h4 id="主成分分析"><a href="#主成分分析" class="headerlink" title="主成分分析"></a>主成分分析</h4><p>主成分分析PCA 又称Karhunen-Loeve 或K-L 方法）搜索c 个最能代表数据的k-维正交向量；这里c ≤ k。这样，原来的数据投影到一个较小的空间，导致数据压缩。PCA 可以作为一种维归约形式使用。然而，不象属性子集选择通过保留原属性集的一个子集来减少属性集的大小。PCA 通过创建一个替换的、较小的变量集“组合”属性的本质。原数据可以投影到该较小的集合中。</p>
+<p>详解的过程暂时不记录，查看模式识别的教材。<strong>只适用数值数据</strong></p>
+<h4 id="属性-特征子集选择"><a href="#属性-特征子集选择" class="headerlink" title="属性/特征子集选择"></a>属性/特征子集选择</h4><p>也就是降维。使用压缩搜索空间的启发式的算法，典型的是贪心算法。每次找到一个局部的好的属性，剔除掉差的属性。</p>
+<p>属性子集选择的基本启发式方法包括以下技术：</p>
+<ul>
+<li>逐步向前选择：该过程由空属性集开始，选择原属性集中最好的属性，并将它添加到该集合中。</li>
+<li>逐步向后删除：该过程由整个属性集开始。在每一步，删除掉尚在属性集中的最坏属性。</li>
+<li>向前选择和向后删除的结合：向前选择和向后删除方法可以结合在一起，每一步选择一个最好的属性，并在剩余属性中删除一个最坏的属性。</li>
+<li>判定树归纳：判定树算法，如ID3 和C4.5 。</li>
+</ul>
+<h3 id="数量规约"><a href="#数量规约" class="headerlink" title="数量规约"></a>数量规约</h3><h4 id="数据立方体集成"><a href="#数据立方体集成" class="headerlink" title="数据立方体集成"></a>数据立方体集成</h4><p>将数据整理成之前介绍过的数据立方体，把感兴趣的数据整理到基本立方体base cuboid上面。比如如果只关注每个季度的销售数据，那么可以将原来的每天的数据整理成每个季度的销售数据。这样就可以大大减少原来的数据量了。</p>
+<h4 id="回归-1"><a href="#回归-1" class="headerlink" title="回归"></a>回归</h4><p>因为展开内容很多，只记录下有这些方法。当把数据拟合为某一种模型后只用记录这些模型的参数就可以了</p>
+<ul>
+<li>线性回归</li>
+<li>多元线性回归</li>
+<li>对数线性模型</li>
+</ul>
+<h4 id="直方图-1"><a href="#直方图-1" class="headerlink" title="直方图"></a>直方图</h4><p>就是前面叙述的分箱的方法，使用一个桶来记录一个属性的频次。或者等宽的方法，用区间来记录每个区间中的频次。</p>
+<h4 id="聚类-1"><a href="#聚类-1" class="headerlink" title="聚类"></a>聚类</h4><p>聚类后，用数据的簇代表替换实际的数据。即只记录簇的中心点。</p>
+<h4 id="抽样"><a href="#抽样" class="headerlink" title="抽样"></a>抽样</h4><p>假定大的数据集D 包含N 个元组。我们看看对D 的可能选样。</p>
+<p>简单选择n 个样本，不回放(<strong>SRSWOR</strong>)：由D 的N 个元组中抽取n 个样本（n &lt; N）；其中， D中任何元组被抽取的概率均为1/N。即，所有元组是等可能的。</p>
+<p>简单选择n 个样本，回放(<strong>SRSWR</strong>)：该方法类似于SRSWOR，不同在于当一个元组被抽取后，记录它，然后放回去。这样，一个元组被抽取后，它又被放回D，以便它可以再次被抽取。</p>
+<h3 id="数据压缩"><a href="#数据压缩" class="headerlink" title="数据压缩"></a>数据压缩</h3><p>主要使用编码机制来进行压缩。包括字符串、音频、视频的压缩。</p>
+<h3 id="数据离散和概念分层"><a href="#数据离散和概念分层" class="headerlink" title="数据离散和概念分层"></a>数据离散和概念分层</h3><p>可以使用分箱来、聚类、决策树和相关分析来进行离散化。而对于标称数据可以进行概念分层，前面的数据立方体就是用的这个思路。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《数据挖掘概念与技术》第3版 第三章数据预处理</p>
+]]></content>
+      <categories>
+        <category>数据挖掘</category>
+      </categories>
+      <tags>
+        <tag>课程</tag>
+        <tag>国科大</tag>
+        <tag>降维</tag>
+        <tag>相关性分析</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据仓库</title>
+    <url>/2019-11-15-%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93.html</url>
+    <content><![CDATA[<h1 id="数据仓库"><a href="#数据仓库" class="headerlink" title="数据仓库"></a>数据仓库</h1><h2 id="什么是数据仓库"><a href="#什么是数据仓库" class="headerlink" title="什么是数据仓库"></a>什么是数据仓库</h2><p>有多种定义，按照一位数据仓库系统构造方面的领衔设计师William H. Inmon的说法：数据仓库是一个面向主题的、集成的、时变的、非易失的数据集合，支持管理者的决策过程。</p>
+<p>一句话总结：通过数据仓库来完成对一个项目的相关需求的快速分析，是一个联机分析处理（Online Analytical Processing System）系统，具体的定义见<a href="https://baike.baidu.com/item/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93" target="_blank" rel="noopener">百度百科</a>。</p>
+<a id="more"></a>
+<h3 id="特征"><a href="#特征" class="headerlink" title="特征"></a>特征</h3><ul>
+<li><strong>面向主题的</strong>：数据仓库围绕一些主题，如顾客、供应商、产品和销售组织。数据仓库关注决策者的数据建模与分析，而不是构造组织机构的日常操作和事务处理。</li>
+<li><strong>集成的：</strong>通常，构造数据仓库是将多个异种数据源，如关系数据库、一般文件和联机事务处理记录，集成在一起。</li>
+<li><strong>时变的</strong>：数据存储从历史的角度（例如，过去5-10 年）提供信息。</li>
+<li><strong>非易失的：</strong>数据仓库总是。物理地分离存放数据；这些数据源于操作环境下的应用数据</li>
+</ul>
+<h3 id="操作数据库系统与数据仓库的区别"><a href="#操作数据库系统与数据仓库的区别" class="headerlink" title="操作数据库系统与数据仓库的区别"></a>操作数据库系统与数据仓库的区别</h3><p>我们常见的关系数据库就是联机操作数据库，联机操作数据库系统的主要任务是执行联机事务和查询处理。这种系统称为联机事务处理（OLTP）系统。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875850/blog/OLTP_OLAP.jpg" alt=""></p>
+<h2 id="数据立方体"><a href="#数据立方体" class="headerlink" title="数据立方体"></a>数据立方体</h2><p>数据仓库基于<strong>多维数据模型</strong>，这种模型将数据看做数据立方体形式。</p>
+<p>数据立方体的定义：在一个多维的平台上面对数据建模和观察，由<strong>维和事实</strong>定义。</p>
+<p>每个维都可以有一个与之相关联的表，称作维表，在表中进一步的描述维更具体的属性（比如名字、类型等）。</p>
+<p>多维数据模型围绕一个具体的主题（比如销售）这样的中心主题来组织。主题用事实表表示。事实是数值度量的，事实表包括事实的<strong>名称或度量</strong>。</p>
+<p>一个具体的例子如下所示，表示的是关于销售这个事实的数据立方体。其中左边是一个二维的数据立方体，右边是一个三维的数据立方体。可以扩展到n维。以3d这个数据立方体，讲解下682这个值的含义，表示Toronto市，security项目在Q2季度的销售量。<img src="https://res.cloudinary.com/bravey/image/upload/v1573875852/blog/data_cube.jpg" alt=""></p>
+<h2 id="数据仓库建模"><a href="#数据仓库建模" class="headerlink" title="数据仓库建模"></a>数据仓库建模</h2><p>数据仓库最流行的数据模型是多维数据模型，这种模型有三种形式：星形模式（Star schema）、雪花模式（snowflake schema）、事实星座（fact constellation）</p>
+<h3 id="星形模式"><a href="#星形模式" class="headerlink" title="星形模式"></a>星形模式</h3><p>最常见的模式，在这种模式下，数据仓库包括：</p>
+<ul>
+<li>一个大的事实表，里面又包含<ul>
+<li>事实的维度</li>
+<li>事实的度量</li>
+</ul>
+</li>
+<li>多组小的维表，详细记录一个维度的属性</li>
+</ul>
+<p>例子如下，展开了很像星光四射，因而得名。<img src="https://res.cloudinary.com/bravey/image/upload/v1573875853/blog/start_schema.jpg" alt=""></p>
+<p>最中间的是销售事实表，总共有4个维度：时间、商品、部门（branch）、地点，3个度量：销售数量、销售金额、平均销售量。</p>
+<h3 id="雪花模式"><a href="#雪花模式" class="headerlink" title="雪花模式"></a>雪花模式</h3><p>雪花模式是星形模式的变种，其中某些维表被规范化，因而把数据进一步分解到附加的表中。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875852/blog/snowfake_schema.jpg" alt=""></p>
+<p>星形模式是只有一层的，而雪花模式可以延伸。图中在item维度又延伸出了供应商这个维度，在地点维度又延伸出了城市这个维度。</p>
+<h3 id="事实星座"><a href="#事实星座" class="headerlink" title="事实星座"></a>事实星座</h3><p>对于一些复杂的应用可能需要多个事实表共享维表，这种模式可以看成星形模式的汇集，所以称做事实星座。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875852/blog/fact_schema.jpg" alt=""></p>
+<p>上面总共有两个事实表：销售与运输(Shipping)。因为两个事实表有些维度是共享的，所以同时指向相同的维度就可以了。</p>
+<h3 id="概念分层"><a href="#概念分层" class="headerlink" title="概念分层"></a>概念分层</h3><p>概念分层(Concept Hierarchy)，对一个维度在概念上进行分层。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875852/blog/location_hierarchy.jpg" alt=""></p>
+<p>比如在地点上可以从办公室上升到城市上升到国家一直到最后的最高层所有。每个维度的最高层都是all所有这个级别。上图地点的分层是基于全序的层次结构，也可以组织成基于偏序的格结构，如下对时间的分层。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875851/blog/time_hierarchy.jpg" alt=""></p>
+<p>对于连续的属性值或或者维度，通过将其离散化来定义概念分层。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875851/blog/numeric_hierarchy.jpg" alt=""></p>
+<h3 id="OLAP操作"><a href="#OLAP操作" class="headerlink" title="OLAP操作"></a>OLAP操作</h3><p>进行实际分析的时候需要执行OLAP操作，典型的有下面四种。</p>
+<h4 id="上卷（roll-up）"><a href="#上卷（roll-up）" class="headerlink" title="上卷（roll-up）"></a>上卷（roll-up）</h4><p>上卷操作沿着一个维度的概念分层向上攀升。如下图所示的第1个操作，对location维度从城市上卷到国家，则原来的立方体的location维度从原来有4个城市变成只有两个国家。</p>
+<h4 id="下钻（drill-down）"><a href="#下钻（drill-down）" class="headerlink" title="下钻（drill-down）"></a>下钻（drill-down）</h4><p>下钻是上卷的逆操作，它由不太详细的数据到更详细的数据。</p>
+<p>比如从第1个上卷的操作得到的数据立方体做从国家到城市的逆操作就回到了原来的数据立方体。第二个操作就是下钻操作，在time维度上从季度下钻到了月。</p>
+<h4 id="切片（slice）和切块（dice）"><a href="#切片（slice）和切块（dice）" class="headerlink" title="切片（slice）和切块（dice）"></a>切片（slice）和切块（dice）</h4><p>切片操作在给定的立方体上一个维度上面进行选择，形成一个新的子立方体。比如第3个操作，切边选择了time=Q1，因而得到的子立方体都是在Q1季度上的数据。</p>
+<p>切块操作则是在多个维度上进行选择。比如第4个操作就是在location维度选择多伦多与温哥华，而在time维度上选择Q1与Q2季度，而在item维度上选择家庭娱乐与计算机。</p>
+<h4 id="转轴（pivot）"><a href="#转轴（pivot）" class="headerlink" title="转轴（pivot）"></a>转轴（pivot）</h4><p>转轴又称作旋转(rotate)，是一种目视操作，移动了数据的视角。比如第5个操作，将原来的item维度在下，location维度在上。旋转后变成了item维度在上，而location维度在下。类似于矩阵的转置。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875851/blog/olap_operation.jpg" alt=""></p>
+<h4 id="操作实例"><a href="#操作实例" class="headerlink" title="操作实例"></a>操作实例</h4><p> Starting with the base cuboid [day, doctor, patient],what OLAP operations should be performed in order<br>to list the total fee collected by each doctor in 1999?</p>
+<p>首先要求所有的费用，因此对patient维度做上卷操作，上卷到all所有这个层次。然后时间限定在了1999年，因此对day维度做上卷操作，上卷到年这个层次。最后进行切边操作，选择1999年这个年份。</p>
+<h2 id="数据仓库实现"><a href="#数据仓库实现" class="headerlink" title="数据仓库实现"></a>数据仓库实现</h2><h3 id="数据立方体的有效计算"><a href="#数据立方体的有效计算" class="headerlink" title="数据立方体的有效计算"></a>数据立方体的有效计算</h3><p>前述的OLAP操作依赖于对数据立方体的计算操作，既是针对不同维度上面的聚合，SQL的术语是分组（group-by）。对于n个维度的数据立方体，不考虑每个维度的概念分层，则总共可以构成的分组（不同维度组合的集合）有$2^n$种。如下所示，一个（city，item，year）的三维数据立方体可以有8种分组方式。</p>
+<p>其实不考虑概念分层意味着每个维度可以有最高层all和最低层两个分层。因此如果考虑概念分层，假设有n个维度</p>
+<p>，每个维度都有m个分层，则这样来说可有$m^n$个方体。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875850/blog/cube_group_by.jpg" alt=""></p>
+<p>为了实现快速返回OLAP的操作，需要提前将这些分组的结果存储下来，这样当指定OLAP操作，直接去访问这些分组就可以了。这种提前计算方体结果的方法，称作<strong>物化（materialization）</strong>但是考虑到概念分层，存储所有的分组结果是不现实的。采用<strong>部分物化（partial materaialiaztion）</strong>预先计算一部分适当的常用的子集。</p>
+<h3 id="OLAP索引"><a href="#OLAP索引" class="headerlink" title="OLAP索引"></a>OLAP索引</h3><h4 id="位图索引（bitmap-indexing）"><a href="#位图索引（bitmap-indexing）" class="headerlink" title="位图索引（bitmap indexing）"></a>位图索引（bitmap indexing）</h4><p>在给定属性的位图索引中，属性域中的每个值v，有一个不同的位向量bit vector(即一列值)Bv。如果给定的属性域包含n 个值，则位图索引中每项需要n 位（即，n 位向量）。如果数据表中给定行的属性值为v，则在位图索引的对应行，表示该值的位为1，该行的其它位均为0。可以理解成one hot 编码。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875851/blog/index_map.jpg" alt=""></p>
+<p>Region有3种取值，所以3个位向量，也就是对应3列值；Type有2种取值，所以对应2列值。</p>
+<h5 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h5><p>优点：与散列和树索引相比，位图索引有优势。对于基数较小的域它特别有用，因为比较、连接、和聚集操作都变成了位算术运算，大大减少了运行时间。由于字符串可以用单个位表示，位图索引大大降低了空间和I/O 开销。对于基数较高的域，使用压缩技术，这种方法可以接受。但是不是很适合。</p>
+<p>缺点：因为值域中的每一个可能的值都需要一个位向量来记录，所以当基数较大时，会需要开辟很大的存储空间，因为每一个记录其实只使用到了一位，因此造成了很大的浪费。同时当可取的值连续时无法使用位图来记录。</p>
+<h4 id="连接索引"><a href="#连接索引" class="headerlink" title="连接索引"></a>连接索引</h4><p>如果两个关系R(RID,A)和S(B,SID)在属性A和B 上连接，则连接索引记录包含(RID,SID)对，其中RID 和SID 分别为来自R 和S 的记录标识符。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875850/blog/join_index.jpg" alt=""></p>
+<p>在左边的销售事实表中有同location和item两个维度的链接，那么就可以有右边3中连接索引。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《数据挖掘概念与技术》第3版 第四章数据仓库与联机分析处理</p>
+]]></content>
+      <categories>
+        <category>数据挖掘</category>
+      </categories>
+      <tags>
+        <tag>课程</tag>
+        <tag>国科大</tag>
+        <tag>数据仓库</tag>
+        <tag>OLAPS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Clementine教程</title>
     <url>/2019-11-07-Clementine%E6%95%99%E7%A8%8B.html</url>
     <content><![CDATA[<h1 id="Clementine教程"><a href="#Clementine教程" class="headerlink" title="Clementine教程"></a>Clementine教程</h1><p>数据挖掘课程要求使用这个软件Clementine来进行实验，之前完全没听说过这个软件。网上搜到的资料也比较少，特别是CSDN上面有个博客名字叫做Clementine完整教程，然后内容也是Clementine教程这几个字，把我给惊呆了，这也能写博客？现在实验都已经做完了因此记录下使用方法，希望对其他人能有帮助。</p>
@@ -546,9 +983,8 @@ T(n)=\left\{
     <url>/2019-04-17-%E9%9D%92%E8%9B%99%E8%B7%B3%E5%8F%B0%E9%98%B6%E9%97%AE%E9%A2%98.html</url>
     <content><![CDATA[<h1 id="青蛙跳台阶问题"><a href="#青蛙跳台阶问题" class="headerlink" title="青蛙跳台阶问题"></a>青蛙跳台阶问题</h1><p>一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法（先后次序不同算不同的结果）。 公式不能在hexo上显示出来</p>
 <a id="more"></a>
-<p>题目来源：</p>
-<p><a href="https://www.nowcoder.com/practice/8c82a5b80378478f9484d87d1c5f12a4?tpId=13&amp;tqId=11161&amp;tPage=1&amp;rp=1&amp;ru=/ta/coding-interviews&amp;qru=/ta/coding-interviews/question-ranking" target="_blank" rel="noopener">https://www.nowcoder.com/practice/8c82a5b80378478f9484d87d1c5f12a4?tpId=13&amp;tqId=11161&amp;tPage=1&amp;rp=1&amp;ru=/ta/coding-interviews&amp;qru=/ta/coding-interviews/question-ranking</a></p>
-<p>解题思路：函数思想，把n阶台阶的调法看成是关于n的函数 f(n)。当n&gt;2的时候：</p>
+<p><a href="https://www.nowcoder.com/practice/8c82a5b80378478f9484d87d1c5f12a4?tpId=13&amp;tqId=11161&amp;tPage=1&amp;rp=1&amp;ru=/ta/coding-interviews&amp;qru=/ta/coding-interviews/question-ranking" target="_blank" rel="noopener">题目来源</a></p>
+<p>解题思路：函数思想，把n阶台阶的跳法看成是关于n的函数 f(n)。当n&gt;2的时候：</p>
 <p>假设第一次跳一个台阶，那么还剩n-1个台阶需要跳，也就是还有f(n-1)的跳法。</p>
 <p>假设第一次跳两个台阶，那么还剩n-2个台阶需要跳，也就是还有f(n-2)的跳法</p>
 <p>所以n阶的跳法总共有f(n-1) + f(n-2)  种，也就是 f(n) = f(n-1) +f(n-2)。</p>
