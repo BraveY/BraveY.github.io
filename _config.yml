@@ -97,3 +97,10 @@ sitemap:
   path: sitemap.xml
 baidusitemap:
   path: baidusitemap.xml  
+
+leancloud_counter_security:
+  enable_sync: true
+  app_id: W6nLzKg0cpOi9OkACkaXg3YB-gzGzoHsz
+  app_key: 0M7O0e3b6oEuphDr3yhQLx3E
+  username: # Will be asked while deploying if is left blank
+  password: # Recommmended to be left blank. Will be asked while deploying if is left blank  
