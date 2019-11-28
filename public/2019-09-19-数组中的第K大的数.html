@@ -9,6 +9,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon16x16.png">
   <link rel="mask-icon" href="/images/favicon16x16.png" color="#222">
+  <meta name="google-site-verification" content="hDujO4MQUB7U9ir-4VXM5PW4fDFSq0-7G-LBX-Lh86M">
 
 <link rel="stylesheet" href="/css/main.css">
 
@@ -52,7 +53,7 @@
 </script>
 
   <meta name="description" content="数组中的第K大的数leetcode#215题，给定一个数组，要求找出其第K大的个数。">
-<meta name="keywords" content="快排,leetcode">
+<meta name="keywords" content="leetcode,快排">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数组中的第K大的数">
 <meta property="og:url" content="https://bravey.github.io/2019-09-19-数组中的第K大的数.html">
@@ -335,8 +336,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/快排/" rel="tag"># 快排</a>
               <a href="/tags/leetcode/" rel="tag"># leetcode</a>
+              <a href="/tags/快排/" rel="tag"># 快排</a>
           </div>
 
         
@@ -579,14 +580,9 @@
                 console.log('Failed to save visitor count', error);
               })
           } else {
-              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
-                .then(response => response.json())
-                .then(() => {
-                  leancloudSelector(url).innerText = 1;
-                })
-                .catch(error => {
-                  console.log('Failed to create', error);
-                });
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
           }
         })
         .catch(error => {

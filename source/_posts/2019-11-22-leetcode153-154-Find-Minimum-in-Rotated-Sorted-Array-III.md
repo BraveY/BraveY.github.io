@@ -1,5 +1,5 @@
 ---
-title: leetcode#153/#154. Find Minimum in Rotated Sorted Array I/II
+title: leetcode153 154 Find Minimum in Rotated Sorted Array I/II
 date: 2019-11-22 21:07:54
 categories: 题解
 tags:
@@ -11,19 +11,19 @@ tags:
 copyright: true
 ---
 
-# leetcode#153/#154. Find Minimum in Rotated Sorted Array I/II
+# leetcode153 154. Find Minimum in Rotated Sorted Array I/II
 
-题目来源[leetcode#153](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/description/) 和[leetcode#154](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array-ii/) 要求在排序的旋转数组中寻找最小值。最小值可以很简单的遍历一次数组得到，时间复杂度为$O(n)$但是没有用到题目给的性质，所以会超时。
+题目来源[leetcode153](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/description/) 和[leetcode154](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array-ii/) 要求在排序的旋转数组中寻找最小值。最小值可以很简单的遍历一次数组得到，时间复杂度为$O(n)$但是没有用到题目给的性质，所以会超时。
 
 <!--more-->
 
 ## 解题思路
 
-### leetcode#153 无重复元素
+### leetcode153 无重复元素
 
-先分析leetcode#153中没有重复值的情况，采用二分查找的思路，设输入的数组长度为n表示为$A[n]$,经过观察可以发现pivot将A划分成了两个递增子数组L，R。使用指针p指向A的第一个元素A[0],指针q指向A的最后一个元素$A[n-1]$,使用指针m指向A的中间元素$A[\frac{n}{2}]$。如果中间元素位于第一个递增数组L，则有关系：$A[p]<A[m],A[m]>A[q]$,此时最小元素在m与q之间，将p移动到m，原来规模为n的问题变成规模为$q-m=\frac{n}{2}$的子问题。如果中间元素位于第二个递增数组R，则有关系：$A[p]>A[m],A[m]<A[q]$,此时最小元素在p与m之间，将q移动到m，原来规模为n的问题变成规模为$m-p=\frac{n}{2}$的子问题。直到最后q=p+1时，问题规模下降到2的情况，得到答案最小的元素为q指针指向的元素。可以看到每一次迭代，都会将n规模的问题下降到$\frac{n}{2}$规模。
+先分析leetcode153中没有重复值的情况，采用二分查找的思路，设输入的数组长度为n表示为$A[n]$,经过观察可以发现pivot将A划分成了两个递增子数组L，R。使用指针p指向A的第一个元素A[0],指针q指向A的最后一个元素$A[n-1]$,使用指针m指向A的中间元素$A[\frac{n}{2}]$。如果中间元素位于第一个递增数组L，则有关系：$A[p]<A[m],A[m]>A[q]$,此时最小元素在m与q之间，将p移动到m，原来规模为n的问题变成规模为$q-m=\frac{n}{2}$的子问题。如果中间元素位于第二个递增数组R，则有关系：$A[p]>A[m],A[m]<A[q]$,此时最小元素在p与m之间，将q移动到m，原来规模为n的问题变成规模为$m-p=\frac{n}{2}$的子问题。直到最后q=p+1时，问题规模下降到2的情况，得到答案最小的元素为q指针指向的元素。可以看到每一次迭代，都会将n规模的问题下降到$\frac{n}{2}$规模。
 
-### leetcode#154 有重复元素
+### leetcode154 有重复元素
 
 在有重复值的情况下，会出现$A[m]==A[p]$的情况，这个时候是无法判断到底左右两边谁为递增序列。如
 $$
@@ -33,7 +33,7 @@ $$
 
 ## 复杂度
 
-### leetcode#153 无重复元素
+### leetcode153 无重复元素
 
 可以画出递归图:
 
@@ -58,7 +58,7 @@ $$
 
 设在第k次迭代的时候长度下降到2，  此时有$\frac{n}{2^k}=2$解出$k=\log_2n-1$，所以有$T[n]=(\log_2n-1)C=O(\log_2n)$，所以算法的时间复杂度为$O(logn)$
 
-### leetcode#154 有重复元素
+### leetcode154 有重复元素
 
 最坏的情况，当出现$A[m]==A[p]$的情况的时候有递推表达式：
 $$
@@ -76,7 +76,7 @@ $$
 
 使用迭代和循环两种方式实现。 循环的时候比较的选择？mid是该和左边还是右边比呢？我自己写的是和左边的比，但是我看leetcode的题解都是和右边的比。
 
-### leetcode#153 无重复元素
+### leetcode153 无重复元素
 
 ```c++
 /*leetcode#153
@@ -136,7 +136,7 @@ int main(int argc, char const *argv[])
 }
 ```
 
-### leetcode#154 有重复元素
+### leetcode154 有重复元素
 
 ```c++
 /*
