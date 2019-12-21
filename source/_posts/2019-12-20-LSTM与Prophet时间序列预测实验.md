@@ -18,7 +18,7 @@ copyright: true
 
 使用的数据为了与Prophet进行对比，因此使用了Prophet官网例子上用到的数据集。该时间序列数据集来自维基百科上面对美国橄榄球运动员佩顿·曼宁（Peyton Williams Manning）的日访问量的记录日志，时间跨度为2007年12月10号到2016年1月20号共2905条数据。 
 
-Jupyter代码与数据集地址在[我的github](<https://github.com/BraveY/AI-with-code/tree/master/time-series> )上，欢迎start。
+Jupyter代码与数据集地址在[我的github](<https://github.com/BraveY/AI-with-code/tree/master/time-series> )上，欢迎star。
 
 ## LSTM
 
@@ -191,7 +191,7 @@ print(MSE_loss)
 
 计算出来的MSE为`0.195649022176008`, 画出来的曲线图为：
 
-![](C:\Users\BraveY\Documents\BraveY\blog\images\深度学习\LSTM_time_series.png)
+![](https://res.cloudinary.com/bravey/image/upload/v1576911405/blog/deep-learning/LSTM_time_series.png)
 
 ### GPU加速
 
@@ -244,7 +244,7 @@ print(MSE_loss)
 
 计算出来的MSE为：`0.25229994660830146`,画出来的图像为：
 
-![](C:\Users\BraveY\Documents\BraveY\blog\images\深度学习\Prophet_time_series.png)
+![](https://res.cloudinary.com/bravey/image/upload/v1576911405/blog/deep-learning/Prophet_time_series.png)
 
 ## 总结
 
@@ -255,7 +255,7 @@ print(MSE_loss)
 
 可以看到使用LSTM的预测结果要比Prophet的结果好，但是也有可能是我还没有去调整Prophet的参数导致Prophet的性能差一些的。同时Prophet可以预测整整一年的时间，这个比起使用LSTM要厉害很多，实验中的LSTM使用的是单步预测的方法，也就是只能根据前段时刻的数据来预测下一个时刻的数据，如果要做到像Prophet那样预测未来一段时刻的数据，需要使用多步预测的方法，我查了下涉及到seq2seq，貌似比较复杂，还没有做实验。
 
-自己是小白，实验可能存在相关问题，欢迎反馈。
+自己是小白，实验可能存在相关问题与不足之处，欢迎反馈。
 
 ## 参考
 
