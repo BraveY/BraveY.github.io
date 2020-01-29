@@ -10,7 +10,7 @@ copyright: true
 
 # leetcode 543 Diameter of Binary Tree 
 
-[题目来源](<https://leetcode.com/problems/diameter-of-binary-tree/> )。需要求解一颗二叉树的最大路径的长度，第一做出来了，第二次没有做对，所以记录下。
+[题目来源](<https://leetcode.com/problems/diameter-of-binary-tree/> )。需要求解一颗二叉树的最大路径的长度，第一次做出来了，第二次没有做对，所以记录下。
 
 <!--more-->
 
@@ -75,6 +75,7 @@ public:
 private:
     int LP(TreeNode* root){
         if(!root) return -1;
+        //求左节点的最大深度与右节点的最大深度，根节点到子节点还有长度1，所以都需要加上1
         int l = LP(root->left)+1;
         int r = LP(root->right)+1;
         ans = max(ans, l+r);
