@@ -11,7 +11,7 @@ copyright: true
 
 # leetcode 53 Maximum Subarray
 
-[题目来源](<https://leetcode.com/problems/maximum-subarray/> ),题意要求给出一个数组中拥有最大和的连续子数组。
+[题目来源](<https://leetcode.com/problems/maximum-subarray/> )。题意要求给出一个数组中拥有最大和的连续子数组。
 
 <!--more-->
 
