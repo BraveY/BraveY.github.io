@@ -1,6 +1,528 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>leetcode 53 Maximum Subarray</title>
+    <url>/2020-01-29-leetcode-53-Maximum-Subarray.html</url>
+    <content><![CDATA[<h1 id="leetcode-53-Maximum-Subarray"><a href="#leetcode-53-Maximum-Subarray" class="headerlink" title="leetcode 53 Maximum Subarray"></a>leetcode 53 Maximum Subarray</h1><p><a href="https://leetcode.com/problems/maximum-subarray/" target="_blank" rel="noopener">题目来源</a>。题意要求给出一个数组中拥有最大和的连续子数组。</p>
+<a id="more"></a>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><h3 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h3><p>最简单的思路，连续的数组，只要枚举出所有的头和尾的索引对，然后计算这些所有枚举对中的和，然后输出这些和之中的最大和就可以了。</p>
+<h3 id="复杂度"><a href="#复杂度" class="headerlink" title="复杂度"></a>复杂度</h3><p>因为总共有$1+2+3…+n=\frac{n(n+1)}{2}$ 对，然后每个对需要花费O(n)的时间去求和，因此总共的时间复杂度为$O(n^3)$.</p>
+<h3 id="分治"><a href="#分治" class="headerlink" title="分治"></a>分治</h3><p>观察的输入的数据是数组，数组是典型的可分的数据结构，因此可以考虑使用分治法。首先定义子问题为：长度为n的数组$A[0…n-1]$的连续子数组的最大和。从中间元素$A[\frac{n}{2}]$划分成左右两个数组，变成左边$L[0…\frac{n}{2}]$与右边$R[\frac{n}{2}+1…n-1]$两个子问题。划分成两个自问题后，考虑最大和的连续数组要么在左边数组，要么在右边数组，还有一种情况是连续数组横跨中间的元素，即占了左边的一部分，又占了右边的一部分。这种交叉的情况，就是左边数组必须以中间元素$A[\frac{n}{2}]$为结尾的最大连续数组和，与右边必须以$A[\frac{n}{2}+1]$为开始的最大连续数组和。这种交叉的情况只能通过左右两边分别遍历来得到结果。这种情况的分析与493<a href="https://bravey.github.io/2019-10-07-%E9%80%86%E5%BA%8F%E5%AF%B9%E7%9A%84%E8%AE%A1%E6%95%B0.html">逆序对的计数</a>的分支情况很相似。</p>
+<p><strong>Divide</strong> 将输入数组A划分为左边A[0, n/2] 与右边A[n/2+1, n-1]两个数组 </p>
+<p><strong>Conquer</strong> 对左边与右边的子数组递归调用求解</p>
+<p><strong>Merge </strong>遍历求交叉的情况，然后与左边和右边的最大连续和三者比较求得最大值并返回</p>
+<p>一个形象的<a href="https://github.com/azl397985856/leetcode/blob/master/problems/53.maximum-sum-subarray-cn.md" target="_blank" rel="noopener">参考</a>图示：</p>
+<p><img src="https://github.com/azl397985856/leetcode/raw/master/assets/problems/53.maximum-sum-subarray-divideconquer.png" alt=""></p>
+<h3 id="复杂度-1"><a href="#复杂度-1" class="headerlink" title="复杂度"></a>复杂度</h3><p>与暴力求解需要遍历$n^2$个索引对相比，分治法只需要遍历递归树的深度$log(n)$次。</p>
+<p>将规模为n的问题分解成两个两个n2n2 的子问题问题，同时对两个子问题进行合并的复杂度为O(n)，所以有递推公式： </p>
+<script type="math/tex; mode=display">
+T(n)=\left\{
+  \begin{array}{**lr**}  
+             1 &  n=1\\\\  
+             2T(\frac{n}{2})+O(n)
+             \end{array}  
+\right.</script><p>根据主定理有最后的复杂度为O(nlog(n))  </p>
+<h3 id="动态规划"><a href="#动态规划" class="headerlink" title="动态规划"></a>动态规划</h3><p>观察题意，求解的是最大这种求最优的问题，然后问题又可分，因此可以考虑动态规划的方法。动态规划最重要的就是最优子结构的定义。我当时做的思路就是把最优子结构定义为分治的子问题：长度为n的数组的最大和用OPT[n-1]表示。然后考虑最后一个末尾元素是否在连续数组中来考虑，考虑状态OPT[n-1]是怎么从OPT[n-2]来转移的。从这个思路就会陷入一种困难的情况，因为去除最后一个元素A[n-1]后，OPT[n-1]与OPT[n-2]状态转移不是max(OPT[n-1],OPT[n-2]+A[n-1])。因为要求连续，所以可能要加上前面其他的元素。比如以[1,-3, 4]来举例，4如果在连续数组中，并不是OPT[1,-3]+4，而是OPT[1,-3]+(-3)+4。</p>
+<p>从前面这种思路可以得到一个启发，如果要使用OPT[n-2]+A[n-1]来表示状态的转移，需要限定OPT[n-1]为第n-1个元素必须参与到连续数组中。所以定义最优子结构OPT[n]为：<strong>第n个元素一定参与的连续数组最大和。</strong>这个时候就可以使用max(OPT[n-1],OPT[n-2]+A[n-1])来进行状态转移，这个max(OPT[n-1],OPT[n-2]+A[n-1])的状态转移方程也可以用一个if语句来判断，如果OPT[n-2]为负数就不用加上A[n-1],因为加上一个负数只会使得连续和变小。</p>
+<p>根据这个子结构的定义，对于样例[-2 1 -3 4 -1 2 1 -5 4]，其对应的状态数组OPT为：[-2 1 -2 4 3 5 6 1 5]。即对于第2个元素-3，以其结尾的连续数组中，最大和为-2。这个子结构并不是对应问题的原始解，原始解是对应的OPT数组截止目前的最大值。即：maxSum[n-1]=max(OPT[n-1],maxSum[n-1])。</p>
+<p><a href="https://github.com/azl397985856/leetcode/blob/master/problems/53.maximum-sum-subarray-cn.md" target="_blank" rel="noopener">参考</a>图示:</p>
+<p><img src="https://github.com/azl397985856/leetcode/raw/master/assets/problems/53.maximum-sum-subarray-dp.png" alt=""></p>
+<h3 id="复杂度-2"><a href="#复杂度-2" class="headerlink" title="复杂度"></a>复杂度</h3><p>因为只需要遍历一遍就可以把OPT数组给填充好，所有时间复杂度为O(n)，因为每次状态转移只依赖于前面一个状态，所以可以只使用O(1)的空间。</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>源码文件在<a href="https://github.com/BraveY/Coding/blob/master/leetcode/53maximum-subarray.cpp" target="_blank" rel="noopener">github</a>上。</p>
+<h3 id="分治-1"><a href="#分治-1" class="headerlink" title="分治"></a>分治</h3><p>使用坐标索引来传递。</p>
+<figure class="highlight cc"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">DC解法</span></span><br><span class="line"><span class="comment">Runtime: 948 ms, faster than 5.13% of C++ online submissions for Maximum</span></span><br><span class="line"><span class="comment">Subarray. Memory Usage: 9.6 MB, less than 5.88% of C++ online submissions for</span></span><br><span class="line"><span class="comment">Maximum Subarray. Maximum Subarray. 时间复杂度O(nlogn),空间复杂度O(1)/O(logn)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution3</span> &#123;</span></span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">maxSubArray</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = nums.size();</span><br><span class="line">    <span class="keyword">if</span> (<span class="number">0</span> == n) <span class="keyword">return</span> INT_MIN;</span><br><span class="line">    <span class="keyword">if</span> (<span class="number">1</span> == n) <span class="keyword">return</span> nums[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">return</span> helper(nums, <span class="number">0</span>, n - <span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">helper</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (lo &gt;= hi) <span class="keyword">return</span> nums[lo];</span><br><span class="line">    <span class="keyword">int</span> mid = lo + (hi - lo) / <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">int</span> left = helper(nums, lo, mid);</span><br><span class="line">    <span class="keyword">int</span> left_max = nums[mid];</span><br><span class="line">    <span class="keyword">int</span> left_sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = mid; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">      left_sum += nums[i];</span><br><span class="line">      left_max = max(left_sum, left_max);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> right = helper(nums, mid + <span class="number">1</span>, hi);</span><br><span class="line">    <span class="keyword">int</span> right_max = nums[mid + <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">int</span> right_sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = mid + <span class="number">1</span>; i &lt;= hi; i++) &#123;</span><br><span class="line">      right_sum += nums[i];</span><br><span class="line">      right_max = max(right_sum, right_max);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> cross = right_max + left_max;</span><br><span class="line">    <span class="keyword">int</span> max_all = max(max(left, right), cross);</span><br><span class="line">    <span class="keyword">return</span> max_all;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="动态规划-1"><a href="#动态规划-1" class="headerlink" title="动态规划"></a>动态规划</h3><p>第一种使用一维数组</p>
+<figure class="highlight cc"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">DP解法</span></span><br><span class="line"><span class="comment">Runtime: 8 ms, faster than 72.96% of C++ online submissions for Maximum</span></span><br><span class="line"><span class="comment">Subarray. Memory Usage: 9.4 MB, less than 18.63% of C++ online submissions for</span></span><br><span class="line"><span class="comment">Maximum Subarray.</span></span><br><span class="line"><span class="comment">时间复杂度O(n),空间复杂度O(n)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution1</span> &#123;</span></span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">maxSubArray</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = nums.size();</span><br><span class="line">    <span class="keyword">int</span> ans = nums[<span class="number">0</span>];</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; opt(n, INT_MIN);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">      opt[i] = opt[i - <span class="number">1</span>] &gt; <span class="number">0</span> ? nums[i] + opt[i - <span class="number">1</span>] : nums[i];</span><br><span class="line">      ans = max(opt[i], ans);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>第二种不使用一维数组</p>
+<figure class="highlight cc"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">DP解法</span></span><br><span class="line"><span class="comment">Runtime: 4 ms, faster than 98.48% of C++ online submissions for Maximum</span></span><br><span class="line"><span class="comment">Subarray. Memory Usage: 9.3 MB, less than 74.51% of C++ online submissions for</span></span><br><span class="line"><span class="comment">Maximum Subarray. 时间复杂度O(n),空间复杂度O(1)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution2</span> &#123;</span></span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">maxSubArray</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = nums.size();</span><br><span class="line">    <span class="keyword">int</span> ans = nums[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">int</span> opt = nums[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">      opt = opt &gt; <span class="number">0</span> ? nums[i] + opt : nums[i];</span><br><span class="line">      ans = max(opt, ans);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>azl397985856的题解以及文中图示的参考<a href="https://github.com/azl397985856/leetcode/blob/master/problems/53.maximum-sum-subarray-cn.md" target="_blank" rel="noopener">链接</a></p>
+<p><a href="https://www.youtube.com/watch?v=7J5rs56JBs8&amp;feature=youtu.be" target="_blank" rel="noopener">花花leetcode</a> 53题题解 </p>
+]]></content>
+      <categories>
+        <category>题解</category>
+      </categories>
+      <tags>
+        <tag>leetcode</tag>
+        <tag>分治</tag>
+        <tag>动态规划</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>leetcode 543 Diameter of Binary Tree</title>
+    <url>/2020-01-06-leetcode-543-Diameter-of-Binary-Tree.html</url>
+    <content><![CDATA[<h1 id="leetcode-543-Diameter-of-Binary-Tree"><a href="#leetcode-543-Diameter-of-Binary-Tree" class="headerlink" title="leetcode 543 Diameter of Binary Tree"></a>leetcode 543 Diameter of Binary Tree</h1><p><a href="https://leetcode.com/problems/diameter-of-binary-tree/" target="_blank" rel="noopener">题目来源</a>。需要求解一颗二叉树的最大路径的长度，第一次做出来了，第二次没有做对，所以记录下。</p>
+<a id="more"></a>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>首先观察到问题的输入是一颗二叉树，其左右子节点仍然是一个二叉树，属于可以分解成子问题的数据结构，不是求解最优解，所以很自然的想到分治的方法。</p>
+<p>对于每一个节点而言，经过该节点的最长路径分为两种情况：</p>
+<ol>
+<li>不经过其父节点，是左节点的最长深度+右节点的最长深度</li>
+<li>经过其父节点，且经过其左右子节点中拥有最大深度的一个子节点</li>
+</ol>
+<p>第二种情况对于该节点的父节点而言，是第一种情况，因此对于输入的二叉树而言，更新最大深度只存在第一种情况就是某一节点的左节点最大深度与右节点的最大深度相加，因此每个节点需要返回其左右子节点中拥有最大深度的一个子节点。这样从得到叶子节点这个最小的子问题的解开始，就可以不断向上叠加，得到每一个节点的解，最终得到原始问题的解了。</p>
+<p>所以这里的子问题应该是<strong>左右子节点的最长深度</strong>，而不是左右子节点的最长路径，因为每个节点只能经过一次，也就是对于父节点而言，<strong>只能选择左边或者右边的一条路径</strong>，不能左右两边都同时选择。我第二次做错就是因为理解成子问题是每个子节点对应的最大路径长度了。</p>
+<p>用分治的三个过程来表示为：</p>
+<ul>
+<li><strong>划分</strong>：将输入的二叉树划分为左子树L，与右子树R，两个子树仍然是二叉树。</li>
+<li><strong>治理</strong>：将L和R分别递归调用函数求得两个子树的最大深度。</li>
+<li><strong>合并</strong>：将左子树与右子树的最大深度相加来更新当前的最大路径值，之后返回该子树两个子节点中最大深度最大的深度值。</li>
+</ul>
+<p>因为子问题<strong>没有直接返回最大路径长度</strong>，所以需要选择一个全局变量来存储递归返回时的最大路径长度。同时需要注意让<strong>NULL节点返回-1</strong>而不是0，计算长度的时候通过+1来表示路径长度。</p>
+<h2 id="复杂度"><a href="#复杂度" class="headerlink" title="复杂度"></a>复杂度</h2><p>用T(n)表示对于一个拥有n个节点的二叉树寻找最大路径长度所需要的时间，T(n)最复杂的情况是二叉树是一棵完全二叉树。对最复杂的情况进行分析有$T(n)=2T(\lfloor\frac{n}{2}\rfloor)+C$</p>
+<script type="math/tex; mode=display">
+\begin{equation}\nonumber
+\begin{split}
+T(n)&=2T[{\lfloor\frac{n}{2}\rfloor]+C}\\
+&=2^2T[{\lfloor\frac{n}{2^2}\rfloor]+C+2C}\\
+&=2^3T[{\lfloor\frac{n}{2^3}\rfloor]+C+2C+2C}\\
+\dots\\
+&=2^kT[{\lfloor\frac{n}{2^k}\rfloor]+(2k-1)C}\\
+\end{split} 
+\end{equation}</script><p>每次分解后规模变为左右两个子树，因此下降到$\lfloor\frac{n}{2}\rfloor$,而每次比较左右两个子树最大深度与更新最大路径长度所需的时间为常数C。设当第k次的时候下降到规模为1的叶子节点，因此有$\frac{n}{2^k}=1$推出$k=\log_2n$所以有$T(n)=n+(2\log_2n-1)C=O(n)$,所以时间复杂度为O(n)。</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>代码如下，<a href="https://github.com/BraveY/Coding/blob/master/leetcode/diameter-of-binary-tree.cc" target="_blank" rel="noopener">源码链接</a>。</p>
+<figure class="highlight cc"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * struct TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode *left;</span></span><br><span class="line"><span class="comment"> *     TreeNode *right;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) : val(x), left(NULL), right(NULL) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">diameterOfBinaryTree</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        LP(root);</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">LP</span><span class="params">(TreeNode* root)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!root) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        <span class="comment">//求左节点的最大深度与右节点的最大深度，根节点到子节点还有长度1，所以都需要加上1</span></span><br><span class="line">        <span class="keyword">int</span> l = LP(root-&gt;left)+<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> r = LP(root-&gt;right)+<span class="number">1</span>;</span><br><span class="line">        ans = max(ans, l+r);</span><br><span class="line">        <span class="keyword">return</span> max(l,r);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+      </categories>
+      <tags>
+        <tag>leetcode</tag>
+        <tag>分治</tag>
+        <tag>二叉树</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>特征选择和特征提取</title>
+    <url>/2019-12-28-%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9%E5%92%8C%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96.html</url>
+    <content><![CDATA[<h1 id="特征选择和特征提取"><a href="#特征选择和特征提取" class="headerlink" title="特征选择和特征提取"></a>特征选择和特征提取</h1><h2 id="意义"><a href="#意义" class="headerlink" title="意义"></a>意义</h2><ol>
+<li>降低维度，后续的分类器设计更容易计算，可以加快速度</li>
+<li>消除特征之间可能存在的相关性，减少与分类无关的信息（理解成降噪？），从而更好的分类。</li>
+</ol>
+<a id="more"></a>
+<h2 id="类别可分性质的度量"><a href="#类别可分性质的度量" class="headerlink" title="类别可分性质的度量"></a>类别可分性质的度量</h2><h3 id="距离"><a href="#距离" class="headerlink" title="距离"></a>距离</h3><ol>
+<li><p>点到点之间的距离</p>
+<p>欧式距离：</p>
+<script type="math/tex; mode=display">
+D(a, b) = || a – b ||</script><p>平方形式（向量转置相乘，点积的形式）：</p>
+<script type="math/tex; mode=display">
+D^{2}(a,b) = (a - b)^{T}(a - b) = \sum_{k = 1}^{n}{(a_{k} - b_{k})^{2}}</script><p>其中a和b为n维向量，其第k个特征分别是$a_k$和$b_k$。 <strong>各自对应的特征维度差的平方之和。</strong></p>
+</li>
+<li><p>点到点集之间的距离</p>
+<p>在n维空间中，点x到点$a^{(i)}$之间的距离平方为：</p>
+<script type="math/tex; mode=display">
+D^{2}(x,a^{(i)}) = \sum_{k = 1}^{n}{(x_{k} - a_{k}^{(i)})^{2}}</script><p>因此x到有K个点组合的均方距离，就是到每个点均方距离相加之后取均值。</p>
+<script type="math/tex; mode=display">
+\overline{D^{2}(x,\{ a^{(i)}\})} = \frac{1}{K}\sum_{i = 1}^{K}{D^{2}(x,a^{(i)}) =}\frac{1}{K}\sum_{i = 1}^{K}\left\{ \sum_{k = 1}^{n}{(x_{k} - a_{k}^{(i)})^{2}} \right\}</script></li>
+</ol>
+<h4 id="类内距离"><a href="#类内距离" class="headerlink" title="类内距离"></a>类内距离</h4><p>   <strong>类中每个点到其他点的均方距离累加之后求均值</strong></p>
+<p>   n维空间中同一类内各模式样本点集$\{a^{(i)}\}_{i=1,2,\ldots{},K}$，其内部各点的均方距离为$\overline{D^{2}(\{ a^{(j)}\},\{ a^{(i)}\})}$，其中$i,j = 1,2,\ldots,K,i \neq j$，即：</p>
+<script type="math/tex; mode=display">
+   \overline{D^{2}(\{ a^{(j)}\},\{ a^{(i)}\})} = \frac{1}{K}\sum_{j = 1}^{K}\left\lbrack \frac{1}{K - 1}\sum_{\begin{matrix}
+    i = 1 \\
+    i \neq j \\
+   \end{matrix}}^{K}{\sum_{k = 1}^{n}{(a_{k}^{(j)} - a_{k}^{(i)})^{2}}} \right\rbrack</script><p>   每个点到其他点的平方距离求和，<strong>三层循环</strong>（点j，点i，维度k）</p>
+<p>   可证明：</p>
+<script type="math/tex; mode=display">
+   \overline{D^{2}} = 2\sum_{k = 1}^{n}\sigma_{k}^{2}</script><p>   其中$\sigma_{k}^{2}$为样本集合$a^{(i)}$在第k个分量上的无偏方差，即：</p>
+<script type="math/tex; mode=display">
+   \sigma_{k}^{2} = \frac{1}{K - 1}\sum_{i = 1}^{K}{(a_{k}^{(i)} - \overline{a_{k}})^{2}}</script><p>   其中$\overline{a_{k}} = \frac{1}{K}\sum_{i = 1}^{K}a_{k}^{(i)}$为$a^{(i)}$在第k个分量方向上的均值。</p>
+<p>   <strong>无偏估计除以的是K-1，把数据集合用一个完整的$K \times N$矩阵来理解，就可以很方便的对应这些距离公式，均值，方差的计算了。公式可以不用管。</strong></p>
+<h4 id="类间距离"><a href="#类间距离" class="headerlink" title="类间距离"></a>类间距离</h4><p>   <strong>两类样本均值质心的均方距离</strong></p>
+<p>   常用两类样本各自质心间的距离作为类间距离，并假设两类样本出现的概率相等，则：</p>
+<script type="math/tex; mode=display">
+   D^{2} = \sum_{k = 1}^{n}{(m_{1_{k}} -}m_{2_{k}})^{2}</script><p>   其中 $m_1$ 和 $m_2$ 为两类模式样本集各自的均值向量， $m_{1k}$ 和$m_{1k}$为 两个均值向量的第k个特征分量，n为维数。</p>
+<h3 id="散布矩阵"><a href="#散布矩阵" class="headerlink" title="散布矩阵"></a>散布矩阵</h3><p>不管类内还是类间都涉及到与均值向量之差的向量乘以其转置。</p>
+<h4 id="类内散布矩阵"><a href="#类内散布矩阵" class="headerlink" title="类内散布矩阵"></a>类内散布矩阵</h4><p><strong>每个样本向量减去均值向量后乘以结果的转置(矩阵)，<em>然后将得到的矩阵再相加</em></strong></p>
+<p>考虑一类内模式点集$\{ a^{(i)}\}_{i = 1,2,\ldots,K}$，其类内散布矩阵为：</p>
+<script type="math/tex; mode=display">
+S_w = \sum_{i = 1}^{K}\{(a^{(i)} - m)(a^{(i)} - m)^{T}\}</script><p>其中m是样本集合的<strong>均值向量</strong></p>
+<script type="math/tex; mode=display">
+m = \frac{1}{K}\sum_{i = 1}^{K}a{(i)}</script><p>对属于同一类的模式样本，<strong>类内散布矩阵表示各样本点围绕其均值周围的散布情况</strong>。</p>
+<h4 id="类间散布矩阵"><a href="#类间散布矩阵" class="headerlink" title="类间散布矩阵"></a>类间散布矩阵</h4><p><strong>两个质心之差形成的向量与其转置相乘而形成的矩阵</strong>，类比与类内散布矩阵，<strong>类内</strong>是每个样本向量减去该类的均值向量，是<strong>所有样本向量</strong>都要参与。</p>
+<script type="math/tex; mode=display">
+S_{b2} = (m_{1} - m_{2})(m_{1} - m_{2})^{T}</script><p>对三个以上的类别，类间散布矩阵常写成：</p>
+<script type="math/tex; mode=display">
+S_{b} = \sum_{i = 1}^{c}{P(\omega_{i})}(m_{i} - m_{0})(m_{i} - m_{0})^{T}</script><p>其中，$m_{0}$为多类模式（如共有c类）分布的总体均值向量，即：</p>
+<script type="math/tex; mode=display">
+m_{0} = E\{ x\} = \sum_{i = 1}^{c}{P(\omega_{i})m_{i}},\quad\forall\omega_{i},\mspace{6mu} i = 1,2,\ldots,c</script><p><strong>用质心来代表每一类，多类模式引入概率来取得总体所有样本均值。</strong>计算的形式与类内的很相似了，$m_0$对应着类内中一个类的均值向量，每个质心对应这类内中的一个样本向量。</p>
+<h3 id="多类模式集散布矩阵"><a href="#多类模式集散布矩阵" class="headerlink" title="多类模式集散布矩阵"></a>多类模式集散布矩阵</h3><p>多类情况的<strong>类内散布矩阵</strong>，可写成<strong>各类的类内散布矩阵的先验概率的加权和</strong>，即：</p>
+<script type="math/tex; mode=display">
+S_{w} = \sum_{i = 1}^{c}{P(\omega_{i})E\{}(x - m_{i})(x - m_{i})^{T}|\omega_{i}\} = \sum_{i = 1}^{c}{P(\omega_{i})C_{i}}</script><p>其中$C_{i}$是第i类的协方差矩阵。E是求期望，也就是每个样本的矩阵计算完了之后相加还要除以样本数目N或者N-1（N-1是无偏估计）。</p>
+<p><strong>协方差(两个变量各自与各自均值的差相乘)：</strong></p>
+<script type="math/tex; mode=display">
+Cov(X,Y)=E[(X-m_X)(Y-m_Y)]=E[XY]-E[X]\times E[Y]</script><p>协方差矩阵是不同维度之间的相关性的表达，一个d维的样本也能建立协方差矩阵尺度为$d\times d$, 所以一个类的协方差矩阵是每个样本的协方差矩阵相加后取<strong>均值</strong>得到的。</p>
+<p>有时，用多类模式<strong>总体分布的散布矩阵</strong>来反映其<strong>可分性</strong>，即：</p>
+<script type="math/tex; mode=display">
+S_{t} = E\{(x - m_{0})(x - m_{0})^{T}\},\quad x \in \forall\omega_{i},\mspace{6mu} i = 1,2,\ldots,c</script><p>其中，$m_{0}$为多类模式分布的总体均值向量。</p>
+<p>可以证明：$S_{t} = S_{w} +S_{b}$，即<strong>总体散布矩阵是各类类内散布矩阵与类间散布矩阵之和。</strong></p>
+<h2 id="特征选择"><a href="#特征选择" class="headerlink" title="特征选择"></a>特征选择</h2><p>在尽量不降低分类精度的前提下，选择更少的特诊来进行分类。</p>
+<h3 id="独立特征的选择准则"><a href="#独立特征的选择准则" class="headerlink" title="独立特征的选择准则"></a>独立特征的选择准则</h3><p><strong>不同类</strong>的均值向量（<strong>质心点</strong>）之间的<strong>距离最大</strong>，而<strong>同一类</strong>的样本向量的方差之和最小（与其<strong>质心</strong>的<strong>距离较近</strong>）。用一个比值来作为度量标准。</p>
+<p>假设个特征之间统计独立，那么对<strong>每个特征分量都去计算那个标准</strong>，就能够知道每个特征对样本可分性的贡献了。</p>
+<p>对于$ω_{i}$和$ω_{j}$两类训练样本，假设其均值向量为$m_{i}$和$m_{j}$，其k维方向的分量为$m_{ik}$和$m_{jk}$，方差为$\sigma_{\text{ik}}^{2}$和$\sigma_{\text{jk}}^{2}$，定义可分性准则函数(也就是那个标准)：</p>
+<script type="math/tex; mode=display">
+G_{k} = \frac{(m_{\text{ik}} - m_{\text{jk}})^{2}}{\sigma_{\text{ik}}^{2} + \sigma_{\text{jk}}^{2}},\;\;k = 1,2,\ldots,n</script><p>则$G_{K}$为正值。$G_{K}$值越大，表示测度值的第k个分量对分离$ω_{i}$和$ω_{j}$两类越有效。将$\{G_{K},k=1,2,\ldots{},n\}$按大小排队，选出最大的m个对应的测度值作为分类特征，即达到特征选择的目的。</p>
+<h3 id="一般特征的散布矩阵准则"><a href="#一般特征的散布矩阵准则" class="headerlink" title="一般特征的散布矩阵准则"></a>一般特征的散布矩阵准则</h3><p>回顾类内与类间散布矩阵：</p>
+<p>多类类内散布矩阵：</p>
+<script type="math/tex; mode=display">
+S_{w} = \sum_{i = 1}^{c}{P(\omega_{i})E\{}(x - m_{i})(x - m_{i})^{T}|\omega_{i}\}</script><p> 多类类间散布矩阵：</p>
+<script type="math/tex; mode=display">
+S_{b} = \sum_{i = 1}^{c}{P(\omega_{i})}(m_{i} - m_{0})(m_{i} - m_{0})^{T}</script><p>直观上，<strong>类间离散度越大且类内离散度越小</strong>，则可分性越好。因此，可推导出散布矩阵准则采用如下形式： (<strong>矩阵的逆类比于除法</strong>)</p>
+<p>行列式形式：$J_{1} = \det(S_{w}^{- 1}S_{b}) = \prod_{i}^{}\lambda_{i}$</p>
+<p>迹形式：$J_{2} = tr(S_{w}^{- 1}S_{b}) = \sum_{i}^{}\lambda_{i}$</p>
+<p>其中，$λ_{i}$是矩阵$S_{w}^{- 1}S_{b}$的特征值。使$J_{1}$或$J_{2}$<strong>最大</strong>的子集可作为选择的分类特征。</p>
+<h2 id="离散K-L变换"><a href="#离散K-L变换" class="headerlink" title="离散K-L变换"></a>离散K-L变换</h2><p>前面讨论的<strong>直接删去</strong>一些特征的做法<strong>不理想</strong>，因为一般来说，原来的n个数据各自在不同程度上反映了识别对象的某些特征，简单地删去某些特征可能会丢失较多的有用信息 。</p>
+<p>将样本看成是对应维度D维随机向量的一次采样，对D维向量<em>x</em>用一个完备的<strong>正交归一向量系</strong>进行<strong>展开</strong>（理解成用一组正交的基向量来表示）。或者是对D维特征进行<strong>正交变换</strong>，用变换后的维度中选择少数的几个特征，这几个少数的特征<strong>尽可能多地反映各类模式之间的差异</strong>，而这些特征间<strong>又尽可能相互独立 。</strong></p>
+<h3 id="展开式的形式"><a href="#展开式的形式" class="headerlink" title="展开式的形式"></a>展开式的形式</h3><p>设一连续的随机实函数x(t)，$T_{1} \leq t \leq T_{2}$，则x(t)可用已知的<strong>正交函数集</strong>$φ_{j}(t),j=1,2,\ldots{\infty}$的<strong>线性组合来展开</strong>，即公式1：</p>
+<script type="math/tex; mode=display">
+\begin{split}
+x(t) &= a_{1}\varphi_{1}(t) + a_{2}\varphi_{2}(t) + \cdots + a_{j}\varphi_{j}(t) + \cdots\\
+&=\sum_{j=1}a_j\varphi_j(t),\qquad T_1\le t \le T_2 \qquad (1)\\
+\end{split}</script><p>式中，$a_{j}$为展开式的随机系数，$φ_{j}(t)$为一连续的正交函数，它应满足：</p>
+<script type="math/tex; mode=display">
+\int_{T_{1}}^{T_{2}}{\varphi_{n}^{(t)}{\tilde{\varphi}}_{m}(t)dt = \left\{ \begin{matrix}
+1, & \text{if}\mspace{6mu} m = n \\
+0 & \text{if}\mspace{6mu} m \neq n \\
+\end{matrix} \right.\ }</script><p>其中${\tilde{\varphi}}_{m}(t)$为$φ_{m}(t)$的共轭复数式。</p>
+<p>将上式写成离散的正交函数形式，使连续随机函数x(t)和连续正交函数$φ_{j}(t)$在区间$T_{1} \leq t \leq T_{2}$内被等间隔采样为n个离散点，<strong>用采n个点的样本，来描绘原来的函数</strong>即：</p>
+<script type="math/tex; mode=display">
+x(t) \rightarrow \{ x(1),x(2),\cdots,x(n)\}\\
+\varphi_{j}(t) \rightarrow \{\varphi_{j}(1),\varphi_{j}(2),\cdots,\varphi_{j}(n)\}</script><p>写成向量形式：</p>
+<script type="math/tex; mode=display">
+\begin{split}
+x &= (x(1),x(2),\cdots,x(n))^{T}\\
+\varphi_{j}& = (\varphi_{j}(1),\varphi_{j}(2),\cdots,\varphi_{j}(n))^{T},\mspace{6mu} j = 1,2,\cdots,n
+\end{split}</script><p><strong>每一个正交函数都要对应的平行采样</strong>，而不是一个函数采一个时刻的样。</p>
+<p>将公式(1)<strong>取n项近似</strong>(可以理解成逼近)，并写成离散展开式：</p>
+<script type="math/tex; mode=display">
+x = \sum_{j = 1}^{n}{a_{j}\varphi_{j}} = \Phi a,\quad T_{1} \leq t \leq T_{2} \qquad(2)</script><p>其中，a为展开式中随机系数的向量形式，即：$a = (a_{1}, a_{2}, \ldots{},a_{j}, \ldots{},a_{n})^{T}$</p>
+<p>$\Phi$为n x n维矩阵，即：</p>
+<script type="math/tex; mode=display">
+\Phi = (\varphi_{1},\varphi_{2},\cdots,\varphi_{n}) = \begin{bmatrix}
+\varphi_{1}(1) & \varphi_{2}(1) & \cdots & \varphi_{n}(1) \\
+\varphi_{1}(2) & \varphi_{2}(2) & \cdots & \varphi_{n}(2) \\
+\cdots & \cdots & \cdots & \cdots \\
+\varphi_{1}(n) & \varphi_{2}(n) & \cdots & \varphi_{n}(n) \\
+\end{bmatrix}</script><p>其中，每一列为正交函数集中的一个函数，小括号内的序号为正交函数的采样点次序。因此，$\Phi$实质上是由$φ_{j}$向量组成的正交变换矩阵，它将x变换成a。<strong>不应该是a变换成x吗，x变成a应该是用逆矩阵来变换的？</strong></p>
+<p>对于<strong>每一类正交函数是相同</strong>的，但是每一类的<strong>展开系数向量则不同</strong></p>
+<h3 id="展开式的性质"><a href="#展开式的性质" class="headerlink" title="展开式的性质"></a>展开式的性质</h3><h4 id="正交向量集-varphi-j-的确定"><a href="#正交向量集-varphi-j-的确定" class="headerlink" title="正交向量集$\varphi_j$的确定"></a>正交向量集$\varphi_j$的确定</h4><p>K-L展开式的根本性质是<strong>将随机向量x展开为另一组正交向量$\varphi_j$的线性和</strong>，且其展开式系数$a_j$（即系数向量a的各个分量）具有不同的性质。</p>
+<p>设随机向量x的总体<strong>自相关矩阵</strong>为$R = E\{xx^{T}\}$。由$x = \sum_{j = 1}^{n}{a_{j}\varphi_{j}} = \Phi a,\quad T_{1} \leq t \leq T_{2}$将$x=\Phi a$代入$R = E\{xx^{T}\}$，得：</p>
+<script type="math/tex; mode=display">
+{R = E\{Φaa^{T}Φ^{T}\}=Φ(E\{aa^{T}\})Φ^{T}}</script><p>要求<strong>系数向量a</strong>的各个<strong>不同分量</strong>应<strong>统计独立</strong>，即应使$(a_{1},a_{2}, \ldots{}, a_{j}, \ldots{},a_{n})$满足如下关系：<strong>(没搞懂)</strong></p>
+<script type="math/tex; mode=display">
+E(a_{j}a_{k}) = \left\{ \begin{matrix}
+\lambda_{j} & \text{if}\mspace{6mu} j = k \\
+0 & \text{if}\mspace{6mu} j \neq k \\
+\end{matrix} \right.\</script><p>写成矩阵形式，应使：$E\{a a^{T}\} =D_{λ}$，其中$D_{λ}$为对角形矩阵，其互相关成分均为0，即:</p>
+<script type="math/tex; mode=display">
+D_{\lambda} = \begin{bmatrix}
+\lambda_{1} & 0 & \cdots & \cdots & 0 \\
+0 & \ddots & 0 & \cdots & 0 \\
+0 & & \lambda_{j} & & 0 \\
+0 & \cdots & 0 & \ddots & 0 \\
+0 & \cdots & \cdots & 0 & \lambda_{n} \\
+\end{bmatrix}</script><p>则：$R =\Phi D_{λ}Φ^{T}$</p>
+<p>由于$\Phi$中的各个向量$\varphi_j$都<strong>相互归一正交有性质</strong>（$\Phi^T \Phi=\Phi^{-1}\Phi=I$）<strong>$\Phi$是正交矩阵？</strong>，故有：</p>
+<script type="math/tex; mode=display">
+{RΦ=ΦD_{λ}Φ^{T}Φ=ΦD_{λ}}</script><p>其中，$\varphi_j$向量对应为：$R\varphi_j=λ_j\varphi_j$</p>
+<p>可以看出，<strong>$λ_j$是x的自相关矩阵R的特征值，$\varphi_j$是对应的特征向量。</strong>因为R是实对称矩阵，其不同特征值对应的特征向量应<strong>正交(向量之间的夹角为90度)</strong>，即：</p>
+<script type="math/tex; mode=display">
+\varphi_{j}^{T}\varphi_{k} = \left\{ \begin{matrix}
+1 & \text{if}\mspace{6mu} j = k \\
+0 & \text{if}\mspace{6mu} j \neq k \\
+\end{matrix} \right.\</script><p>由式$x = \sum_{j = 1}^{n}{a_{j}\varphi_{j}} = \Phi a,\quad T_{1} \leq t \leq T_{2}$，<strong>K-L展开式系数应为</strong>：</p>
+<script type="math/tex; mode=display">
+a = \Phi^{T}x</script><p><strong>结论：正交向量集$\Phi$是样本的自相关矩阵$R = E\{xx^{T}\}$的特征向量构成的集合。</strong>如果选择$\Phi$的维度是$D\times K$即只选择K个特征向量去展开来逼近原来的样本，<strong>则应该选择特征值前K大的的K个特征向量来组成。</strong></p>
+<p>这段推导没有搞懂，还是模式识别书上的展开后去前n项来逼近原始向量之后求原向量与逼近向量之间的均方误差最小，然后在等式约束下使用拉格朗日发来求极值，解得系数是是$\Phi$的特征值好理解。</p>
+<h4 id="K-L展示式系数的计算步骤"><a href="#K-L展示式系数的计算步骤" class="headerlink" title="K-L展示式系数的计算步骤"></a>K-L展示式系数的计算步骤</h4><ol>
+<li>求随机向量x的自相关矩阵：$R = E\{xx^{T}\}$</li>
+<li>求出矩阵R的特征值$λ_j$和对应的特征向量$\varphi_j，j = 1,2,\ldots{},n$，得矩阵：$\Phi = (\varphi_{1},\varphi_{2},\cdots,\varphi_{n})$</li>
+<li>计算展开式系数：$a = \Phi^{T}x$</li>
+</ol>
+<h3 id="按K-L展开式选择特征"><a href="#按K-L展开式选择特征" class="headerlink" title="按K-L展开式选择特征"></a>按K-L展开式选择特征</h3><p>K-L展开式用于特征选择相当于一种<strong>线性变换</strong>。 </p>
+<p>若从n个特征向量中取出m个组成变换矩阵$\Phi$，即$\Phi=(\Phi_1,\Phi_2,\ldots{\Phi_m})\quad m&lt;n$  得到的$\Phi$矩阵的维度是$n\times m$,样本向量x是n为向量，则通过$a = \Phi^{T}x$得到的系数向量是m维度，<strong>系数向量就是降维后得到的新向量。</strong></p>
+<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>选取变换矩阵$\Phi$ 后，让降维后得到的<strong>新向量a在最小均方误差条件下接近原来的向量x</strong>。（不是直接用a与x取比较的，因为维度都不同，是让a乘以变换矩阵去逼近x。换句话说，x是被其自相关矩阵展开的）</p>
+<p>对于$x = \sum_{j = 1}^{n}{a_{j}\varphi_{j}}$，现仅取m项，对略去的系数项用预先选定的常数b代替，此时对x的估计值为：</p>
+<script type="math/tex; mode=display">
+\hat{x} = \sum_{j = 1}^{m}{a_{j}\varphi_{j}} + \sum_{j = m + 1}^{n}{b\varphi_{j}}</script><p>则产生的误差为：</p>
+<script type="math/tex; mode=display">
+\Delta x = x - \hat{x} = \sum_{j = m + 1}^{n}{(a_{j} - b)\varphi_{j}}</script><p>则$\Delta x$的均方误差为：(<strong>为什么引入了期望</strong>)(<strong>为什么没有了$\varphi_j$</strong>)</p>
+<script type="math/tex; mode=display">
+\overline{\varepsilon^{2}} = E\{||\Delta x||\}^{2} = \sum_{j = m + 1}^{n}{\{ E(a_{j} - b)^{2}\}}</script><p>要使$\overline{\varepsilon^{2}}$最小，对b的选择应满足：</p>
+<script type="math/tex; mode=display">
+\frac{\partial}{\partial b}\lbrack E(a_{j} - b)^{2}\rbrack = \frac{\partial}{\partial b}\lbrack E(a_{j}^{2} - 2a_{j}b + b^{2})\rbrack = - 2\lbrack E(a_{j}) - b\rbrack = 0</script><p>因此，$b =E{[}a_{j}{]}$，即<strong>对省略掉的a中的分量，应使用它们的数学期望来代替</strong>，此时的误差为：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{split}
+{\overline{\varepsilon^{2}} = \sum_{j = m + 1}^{n}{E\lbrack(a_{j} - E\{ a_{j}\})^{2}\rbrack }\\
+=\sum_{j = m + 1}^{n}{\varphi_{j}^{T}E\lbrack(x - E\{ x\})(x - E\{ x\})^{T}\rbrack\varphi_{j}}}= { \sum_{j = m + 1}^{n}{\varphi_{j}^{T}C_{x}}\varphi_{j}}\\
+\end{split}
+\end{equation}</script><p>其中，$C_{x}$为x的协方差矩阵。<strong>（第二步怎么推出来的？）</strong></p>
+<p>设$λ_{j}$为$C_{x}$的第j个特征值，$\varphi_{j}$是与$λ_{j}$对应的特征向量，则$C_{x}\varphi_{j} = \lambda_{j}\varphi_{j}$由于$\varphi_{j}^{T}\varphi_{j} = 1$,从而$\varphi_{j}^{T}C_{x}\varphi_{j} = \lambda_{j}$因此:</p>
+<script type="math/tex; mode=display">
+\overline{\varepsilon^{2}} = \sum_{j = m + 1}^{n}{\varphi_{j}^{T}C_{x}}\varphi_{j} = \sum_{j = m + 1}^{n}\lambda_{j}</script><p>由此可以看出，$λ_{j}$值越小，误差也越小。<strong>（这里的特征值与自相关矩阵的特征值不同？，所以原来的自相关矩阵的特征应该选择大的。）</strong></p>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>按照最小均方差的准则来选择特征，应使得$E[a_j]=0$<strong>为什么?</strong>。因为$E[a]=E[\Phi^Tx]=\Phi^TE[x]$,所以应使的$E[x]=0$。因此在K-L变换之前，需要先将<strong>其均值作为新坐标轴的原点</strong>，采用协方差矩阵C或自相关矩阵R来计算特征值。如果<strong>$E[x] ≠0$</strong>，则只能得到<strong>“次最佳</strong>”的结果。 </p>
+<p>为了使误差尽可能小，<strong>选择的特征向量对应的特征值要是最大的</strong>。</p>
+<p>K-L变换是在<strong>均方误差最小的意义下</strong>获得数据压缩（<strong>降维</strong>）的<strong>最佳变换</strong>，且不受模式分布的限制。 整个变换使的整个<strong>模式分布结构尽可能保持不变</strong>。</p>
+<p>通过K-L变换能获得互不相关的新特征。 主<strong>成分分析出发点是变换得到的新特征的方差最大</strong>，从而保证原始样本在改维特征上的差异更大，从而更好的区分。PCA使用的变换矩阵是样本的协方差矩阵$C_x=E[(x-E[x])(x-E[x]^T)]$，因此当<strong>样本集的均值为0</strong>即$[E[x]=0]$，或者<strong>对样本进行去均值处理</strong>的时候，<strong>K-L变换就与PCA等价</strong>了。</p>
+<p>需要指出的是，采用K-L变换作为模式分类的<strong>特征提取</strong>时，要<strong>特别注意保留不同类别的模式分类鉴别信息</strong>，仅单纯考虑尽可能代表原来模式的主成分，有时并不一定有利于分类的鉴别。 （<strong>这里不同类别的模式分类鉴别信息是什么？）</strong></p>
+]]></content>
+      <categories>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>降维</tag>
+        <tag>特征提取</tag>
+        <tag>距离矩阵</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>奇思妙想</title>
+    <url>/2019-12-27-%E5%A5%87%E6%80%9D%E5%A6%99%E6%83%B3.html</url>
+    <content><![CDATA[<h1 id="奇思妙想"><a href="#奇思妙想" class="headerlink" title="奇思妙想"></a>奇思妙想</h1><p>记录一些觉得有用的点子，公式推导等。当成便利贴来使用的。23333</p>
+<a id="more"></a>
+<h2 id="条件联合分布的推导"><a href="#条件联合分布的推导" class="headerlink" title="条件联合分布的推导"></a>条件联合分布的推导</h2><p>首先搞清楚逗号是与的意思，把逗号去掉，加个括号就好理解了。</p>
+<p>$P(S,A|T)$:事件T发生的条件下，事件S、A均发生的概率。直接把逗号给去掉，就是$P((SA)|T)$竖线的优先级别高。因此有：$P(S,A|T)=\frac{P(SAT)}{P(T)}$</p>
+<p>$P(S|A,T)$ ：事件A、T均发生的条件下，事件S发生的概率 。</p>
+<script type="math/tex; mode=display">
+P(X=a,Y=b|Z=c)=P(X=a|Y=b,Z=c)P(Y=b|Z=c)</script><p>上式的证明如下：</p>
+<script type="math/tex; mode=display">
+\begin{equation}\nonumber
+\begin{split}
+P(X=a,Y=b|Z=c)&=\frac{P(X=a,Y=b,Z=c)}{P(Z=c)}\\
+&=\frac{P(X=a|Y=b,Z=c)P(Y=b,Z=c)}{P(Z=c)}\\
+&=\frac{P(X=a|Y=b,Z=c)P(Y=b|Z=c)P(Z=c)}{P(Z=c)}\\
+&=P(X=a|Y=b,Z=c)P(Y=b|Z=c)
+\end{split} 
+\end{equation}</script><h2 id="贝叶斯估计"><a href="#贝叶斯估计" class="headerlink" title="贝叶斯估计"></a>贝叶斯估计</h2><p>根据现有的数据样本集D估计一个新的样本的分布$x$即$P(x|D)$.通过D引入$\theta$,然后通过$\theta$来估计x的分布$p(x|\theta)$</p>
+<script type="math/tex; mode=display">
+\begin{equation}\nonumber
+\begin{split}
+P(x|D)&=\int P(x,\theta|D)d\theta\\
+&=\int \frac{P(x,\theta,D)}{P(D)}d\theta\\
+&=\int \frac{P(x|\theta,D)P(\theta,D)}{P(D)}d\theta\\
+&=\int \frac{P(x|\theta,D)P(\theta|D)P(D)}{P(D)}d\theta\\
+&=\int P(x|\theta,D)P(\theta|D)P(D)d\theta\\
+\end{split} 
+\end{equation}</script><p>关于第一步$P(x|D)=\int P(x,\theta|D)d\theta$ 的理解在D条件下的联合分布对另一个变量求积分，就得到了一个边缘分布，不过这个边缘分布是在D条件下的。</p>
+<h2 id="点子"><a href="#点子" class="headerlink" title="点子"></a>点子</h2><ol>
+<li>目标函数不可导的情况下优化：遗传算法</li>
+</ol>
+<h2 id="待解决的问题"><a href="#待解决的问题" class="headerlink" title="待解决的问题"></a>待解决的问题</h2><ol>
+<li>矩阵的特征值的个数怎么判断的？重根的情况。</li>
+<li>算出来特征向量任意取的情况，KL变换的变换矩阵还有什么作用呢？</li>
+<li>Adaboost为什么要求迭代后的更新的权重使得上一轮的学习器在这轮的性能为随机猜测呢？</li>
+</ol>
+]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>数学</tag>
+        <tag>点子</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LSTM与Prophet时间序列预测实验</title>
+    <url>/2019-12-20-LSTM%E4%B8%8EProphet%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E9%A2%84%E6%B5%8B%E5%AE%9E%E9%AA%8C.html</url>
+    <content><![CDATA[<h1 id="LSTM与Prophet时间序列预测实验"><a href="#LSTM与Prophet时间序列预测实验" class="headerlink" title="LSTM与Prophet时间序列预测实验"></a>LSTM与Prophet时间序列预测实验</h1><p>分别使用Pytorch构建的LSTM网络与Facebook开源的Prophet工具对时间序列进行预测的一个对比小实验，同时作为一个小白也借着这个实验来学习下Pytorch的使用，因为第一次使用，所以会比较详细的注释代码。</p>
+<a id="more"></a>
+<p>使用的数据为了与Prophet进行对比，因此使用了Prophet官网例子上用到的数据集。该时间序列数据集来自维基百科上面对美国橄榄球运动员佩顿·曼宁（Peyton Williams Manning）的日访问量的记录日志，时间跨度为2007年12月10号到2016年1月20号共2905条数据。 </p>
+<p>Jupyter代码与数据集地址在<a href="https://github.com/BraveY/AI-with-code/tree/master/time-series" target="_blank" rel="noopener">我的github</a>上，欢迎star。</p>
+<h2 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a>LSTM</h2><p>LSTM的介绍参考<a href="https://zhuanlan.zhihu.com/p/30465140" target="_blank" rel="noopener">夕小瑶</a>与<a href="https://zhuanlan.zhihu.com/p/32085405" target="_blank" rel="noopener">陈诚</a>的介绍，代码主要参考<a href="https://blog.csdn.net/baidu_36669549/article/details/85595807" target="_blank" rel="noopener">凌空的桨</a>与<a href="https://github.com/L1aoXingyu/code-of-learn-deep-learning-with-pytorch/tree/master/chapter5_RNN/time-series" target="_blank" rel="noopener">源码链接</a> ，在Pytorch1.3.1的版本上面改了一下，主要是测试的逻辑修改成了使用测试集以及取消了Variable的使用。整体的逻辑是使用前面的两天的数据来预测下一天的数据，网络的结构是使用了两层LSTM与一层线性回归层。</p>
+<h3 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h3><p>首先是数据的预处理代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np </span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd </span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt </span><br><span class="line"><span class="keyword">import</span> torch </span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"></span><br><span class="line"><span class="comment">#数据预处理</span></span><br><span class="line">data = pd.read_csv(<span class="string">'example_wp_log_peyton_manning.csv'</span>,usecols=[<span class="number">1</span>])</span><br><span class="line">data = data.dropna() <span class="comment">#丢弃空值</span></span><br><span class="line">dataset = data.values</span><br><span class="line">dataset = dataset.astype(<span class="string">'float32'</span>)</span><br><span class="line"></span><br><span class="line">max_value = np.max(dataset)</span><br><span class="line">min_value = np.min(dataset)</span><br><span class="line">scalar = max_value - min_value</span><br><span class="line">dataset = list(map(<span class="keyword">lambda</span> x: x/scalar, dataset)) <span class="comment">#将数据归一化到0~1之间</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#划分数据集</span></span><br><span class="line"><span class="comment">#通过前面几条的数据来预测下一条的数据，look_back设置具体的把前面几条的数据作为预测的输入data_X，而输出就是下一条data_Y</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_dataset</span><span class="params">(dataset,look_back=<span class="number">2</span>)</span>:</span> <span class="comment"># 每个的滑动窗口设置为2</span></span><br><span class="line">    dataX, dataY=[], []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(dataset)-look_back):</span><br><span class="line">        a=dataset[i:(i+look_back)]</span><br><span class="line">        dataX.append(a)    <span class="comment"># 记录窗口的值</span></span><br><span class="line">        dataY.append(dataset[i+look_back]) <span class="comment"># 记录除了前面两个以外的所有值作为正确的标签</span></span><br><span class="line">    <span class="keyword">return</span> np.array(dataX), np.array(dataY)</span><br><span class="line"><span class="comment">#创建好输入与输出 data_Y作为正确的预测值</span></span><br><span class="line">data_X, data_Y = create_dataset(dataset)</span><br><span class="line"></span><br><span class="line"><span class="comment">#划分训练集和测试集，70%作为训练集</span></span><br><span class="line">train_size = int(len(data_X) * <span class="number">0.7</span>)</span><br><span class="line">test_size = len(data_X)-train_size</span><br><span class="line"></span><br><span class="line">train_X = data_X[:train_size]</span><br><span class="line">train_Y = data_Y[:train_size]</span><br><span class="line"></span><br><span class="line">test_X = data_X[train_size:]</span><br><span class="line">test_Y = data_Y[train_size:]</span><br><span class="line"></span><br><span class="line"><span class="comment">#最后，我们需要将数据改变一下形状，因为 RNN 读入的数据维度是 (seq, batch, feature)，所以要重新改变一下数据的维度，这里只有一个序列，所以 batch 是 1，而输入的 feature 就是我们希望依据的几天，这里我们定的是两个天，所以 feature 就是 2.</span></span><br><span class="line"></span><br><span class="line">train_X = train_X.reshape(<span class="number">-1</span>,<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line">train_Y = train_Y.reshape(<span class="number">-1</span>,<span class="number">1</span>,<span class="number">1</span>)</span><br><span class="line">test_X = test_X.reshape(<span class="number">-1</span>,<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 转化成torch 的张量</span></span><br><span class="line">train_x = torch.from_numpy(train_X)</span><br><span class="line">train_y = torch.from_numpy(train_Y)</span><br><span class="line">test_x = torch.from_numpy(test_X)</span><br></pre></td></tr></table></figure>
+<h3 id="LSTM网络构建"><a href="#LSTM网络构建" class="headerlink" title="LSTM网络构建"></a>LSTM网络构建</h3><p>接着定义好网络模型，模型的第一部分是一个两层的 RNN，每一步模型接受前两天的输入作为特征，得到一个输出特征。接着通过一个线性层将 RNN 的输出回归到流量的具体数值，这里我们需要用 <code>view</code> 来重新排列，因为 <code>nn.Linear</code> 不接受三维的输入，所以我们先将前两维合并在一起，然后经过线性层之后再将其分开，最后输出结果。 </p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#lstm 网络</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">lstm_reg</span><span class="params">(nn.Module)</span>:</span><span class="comment">#括号中的是python的类继承语法，父类是nn.Module类 不是参数的意思</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,input_size,hidden_size, output_size=<span class="number">1</span>,num_layers=<span class="number">2</span>)</span>:</span> <span class="comment"># 构造函数</span></span><br><span class="line">        <span class="comment">#inpu_size 是输入的样本的特征维度， hidden_size 是LSTM层的神经元个数，</span></span><br><span class="line">        <span class="comment">#output_size是输出的特征维度</span></span><br><span class="line">        super(lstm_reg,self).__init__()<span class="comment"># super用于多层继承使用，必须要有的操作</span></span><br><span class="line"> </span><br><span class="line">        self.rnn = nn.LSTM(input_size,hidden_size,num_layers)<span class="comment"># 两层LSTM网络，</span></span><br><span class="line">        self.reg = nn.Linear(hidden_size,output_size)<span class="comment">#把上一层总共hidden_size个的神经元的输出向量作为输入向量，然后回归到output_size维度的输出向量中</span></span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self,x)</span>:</span> <span class="comment">#x是输入的数据</span></span><br><span class="line">        x, _ = self.rnn(x)<span class="comment"># 单个下划线表示不在意的变量，这里是LSTM网络输出的两个隐藏层状态</span></span><br><span class="line">        s,b,h = x.shape</span><br><span class="line">        x = x.view(s*b, h)</span><br><span class="line">        x = self.reg(x)</span><br><span class="line">        x = x.view(s,b,<span class="number">-1</span>)<span class="comment">#使用-1表示第三个维度自动根据原来的shape 和已经定了的s,b来确定</span></span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"><span class="comment">#我使用了GPU加速，如果不用的话需要把.cuda()给注释掉    </span></span><br><span class="line">net = lstm_reg(<span class="number">2</span>,<span class="number">4</span>)</span><br><span class="line">net = net.cuda()</span><br><span class="line">criterion = nn.MSELoss().cuda()</span><br><span class="line">optimizer = torch.optim.Adam(net.parameters(),lr=<span class="number">1e-2</span>)</span><br></pre></td></tr></table></figure>
+<p>本来打算把网络拓扑也给画出来的，后面发现自己理解的还不够深入，可以先参考<a href="https://www.zhihu.com/question/41949741/answer/318771336" target="_blank" rel="noopener">LSTM神经网络输入输出究竟是怎样的？ - Scofield的回答 - 知乎 </a> 和<a href="https://zhuanlan.zhihu.com/p/79064602" target="_blank" rel="noopener">LSTM细节分析理解（pytorch版） - ymmy的文章 - 知乎 </a></p>
+<p>关于forward函数中为什么每个层可以直接使用输入的数据x这个tensor，而不需要按照构造函数里面的按照形参(input_size,hidden_size,num_layers)来传递参数。以nn.LSTM做例子，官方API为：</p>
+<ul>
+<li>参数<br>– <strong>input_size</strong><br>– <strong>hidden_size</strong><br>– <strong>num_layers</strong><br>– <strong>bias</strong><br>– <strong>batch_first</strong><br>– <strong>dropout</strong><br>– <strong>bidirectional</strong></li>
+<li>输入<br>– <strong>input</strong> (seq_len, batch, input_size)<br>– <strong>h_0</strong> (num_layers <em> num_directions, batch, hidden_size)<br>– <strong>c_0</strong> (num_layers </em> num_directions, batch, hidden_size)</li>
+<li><p>输出<br>– <strong>output</strong> (seq_len, batch, num_directions <em> hidden_size)<br>– <strong>h_n</strong> (num_layers </em> num_directions, batch, hidden_size)<br>– <strong>c_n</strong> (num_layers * num_directions, batch, hidden_size)</p>
+<p>所以forward中的x，<code>x, _ = self.rnn(x)</code>传递的参数是对应输入<strong>input</strong> (seq_len, batch, input_size)这个tensor，而不是对应的参数列表。同样<code>_</code>所代表的参数也就是<strong>h_n</strong> 和<strong>c_n</strong>。</p>
+</li>
+</ul>
+<h3 id="迭代"><a href="#迭代" class="headerlink" title="迭代"></a>迭代</h3><p>迭代过程进行了10000次迭代：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> e <span class="keyword">in</span> range(<span class="number">10000</span>):</span><br><span class="line"><span class="comment"># 新版本中可以不使用Variable了    </span></span><br><span class="line"><span class="comment">#     var_x = Variable(train_x).cuda() </span></span><br><span class="line"><span class="comment">#     var_y = Variable(train_y).cuda()</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#将tensor放在GPU上面进行运算</span></span><br><span class="line">    var_x = train_x.cuda()</span><br><span class="line">    var_y = train_y.cuda()</span><br><span class="line"> </span><br><span class="line">    out = net(var_x)</span><br><span class="line">    loss = criterion(out, var_y)</span><br><span class="line"> </span><br><span class="line">    optimizer.zero_grad()</span><br><span class="line">    loss.backward()</span><br><span class="line">    optimizer.step()</span><br><span class="line">    <span class="keyword">if</span> (e+<span class="number">1</span>)%<span class="number">100</span> == <span class="number">0</span>:</span><br><span class="line">        print(<span class="string">'Epoch: &#123;&#125;, Loss:&#123;:.5f&#125;'</span>.format(e+<span class="number">1</span>, loss.item()))</span><br><span class="line"><span class="comment">#存储训练好的模型参数        </span></span><br><span class="line">torch.save(net.state_dict(), <span class="string">'example_wp_log.net_params.pkl'</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="测试过程"><a href="#测试过程" class="headerlink" title="测试过程"></a>测试过程</h3><p>在测试的时候我发现源码中并没有用到之前划分的30%的测试集来单独进行测试，而是直接把原来的完整数据给丢进去来训练的，这儿有点没搞懂。因为按理来说需要单独使用测试集进行测试来评判模型的性能的，所以我单独把测试的数据集给提出来，使用单独的测试集进行了测试。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">net.load_state_dict(torch.load(<span class="string">'example_wp_log.net_params.pkl'</span>)) </span><br><span class="line">var_data = torch.from_numpy(test_X).cuda()<span class="comment">#net在GPU上面，所以输入的测试集合也要转入到GPU上面</span></span><br><span class="line">pred_test = net(var_data) <span class="comment"># 测试集的预测结果</span></span><br><span class="line">pred_test = pred_test.cpu().view(<span class="number">-1</span>).data.numpy()<span class="comment">#先转移到cpu上才能转换为numpy</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#乘以原来归一化的刻度放缩回到原来的值域 </span></span><br><span class="line">origin_test_Y = test_Y*scalar</span><br><span class="line">origin_pred_test = pred_test*scalar</span><br><span class="line"></span><br><span class="line"><span class="comment">#画图</span></span><br><span class="line">plt.plot(origin_pred_test, <span class="string">'r'</span>, label=<span class="string">'prediction'</span>)</span><br><span class="line">plt.plot(origin_test_Y, <span class="string">'b'</span>, label=<span class="string">'real'</span>)</span><br><span class="line">plt.legend(loc=<span class="string">'best'</span>)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line"><span class="comment">#计算MSE</span></span><br><span class="line"><span class="comment">#loss = criterion(out, var_y)？</span></span><br><span class="line">true_data = origin_test_Y</span><br><span class="line">true_data = np.array(true_data)</span><br><span class="line">true_data = np.squeeze(true_data)  <span class="comment"># 从二维变成一维</span></span><br><span class="line">MSE = true_data - origin_pred_test</span><br><span class="line">MSE = MSE*MSE</span><br><span class="line">MSE_loss = sum(MSE)/len(MSE)</span><br><span class="line">print(MSE_loss)</span><br></pre></td></tr></table></figure>
+<p>计算出来的MSE为<code>0.195649022176008</code>, 画出来的曲线图为：</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1576911405/blog/deep-learning/LSTM_time_series.png" alt=""></p>
+<h3 id="GPU加速"><a href="#GPU加速" class="headerlink" title="GPU加速"></a>GPU加速</h3><p><code>use_gpu = torch.cuda.is_available()  # 判断是否有GPU加速</code></p>
+<p>CUDA 加速需要设置的为：</p>
+<ol>
+<li>迭代的过程中输入的tensor放到GPU上  var_x = train_x.cuda()</li>
+<li>模型转移到GPU net.cuda()</li>
+<li>损失函数转移到GPU criterion = nn.MSELoss().cuda()</li>
+</ol>
+<h2 id="Prophet"><a href="#Prophet" class="headerlink" title="Prophet"></a>Prophet</h2><p>Prophet是facebook开源的一个时间序列预测工具,使用了时间序列分解与机器学习拟合的方法。详细介绍参考<a href="https://zhuanlan.zhihu.com/p/52330017" target="_blank" rel="noopener">张戎</a>的介绍。</p>
+<h3 id="Prophet的安装"><a href="#Prophet的安装" class="headerlink" title="Prophet的安装"></a>Prophet的安装</h3><p>在安装Prophet的时候并没有想官网介绍的那么简单，首先需要先安装Pystan,但是直接<code>pip install pystan</code>会报编译器内部错误，使用<code>conda install -c conda-forge pystan</code>之后问题解决，然后再使用<code>pip install fbprophet</code> 进行安装。</p>
+<h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><p>实验的例子就是官网的例子</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> fbprophet <span class="keyword">import</span> Prophet</span><br><span class="line">df = pd.read_csv(<span class="string">'example_wp_log_peyton_manning.csv'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#Prophet使用</span></span><br><span class="line">m = Prophet()</span><br><span class="line">m.fit(df)</span><br><span class="line"><span class="comment">#需要预测时间段为整个365天，也就是下一年的整个天数</span></span><br><span class="line">future = m.make_future_dataframe(periods=<span class="number">365</span>)</span><br><span class="line"><span class="comment">#开始预测</span></span><br><span class="line">forecast = m.predict(future)</span><br><span class="line"><span class="comment">#预测的结果保存在yhat_upper列中</span></span><br><span class="line">forecast[[<span class="string">'ds'</span>, <span class="string">'yhat'</span>, <span class="string">'yhat_lower'</span>, <span class="string">'yhat_upper'</span>]].tail()</span><br><span class="line"><span class="comment">#画图</span></span><br><span class="line">plt.plot(fb_pre, <span class="string">'r'</span>, label=<span class="string">'prediction'</span>)</span><br><span class="line">plt.plot(origin_test_Y, <span class="string">'b'</span>, label=<span class="string">'real'</span>)</span><br><span class="line">plt.legend(loc=<span class="string">'best'</span>)</span><br><span class="line">plt.show()</span><br><span class="line"><span class="comment">#计算MSE</span></span><br><span class="line">fb_pre = np.array(forecast[<span class="string">'yhat'</span>].iloc[<span class="number">2034</span>:<span class="number">2905</span>])<span class="comment">#2034到2905是前面30%的测试集所对应的数据范围</span></span><br><span class="line">MSE = true_data - fb_pre</span><br><span class="line">MSE = MSE*MSE</span><br><span class="line">MSE_loss = sum(MSE)/len(MSE)</span><br><span class="line">print(MSE_loss)</span><br></pre></td></tr></table></figure>
+<p>计算出来的MSE为：<code>0.25229994660830146</code>,画出来的图像为：</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1576911405/blog/deep-learning/Prophet_time_series.png" alt=""></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>MSE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LSTM</td>
+<td>0.195649022176008</td>
+</tr>
+<tr>
+<td>Prophet</td>
+<td>0.25229994660830146</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>可以看到使用LSTM的预测结果要比Prophet的结果好，但是也有可能是我还没有去调整Prophet的参数导致Prophet的性能差一些的。同时Prophet可以预测整整一年的时间，这个比起使用LSTM要厉害很多，实验中的LSTM使用的是单步预测的方法，也就是只能根据前段时刻的数据来预测下一个时刻的数据，如果要做到像Prophet那样预测未来一段时刻的数据，需要使用多步预测的方法，我查了下涉及到seq2seq，貌似比较复杂，还没有做实验。</p>
+<p>自己是小白，实验可能存在相关问题与不足之处，欢迎反馈。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>Pytorch中的<a href="https://zhuanlan.zhihu.com/p/41261640" target="_blank" rel="noopener">LSTM参数</a></p>
+<p><a href="https://facebook.github.io/prophet/" target="_blank" rel="noopener">Prophet官网</a></p>
+<p><a href="https://www.okcode.net/article/43571" target="_blank" rel="noopener">Prophet安装问题</a> </p>
+]]></content>
+      <categories>
+        <category>深度学习</category>
+      </categories>
+      <tags>
+        <tag>时间序列</tag>
+        <tag>LSTM</tag>
+        <tag>Pytorch</tag>
+        <tag>Prophet</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>线性判别函数</title>
+    <url>/2019-12-08-%E7%BA%BF%E6%80%A7%E5%88%A4%E5%88%AB%E5%87%BD%E6%95%B0.html</url>
+    <content><![CDATA[<h1 id="线性判别函数"><a href="#线性判别函数" class="headerlink" title="线性判别函数"></a>线性判别函数</h1><p>模式识别与机器学习第三章的笔记。</p>
+<a id="more"></a>
+<h2 id="线性判别函数-1"><a href="#线性判别函数-1" class="headerlink" title="线性判别函数"></a>线性判别函数</h2><h3 id="n维线性判别函数的一般形式"><a href="#n维线性判别函数的一般形式" class="headerlink" title="n维线性判别函数的一般形式"></a>n维线性判别函数的一般形式</h3><p>一个n维线性判别函数的一般形式： </p>
+<script type="math/tex; mode=display">
+d(x)=w_1x_1+w_2x_2+\dots+w_nx_n+b=W_0^tx+b</script><p>其中$W_0=(w_1,w_2,\dots,w_n)^T$称为<strong>权向量</strong>，如果把b也加入到权向量则$d(x)=W^Tx$ 其中$x=(x_1,x_2,\dots,x_n,1)$ 称为增广模式向量 (b对应的特征维度取值为1),而权向量也对应的加入b$W=((w_1,w_2,\dots,w_n,b)^T)$ 称为增广权向量 。</p>
+<h3 id="两类情况"><a href="#两类情况" class="headerlink" title="两类情况"></a>两类情况</h3><p>样本如果只有两类$\omega_1,\omega_2$则可以只用一个线性判别函数进行判别：</p>
+<script type="math/tex; mode=display">
+d(x)=W^Tx=\left\{
+  \begin{array}{**lr**}  
+             >0 &  if\;x\in \omega_1\\\\  
+             \le0& if\;x\in\omega_2
+             \end{array}  
+\right.</script><h3 id="多类情况"><a href="#多类情况" class="headerlink" title="多类情况"></a>多类情况</h3><h4 id="多类情况1"><a href="#多类情况1" class="headerlink" title="多类情况1"></a>多类情况1</h4><p>用线性判别函数将属于$ω_i$类的模式与不属于$ω_i$类的模式分开，其判别函数为：</p>
+<script type="math/tex; mode=display">
+d(x)=W^Tx=\left\{
+  \begin{array}{**lr**}  
+             >0 &  if\;x\in \omega_i\\\\  
+             \le0& if\;x\notin\omega_i
+             \end{array}  
+\right.</script><p>这种情况称为$w_i/\bar w_i$两分法，即把M类多类问题分成M个两类问题，因此共有<strong>M个判别函数</strong> ，每一类都有一个自己的判别函数，只负责把这一类给判别出来。</p>
+<p>把样本点带入所有的判别函数，<strong>有且只有一个</strong>判别函数判定这个样本值为正，其他判别函数都判定为负，则分类成功，否则分类失败。分类失败的区域称为<strong>不确定区域</strong></p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1577451087/blog/machine-learning/%E5%A4%9A%E7%B1%BB%E6%83%85%E5%86%B51.jpg" alt=""></p>
+<p>判别界面<strong>不穿过类</strong>，每个判别界面可以准确的判别出一类样本。</p>
+<p>不确定区域在图上就是除了能判定3个类别以外的区域，包括三条直线围成的中间的三角形，和三个角延伸出来的区域。</p>
+<h4 id="多类情况2"><a href="#多类情况2" class="headerlink" title="多类情况2"></a>多类情况2</h4><p>每个判别函数去划分一对样本，一个判别界面只能分开两种类别，称为$\omega_i/\omega_j$两分法。判别函数为：</p>
+<script type="math/tex; mode=display">
+d_{ij}(x)=W_{ij}^Tx</script><p>其中当$d_{ij}x&gt;0 \quad\forall j\neq i$ 则将样本划入$\omega_i$类。比如$d_{12}(x)$只能判别是第一类还是第二类样本。</p>
+<p>重要的性质：$d_{ij}=-d_{ji}$</p>
+<p>对于M类模式，总共需要M(M-1)/2个判别函数。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1577451087/blog/machine-learning/%E5%A4%9A%E7%B1%BB%E6%83%85%E5%86%B52.jpg" alt=""></p>
+<p>判别界面会穿过类，因此一个单独的判别函数无法准确的判别出一个完整无误的类，所以需要多个判别函数来辅助判别。只有所有的判别函数都判别这个样本都属于同一类，才能确定其属于这一类。</p>
+<p>需要依次根据这一类$\omega_i$的所有判别函数$d_{i1},d_{i2},\dots,d_{ij}$ 都得到正值，才判断其为$\omega_i$类。</p>
+<p>不确定区域只剩下中间围成的三角区域了。因此多类情况2对模式是线性可分的可能性比多类情况1更大一些。</p>
+<h4 id="多类情况3"><a href="#多类情况3" class="headerlink" title="多类情况3"></a>多类情况3</h4><p>是多类情况2没有不确定区域的特例。特例引入的条件是：</p>
+<p>$d_{ij}(x)=d_i(x)-d_j(x)=(W_i^T-W_j^T)x$ 因此当$d_{ij}(x)&gt;0$有$d_i(x)&gt;d_j(x) \quad\forall j\neq i$ 这时不存在不确定区域，判别界面相交于一点。此时M类情况，对应有M个判别函数。</p>
+<p>根据上面的条件，只有当$d_i(x)$大于所有$d_j(x)$的时候，才会有所有的$d_{ij}(x)&gt;0$。因此把样本带入所有的判别函数，选择值最大的一个作为划分的类。</p>
+<p>该分类的特点是把M类情况分成M-1个两类问题。 </p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1577451087/blog/machine-learning/%E5%A4%9A%E7%B1%BB%E6%83%85%E5%86%B53.jpg" alt=""></p>
+<h2 id="广义线性判别函数"><a href="#广义线性判别函数" class="headerlink" title="广义线性判别函数"></a>广义线性判别函数</h2><h3 id="出发点"><a href="#出发点" class="headerlink" title="出发点"></a>出发点</h3><ul>
+<li>线性判别函数简单，容易实现；</li>
+<li>非线性判别函数复杂，不容易实现；</li>
+<li>若能将非线性判别函数转换为线性判别函数，则有利于模式分类的实现。</li>
+</ul>
+<h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>如果在低维度中不是线性可分的（判别函数在低维度中是非线性的），将样本用非线性的变换（比如多项式）映射到能够线性可分的高维度中去，然后在高维度中用线性判别函数来分类。</p>
+<p>对于原来的样本x向量，可以变换为：</p>
+<script type="math/tex; mode=display">
+x^*=(f_1(x), f_2(x),\dots,f_k(x))^T, k>n</script><h3 id="总项数"><a href="#总项数" class="headerlink" title="总项数"></a>总项数</h3><p>对于n维x向量，若用r次多项式，d(x)的权系数的总项数为：</p>
+<script type="math/tex; mode=display">
+N_w=C_{n+r}^{r}=\dfrac{(n+r)!}{n!r!}</script><h2 id="Fisher-线性判别"><a href="#Fisher-线性判别" class="headerlink" title="Fisher 线性判别"></a>Fisher 线性判别</h2><p>求一个投影后能够分开的权重法向量$W$,从d维空间变换到一维空间。</p>
+<h3 id="基本参量"><a href="#基本参量" class="headerlink" title="基本参量"></a>基本参量</h3><h4 id="d维x空间"><a href="#d维x空间" class="headerlink" title="d维x空间"></a>d维x空间</h4><ol>
+<li>样本的均值向量</li>
+<li>样本类内离散度矩阵 和总样本类内离散度矩阵</li>
+<li>样本类间离散度矩阵</li>
+</ol>
+<h4 id="一维Y空间"><a href="#一维Y空间" class="headerlink" title="一维Y空间"></a>一维Y空间</h4><ol>
+<li>样本的均值向量</li>
+<li>样本类内离散度矩阵 和总样本类内离散度矩阵</li>
+</ol>
+<h2 id="感知器"><a href="#感知器" class="headerlink" title="感知器"></a>感知器</h2><h3 id="两类"><a href="#两类" class="headerlink" title="两类"></a>两类</h3><p>使用误分类的样本点到判别平面的距离作为目标函数，要求最终下降到0，通过随机梯度下降法来进行优化。每次向输入的误分类点移动一步（加上对应的值），直到对于所有的样本点都可以正确分类。负梯度的方向就是样本向量的方向。</p>
+<p>感知器的解存在很多，加上b偏置就是余量。距离理解成置信度</p>
+<h3 id="多类情况3-1"><a href="#多类情况3-1" class="headerlink" title="多类情况3"></a>多类情况3</h3><p>有多少类就有多少个判别函数，要求对于第i类样本其对应的$d_i(x)$判别函数一定最大的（不存在相等的），如果不是最大的则其对应的加上这个样本$x_i$超过的减去这个样本。</p>
+<p>每一次同一个样本要带入所有判别函数，然后再对所有的判别函数进行调整。</p>
+<h2 id="梯度法"><a href="#梯度法" class="headerlink" title="梯度法"></a>梯度法</h2><p>确定好了对误分类敏感的准则函数（目标函数），先对准则函数求得其梯度向量，对于误分类的样本点朝着负梯度方向来更新权重系数。</p>
+<p>感知器算法选择准则函数是误分类点的函数间隔$y_i(wx_i+b)$</p>
+<p>选择不同的准则函数，得到的梯度也是不一样的，因此权重的更新的值也不一样。</p>
+<h2 id="最小平方误差算法"><a href="#最小平方误差算法" class="headerlink" title="最小平方误差算法"></a>最小平方误差算法</h2><p>最小平方误差(LMSE)算法，除了对可分模式是收敛的以外，对于类别不可分的情况也能指出来。 </p>
+<h3 id="分类器的不等式方程"><a href="#分类器的不等式方程" class="headerlink" title="分类器的不等式方程"></a>分类器的不等式方程</h3><p>将所有样本增广后写入一个矩阵X，X是N*（D+1）的矩阵，每一行是一个具体的样本，N是总共的样本数，其中负类的样本乘以-1规范化，因此判别界面的要求是：$Xw&gt;0$ 其中W是一个D+1维度的权向量，乘法得到的向量是一个N行的列向量，对应的是没一个样本的$w^Tx$ 。</p>
+<h3 id="H-K算法"><a href="#H-K算法" class="headerlink" title="H-K算法"></a>H-K算法</h3><p>求解的是$Xw=b$ 式子中$b=(b_1,b_2,\dots,b_n)^T$的所有分量都是正值。因为X是一个$N*(D+1)$ 通常行大于列的长方阵，属于超定方程，因此一般情况下 ，不存在确定解，但是可以求线性最小二乘解 。</p>
+<p>将b看作真实的值，因此平方误差就是$(w^Tx-b)^2$ 。</p>
+<p>所以可以将准则函数定义为：</p>
+<script type="math/tex; mode=display">
+J(w,x,b)=\dfrac{1}{2}\sum_{i=1}^{n}(w^Tx_i-b_i)^2=\dfrac{1}{2}\sum_{i=1}^{n}||w^Tx_i-b_i||^2=\dfrac{1}{2}(Xw-b)^T(Xw-b)</script><h2 id="势函数"><a href="#势函数" class="headerlink" title="势函数"></a>势函数</h2><p>非线性分类的方法。</p>
+<p>判别函数由样本向量的势函数产生。每个样本点对应与一个位置所以对应一个势能。</p>
+<p>在第k步迭代时的积累位势决定于在该步前所有的单独势函数的累加 。</p>
+<p>以K(x)表示积累位势函数，若加入的训练样本xk+1是错误分类，则积累函数需要修改，若是正确分类，则不变。 </p>
+<p>两类问题$\omega_1$的样本产生的势能为正，$\omega_2$样本产生的势能为负。</p>
+<p>迭代的时候，只有错分的样本才会积累势能，正势能的如果被错分（带入积累势能函数中为负）则积累的势能需要加上这个点的势能。反之负势能的如果被错分（代入积累势能函数中为正），则积累势能减去这个点的势能。</p>
+<p>积累势能函数由误分类的样本的势函数累加得到。</p>
+<p>第一类势函数：可用对称的有限多项式展开。</p>
+<script type="math/tex; mode=display">
+K(x,x_k)=\sum_i=1^m\phi_i(x)\phi_i(x_k)</script><p>注意是先乘了再相加，第二项的$\phi_i(x_k)$可以理解成每个样本点对应的权重</p>
+<p>最终的迭代关系为：</p>
+<script type="math/tex; mode=display">
+d_{k+1}(x)=\sum_{i=1}^mC_i(k+1)\phi_i(x)\\
+C_i(k+1)=C_i(k)+r_{k+1}\phi_i(x_{k+1})</script><p>势函数确定了，每个样本都是同样的势函数形式，但是判别函数也就是积累势函数随着样本的加入而在不断的更新，特别是误分类的样本会更新势函数。</p>
+<p>第二类势函数：选择双变量<strong>x</strong>和<strong>x</strong>k的对称函数作为势函数，即K(<strong>x</strong>, <strong>x</strong>k) = K(<strong>x</strong>k, <strong>x</strong>)，并且它可展开成无穷级数 。如下三种势函数</p>
+<script type="math/tex; mode=display">
+K(x,x_k)=e^{-\alpha||x-x_k||^2}\\
+K(x,x_k)=\frac{1}{1-\alpha||x-x_k||^2} \quad \alpha >0\\
+K(x,x_k)=\dfrac{sin\alpha||x-x_k||^2}{\alpha||x-x_k||^2}</script>]]></content>
+      <categories>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>课程</tag>
+        <tag>模式识别</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>leetcode 881 Boats to Save People</title>
+    <url>/2019-11-29-leetcode-881-Boats-to-Save-People.html</url>
+    <content><![CDATA[<h1 id="leetcode-881-Boats-to-Save-People"><a href="#leetcode-881-Boats-to-Save-People" class="headerlink" title="leetcode 881 Boats to Save People"></a>leetcode 881 Boats to Save People</h1><p><a href="https://leetcode.com/problems/boats-to-save-people/" target="_blank" rel="noopener">题目来源</a>。要求在船有载重量和人数限制为2的情况下，给出将所有人运过河的最小船数。</p>
+<a id="more"></a>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>使用贪心算法，进行求解。</p>
+<h3 id="桶排序"><a href="#桶排序" class="headerlink" title="桶排序"></a>桶排序</h3><p>首先是自己的思路：贪心的考虑每只船都尽可能的装满限重，然后优先让胖的人先上船，之后寻找在剩下载重量限制的情况下，找最胖的人。</p>
+<p>在具体实现上，先遍历一遍人数的重量，按照重量进行桶排序，因为重量不会超过limit，而且都是整数所以是可以实现的。每个桶记录该重量下的人数，然后先将重量最大的给安排上船，并寻找能够匹配的第二个重量。直到最轻的被遍历完得到答案。</p>
+<h2 id="双指针"><a href="#双指针" class="headerlink" title="双指针"></a>双指针</h2><p>提交后发现网上的思路和自己有一点差别：配对的贪心规则是最胖的先走之后，选择最轻的进行匹配。这样就很容易的使用双指针来实现。不过为什么两种规则都能够过，自己还在思考中,参考链接中有对这种贪心规则的证明。</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><h3 id="桶排序-1"><a href="#桶排序-1" class="headerlink" title="桶排序"></a>桶排序</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="comment">/* 桶排序 贪心的选择最胖的先走</span></span><br><span class="line"><span class="comment">	Runtime: 96 ms</span></span><br><span class="line"><span class="comment">	Memory Usage: 16.5 MB*/</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">numRescueBoats</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; people, <span class="keyword">int</span> limit)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> num = people.size();</span><br><span class="line">		<span class="keyword">if</span>(num&lt;=<span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; person(limit+<span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;num; i++)&#123;</span><br><span class="line">            person[people[i]]++;</span><br><span class="line">        &#125;</span><br><span class="line">		<span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">		<span class="comment">// int crossed = 0;</span></span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i = limit; i&gt;<span class="number">0</span>; i--)&#123;</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> j=person[i]; j&gt;<span class="number">0</span>; j--)&#123;</span><br><span class="line">				ans++;</span><br><span class="line">				<span class="comment">// crossed++;</span></span><br><span class="line">				person[i]--;<span class="comment">// 运走一个人后 计数减1</span></span><br><span class="line">				<span class="keyword">int</span> rest = limit - i;</span><br><span class="line">				<span class="keyword">for</span>(<span class="keyword">int</span> k=rest; k&gt;<span class="number">0</span>; k--)&#123;</span><br><span class="line">					<span class="keyword">if</span>(person[k]&gt;<span class="number">0</span>)&#123;</span><br><span class="line">						person[k]--;</span><br><span class="line">						<span class="keyword">if</span>(k==i) j--; <span class="comment">// 如果减去的和当前指向的weight一样 则需要减去自身</span></span><br><span class="line">						<span class="comment">// crossed++;</span></span><br><span class="line">						<span class="keyword">break</span>;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// if(crossed==num) cout&lt;&lt;"all crossed" &lt;&lt;endl;</span></span><br><span class="line">		<span class="keyword">return</span> ans;   </span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>需要注意的是如果剩下的重量和当前重量一致的时候，迭代的计数也要减1，比如limit为4，当前迭代的重量为2，剩下的匹配重量也为2情况。</p>
+<h3 id="双指针-1"><a href="#双指针-1" class="headerlink" title="双指针"></a>双指针</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="comment">/*排序后 双指针</span></span><br><span class="line"><span class="comment">	Runtime: 116 ms</span></span><br><span class="line"><span class="comment">	Memory Usage: 13.6 MB</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">numRescueBoats</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; people, <span class="keyword">int</span> limit)</span></span>&#123;</span><br><span class="line">    	sort(people.begin(), people.end());</span><br><span class="line">    	<span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">    	<span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    	<span class="keyword">int</span> j = people.size() - <span class="number">1</span>;</span><br><span class="line">    	<span class="keyword">while</span>(i&lt;=j)&#123;</span><br><span class="line">    		<span class="keyword">if</span>(people[i]+people[j]&lt;=limit)&#123;</span><br><span class="line">    			i++;</span><br><span class="line">    			j--;</span><br><span class="line">    			ans++;</span><br><span class="line">    		&#125;</span><br><span class="line">    		<span class="keyword">else</span>&#123;</span><br><span class="line">    			j--;</span><br><span class="line">    			ans++;</span><br><span class="line">    		&#125;</span><br><span class="line">    	&#125;</span><br><span class="line">    	<span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="复杂度"><a href="#复杂度" class="headerlink" title="复杂度"></a>复杂度</h2><p>leetcode上面显示桶排序的速度能够超过96%的提交，但是空间使用仅超过11%.</p>
+<h3 id="桶排序-2"><a href="#桶排序-2" class="headerlink" title="桶排序"></a>桶排序</h3><p>桶排序的时间复杂读为O(n)，但是空间消耗较多为O(limit)。自己实现的代码中虽然有三层for循环，但是每一层都不是人数n，从总的被遍历到的人来考虑，前面两层是遍历的人数因此是O(n)，而每一个重量的人都需要去寻找匹配的重量，考虑最坏的情况是O(limit)，但是一般来说不会寻找太多次，所以可以认为近似的是O(1)。因此总得时间复杂度为O(n)，空间复杂度为O(limit)</p>
+<h3 id="双指针-2"><a href="#双指针-2" class="headerlink" title="双指针"></a>双指针</h3><p>双指针的时间复杂度为排序的时间复杂度，使用快排的话是O(nlogn)。不需要额外的空间，所以是O(1)。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>对于第二种匹配规则的贪心的证明<a href="https://zhanghuimeng.github.io/post/leetcode-881-boats-to-save-people/" target="_blank" rel="noopener">参考</a> 但是存疑，因为我用第一种的匹配规则也做出来了。</p>
+]]></content>
+      <categories>
+        <category>题解</category>
+      </categories>
+      <tags>
+        <tag>leetcode</tag>
+        <tag>贪心</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>leetcode153 154 Find Minimum in Rotated Sorted Array I/II</title>
     <url>/2019-11-22-leetcode153-154-Find-Minimum-in-Rotated-Sorted-Array-III.html</url>
     <content><![CDATA[<h1 id="leetcode153-154-Find-Minimum-in-Rotated-Sorted-Array-I-II"><a href="#leetcode153-154-Find-Minimum-in-Rotated-Sorted-Array-I-II" class="headerlink" title="leetcode153 154. Find Minimum in Rotated Sorted Array I/II"></a>leetcode153 154. Find Minimum in Rotated Sorted Array I/II</h1><p>题目来源<a href="https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/description/" target="_blank" rel="noopener">leetcode153</a> 和<a href="https://leetcode.com/problems/find-minimum-in-rotated-sorted-array-ii/" target="_blank" rel="noopener">leetcode154</a> 要求在排序的旋转数组中寻找最小值。最小值可以很简单的遍历一次数组得到，时间复杂度为$O(n)$但是没有用到题目给的性质，所以会超时。</p>
@@ -653,10 +1175,10 @@ e_{11}=\dfrac{count(男)\times count(小说)}{n}=\dfrac{300\times450}{1500}=90</
         <category>数据挖掘</category>
       </categories>
       <tags>
-        <tag>课程</tag>
-        <tag>国科大</tag>
         <tag>数据仓库</tag>
         <tag>OLAPS</tag>
+        <tag>课程</tag>
+        <tag>国科大</tag>
       </tags>
   </entry>
   <entry>
@@ -816,7 +1338,7 @@ e_{11}=\dfrac{count(男)\times count(小说)}{n}=\dfrac{300\times450}{1500}=90</
 <p>再来看下Linux 内核中main()中对中断异常挂接的trap_init()中的设计到的一个GCC内嵌汇编。代码路径为；include\asm\system.h</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">1 #define _set_gate(gate_addr,type,dpl,addr) \</span><br><span class="line">2 __asm__ (&quot;movw %%dx,%%ax\n\t&quot; \</span><br><span class="line">3	&quot;movw %0,%%dx\n\t&quot; \</span><br><span class="line">4	&quot;movl %%eax,%1\n\t&quot; \</span><br><span class="line">5	&quot;movl %%edx,%2&quot; \</span><br><span class="line">6	: \</span><br><span class="line">7	: &quot;i&quot; ((short) (0x8000+(dpl&lt;&lt;13)+(type&lt;&lt;8))), \</span><br><span class="line">8	&quot;o&quot; (*((char *) (gate_addr))), \</span><br><span class="line">9	&quot;o&quot; (*(4+(char *) (gate_addr))), \</span><br><span class="line">10	&quot;d&quot; ((char *) (addr)),&quot;a&quot; (0x00080000))</span><br></pre></td></tr></table></figure>
 <p>首先从第6行输出寄存器开始阅读：输出寄存器为空。然后是第7至10行的输入寄存器。第%0个输入寄存器使用“i”表示输入立即数，第%1个输入寄存器使用“o”表示使用内存地址并可以加偏移值，第%2个输入寄存器依然使用“o”代码，第%3个寄存器使用“d”表示使用寄存器edx，第%4个寄存器使用“a”表示使用寄存器eax。</p>
-<p>之后再看下汇编语句：依次进行值得传递。</p>
+<p>之后再看下汇编语句：依次进行值的传递。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《Linux内核设计的艺术》新设计团队 著</p>
 <p>《Linux内核完全注释》赵炯 编著</p>
 ]]></content>
@@ -933,8 +1455,8 @@ T(n)=\left\{
         <category>题解</category>
       </categories>
       <tags>
-        <tag>leetcode</tag>
         <tag>快排</tag>
+        <tag>leetcode</tag>
       </tags>
   </entry>
   <entry>
@@ -1221,7 +1743,7 @@ f(n-1)+f(n-2)& \text {n>2}
 \end{cases}</script><p>也就是一个斐波那契数列，代码也就比较简单了。参考斐波那契数列的解法:</p>
 <p><a href="https://github.com/BraveY/Coding/blob/master/%E5%89%91%E6%8C%87offer/Fibonacci.cc" target="_blank" rel="noopener">https://github.com/BraveY/Coding/blob/master/%E5%89%91%E6%8C%87offer/Fibonacci.cc</a></p>
 <p>代码为：</p>
-<figure class="highlight cc"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">jumpFloor</span><span class="params">(<span class="keyword">int</span> number)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> result[<span class="number">3</span>] = &#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>&#125;;</span><br><span class="line">        <span class="keyword">if</span>(number&lt;<span class="number">3</span>) <span class="keyword">return</span> result[number];</span><br><span class="line">        <span class="keyword">int</span> fib_one = result[<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> fib_two = result[<span class="number">2</span>];</span><br><span class="line">        <span class="keyword">int</span> fib;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">3</span>; i&lt;=number; i++)&#123;</span><br><span class="line">            fib = fib_one + fib_two;</span><br><span class="line">            fib_one = fib_two;</span><br><span class="line">            fib_two = fib;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> fib;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">jumpFloor</span><span class="params">(<span class="keyword">int</span> number)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> result[<span class="number">3</span>] = &#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>&#125;;</span><br><span class="line">        <span class="keyword">if</span>(number&lt;<span class="number">3</span>) <span class="keyword">return</span> result[number];</span><br><span class="line">        <span class="keyword">int</span> fib_one = result[<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> fib_two = result[<span class="number">2</span>];</span><br><span class="line">        <span class="keyword">int</span> fib;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">3</span>; i&lt;=number; i++)&#123;</span><br><span class="line">            fib = fib_one + fib_two;</span><br><span class="line">            fib_one = fib_two;</span><br><span class="line">            fib_two = fib;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> fib;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <h2 id="变种题目："><a href="#变种题目：" class="headerlink" title="变种题目："></a>变种题目：</h2><p>一只青蛙一次可以跳上1级台阶，也可以跳上2级……它也可以跳上n级。求该青蛙跳上一个n级的台阶总共有多少种跳法。</p>
 <p>思路也是一样的：第一次跳1级台阶，则有f(n-1)的解法，第一次跳2级台阶，则有f(n-2)的解法，第一次跳n-1级台阶，则有f(2)的解法， 第一次跳n级台阶则还有一种解法。用f(0)表示第一次跳n级的情况,f(0)=1。</p>
 <p>归纳成函数就是：</p>
@@ -1232,7 +1754,7 @@ f(n)=
 1& \text{n=1}\\
 f(n-1)+f(n-2)...+f(1)+f(0)& \text {n>1}
 \end{cases}</script><p>所以代码为：</p>
-<figure class="highlight cc"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">jumpFloorII</span><span class="params">(<span class="keyword">int</span> number)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; result;</span><br><span class="line">        result.push_back(<span class="number">1</span>); <span class="comment">// f(0) =1 ;</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;=number; i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>; j&lt;i; j++)&#123; <span class="comment">// f(n)=f(n-1)+f(n-2)+...f(1)+f(0)</span></span><br><span class="line">                sum += result[j];</span><br><span class="line">            &#125;</span><br><span class="line">            result.push_back(sum);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result[number];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">jumpFloorII</span><span class="params">(<span class="keyword">int</span> number)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; result;</span><br><span class="line">        result.push_back(<span class="number">1</span>); <span class="comment">// f(0) =1 ;</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;=number; i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>; j&lt;i; j++)&#123; <span class="comment">// f(n)=f(n-1)+f(n-2)+...f(1)+f(0)</span></span><br><span class="line">                sum += result[j];</span><br><span class="line">            &#125;</span><br><span class="line">            result.push_back(sum);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result[number];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>另一个斐波那契数列数列问题：</p>
 <h2 id="矩形覆盖"><a href="#矩形覆盖" class="headerlink" title="矩形覆盖"></a>矩形覆盖</h2><p><a href="https://www.nowcoder.com/practice/72a5a919508a4251859fb2cfb987a0e6?tpId=13&amp;tqId=11163&amp;rp=1&amp;ru=/ta/coding-interviews&amp;qru=/ta/coding-interviews/question-ranking" target="_blank" rel="noopener">https://www.nowcoder.com/practice/72a5a919508a4251859fb2cfb987a0e6?tpId=13&amp;tqId=11163&amp;rp=1&amp;ru=/ta/coding-interviews&amp;qru=/ta/coding-interviews/question-ranking</a></p>
 <p>我们可以用2<em>1的小矩形横着或者竖着去覆盖更大的矩形。请问用n个2</em>1的小矩形无重叠地覆盖一个2*n的大矩形，总共有多少种方法？</p>
@@ -1249,7 +1771,7 @@ f(n)=
 f(n-1)+f(n-2)& \text {n>2}
 \end{cases}</script><p>因此代码也是同第一个青蛙跳台阶一样的。</p>
 <p>代码：</p>
-<figure class="highlight cc"><table><tr><td class="code"><pre><span class="line"><span class="comment">//https://www.nowcoder.com/practice/72a5a919508a4251859fb2cfb987a0e6?tpId=13&amp;tqId=11163&amp;rp=1&amp;ru=/ta/coding-interviews&amp;qru=/ta/coding-interviews/question-ranking</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">rectCover</span><span class="params">(<span class="keyword">int</span> number)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> result[<span class="number">3</span>] = &#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>&#125;;</span><br><span class="line">        <span class="keyword">if</span>(number&lt;<span class="number">3</span>) <span class="keyword">return</span> result[number];</span><br><span class="line">        <span class="keyword">int</span> fib_one = result[<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> fib_two = result[<span class="number">2</span>];</span><br><span class="line">        <span class="keyword">int</span> fib;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">3</span>; i&lt;=number; i++)&#123;</span><br><span class="line">            fib = fib_one + fib_two;</span><br><span class="line">            fib_one = fib_two;</span><br><span class="line">            fib_two = fib;</span><br><span class="line">        &#125;</span><br><span class="line">       <span class="keyword">return</span> fib;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//https://www.nowcoder.com/practice/72a5a919508a4251859fb2cfb987a0e6?tpId=13&amp;tqId=11163&amp;rp=1&amp;ru=/ta/coding-interviews&amp;qru=/ta/coding-interviews/question-ranking</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">rectCover</span><span class="params">(<span class="keyword">int</span> number)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> result[<span class="number">3</span>] = &#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>&#125;;</span><br><span class="line">        <span class="keyword">if</span>(number&lt;<span class="number">3</span>) <span class="keyword">return</span> result[number];</span><br><span class="line">        <span class="keyword">int</span> fib_one = result[<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> fib_two = result[<span class="number">2</span>];</span><br><span class="line">        <span class="keyword">int</span> fib;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">3</span>; i&lt;=number; i++)&#123;</span><br><span class="line">            fib = fib_one + fib_two;</span><br><span class="line">            fib_one = fib_two;</span><br><span class="line">            fib_two = fib;</span><br><span class="line">        &#125;</span><br><span class="line">       <span class="keyword">return</span> fib;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总结一下，对于斐波那契数列问题思路都是一样：</p>
 <ul>
 <li>输出是输入的函数， f(n)</li>

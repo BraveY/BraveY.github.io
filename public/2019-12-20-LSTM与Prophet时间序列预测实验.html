@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon16x16.png">
+  <link rel="mask-icon" href="/images/favicon16x16.png" color="#222">
+  <meta name="google-site-verification" content="hDujO4MQUB7U9ir-4VXM5PW4fDFSq0-7G-LBX-Lh86M">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="LSTM与Prophet时间序列预测实验分别使用Pytorch构建的LSTM网络与Facebook开源的Prophet工具对时间序列进行预测的一个对比小实验，同时作为一个小白也借着这个实验来学习下Pytorch的使用，因为第一次使用，所以会比较详细的注释代码。">
+<meta name="keywords" content="时间序列,LSTM,Pytorch,Prophet">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LSTM与Prophet时间序列预测实验">
+<meta property="og:url" content="https://bravey.github.io/2019-12-20-LSTM与Prophet时间序列预测实验.html">
+<meta property="og:site_name" content="BraveY">
+<meta property="og:description" content="LSTM与Prophet时间序列预测实验分别使用Pytorch构建的LSTM网络与Facebook开源的Prophet工具对时间序列进行预测的一个对比小实验，同时作为一个小白也借着这个实验来学习下Pytorch的使用，因为第一次使用，所以会比较详细的注释代码。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1576911405/blog/deep-learning/LSTM_time_series.png">
+<meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1576911405/blog/deep-learning/Prophet_time_series.png">
+<meta property="og:updated_time" content="2019-12-21T08:23:13.385Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LSTM与Prophet时间序列预测实验">
+<meta name="twitter:description" content="LSTM与Prophet时间序列预测实验分别使用Pytorch构建的LSTM网络与Facebook开源的Prophet工具对时间序列进行预测的一个对比小实验，同时作为一个小白也借着这个实验来学习下Pytorch的使用，因为第一次使用，所以会比较详细的注释代码。">
+<meta name="twitter:image" content="https://res.cloudinary.com/bravey/image/upload/v1576911405/blog/deep-learning/LSTM_time_series.png">
+
+<link rel="canonical" href="https://bravey.github.io/2019-12-20-LSTM与Prophet时间序列预测实验.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>LSTM与Prophet时间序列预测实验 | BraveY</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BraveY</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bravey.github.io/2019-12-20-LSTM与Prophet时间序列预测实验.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="http://imgsrc.baidu.com/forum/w%3D580/sign=9ef55a639e22720e7bcee2f24bcb0a3a/072032adcbef7609dc34669e28dda3cc7dd99ecc.jpg">
+      <meta itemprop="name" content="BraveY">
+      <meta itemprop="description" content="To the time to life, rather than to life in time">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BraveY">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          LSTM与Prophet时间序列预测实验
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-20 22:24:26" itemprop="dateCreated datePublished" datetime="2019-12-20T22:24:26+08:00">2019-12-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-12-21 16:23:13" itemprop="dateModified" datetime="2019-12-21T16:23:13+08:00">2019-12-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度学习/" itemprop="url" rel="index">
+                    <span itemprop="name">深度学习</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019-12-20-LSTM与Prophet时间序列预测实验.html" class="post-meta-item leancloud_visitors" data-flag-title="LSTM与Prophet时间序列预测实验" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2019-12-20-LSTM与Prophet时间序列预测实验.html#comments" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019-12-20-LSTM与Prophet时间序列预测实验.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>6.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="LSTM与Prophet时间序列预测实验"><a href="#LSTM与Prophet时间序列预测实验" class="headerlink" title="LSTM与Prophet时间序列预测实验"></a>LSTM与Prophet时间序列预测实验</h1><p>分别使用Pytorch构建的LSTM网络与Facebook开源的Prophet工具对时间序列进行预测的一个对比小实验，同时作为一个小白也借着这个实验来学习下Pytorch的使用，因为第一次使用，所以会比较详细的注释代码。</p>
+<a id="more"></a>
+<p>使用的数据为了与Prophet进行对比，因此使用了Prophet官网例子上用到的数据集。该时间序列数据集来自维基百科上面对美国橄榄球运动员佩顿·曼宁（Peyton Williams Manning）的日访问量的记录日志，时间跨度为2007年12月10号到2016年1月20号共2905条数据。 </p>
+<p>Jupyter代码与数据集地址在<a href="https://github.com/BraveY/AI-with-code/tree/master/time-series" target="_blank" rel="noopener">我的github</a>上，欢迎star。</p>
+<h2 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a>LSTM</h2><p>LSTM的介绍参考<a href="https://zhuanlan.zhihu.com/p/30465140" target="_blank" rel="noopener">夕小瑶</a>与<a href="https://zhuanlan.zhihu.com/p/32085405" target="_blank" rel="noopener">陈诚</a>的介绍，代码主要参考<a href="https://blog.csdn.net/baidu_36669549/article/details/85595807" target="_blank" rel="noopener">凌空的桨</a>与<a href="https://github.com/L1aoXingyu/code-of-learn-deep-learning-with-pytorch/tree/master/chapter5_RNN/time-series" target="_blank" rel="noopener">源码链接</a> ，在Pytorch1.3.1的版本上面改了一下，主要是测试的逻辑修改成了使用测试集以及取消了Variable的使用。整体的逻辑是使用前面的两天的数据来预测下一天的数据，网络的结构是使用了两层LSTM与一层线性回归层。</p>
+<h3 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h3><p>首先是数据的预处理代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np </span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd </span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt </span><br><span class="line"><span class="keyword">import</span> torch </span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"></span><br><span class="line"><span class="comment">#数据预处理</span></span><br><span class="line">data = pd.read_csv(<span class="string">'example_wp_log_peyton_manning.csv'</span>,usecols=[<span class="number">1</span>])</span><br><span class="line">data = data.dropna() <span class="comment">#丢弃空值</span></span><br><span class="line">dataset = data.values</span><br><span class="line">dataset = dataset.astype(<span class="string">'float32'</span>)</span><br><span class="line"></span><br><span class="line">max_value = np.max(dataset)</span><br><span class="line">min_value = np.min(dataset)</span><br><span class="line">scalar = max_value - min_value</span><br><span class="line">dataset = list(map(<span class="keyword">lambda</span> x: x/scalar, dataset)) <span class="comment">#将数据归一化到0~1之间</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#划分数据集</span></span><br><span class="line"><span class="comment">#通过前面几条的数据来预测下一条的数据，look_back设置具体的把前面几条的数据作为预测的输入data_X，而输出就是下一条data_Y</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_dataset</span><span class="params">(dataset,look_back=<span class="number">2</span>)</span>:</span> <span class="comment"># 每个的滑动窗口设置为2</span></span><br><span class="line">    dataX, dataY=[], []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(dataset)-look_back):</span><br><span class="line">        a=dataset[i:(i+look_back)]</span><br><span class="line">        dataX.append(a)    <span class="comment"># 记录窗口的值</span></span><br><span class="line">        dataY.append(dataset[i+look_back]) <span class="comment"># 记录除了前面两个以外的所有值作为正确的标签</span></span><br><span class="line">    <span class="keyword">return</span> np.array(dataX), np.array(dataY)</span><br><span class="line"><span class="comment">#创建好输入与输出 data_Y作为正确的预测值</span></span><br><span class="line">data_X, data_Y = create_dataset(dataset)</span><br><span class="line"></span><br><span class="line"><span class="comment">#划分训练集和测试集，70%作为训练集</span></span><br><span class="line">train_size = int(len(data_X) * <span class="number">0.7</span>)</span><br><span class="line">test_size = len(data_X)-train_size</span><br><span class="line"></span><br><span class="line">train_X = data_X[:train_size]</span><br><span class="line">train_Y = data_Y[:train_size]</span><br><span class="line"></span><br><span class="line">test_X = data_X[train_size:]</span><br><span class="line">test_Y = data_Y[train_size:]</span><br><span class="line"></span><br><span class="line"><span class="comment">#最后，我们需要将数据改变一下形状，因为 RNN 读入的数据维度是 (seq, batch, feature)，所以要重新改变一下数据的维度，这里只有一个序列，所以 batch 是 1，而输入的 feature 就是我们希望依据的几天，这里我们定的是两个天，所以 feature 就是 2.</span></span><br><span class="line"></span><br><span class="line">train_X = train_X.reshape(<span class="number">-1</span>,<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line">train_Y = train_Y.reshape(<span class="number">-1</span>,<span class="number">1</span>,<span class="number">1</span>)</span><br><span class="line">test_X = test_X.reshape(<span class="number">-1</span>,<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 转化成torch 的张量</span></span><br><span class="line">train_x = torch.from_numpy(train_X)</span><br><span class="line">train_y = torch.from_numpy(train_Y)</span><br><span class="line">test_x = torch.from_numpy(test_X)</span><br></pre></td></tr></table></figure>
+<h3 id="LSTM网络构建"><a href="#LSTM网络构建" class="headerlink" title="LSTM网络构建"></a>LSTM网络构建</h3><p>接着定义好网络模型，模型的第一部分是一个两层的 RNN，每一步模型接受前两天的输入作为特征，得到一个输出特征。接着通过一个线性层将 RNN 的输出回归到流量的具体数值，这里我们需要用 <code>view</code> 来重新排列，因为 <code>nn.Linear</code> 不接受三维的输入，所以我们先将前两维合并在一起，然后经过线性层之后再将其分开，最后输出结果。 </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#lstm 网络</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">lstm_reg</span><span class="params">(nn.Module)</span>:</span><span class="comment">#括号中的是python的类继承语法，父类是nn.Module类 不是参数的意思</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,input_size,hidden_size, output_size=<span class="number">1</span>,num_layers=<span class="number">2</span>)</span>:</span> <span class="comment"># 构造函数</span></span><br><span class="line">        <span class="comment">#inpu_size 是输入的样本的特征维度， hidden_size 是LSTM层的神经元个数，</span></span><br><span class="line">        <span class="comment">#output_size是输出的特征维度</span></span><br><span class="line">        super(lstm_reg,self).__init__()<span class="comment"># super用于多层继承使用，必须要有的操作</span></span><br><span class="line"> </span><br><span class="line">        self.rnn = nn.LSTM(input_size,hidden_size,num_layers)<span class="comment"># 两层LSTM网络，</span></span><br><span class="line">        self.reg = nn.Linear(hidden_size,output_size)<span class="comment">#把上一层总共hidden_size个的神经元的输出向量作为输入向量，然后回归到output_size维度的输出向量中</span></span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self,x)</span>:</span> <span class="comment">#x是输入的数据</span></span><br><span class="line">        x, _ = self.rnn(x)<span class="comment"># 单个下划线表示不在意的变量，这里是LSTM网络输出的两个隐藏层状态</span></span><br><span class="line">        s,b,h = x.shape</span><br><span class="line">        x = x.view(s*b, h)</span><br><span class="line">        x = self.reg(x)</span><br><span class="line">        x = x.view(s,b,<span class="number">-1</span>)<span class="comment">#使用-1表示第三个维度自动根据原来的shape 和已经定了的s,b来确定</span></span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"><span class="comment">#我使用了GPU加速，如果不用的话需要把.cuda()给注释掉    </span></span><br><span class="line">net = lstm_reg(<span class="number">2</span>,<span class="number">4</span>)</span><br><span class="line">net = net.cuda()</span><br><span class="line">criterion = nn.MSELoss().cuda()</span><br><span class="line">optimizer = torch.optim.Adam(net.parameters(),lr=<span class="number">1e-2</span>)</span><br></pre></td></tr></table></figure>
+<p>本来打算把网络拓扑也给画出来的，后面发现自己理解的还不够深入，可以先参考<a href="https://www.zhihu.com/question/41949741/answer/318771336" target="_blank" rel="noopener">LSTM神经网络输入输出究竟是怎样的？ - Scofield的回答 - 知乎 </a> 和<a href="https://zhuanlan.zhihu.com/p/79064602" target="_blank" rel="noopener">LSTM细节分析理解（pytorch版） - ymmy的文章 - 知乎 </a></p>
+<p>关于forward函数中为什么每个层可以直接使用输入的数据x这个tensor，而不需要按照构造函数里面的按照形参(input_size,hidden_size,num_layers)来传递参数。以nn.LSTM做例子，官方API为：</p>
+<ul>
+<li>参数<br>– <strong>input_size</strong><br>– <strong>hidden_size</strong><br>– <strong>num_layers</strong><br>– <strong>bias</strong><br>– <strong>batch_first</strong><br>– <strong>dropout</strong><br>– <strong>bidirectional</strong></li>
+<li>输入<br>– <strong>input</strong> (seq_len, batch, input_size)<br>– <strong>h_0</strong> (num_layers <em> num_directions, batch, hidden_size)<br>– <strong>c_0</strong> (num_layers </em> num_directions, batch, hidden_size)</li>
+<li><p>输出<br>– <strong>output</strong> (seq_len, batch, num_directions <em> hidden_size)<br>– <strong>h_n</strong> (num_layers </em> num_directions, batch, hidden_size)<br>– <strong>c_n</strong> (num_layers * num_directions, batch, hidden_size)</p>
+<p>所以forward中的x，<code>x, _ = self.rnn(x)</code>传递的参数是对应输入<strong>input</strong> (seq_len, batch, input_size)这个tensor，而不是对应的参数列表。同样<code>_</code>所代表的参数也就是<strong>h_n</strong> 和<strong>c_n</strong>。</p>
+</li>
+</ul>
+<h3 id="迭代"><a href="#迭代" class="headerlink" title="迭代"></a>迭代</h3><p>迭代过程进行了10000次迭代：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> e <span class="keyword">in</span> range(<span class="number">10000</span>):</span><br><span class="line"><span class="comment"># 新版本中可以不使用Variable了    </span></span><br><span class="line"><span class="comment">#     var_x = Variable(train_x).cuda() </span></span><br><span class="line"><span class="comment">#     var_y = Variable(train_y).cuda()</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#将tensor放在GPU上面进行运算</span></span><br><span class="line">    var_x = train_x.cuda()</span><br><span class="line">    var_y = train_y.cuda()</span><br><span class="line"> </span><br><span class="line">    out = net(var_x)</span><br><span class="line">    loss = criterion(out, var_y)</span><br><span class="line"> </span><br><span class="line">    optimizer.zero_grad()</span><br><span class="line">    loss.backward()</span><br><span class="line">    optimizer.step()</span><br><span class="line">    <span class="keyword">if</span> (e+<span class="number">1</span>)%<span class="number">100</span> == <span class="number">0</span>:</span><br><span class="line">        print(<span class="string">'Epoch: &#123;&#125;, Loss:&#123;:.5f&#125;'</span>.format(e+<span class="number">1</span>, loss.item()))</span><br><span class="line"><span class="comment">#存储训练好的模型参数        </span></span><br><span class="line">torch.save(net.state_dict(), <span class="string">'example_wp_log.net_params.pkl'</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="测试过程"><a href="#测试过程" class="headerlink" title="测试过程"></a>测试过程</h3><p>在测试的时候我发现源码中并没有用到之前划分的30%的测试集来单独进行测试，而是直接把原来的完整数据给丢进去来训练的，这儿有点没搞懂。因为按理来说需要单独使用测试集进行测试来评判模型的性能的，所以我单独把测试的数据集给提出来，使用单独的测试集进行了测试。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">net.load_state_dict(torch.load(<span class="string">'example_wp_log.net_params.pkl'</span>)) </span><br><span class="line">var_data = torch.from_numpy(test_X).cuda()<span class="comment">#net在GPU上面，所以输入的测试集合也要转入到GPU上面</span></span><br><span class="line">pred_test = net(var_data) <span class="comment"># 测试集的预测结果</span></span><br><span class="line">pred_test = pred_test.cpu().view(<span class="number">-1</span>).data.numpy()<span class="comment">#先转移到cpu上才能转换为numpy</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#乘以原来归一化的刻度放缩回到原来的值域 </span></span><br><span class="line">origin_test_Y = test_Y*scalar</span><br><span class="line">origin_pred_test = pred_test*scalar</span><br><span class="line"></span><br><span class="line"><span class="comment">#画图</span></span><br><span class="line">plt.plot(origin_pred_test, <span class="string">'r'</span>, label=<span class="string">'prediction'</span>)</span><br><span class="line">plt.plot(origin_test_Y, <span class="string">'b'</span>, label=<span class="string">'real'</span>)</span><br><span class="line">plt.legend(loc=<span class="string">'best'</span>)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line"><span class="comment">#计算MSE</span></span><br><span class="line"><span class="comment">#loss = criterion(out, var_y)？</span></span><br><span class="line">true_data = origin_test_Y</span><br><span class="line">true_data = np.array(true_data)</span><br><span class="line">true_data = np.squeeze(true_data)  <span class="comment"># 从二维变成一维</span></span><br><span class="line">MSE = true_data - origin_pred_test</span><br><span class="line">MSE = MSE*MSE</span><br><span class="line">MSE_loss = sum(MSE)/len(MSE)</span><br><span class="line">print(MSE_loss)</span><br></pre></td></tr></table></figure>
+<p>计算出来的MSE为<code>0.195649022176008</code>, 画出来的曲线图为：</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1576911405/blog/deep-learning/LSTM_time_series.png" alt=""></p>
+<h3 id="GPU加速"><a href="#GPU加速" class="headerlink" title="GPU加速"></a>GPU加速</h3><p><code>use_gpu = torch.cuda.is_available()  # 判断是否有GPU加速</code></p>
+<p>CUDA 加速需要设置的为：</p>
+<ol>
+<li>迭代的过程中输入的tensor放到GPU上  var_x = train_x.cuda()</li>
+<li>模型转移到GPU net.cuda()</li>
+<li>损失函数转移到GPU criterion = nn.MSELoss().cuda()</li>
+</ol>
+<h2 id="Prophet"><a href="#Prophet" class="headerlink" title="Prophet"></a>Prophet</h2><p>Prophet是facebook开源的一个时间序列预测工具,使用了时间序列分解与机器学习拟合的方法。详细介绍参考<a href="https://zhuanlan.zhihu.com/p/52330017" target="_blank" rel="noopener">张戎</a>的介绍。</p>
+<h3 id="Prophet的安装"><a href="#Prophet的安装" class="headerlink" title="Prophet的安装"></a>Prophet的安装</h3><p>在安装Prophet的时候并没有想官网介绍的那么简单，首先需要先安装Pystan,但是直接<code>pip install pystan</code>会报编译器内部错误，使用<code>conda install -c conda-forge pystan</code>之后问题解决，然后再使用<code>pip install fbprophet</code> 进行安装。</p>
+<h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><p>实验的例子就是官网的例子</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> fbprophet <span class="keyword">import</span> Prophet</span><br><span class="line">df = pd.read_csv(<span class="string">'example_wp_log_peyton_manning.csv'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#Prophet使用</span></span><br><span class="line">m = Prophet()</span><br><span class="line">m.fit(df)</span><br><span class="line"><span class="comment">#需要预测时间段为整个365天，也就是下一年的整个天数</span></span><br><span class="line">future = m.make_future_dataframe(periods=<span class="number">365</span>)</span><br><span class="line"><span class="comment">#开始预测</span></span><br><span class="line">forecast = m.predict(future)</span><br><span class="line"><span class="comment">#预测的结果保存在yhat_upper列中</span></span><br><span class="line">forecast[[<span class="string">'ds'</span>, <span class="string">'yhat'</span>, <span class="string">'yhat_lower'</span>, <span class="string">'yhat_upper'</span>]].tail()</span><br><span class="line"><span class="comment">#画图</span></span><br><span class="line">plt.plot(fb_pre, <span class="string">'r'</span>, label=<span class="string">'prediction'</span>)</span><br><span class="line">plt.plot(origin_test_Y, <span class="string">'b'</span>, label=<span class="string">'real'</span>)</span><br><span class="line">plt.legend(loc=<span class="string">'best'</span>)</span><br><span class="line">plt.show()</span><br><span class="line"><span class="comment">#计算MSE</span></span><br><span class="line">fb_pre = np.array(forecast[<span class="string">'yhat'</span>].iloc[<span class="number">2034</span>:<span class="number">2905</span>])<span class="comment">#2034到2905是前面30%的测试集所对应的数据范围</span></span><br><span class="line">MSE = true_data - fb_pre</span><br><span class="line">MSE = MSE*MSE</span><br><span class="line">MSE_loss = sum(MSE)/len(MSE)</span><br><span class="line">print(MSE_loss)</span><br></pre></td></tr></table></figure>
+<p>计算出来的MSE为：<code>0.25229994660830146</code>,画出来的图像为：</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1576911405/blog/deep-learning/Prophet_time_series.png" alt=""></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>MSE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LSTM</td>
+<td>0.195649022176008</td>
+</tr>
+<tr>
+<td>Prophet</td>
+<td>0.25229994660830146</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>可以看到使用LSTM的预测结果要比Prophet的结果好，但是也有可能是我还没有去调整Prophet的参数导致Prophet的性能差一些的。同时Prophet可以预测整整一年的时间，这个比起使用LSTM要厉害很多，实验中的LSTM使用的是单步预测的方法，也就是只能根据前段时刻的数据来预测下一个时刻的数据，如果要做到像Prophet那样预测未来一段时刻的数据，需要使用多步预测的方法，我查了下涉及到seq2seq，貌似比较复杂，还没有做实验。</p>
+<p>自己是小白，实验可能存在相关问题与不足之处，欢迎反馈。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>Pytorch中的<a href="https://zhuanlan.zhihu.com/p/41261640" target="_blank" rel="noopener">LSTM参数</a></p>
+<p><a href="https://facebook.github.io/prophet/" target="_blank" rel="noopener">Prophet官网</a></p>
+<p><a href="https://www.okcode.net/article/43571" target="_blank" rel="noopener">Prophet安装问题</a> </p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>BraveY
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://bravey.github.io/2019-12-20-LSTM与Prophet时间序列预测实验.html" title="LSTM与Prophet时间序列预测实验">https://bravey.github.io/2019-12-20-LSTM与Prophet时间序列预测实验.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/null" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/时间序列/" rel="tag"># 时间序列</a>
+              <a href="/tags/LSTM/" rel="tag"># LSTM</a>
+              <a href="/tags/Pytorch/" rel="tag"># Pytorch</a>
+              <a href="/tags/Prophet/" rel="tag"># Prophet</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019-12-08-线性判别函数.html" rel="next" title="线性判别函数">
+                  <i class="fa fa-chevron-left"></i> 线性判别函数
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019-12-27-奇思妙想.html" rel="prev" title="奇思妙想">
+                  奇思妙想 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments" id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#LSTM与Prophet时间序列预测实验"><span class="nav-number">1.</span> <span class="nav-text">LSTM与Prophet时间序列预测实验</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LSTM"><span class="nav-number">1.1.</span> <span class="nav-text">LSTM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据预处理"><span class="nav-number">1.1.1.</span> <span class="nav-text">数据预处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LSTM网络构建"><span class="nav-number">1.1.2.</span> <span class="nav-text">LSTM网络构建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#迭代"><span class="nav-number">1.1.3.</span> <span class="nav-text">迭代</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试过程"><span class="nav-number">1.1.4.</span> <span class="nav-text">测试过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GPU加速"><span class="nav-number">1.1.5.</span> <span class="nav-text">GPU加速</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Prophet"><span class="nav-number">1.2.</span> <span class="nav-text">Prophet</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Prophet的安装"><span class="nav-number">1.2.1.</span> <span class="nav-text">Prophet的安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验"><span class="nav-number">1.2.2.</span> <span class="nav-text">实验</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">1.4.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="BraveY"
+      src="http://imgsrc.baidu.com/forum/w%3D580/sign=9ef55a639e22720e7bcee2f24bcb0a3a/072032adcbef7609dc34669e28dda3cc7dd99ecc.jpg">
+  <p class="site-author-name" itemprop="name">BraveY</p>
+  <div class="site-description" itemprop="description">To the time to life, rather than to life in time</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">76</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BraveY" title="GitHub → https://github.com/BraveY" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:kaiyongyang@gmail.com" title="E-Mail → mailto:kaiyongyang@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/yang-shan-zhi-14" title="知乎 → https://www.zhihu.com/people/yang-shan-zhi-14" rel="noopener" target="_blank"><i class="fa fa-fw fa-book"></i>知乎</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_33620071" title="CSDN → https://blog.csdn.net/qq_33620071" rel="noopener" target="_blank"><i class="fa fa-fw fa-copyright"></i>CSDN</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BraveY</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">156k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:21</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1
+  </div>
+  <span class="post-meta-divider">|</span>
+
+<span id="sitetime"></span>
+<script language=javascript>
+  function siteTime(){
+    window.setTimeout("siteTime()", 1000);
+    var seconds = 1000;
+    var minutes = seconds * 60;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var years = days * 365;
+    var today = new Date();
+    var todayYear = today.getFullYear();
+    var todayMonth = today.getMonth()+1;
+    var todayDate = today.getDate();
+    var todayHour = today.getHours();
+    var todayMinute = today.getMinutes();
+    var todaySecond = today.getSeconds();
+    /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+    year - 作为date对象的年份，为4位年份值
+    month - 0-11之间的整数，做为date对象的月份
+    day - 1-31之间的整数，做为date对象的天数
+    hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+    minutes - 0-59之间的整数，做为date对象的分钟数
+    seconds - 0-59之间的整数，做为date对象的秒数
+    microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+    var t1 = Date.UTC(2018,04,17,17,36,03); //北京时间2018-4-17 17:36:03
+    var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
+    var diff = t2-t1;
+    var diffYears = Math.floor(diff/years);
+    var diffDays = Math.floor((diff/days)-diffYears*365);
+    var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
+    var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
+    var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
+    document.getElementById("sitetime").innerHTML=" 已运行"+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒";
+  }/*因为建站时间还没有一年，就将之注释掉了。需要的可以取消*/
+  siteTime();
+</script>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.5.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=W6nLzKg0cpOi9OkACkaXg3YB-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'W6nLzKg0cpOi9OkACkaXg3YB-gzGzoHsz',
+            'X-LC-Key': '0M7O0e3b6oEuphDr3yhQLx3E',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://bravey.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  function loadComments() {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "https://bravey.github.io/2019-12-20-LSTM与Prophet时间序列预测实验.html",
+            identifier: "2019-12-20-LSTM与Prophet时间序列预测实验.html",
+            title: "LSTM与Prophet时间序列预测实验"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://bravey.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  }
+    window.addEventListener('load', loadComments, false);
+</script>
+
+</body>
+</html>

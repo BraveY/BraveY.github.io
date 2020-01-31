@@ -1,5 +1,5 @@
 ---
-title:leetcode 53 Maximum Subarray
+title: leetcode 53 Maximum Subarray
 date: 2020-01-29 14:33:50
 categories: 题解
 tags:
