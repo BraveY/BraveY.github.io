@@ -20,7 +20,7 @@ copyright: true
 
 ## 1. 购买VPS服务器
 
-目前使用vultr的VPS服务器，5刀一个月，使用的CENTOS发行版。貌似日本的服务器网速最快，而且支持IPV6。在部署服务器的时候就需要开启IPV6。
+目前使用vultr的VPS服务器，5刀一个月，使用的CENTOS 8发行版。貌似日本的服务器网速最快，而且支持IPV6。在部署服务器的时候就需要开启IPV6。
 
 ## 2. 服务器设置
 
@@ -36,14 +36,16 @@ cd shadowsocks/
 安装python和pip工具以及git
 
 ```shell
-yum install python-setuptools && easy_install pip
-yum install git 
+#centos 8 服务器自带有python3 和 pip3 所以无需再安装python
+#yum install python-setuptools && easy_install pip 
+yum -y install git 
 ```
 
-使用pip通过git安装shadowsocks
+使用pip3通过git安装shadowsocks
 
-```
-pip install git+https://github.com/shadowsocks/shadowsocks.git@master
+```shell
+#pip install git+https://github.com/shadowsocks/shadowsocks.git@master
+pip3 install git+https://github.com/shadowsocks/shadowsocks.git@master
 ssserver
 ```
 
