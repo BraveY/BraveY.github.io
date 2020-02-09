@@ -11,7 +11,7 @@ copyright: true
 
 # leetcode 543 Diameter of Binary Tree 
 
-[题目来源](<https://leetcode.com/problems/diameter-of-binary-tree/> )。需要求解一颗二叉树的最大路径的长度，第一次做出来了，第二次没有做对，所以记录下。
+[题目来源，](<https://leetcode.com/problems/diameter-of-binary-tree/> )需要求解一颗二叉树的最大路径的长度，第一次做出来了，第二次没有做对，所以记录下。
 
 <!--more-->
 

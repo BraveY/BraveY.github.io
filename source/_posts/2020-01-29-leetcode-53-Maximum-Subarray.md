@@ -41,7 +41,7 @@ copyright: true
 
 
 
-### 复杂度
+#### 复杂度
 
 与暴力求解需要遍历$n^2$个索引对相比，分治法只需要遍历递归树的深度$log(n)$次。
 
@@ -68,7 +68,7 @@ $$
 
 ![](https://github.com/azl397985856/leetcode/raw/master/assets/problems/53.maximum-sum-subarray-dp.png)
 
-### 复杂度
+#### 复杂度
 
 因为只需要遍历一遍就可以把OPT数组给填充好，所有时间复杂度为O(n)，因为每次状态转移只依赖于前面一个状态，所以可以只使用O(1)的空间。
 
