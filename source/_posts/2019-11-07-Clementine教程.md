@@ -61,6 +61,25 @@ copyright: true
 ![](https://res.cloudinary.com/bravey/image/upload/v1573099406/blog/model.jpg)
 ![](https://res.cloudinary.com/bravey/image/upload/v1573099392/blog/viewer.jpg)
 
+### Apriori
+
+补充Apriori模型的例子，整体的架构为
+![](https://res.cloudinary.com/bravey/image/upload/v1581417277/blog/Clementine/Apriori_model.jpg)
+
+数据的导入设置为：
+
+![](https://res.cloudinary.com/bravey/image/upload/v1581416895/blog/Clementine/data.jpg)
+
+type节点的设置为：
+
+![](https://res.cloudinary.com/bravey/image/upload/v1581416896/blog/Clementine/type.jpg)
+
+模型的设置为：
+
+![](https://res.cloudinary.com/bravey/image/upload/v1581416895/blog/Clementine/model_setting.jpg)
+
+其中支持度和置信度这些参数是可以自己调的。
+
 ## 模型使用
 
 同样导入数据节点验证集.txt，设置好type节点(测试集的flag属性也设置为输入了)，再把训练好的模型从右上角给拖进来，最后设置输出节点。整个流程与前述相同，得到的验证流程如下：

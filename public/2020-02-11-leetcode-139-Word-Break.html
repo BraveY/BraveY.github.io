@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon16x16.png">
+  <link rel="mask-icon" href="/images/favicon16x16.png" color="#222">
+  <meta name="google-site-verification" content="hDujO4MQUB7U9ir-4VXM5PW4fDFSq0-7G-LBX-Lh86M">
+  <meta name="baidu-site-verification" content="8XIUcPkbzm">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="leetcode 139 Word Break题目来源,求解一个字符串能否由给定的子字符串组成。">
+<meta name="keywords" content="动态规划,递归">
+<meta property="og:type" content="article">
+<meta property="og:title" content="leetcode 139 Word Break">
+<meta property="og:url" content="https://bravey.github.io/2020-02-11-leetcode-139-Word-Break.html">
+<meta property="og:site_name" content="BraveY">
+<meta property="og:description" content="leetcode 139 Word Break题目来源,求解一个字符串能否由给定的子字符串组成。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-02-11T08:13:12.875Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="leetcode 139 Word Break">
+<meta name="twitter:description" content="leetcode 139 Word Break题目来源,求解一个字符串能否由给定的子字符串组成。">
+
+<link rel="canonical" href="https://bravey.github.io/2020-02-11-leetcode-139-Word-Break.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>leetcode 139 Word Break | BraveY</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BraveY</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bravey.github.io/2020-02-11-leetcode-139-Word-Break.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="http://imgsrc.baidu.com/forum/w%3D580/sign=9ef55a639e22720e7bcee2f24bcb0a3a/072032adcbef7609dc34669e28dda3cc7dd99ecc.jpg">
+      <meta itemprop="name" content="BraveY">
+      <meta itemprop="description" content="To the time to life, rather than to life in time">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BraveY">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          leetcode 139 Word Break
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-02-11 13:09:23 / 修改时间：16:13:12" itemprop="dateCreated datePublished" datetime="2020-02-11T13:09:23+08:00">2020-02-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/题解/" itemprop="url" rel="index">
+                    <span itemprop="name">题解</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2020-02-11-leetcode-139-Word-Break.html" class="post-meta-item leancloud_visitors" data-flag-title="leetcode 139 Word Break" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2020-02-11-leetcode-139-Word-Break.html#comments" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020-02-11-leetcode-139-Word-Break.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>978</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="leetcode-139-Word-Break"><a href="#leetcode-139-Word-Break" class="headerlink" title="leetcode 139 Word Break"></a>leetcode 139 Word Break</h1><p><a href="https://leetcode.com/problems/word-break/" target="_blank" rel="noopener">题目来源</a>,求解一个字符串能否由给定的子字符串组成。</p>
+<a id="more"></a>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>这道题涉及到字符串的操作，之前不是很熟悉。</p>
+<h2 id="记忆化递归"><a href="#记忆化递归" class="headerlink" title="记忆化递归"></a>记忆化递归</h2><p>输入的是字符串，也是属于可分的数据结构，因此可以考虑分成子问题后使用递归的方法来求解。将字符串分为left和right部分，对于left部分递归调用子问题去求解left这部分是否为真，对于right部分判断是否在字典中。只有left部分的解为真而且right部分在字典中，完整的字符串才是可以被字典中的字符串组成的。因为划分为两部分的方法总共有字符串长度n种，所以需要对n种划分方法都遍历，只要有一种划分方法为真，那么原问题的字符串方法为真。</p>
+<p>以“leetcode”为例有：</p>
+<script type="math/tex; mode=display">
+\begin{equation}\nonumber
+\begin{split}
+wB("leetcode")&=wB("")\&\&inDict("leetcode")\\
+&||wB("l")\&\&inDict("eetcode")\\
+&||wB("le")\&\&inDict("etcode")\\
+&||wB("lee")\&\&inDict("tcode")\\
+&||\textbf{wB("leet")&&inDict("code")}\\
+&||wB("leetc")\&\&inDict("ode")\\
+&||wB("leetco")\&\&inDict("de")\\
+&||wB("leetcod")\&\&inDict("e")\\
+\end{split}
+\end{equation}</script><p>这种递归实质上是一种枚举，如果不优化的话很多子问题会被重复计算，所以需要采用记忆化递归的方法。使用一个memo备忘表，存储每个子问题的解，递归时如果改子问题已经有解，就可以不必重复计算。</p>
+<h3 id="复杂度"><a href="#复杂度" class="headerlink" title="复杂度"></a>复杂度</h3><p>直接分析不好分析转化为动态规划好分析一些见下面,时间复杂度$O(n^2)$,空间复杂度$O(n)$</p>
+<h2 id="动态规划"><a href="#动态规划" class="headerlink" title="动态规划"></a>动态规划</h2><h3 id="基础版"><a href="#基础版" class="headerlink" title="基础版"></a>基础版</h3><p>动态规划本身就是记忆化递归的一种实现方式，因此既然写出了记忆化递归的递归式，写出动态规划的形式也就比较容易了。将最优子结构定义为opt[i]:表示字符串前i个字符构成的字符串能否由字典中的字符串组成。对比着上面的递归表达式就可以写出状态转移方程：</p>
+<script type="math/tex; mode=display">
+if\;\{opt[j]\&\&inDict(s.substing(j,i-j))\quad j<i\}\\
+opt[i] = true\;</script><p>也就是opt[i]的状态需要去查看其前面的每一个状态opt[j],如果前面有一个状态为真，而且剩下的right部分也为真那么此时的状态为真。</p>
+<h3 id="复杂度-1"><a href="#复杂度-1" class="headerlink" title="复杂度"></a>复杂度</h3><p>这个版本的时间复杂度，两层循环因此为$O(n^2)$,空间复杂度$O(n)$</p>
+<h3 id="优化版"><a href="#优化版" class="headerlink" title="优化版"></a>优化版</h3><p>基础版的状态转移方式是一个字符一个字符的去遍历的，但是实际上只有按照字典里面字符串的长度去探索才有可能得到真的情况。比如样例s=”leetcode”，wordDict={“leet”,”code”}，字典中字符串的长度为4，因此只有对长度为4的字符串去判断inDict才有意义。比如对left=”leetco“和right=”de“去判断是否为真是没有意义的，因为”de“肯定不在字典中的。</p>
+<p>所以新的状态转移方程为：</p>
+<script type="math/tex; mode=display">
+if\;\{opt[i-len]\&\&inDict(word))\quad len<i\}\\
+opt[i] = true\;</script><p>word是长度为len的字符串。</p>
+<p>如果按照背包问题来理解的话，就是考虑每次选择长度为len的字符串right，然后判断inDict(right)&amp;&amp;opt[i-len]。len的取值为wordDict中的所有字符串的长度。</p>
+<h3 id="复杂度-2"><a href="#复杂度-2" class="headerlink" title="复杂度"></a>复杂度</h3><p>时间复杂度为O(mn),m为字典的长度，空间复杂度O(n)。</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p><a href="https://github.com/BraveY/Coding/blob/master/leetcode/139word-break.cpp" target="_blank" rel="noopener">代码源文件</a></p>
+<h3 id="记忆化递归-1"><a href="#记忆化递归-1" class="headerlink" title="记忆化递归"></a>记忆化递归</h3><p>参考花花的代码，值得学习的地方：</p>
+<ol>
+<li>memo使用hash表来存储，然后通过哈希表的函数dict(key)，来判断key是否存在。</li>
+<li>将wordDict也重新用哈希表来存储，方便快速确定一个字符串是否在字典中</li>
+<li>string.substr(loc,len):从loc开始截取len长度的字符串，只有loc，则是从loc一直截取到尾部。</li>
+</ol>
+<figure class="highlight cc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">Runtime: 16 ms, faster than 50.07% of C++ online submissions for Word Break.</span></span><br><span class="line"><span class="comment">Memory Usage: 15.9 MB, less than 24.53% of C++ online submissions for Word</span></span><br><span class="line"><span class="comment">Break.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution1</span> &#123;</span></span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">wordBreak</span><span class="params">(<span class="built_in">string</span> s, <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt;&amp; wordDict)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//将wordDict中的的元素记录在hashset中，方便查找一个字符串是否在wordDict中</span></span><br><span class="line">    <span class="built_in">unordered_set</span>&lt;<span class="built_in">string</span>&gt; dict(wordDict.cbegin(), wordDict.cend());</span><br><span class="line">    <span class="keyword">return</span> wordBreak(s, dict);  <span class="comment">//重载</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">wordBreak</span><span class="params">(<span class="keyword">const</span> <span class="built_in">string</span>&amp; s, <span class="keyword">const</span> <span class="built_in">unordered_set</span>&lt;<span class="built_in">string</span>&gt;&amp; dict)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (memo.count(s)) <span class="keyword">return</span> memo[s];  <span class="comment">//已经求过s的答案 直接返回</span></span><br><span class="line">    <span class="keyword">if</span> (dict.count(s)) <span class="keyword">return</span> memo[s] = <span class="literal">true</span>;  <span class="comment">// s就在wordDict中</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; s.length(); j++) &#123;</span><br><span class="line">      <span class="keyword">const</span> <span class="built_in">string</span> left = s.substr(<span class="number">0</span>, j);</span><br><span class="line">      <span class="keyword">const</span> <span class="built_in">string</span> right = s.substr(j);</span><br><span class="line">      <span class="keyword">if</span> (dict.count(right) &amp;&amp; wordBreak(left, dict)) <span class="keyword">return</span> memo[s] = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> memo[s] = <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">  <span class="built_in">unordered_map</span>&lt;<span class="built_in">string</span>, <span class="keyword">bool</span>&gt; memo;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="基础DP"><a href="#基础DP" class="headerlink" title="基础DP"></a>基础DP</h3><figure class="highlight cc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">Runtime: 12 ms, faster than 61.68% of C++ online submissions for Word Break.</span></span><br><span class="line"><span class="comment">Memory Usage: 15.7 MB, less than 26.41% of C++ online submissions for Word</span></span><br><span class="line"><span class="comment">Break.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution2</span> &#123;</span></span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">wordBreak</span><span class="params">(<span class="built_in">string</span> s, <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt;&amp; wordDict)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//将wordDict中的的元素记录在hashset中，方便查找一个字符串是否在wordDict中</span></span><br><span class="line">    <span class="built_in">unordered_set</span>&lt;<span class="built_in">string</span>&gt; dict(wordDict.cbegin(), wordDict.cend());</span><br><span class="line">    <span class="keyword">int</span> n = s.length();</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">bool</span>&gt; opt(n + <span class="number">1</span>);</span><br><span class="line">    opt[<span class="number">0</span>] = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">      <span class="comment">// const string sub = s.substr(0, i);</span></span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; i; j++) &#123;</span><br><span class="line">        <span class="comment">// const string right = sub.substr(j);</span></span><br><span class="line">        <span class="keyword">if</span> (dict.count(s.substr(j, i - j)) &amp;&amp; opt[j]) &#123;</span><br><span class="line">          opt[i] = <span class="literal">true</span>;</span><br><span class="line">          <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> opt[n];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="优化DP"><a href="#优化DP" class="headerlink" title="优化DP"></a>优化DP</h3><figure class="highlight cc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">Runtime: 0 ms, faster than 100.00% of C++ online submissions for Word Break.</span></span><br><span class="line"><span class="comment">Memory Usage: 8.9 MB, less than 92.45% of C++ online submissions for Word Break.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution3</span> &#123;</span></span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">wordBreak</span><span class="params">(<span class="built_in">string</span> s, <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt;&amp; wordDict)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//将wordDict中的的元素记录在hashset中，方便查找一个字符串是否在wordDict中</span></span><br><span class="line">    <span class="built_in">unordered_set</span>&lt;<span class="built_in">string</span>&gt; dict(wordDict.cbegin(), wordDict.cend());</span><br><span class="line">    <span class="keyword">int</span> n = s.length();</span><br><span class="line">    <span class="keyword">int</span> m = wordDict.size();</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">bool</span>&gt; opt(n + <span class="number">1</span>);</span><br><span class="line">    opt[<span class="number">0</span>] = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">      <span class="comment">// const string sub = s.substr(0, i);</span></span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; j++) &#123;</span><br><span class="line">        <span class="keyword">int</span> len = wordDict[j].length();</span><br><span class="line">        <span class="keyword">if</span> (len &lt;= i &amp;&amp; opt[i - len] &amp;&amp;</span><br><span class="line">            dict.count(s.substr(i - <span class="number">1</span> - len + <span class="number">1</span>, len))) &#123;</span><br><span class="line">          opt[i] = <span class="literal">true</span>;</span><br><span class="line">          <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> opt[n];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://v.youku.com/v_show/id_XMzgwMjQ2MzEyNA==.html" target="_blank" rel="noopener">花花leetcode</a></p>
+<p><a href="https://github.com/azl397985856/leetcode/blob/master/problems/139.word-break.md" target="_blank" rel="noopener">lucifer</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>BraveY
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://bravey.github.io/2020-02-11-leetcode-139-Word-Break.html" title="leetcode 139 Word Break">https://bravey.github.io/2020-02-11-leetcode-139-Word-Break.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/null" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/动态规划/" rel="tag"># 动态规划</a>
+              <a href="/tags/递归/" rel="tag"># 递归</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020-02-07-leetcode-300-Longest-Increasing-Subsequence.html" rel="next" title="leetcode 300 Longest Increasing Subsequence">
+                  <i class="fa fa-chevron-left"></i> leetcode 300 Longest Increasing Subsequence
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments" id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#leetcode-139-Word-Break"><span class="nav-number">1.</span> <span class="nav-text">leetcode 139 Word Break</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#思路"><span class="nav-number">1.1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#记忆化递归"><span class="nav-number">1.2.</span> <span class="nav-text">记忆化递归</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#复杂度"><span class="nav-number">1.2.1.</span> <span class="nav-text">复杂度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动态规划"><span class="nav-number">1.3.</span> <span class="nav-text">动态规划</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基础版"><span class="nav-number">1.3.1.</span> <span class="nav-text">基础版</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复杂度-1"><span class="nav-number">1.3.2.</span> <span class="nav-text">复杂度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优化版"><span class="nav-number">1.3.3.</span> <span class="nav-text">优化版</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复杂度-2"><span class="nav-number">1.3.4.</span> <span class="nav-text">复杂度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">1.4.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#记忆化递归-1"><span class="nav-number">1.4.1.</span> <span class="nav-text">记忆化递归</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基础DP"><span class="nav-number">1.4.2.</span> <span class="nav-text">基础DP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优化DP"><span class="nav-number">1.4.3.</span> <span class="nav-text">优化DP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">1.5.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="BraveY"
+      src="http://imgsrc.baidu.com/forum/w%3D580/sign=9ef55a639e22720e7bcee2f24bcb0a3a/072032adcbef7609dc34669e28dda3cc7dd99ecc.jpg">
+  <p class="site-author-name" itemprop="name">BraveY</p>
+  <div class="site-description" itemprop="description">To the time to life, rather than to life in time</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">48</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BraveY" title="GitHub → https://github.com/BraveY" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:kaiyongyang@gmail.com" title="E-Mail → mailto:kaiyongyang@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/yang-shan-zhi-14" title="知乎 → https://www.zhihu.com/people/yang-shan-zhi-14" rel="noopener" target="_blank"><i class="fa fa-fw fa-book"></i>知乎</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_33620071" title="CSDN → https://blog.csdn.net/qq_33620071" rel="noopener" target="_blank"><i class="fa fa-fw fa-copyright"></i>CSDN</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BraveY</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">162k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:27</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1
+  </div>
+  <span class="post-meta-divider">|</span>
+
+<span id="sitetime"></span>
+<script language=javascript>
+  function siteTime(){
+    window.setTimeout("siteTime()", 1000);
+    var seconds = 1000;
+    var minutes = seconds * 60;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var years = days * 365;
+    var today = new Date();
+    var todayYear = today.getFullYear();
+    var todayMonth = today.getMonth()+1;
+    var todayDate = today.getDate();
+    var todayHour = today.getHours();
+    var todayMinute = today.getMinutes();
+    var todaySecond = today.getSeconds();
+    /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+    year - 作为date对象的年份，为4位年份值
+    month - 0-11之间的整数，做为date对象的月份
+    day - 1-31之间的整数，做为date对象的天数
+    hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+    minutes - 0-59之间的整数，做为date对象的分钟数
+    seconds - 0-59之间的整数，做为date对象的秒数
+    microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+    var t1 = Date.UTC(2018,04,17,17,36,03); //北京时间2018-4-17 17:36:03
+    var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
+    var diff = t2-t1;
+    var diffYears = Math.floor(diff/years);
+    var diffDays = Math.floor((diff/days)-diffYears*365);
+    var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
+    var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
+    var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
+    document.getElementById("sitetime").innerHTML=" 已运行"+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒";
+  }/*因为建站时间还没有一年，就将之注释掉了。需要的可以取消*/
+  siteTime();
+</script>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.5.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=W6nLzKg0cpOi9OkACkaXg3YB-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'W6nLzKg0cpOi9OkACkaXg3YB-gzGzoHsz',
+            'X-LC-Key': '0M7O0e3b6oEuphDr3yhQLx3E',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://bravey.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  function loadComments() {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "https://bravey.github.io/2020-02-11-leetcode-139-Word-Break.html",
+            identifier: "2020-02-11-leetcode-139-Word-Break.html",
+            title: "leetcode 139 Word Break"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://bravey.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  }
+    window.addEventListener('load', loadComments, false);
+</script>
+
+</body>
+</html>

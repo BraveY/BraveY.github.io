@@ -9,6 +9,7 @@
     "hexo": "^3.2.0",
     "hexo-asset-image": "git+https://github.com/CodeFalling/hexo-asset-image.git",
     "hexo-autonofollow": "^1.0.1",
+    "hexo-baidu-url-submit": "0.0.6",
     "hexo-deployer-git": "^0.3.1",
     "hexo-generator-archive": "^0.1.4",
     "hexo-generator-baidu-sitemap": "^0.1.6",
