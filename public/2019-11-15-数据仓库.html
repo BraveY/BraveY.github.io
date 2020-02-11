@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon16x16.png">
+  <link rel="mask-icon" href="/images/favicon16x16.png" color="#222">
+  <meta name="google-site-verification" content="hDujO4MQUB7U9ir-4VXM5PW4fDFSq0-7G-LBX-Lh86M">
+  <meta name="baidu-site-verification" content="8XIUcPkbzm" />
+  
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="数据仓库什么是数据仓库有多种定义，按照一位数据仓库系统构造方面的领衔设计师William H. Inmon的说法：数据仓库是一个面向主题的、集成的、时变的、非易失的数据集合，支持管理者的决策过程。 一句话总结：通过数据仓库来完成对一个项目的相关需求的快速分析，是一个联机分析处理（Online Analytical Processing System）系统，具体的定义见百度百科。">
+<meta name="keywords" content="数据仓库,OLAPS,课程,国科大">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据仓库">
+<meta property="og:url" content="https://bravey.github.io/2019-11-15-数据仓库.html">
+<meta property="og:site_name" content="BraveY">
+<meta property="og:description" content="数据仓库什么是数据仓库有多种定义，按照一位数据仓库系统构造方面的领衔设计师William H. Inmon的说法：数据仓库是一个面向主题的、集成的、时变的、非易失的数据集合，支持管理者的决策过程。 一句话总结：通过数据仓库来完成对一个项目的相关需求的快速分析，是一个联机分析处理（Online Analytical Processing System）系统，具体的定义见百度百科。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1573875850/blog/OLTP_OLAP.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1573875852/blog/data_cube.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1573875853/blog/start_schema.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1573875852/blog/snowfake_schema.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1573875852/blog/fact_schema.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1573875852/blog/location_hierarchy.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1573875851/blog/time_hierarchy.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1573875851/blog/numeric_hierarchy.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1573875851/blog/olap_operation.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1573875850/blog/cube_group_by.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1573875851/blog/index_map.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1573875850/blog/join_index.jpg">
+<meta property="og:updated_time" content="2019-11-16T13:00:19.536Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据仓库">
+<meta name="twitter:description" content="数据仓库什么是数据仓库有多种定义，按照一位数据仓库系统构造方面的领衔设计师William H. Inmon的说法：数据仓库是一个面向主题的、集成的、时变的、非易失的数据集合，支持管理者的决策过程。 一句话总结：通过数据仓库来完成对一个项目的相关需求的快速分析，是一个联机分析处理（Online Analytical Processing System）系统，具体的定义见百度百科。">
+<meta name="twitter:image" content="https://res.cloudinary.com/bravey/image/upload/v1573875850/blog/OLTP_OLAP.jpg">
+
+<link rel="canonical" href="https://bravey.github.io/2019-11-15-数据仓库.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>数据仓库 | BraveY</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BraveY</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bravey.github.io/2019-11-15-数据仓库.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="http://imgsrc.baidu.com/forum/w%3D580/sign=9ef55a639e22720e7bcee2f24bcb0a3a/072032adcbef7609dc34669e28dda3cc7dd99ecc.jpg">
+      <meta itemprop="name" content="BraveY">
+      <meta itemprop="description" content="To the time to life, rather than to life in time">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BraveY">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          数据仓库
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-15 20:13:46" itemprop="dateCreated datePublished" datetime="2019-11-15T20:13:46+08:00">2019-11-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-11-16 21:00:19" itemprop="dateModified" datetime="2019-11-16T21:00:19+08:00">2019-11-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据挖掘/" itemprop="url" rel="index">
+                    <span itemprop="name">数据挖掘</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019-11-15-数据仓库.html" class="post-meta-item leancloud_visitors" data-flag-title="数据仓库" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2019-11-15-数据仓库.html#comments" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019-11-15-数据仓库.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="数据仓库"><a href="#数据仓库" class="headerlink" title="数据仓库"></a>数据仓库</h1><h2 id="什么是数据仓库"><a href="#什么是数据仓库" class="headerlink" title="什么是数据仓库"></a>什么是数据仓库</h2><p>有多种定义，按照一位数据仓库系统构造方面的领衔设计师William H. Inmon的说法：数据仓库是一个面向主题的、集成的、时变的、非易失的数据集合，支持管理者的决策过程。</p>
+<p>一句话总结：通过数据仓库来完成对一个项目的相关需求的快速分析，是一个联机分析处理（Online Analytical Processing System）系统，具体的定义见<a href="https://baike.baidu.com/item/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93" target="_blank" rel="noopener">百度百科</a>。</p>
+<a id="more"></a>
+<h3 id="特征"><a href="#特征" class="headerlink" title="特征"></a>特征</h3><ul>
+<li><strong>面向主题的</strong>：数据仓库围绕一些主题，如顾客、供应商、产品和销售组织。数据仓库关注决策者的数据建模与分析，而不是构造组织机构的日常操作和事务处理。</li>
+<li><strong>集成的：</strong>通常，构造数据仓库是将多个异种数据源，如关系数据库、一般文件和联机事务处理记录，集成在一起。</li>
+<li><strong>时变的</strong>：数据存储从历史的角度（例如，过去5-10 年）提供信息。</li>
+<li><strong>非易失的：</strong>数据仓库总是。物理地分离存放数据；这些数据源于操作环境下的应用数据</li>
+</ul>
+<h3 id="操作数据库系统与数据仓库的区别"><a href="#操作数据库系统与数据仓库的区别" class="headerlink" title="操作数据库系统与数据仓库的区别"></a>操作数据库系统与数据仓库的区别</h3><p>我们常见的关系数据库就是联机操作数据库，联机操作数据库系统的主要任务是执行联机事务和查询处理。这种系统称为联机事务处理（OLTP）系统。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875850/blog/OLTP_OLAP.jpg" alt=""></p>
+<h2 id="数据立方体"><a href="#数据立方体" class="headerlink" title="数据立方体"></a>数据立方体</h2><p>数据仓库基于<strong>多维数据模型</strong>，这种模型将数据看做数据立方体形式。</p>
+<p>数据立方体的定义：在一个多维的平台上面对数据建模和观察，由<strong>维和事实</strong>定义。</p>
+<p>每个维都可以有一个与之相关联的表，称作维表，在表中进一步的描述维更具体的属性（比如名字、类型等）。</p>
+<p>多维数据模型围绕一个具体的主题（比如销售）这样的中心主题来组织。主题用事实表表示。事实是数值度量的，事实表包括事实的<strong>名称或度量</strong>。</p>
+<p>一个具体的例子如下所示，表示的是关于销售这个事实的数据立方体。其中左边是一个二维的数据立方体，右边是一个三维的数据立方体。可以扩展到n维。以3d这个数据立方体，讲解下682这个值的含义，表示Toronto市，security项目在Q2季度的销售量。<img src="https://res.cloudinary.com/bravey/image/upload/v1573875852/blog/data_cube.jpg" alt=""></p>
+<h2 id="数据仓库建模"><a href="#数据仓库建模" class="headerlink" title="数据仓库建模"></a>数据仓库建模</h2><p>数据仓库最流行的数据模型是多维数据模型，这种模型有三种形式：星形模式（Star schema）、雪花模式（snowflake schema）、事实星座（fact constellation）</p>
+<h3 id="星形模式"><a href="#星形模式" class="headerlink" title="星形模式"></a>星形模式</h3><p>最常见的模式，在这种模式下，数据仓库包括：</p>
+<ul>
+<li>一个大的事实表，里面又包含<ul>
+<li>事实的维度</li>
+<li>事实的度量</li>
+</ul>
+</li>
+<li>多组小的维表，详细记录一个维度的属性</li>
+</ul>
+<p>例子如下，展开了很像星光四射，因而得名。<img src="https://res.cloudinary.com/bravey/image/upload/v1573875853/blog/start_schema.jpg" alt=""></p>
+<p>最中间的是销售事实表，总共有4个维度：时间、商品、部门（branch）、地点，3个度量：销售数量、销售金额、平均销售量。</p>
+<h3 id="雪花模式"><a href="#雪花模式" class="headerlink" title="雪花模式"></a>雪花模式</h3><p>雪花模式是星形模式的变种，其中某些维表被规范化，因而把数据进一步分解到附加的表中。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875852/blog/snowfake_schema.jpg" alt=""></p>
+<p>星形模式是只有一层的，而雪花模式可以延伸。图中在item维度又延伸出了供应商这个维度，在地点维度又延伸出了城市这个维度。</p>
+<h3 id="事实星座"><a href="#事实星座" class="headerlink" title="事实星座"></a>事实星座</h3><p>对于一些复杂的应用可能需要多个事实表共享维表，这种模式可以看成星形模式的汇集，所以称做事实星座。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875852/blog/fact_schema.jpg" alt=""></p>
+<p>上面总共有两个事实表：销售与运输(Shipping)。因为两个事实表有些维度是共享的，所以同时指向相同的维度就可以了。</p>
+<h3 id="概念分层"><a href="#概念分层" class="headerlink" title="概念分层"></a>概念分层</h3><p>概念分层(Concept Hierarchy)，对一个维度在概念上进行分层。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875852/blog/location_hierarchy.jpg" alt=""></p>
+<p>比如在地点上可以从办公室上升到城市上升到国家一直到最后的最高层所有。每个维度的最高层都是all所有这个级别。上图地点的分层是基于全序的层次结构，也可以组织成基于偏序的格结构，如下对时间的分层。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875851/blog/time_hierarchy.jpg" alt=""></p>
+<p>对于连续的属性值或或者维度，通过将其离散化来定义概念分层。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875851/blog/numeric_hierarchy.jpg" alt=""></p>
+<h3 id="OLAP操作"><a href="#OLAP操作" class="headerlink" title="OLAP操作"></a>OLAP操作</h3><p>进行实际分析的时候需要执行OLAP操作，典型的有下面四种。</p>
+<h4 id="上卷（roll-up）"><a href="#上卷（roll-up）" class="headerlink" title="上卷（roll-up）"></a>上卷（roll-up）</h4><p>上卷操作沿着一个维度的概念分层向上攀升。如下图所示的第1个操作，对location维度从城市上卷到国家，则原来的立方体的location维度从原来有4个城市变成只有两个国家。</p>
+<h4 id="下钻（drill-down）"><a href="#下钻（drill-down）" class="headerlink" title="下钻（drill-down）"></a>下钻（drill-down）</h4><p>下钻是上卷的逆操作，它由不太详细的数据到更详细的数据。</p>
+<p>比如从第1个上卷的操作得到的数据立方体做从国家到城市的逆操作就回到了原来的数据立方体。第二个操作就是下钻操作，在time维度上从季度下钻到了月。</p>
+<h4 id="切片（slice）和切块（dice）"><a href="#切片（slice）和切块（dice）" class="headerlink" title="切片（slice）和切块（dice）"></a>切片（slice）和切块（dice）</h4><p>切片操作在给定的立方体上一个维度上面进行选择，形成一个新的子立方体。比如第3个操作，切边选择了time=Q1，因而得到的子立方体都是在Q1季度上的数据。</p>
+<p>切块操作则是在多个维度上进行选择。比如第4个操作就是在location维度选择多伦多与温哥华，而在time维度上选择Q1与Q2季度，而在item维度上选择家庭娱乐与计算机。</p>
+<h4 id="转轴（pivot）"><a href="#转轴（pivot）" class="headerlink" title="转轴（pivot）"></a>转轴（pivot）</h4><p>转轴又称作旋转(rotate)，是一种目视操作，移动了数据的视角。比如第5个操作，将原来的item维度在下，location维度在上。旋转后变成了item维度在上，而location维度在下。类似于矩阵的转置。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875851/blog/olap_operation.jpg" alt=""></p>
+<h4 id="操作实例"><a href="#操作实例" class="headerlink" title="操作实例"></a>操作实例</h4><p> Starting with the base cuboid [day, doctor, patient],what OLAP operations should be performed in order<br>to list the total fee collected by each doctor in 1999?</p>
+<p>首先要求所有的费用，因此对patient维度做上卷操作，上卷到all所有这个层次。然后时间限定在了1999年，因此对day维度做上卷操作，上卷到年这个层次。最后进行切边操作，选择1999年这个年份。</p>
+<h2 id="数据仓库实现"><a href="#数据仓库实现" class="headerlink" title="数据仓库实现"></a>数据仓库实现</h2><h3 id="数据立方体的有效计算"><a href="#数据立方体的有效计算" class="headerlink" title="数据立方体的有效计算"></a>数据立方体的有效计算</h3><p>前述的OLAP操作依赖于对数据立方体的计算操作，既是针对不同维度上面的聚合，SQL的术语是分组（group-by）。对于n个维度的数据立方体，不考虑每个维度的概念分层，则总共可以构成的分组（不同维度组合的集合）有$2^n$种。如下所示，一个（city，item，year）的三维数据立方体可以有8种分组方式。</p>
+<p>其实不考虑概念分层意味着每个维度可以有最高层all和最低层两个分层。因此如果考虑概念分层，假设有n个维度</p>
+<p>，每个维度都有m个分层，则这样来说可有$m^n$个方体。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875850/blog/cube_group_by.jpg" alt=""></p>
+<p>为了实现快速返回OLAP的操作，需要提前将这些分组的结果存储下来，这样当指定OLAP操作，直接去访问这些分组就可以了。这种提前计算方体结果的方法，称作<strong>物化（materialization）</strong>但是考虑到概念分层，存储所有的分组结果是不现实的。采用<strong>部分物化（partial materaialiaztion）</strong>预先计算一部分适当的常用的子集。</p>
+<h3 id="OLAP索引"><a href="#OLAP索引" class="headerlink" title="OLAP索引"></a>OLAP索引</h3><h4 id="位图索引（bitmap-indexing）"><a href="#位图索引（bitmap-indexing）" class="headerlink" title="位图索引（bitmap indexing）"></a>位图索引（bitmap indexing）</h4><p>在给定属性的位图索引中，属性域中的每个值v，有一个不同的位向量bit vector(即一列值)Bv。如果给定的属性域包含n 个值，则位图索引中每项需要n 位（即，n 位向量）。如果数据表中给定行的属性值为v，则在位图索引的对应行，表示该值的位为1，该行的其它位均为0。可以理解成one hot 编码。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875851/blog/index_map.jpg" alt=""></p>
+<p>Region有3种取值，所以3个位向量，也就是对应3列值；Type有2种取值，所以对应2列值。</p>
+<h5 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h5><p>优点：与散列和树索引相比，位图索引有优势。对于基数较小的域它特别有用，因为比较、连接、和聚集操作都变成了位算术运算，大大减少了运行时间。由于字符串可以用单个位表示，位图索引大大降低了空间和I/O 开销。对于基数较高的域，使用压缩技术，这种方法可以接受。但是不是很适合。</p>
+<p>缺点：因为值域中的每一个可能的值都需要一个位向量来记录，所以当基数较大时，会需要开辟很大的存储空间，因为每一个记录其实只使用到了一位，因此造成了很大的浪费。同时当可取的值连续时无法使用位图来记录。</p>
+<h4 id="连接索引"><a href="#连接索引" class="headerlink" title="连接索引"></a>连接索引</h4><p>如果两个关系R(RID,A)和S(B,SID)在属性A和B 上连接，则连接索引记录包含(RID,SID)对，其中RID 和SID 分别为来自R 和S 的记录标识符。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875850/blog/join_index.jpg" alt=""></p>
+<p>在左边的销售事实表中有同location和item两个维度的链接，那么就可以有右边3中连接索引。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《数据挖掘概念与技术》第3版 第四章数据仓库与联机分析处理</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>BraveY
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://bravey.github.io/2019-11-15-数据仓库.html" title="数据仓库">https://bravey.github.io/2019-11-15-数据仓库.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/null" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/数据仓库/" rel="tag"># 数据仓库</a>
+              <a href="/tags/OLAPS/" rel="tag"># OLAPS</a>
+              <a href="/tags/课程/" rel="tag"># 课程</a>
+              <a href="/tags/国科大/" rel="tag"># 国科大</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019-11-07-Clementine教程.html" rel="next" title="Clementine教程">
+                  <i class="fa fa-chevron-left"></i> Clementine教程
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019-11-16-数据预处理.html" rel="prev" title="数据预处理">
+                  数据预处理 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments" id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数据仓库"><span class="nav-number">1.</span> <span class="nav-text">数据仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是数据仓库"><span class="nav-number">1.1.</span> <span class="nav-text">什么是数据仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#特征"><span class="nav-number">1.1.1.</span> <span class="nav-text">特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#操作数据库系统与数据仓库的区别"><span class="nav-number">1.1.2.</span> <span class="nav-text">操作数据库系统与数据仓库的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据立方体"><span class="nav-number">1.2.</span> <span class="nav-text">数据立方体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据仓库建模"><span class="nav-number">1.3.</span> <span class="nav-text">数据仓库建模</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#星形模式"><span class="nav-number">1.3.1.</span> <span class="nav-text">星形模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#雪花模式"><span class="nav-number">1.3.2.</span> <span class="nav-text">雪花模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事实星座"><span class="nav-number">1.3.3.</span> <span class="nav-text">事实星座</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#概念分层"><span class="nav-number">1.3.4.</span> <span class="nav-text">概念分层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OLAP操作"><span class="nav-number">1.3.5.</span> <span class="nav-text">OLAP操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#上卷（roll-up）"><span class="nav-number">1.3.5.1.</span> <span class="nav-text">上卷（roll-up）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#下钻（drill-down）"><span class="nav-number">1.3.5.2.</span> <span class="nav-text">下钻（drill-down）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#切片（slice）和切块（dice）"><span class="nav-number">1.3.5.3.</span> <span class="nav-text">切片（slice）和切块（dice）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#转轴（pivot）"><span class="nav-number">1.3.5.4.</span> <span class="nav-text">转轴（pivot）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#操作实例"><span class="nav-number">1.3.5.5.</span> <span class="nav-text">操作实例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据仓库实现"><span class="nav-number">1.4.</span> <span class="nav-text">数据仓库实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据立方体的有效计算"><span class="nav-number">1.4.1.</span> <span class="nav-text">数据立方体的有效计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OLAP索引"><span class="nav-number">1.4.2.</span> <span class="nav-text">OLAP索引</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#位图索引（bitmap-indexing）"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">位图索引（bitmap indexing）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#优缺点"><span class="nav-number">1.4.2.1.1.</span> <span class="nav-text">优缺点</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#连接索引"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">连接索引</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">1.5.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="BraveY"
+      src="http://imgsrc.baidu.com/forum/w%3D580/sign=9ef55a639e22720e7bcee2f24bcb0a3a/072032adcbef7609dc34669e28dda3cc7dd99ecc.jpg">
+  <p class="site-author-name" itemprop="name">BraveY</p>
+  <div class="site-description" itemprop="description">To the time to life, rather than to life in time</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">77</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BraveY" title="GitHub → https://github.com/BraveY" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:kaiyongyang@gmail.com" title="E-Mail → mailto:kaiyongyang@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/yang-shan-zhi-14" title="知乎 → https://www.zhihu.com/people/yang-shan-zhi-14" rel="noopener" target="_blank"><i class="fa fa-fw fa-book"></i>知乎</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_33620071" title="CSDN → https://blog.csdn.net/qq_33620071" rel="noopener" target="_blank"><i class="fa fa-fw fa-copyright"></i>CSDN</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BraveY</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">161k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:26</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1
+  </div>
+  <span class="post-meta-divider">|</span>
+
+<span id="sitetime"></span>
+<script language=javascript>
+  function siteTime(){
+    window.setTimeout("siteTime()", 1000);
+    var seconds = 1000;
+    var minutes = seconds * 60;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var years = days * 365;
+    var today = new Date();
+    var todayYear = today.getFullYear();
+    var todayMonth = today.getMonth()+1;
+    var todayDate = today.getDate();
+    var todayHour = today.getHours();
+    var todayMinute = today.getMinutes();
+    var todaySecond = today.getSeconds();
+    /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+    year - 作为date对象的年份，为4位年份值
+    month - 0-11之间的整数，做为date对象的月份
+    day - 1-31之间的整数，做为date对象的天数
+    hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+    minutes - 0-59之间的整数，做为date对象的分钟数
+    seconds - 0-59之间的整数，做为date对象的秒数
+    microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+    var t1 = Date.UTC(2018,04,17,17,36,03); //北京时间2018-4-17 17:36:03
+    var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
+    var diff = t2-t1;
+    var diffYears = Math.floor(diff/years);
+    var diffDays = Math.floor((diff/days)-diffYears*365);
+    var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
+    var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
+    var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
+    document.getElementById("sitetime").innerHTML=" 已运行"+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒";
+  }/*因为建站时间还没有一年，就将之注释掉了。需要的可以取消*/
+  siteTime();
+</script>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.5.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=W6nLzKg0cpOi9OkACkaXg3YB-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'W6nLzKg0cpOi9OkACkaXg3YB-gzGzoHsz',
+            'X-LC-Key': '0M7O0e3b6oEuphDr3yhQLx3E',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://bravey.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  function loadComments() {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "https://bravey.github.io/2019-11-15-数据仓库.html",
+            identifier: "2019-11-15-数据仓库.html",
+            title: "数据仓库"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://bravey.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  }
+    window.addEventListener('load', loadComments, false);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon16x16.png">
+  <link rel="mask-icon" href="/images/favicon16x16.png" color="#222">
+  <meta name="google-site-verification" content="hDujO4MQUB7U9ir-4VXM5PW4fDFSq0-7G-LBX-Lh86M">
+  <meta name="baidu-site-verification" content="8XIUcPkbzm" />
+  
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="内嵌汇编操作系统高级教程上面需要阅读Linux内核0.11的源码，其中在书《Linux内核设计的一书》第2.5节异常处理类中段服务程序挂接的部分，遇到了嵌入在C语言中的汇编代码，之前从来没有学习过汇编，因此记录下。">
+<meta name="keywords" content="汇编,C语言">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内嵌汇编">
+<meta property="og:url" content="https://bravey.github.io/2019-10-31-内嵌汇编.html">
+<meta property="og:site_name" content="BraveY">
+<meta property="og:description" content="内嵌汇编操作系统高级教程上面需要阅读Linux内核0.11的源码，其中在书《Linux内核设计的一书》第2.5节异常处理类中段服务程序挂接的部分，遇到了嵌入在C语言中的汇编代码，之前从来没有学习过汇编，因此记录下。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-12-19T15:38:48.527Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="内嵌汇编">
+<meta name="twitter:description" content="内嵌汇编操作系统高级教程上面需要阅读Linux内核0.11的源码，其中在书《Linux内核设计的一书》第2.5节异常处理类中段服务程序挂接的部分，遇到了嵌入在C语言中的汇编代码，之前从来没有学习过汇编，因此记录下。">
+
+<link rel="canonical" href="https://bravey.github.io/2019-10-31-内嵌汇编.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>内嵌汇编 | BraveY</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BraveY</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bravey.github.io/2019-10-31-内嵌汇编.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="http://imgsrc.baidu.com/forum/w%3D580/sign=9ef55a639e22720e7bcee2f24bcb0a3a/072032adcbef7609dc34669e28dda3cc7dd99ecc.jpg">
+      <meta itemprop="name" content="BraveY">
+      <meta itemprop="description" content="To the time to life, rather than to life in time">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BraveY">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          内嵌汇编
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-10-31 16:39:47" itemprop="dateCreated datePublished" datetime="2019-10-31T16:39:47+08:00">2019-10-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-12-19 23:38:48" itemprop="dateModified" datetime="2019-12-19T23:38:48+08:00">2019-12-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程语言/" itemprop="url" rel="index">
+                    <span itemprop="name">编程语言</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019-10-31-内嵌汇编.html" class="post-meta-item leancloud_visitors" data-flag-title="内嵌汇编" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2019-10-31-内嵌汇编.html#comments" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019-10-31-内嵌汇编.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="内嵌汇编"><a href="#内嵌汇编" class="headerlink" title="内嵌汇编"></a>内嵌汇编</h1><p>操作系统高级教程上面需要阅读Linux内核0.11的源码，其中在书《Linux内核设计的一书》第2.5节异常处理类中段服务程序挂接的部分，遇到了嵌入在C语言中的汇编代码，之前从来没有学习过汇编，因此记录下。</p>
+<a id="more"></a>
+<h2 id="AT-amp-T基础知识"><a href="#AT-amp-T基础知识" class="headerlink" title="AT&amp;T基础知识"></a>AT&amp;T基础知识</h2><p>内嵌汇编使用的是AT&amp;T汇编，所以首先稍微讲解下AT&amp;T的汇编指令的基础知识。</p>
+<h3 id="操作数前缀"><a href="#操作数前缀" class="headerlink" title="操作数前缀"></a>操作数前缀</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">movl   $8,%eax </span><br><span class="line">movl   $0xffff,%ebx </span><br><span class="line">int     $0x80</span><br></pre></td></tr></table></figure>
+<p>看到在AT%T汇编中诸如”%eax”、”%ebx”之类的寄存器名字前都要加上”%”；”$8”、”$0xffff”这样的立即数之前都要加上”$”。  </p>
+<h3 id="源-目的操作数顺序"><a href="#源-目的操作数顺序" class="headerlink" title="源/目的操作数顺序"></a>源/目的操作数顺序</h3><p>   在Intel语法中，第一个操作数是目的操作数，第二个操作数源操作数。而在AT&amp;T中，第一个数是源操作数，第二个数是目的操作数。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// INTEL语法</span><br><span class="line">MOV EAX,8 //EAX是目的操作数， 8是源操作数</span><br><span class="line">// AT&amp;T语法</span><br><span class="line">movl   $8,%eax //8是源操作数 EAX是目的操作数</span><br></pre></td></tr></table></figure>
+<h3 id="标识长度的操作码后缀"><a href="#标识长度的操作码后缀" class="headerlink" title="标识长度的操作码后缀"></a>标识长度的操作码后缀</h3><p>在AT&amp;T的操作码后面有时还会有一个后缀，其含义就是指出操作码的大小。“l”表示长整数（32位），“w”表示字（16位），“b”表示字节（8位）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">movb    %bl,%al</span><br><span class="line">movw   %bx,%ax</span><br><span class="line">movl     %ebx,%eax</span><br><span class="line">movl     (%ebx),%eax</span><br></pre></td></tr></table></figure>
+<h2 id="GCC内嵌汇编"><a href="#GCC内嵌汇编" class="headerlink" title="GCC内嵌汇编"></a>GCC内嵌汇编</h2><p>Linux操作系统内核代码绝大部分使用C语言编写，只有一小部分使用汇编语言编写，例如与特定体系结构相关的代码和对性能影响很大的代码。GCC提供了内嵌汇编的功能，可以在C代码中直接内嵌汇编语言语句，大大方便了程序设计。 </p>
+<h3 id="基本行内汇编"><a href="#基本行内汇编" class="headerlink" title="基本行内汇编"></a>基本行内汇编</h3><p>基本行内汇编很容易理解，一般是按照下面的格式：</p>
+  <figure class="highlight plain"><figcaption><span>```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">在“asm”后面有时也会加上“__volatile__”表示编译器不要优化代码，后面的指令保留原样 </span><br><span class="line"></span><br><span class="line"> ```__asm__  __volatile__(&quot;hlt&quot;);``` </span><br><span class="line"></span><br><span class="line">如果有很多行汇编，则每一行后要加上“\n\t” ：</span><br><span class="line"></span><br><span class="line">```assembly</span><br><span class="line"> asm( &quot;pushl %eax\n\t&quot;</span><br><span class="line"> &quot;movl $0,%eax\n\t&quot;</span><br><span class="line">&quot;popl %eax&quot;);</span><br></pre></td></tr></table></figure>
+<p>或者我们也可以分成几行来写，如： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">asm(&quot;movl %eax,%ebx&quot;);</span><br><span class="line">asm(&quot;xorl %ebx,%edx&quot;);</span><br><span class="line">asm(&quot;movl $0,_booga);</span><br></pre></td></tr></table></figure>
+<p>通常使用汇编语句最方便的方式是把它们放在一个宏内，而宏语句需要在一行上定义，因此使用反斜杠<code>\</code>将这些语句连成一行，所以上述语句如果在宏中定义的话就是：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">asm</span>( <span class="string">"pushl %eax; \</span></span><br><span class="line"><span class="string"> movl $0,%eax; \</span></span><br><span class="line"><span class="string">popl %eax"</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="扩展的行内汇编"><a href="#扩展的行内汇编" class="headerlink" title="扩展的行内汇编"></a>扩展的行内汇编</h3><p>在扩展的行内汇编中，可以将C语言表达式（比如C语言中的变量）指定为汇编指令的操作数，而且不用去管如何将C语言表达式的值读入寄存器，以及如何将计算结果写回C变量，你只要告诉程序中C语言表达式与汇编指令操作数之间的对应关系即可， GCC会自动插入代码完成必要的操作。 </p>
+<p>使用内嵌汇编，要先编写汇编指令模板，然后将C语言表达式与指令的操作数相关联，并告诉GCC对这些操作有哪些限制条件。例如下面的内嵌汇编语句： </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> input = <span class="number">8</span>;</span><br><span class="line">	<span class="keyword">int</span> result = <span class="number">0</span>;</span><br><span class="line">    __asm__ __violate__  (<span class="string">"movl %1,%0"</span> : <span class="string">"=r"</span> (result) : <span class="string">"r"</span> (input));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d\n"</span>,result);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>“movl %1,%0”</code>是指令模板；“%0”和“%1”代表指令的操作数，称为占位符，“=r”代表它之后是输入变量且需用到寄存器，指令模板后面用小括号括起来的是C语言表达式 ，其中input是输入变量，该指令会完成把input的值复制到result中的操作 。</p>
+<h3 id="扩展的行内汇编的语法"><a href="#扩展的行内汇编的语法" class="headerlink" title="扩展的行内汇编的语法"></a>扩展的行内汇编的语法</h3><p>内嵌汇编语法如下：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">asm(&quot;汇编语句模块&quot;</span><br><span class="line"></span><br><span class="line">     :输出寄存器 </span><br><span class="line"></span><br><span class="line">     :输入寄存器 </span><br><span class="line"></span><br><span class="line">     :会被修改的寄存器);</span><br></pre></td></tr></table></figure>
+<p>即格式为<code>asm ( &quot;statements&quot; : output_regs : input_regs : clobbered_regs)</code></p>
+<p>汇编语句模块必不可少，其他三部分可选，如果使用了后面的部分，而前面部分为空，也需要用“:”格开，相应部分内容为空。 </p>
+<h4 id="汇编语句模块"><a href="#汇编语句模块" class="headerlink" title="汇编语句模块"></a>汇编语句模块</h4><p>汇编语句模块由汇编语句序列组成，语句之间使用“;”、“\n”或“\n\t”分开。指令中的操作数可以使用占位符引用C语言变量，<strong>操作数占位符</strong>最多10个，名称如下：%0，%1…，%9。指令中使用占位符表示的操作数，总被视为long型（4，个字节），但对其施加的操作根据指令可以是字或者字节，当把操作数当作字或者字节使用时，默认为低字或者低字节。对字节操作可以显式的指明是低字节还是次字节。方法是在%和序号之间插入一个字母，“b”代表低字节，“h”代表高字节，例如：%h1。 </p>
+<p>占位符的理解：将汇编输出寄存器与输入寄存器从输出寄存器行开始左到右从上到下进行编号分别为：%0，%1…，%9。比如有代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#define get_seg_byte(seg,addr) \</span><br><span class="line">(&#123; \</span><br><span class="line">register char __res; \</span><br><span class="line">__asm__(&quot;push %%fs; \</span><br><span class="line">mov %%ax,%%fs; \</span><br><span class="line">movb %%fs:%2,%%al; \</span><br><span class="line">pop %%fs&quot; \</span><br><span class="line">:&quot;=a&quot; (__res) \</span><br><span class="line">:&quot;&quot; (seg),&quot;m&quot; (*(addr))); \</span><br><span class="line">__res;&#125;)</span><br></pre></td></tr></table></figure>
+<p>输出寄存器”=a”eax记为%0,输入寄存器””(依然是eax)记为%1,输入寄存器”m”为%2。</p>
+<h4 id="输出寄存器"><a href="#输出寄存器" class="headerlink" title="输出寄存器"></a>输出寄存器</h4><p>描述输出操作数，不同的操作数描述符之间用逗号格开，每个操作数描述符由<strong>限定字符串和C语言变量</strong>组成。每个<strong>输出操作数的限定字符串必须包含“=”</strong>，表示它是一个输出操作数。例如：</p>
+<figure class="highlight plain"><figcaption><span>__volatile__ ("pushfl ; popl %0 ; cli":"</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">在这里“x”便是最终存放输出结果的C程序变量，而“=g”则是限定字符串，限定字符串表示了对它之后的变量的限制条件 。</span><br><span class="line"></span><br><span class="line">#### 输入寄存器</span><br><span class="line"></span><br><span class="line">描述输入操作数，不同的操作数描述符之间使用逗号格开，每个操作数描述符同样也由限定字符串和C语言表达式或者C语言变量组成。例：</span><br><span class="line"></span><br><span class="line">```c</span><br><span class="line">__asm__ volatile__ (&quot;lidt %0&quot; : : &quot;m&quot; (real_mode_idt));</span><br></pre></td></tr></table></figure>
+<p>其中%0是占位操作符，而输出寄存器为空，输入寄存器的值为C语言表达式real_mode_idt。</p>
+<h4 id="限定字符串"><a href="#限定字符串" class="headerlink" title="限定字符串"></a>限定字符串</h4><p>又叫做寄存器加载代码</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>限定字符</th>
+<th>描述</th>
+<th>限定字符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a</td>
+<td>使用寄存器eax</td>
+<td>m</td>
+<td>使用内存地址</td>
+</tr>
+<tr>
+<td>b</td>
+<td>使用寄存器ebx</td>
+<td>o</td>
+<td>使用内存地址并可以加偏移值</td>
+</tr>
+<tr>
+<td>m、o、V、p</td>
+<td>使用寄存器ecx</td>
+<td>I</td>
+<td>使用常数0~31 立即数</td>
+</tr>
+<tr>
+<td>g、X</td>
+<td>寄存器或内存</td>
+<td>J</td>
+<td>使用常数0~63 立即数</td>
+</tr>
+<tr>
+<td>I、J、N、i、n</td>
+<td>立即数</td>
+<td>K</td>
+<td>使用常数0~255立即数</td>
+</tr>
+<tr>
+<td>D</td>
+<td>使用edi</td>
+<td>L</td>
+<td>使用常数0~65535 立即数</td>
+</tr>
+<tr>
+<td>q</td>
+<td>使用动态分配字节可寻址寄存器（eax、ebx、ecx或edx）</td>
+<td>M</td>
+<td>使用常数0~3  立即数</td>
+</tr>
+<tr>
+<td>r</td>
+<td>使用任意动态分配的寄存器</td>
+<td>N</td>
+<td>使用1字节常数（0~255）立即数</td>
+</tr>
+<tr>
+<td>g</td>
+<td>使用通用有效的地址即可（eax、ebx、ecx、edx或内存变量）</td>
+<td>O</td>
+<td>使用常数0~31 立即数</td>
+</tr>
+<tr>
+<td>A</td>
+<td>使用eax与edx联合（64位）</td>
+<td>i</td>
+<td>立即数</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>直接摘抄自《Linux内核完全注释》第5.2.2 traps.c程序的第82页</p>
+<ul>
+<li>例子1：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">01 #define get_seg_byte(seg,addr) \</span><br><span class="line">02 (&#123; \</span><br><span class="line">03 register char __res; \</span><br><span class="line">04 __asm__(&quot;push %%fs; \</span><br><span class="line">05 mov %%ax,%%fs; \</span><br><span class="line">06 movb %%fs:%2,%%al; \</span><br><span class="line">07 pop %%fs&quot; \</span><br><span class="line">08 :&quot;=a&quot; (__res) \</span><br><span class="line">09 :&quot;&quot; (seg),&quot;m&quot; (*(addr))); \</span><br><span class="line">10 __res;&#125;)</span><br></pre></td></tr></table></figure>
+<p> 第1 行定义了宏的名称，也即是宏函数名称 <code>get_seg_byte(seg,addr)</code> 。第 3 行定义了一个寄存器变量 res 。第 4 行上的 <code>__asm__</code>表示嵌入汇编语句的开始。从第 4 行到第 7 行的 4 条语句是 AT&amp;T 格式的汇编语句。</p>
+<p>第 8 行即是输出寄存器，这句的含义是在这段代码运行结束后将 eax 所代表的寄存器的值放入<code>__res</code>变量中，作为本函数的输出值， “=a” 中的 “a” 称为加载代码， “=” 表示这是输出寄存器。第 9 行表示在这段代码开始运行时将 seg 放到 eax 寄存器中， “” 表示使用与上面同个位置的输出相同的寄存器。而 (<em>(addr))表示一个内存偏移地址值。为了在上面汇编语句中使用该地址值，嵌入汇编程序规定把输出和输入寄存器统一按顺序编号，顺序是从输出寄存器序列从左到右从上到下以 “%0” 开始，分别记为 %0 、 %1 、 …%9 。因此，输出寄存器的编号是 %0 （这里只有一个输出寄存器），输入寄存器前一部分 (“” (seg)) 的编号是 %1 ，而后部分的编号是 %2 。上面第 6 行上的 %2 即代表 (</em>(addr)) 这个内存偏移量。现在我们来研究 4—7 行上的代码的作用。第一句将 fs 段寄存器的内容入栈；第二句将 eax 中的段值赋给 fs 段寄存器；第三句是把 fs:(*(addr)) 所指定的字节放入 al 寄存器中。当执行完汇编语句后，输出寄存器 eax 的值将被放入 <code>__res</code> ，作为该宏函数（块结构表达式）的返回值。</p>
+<p>通过上面分析，我们知道，宏名称中的 seg 代表一指定的内存段值，而 addr 表示一内存偏移地址量。到现在为止，我们应该很清楚这段程序的功能了吧！该宏函数的功能是从指定段和偏移值的内存地址处取一个字节。</p>
+<p>通过上面的例子说明，阅读这段代码时应该像CPU处理指令时的逻辑一样，先从输出输入寄存器语句开始知道输入输出是什么，然后再阅读汇编语句，处理完后再看最后的返回是什么。</p>
+<ul>
+<li>例子2</li>
+</ul>
+<p>再来看下Linux 内核中main()中对中断异常挂接的trap_init()中的设计到的一个GCC内嵌汇编。代码路径为；include\asm\system.h</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1 #define _set_gate(gate_addr,type,dpl,addr) \</span><br><span class="line">2 __asm__ (&quot;movw %%dx,%%ax\n\t&quot; \</span><br><span class="line">3	&quot;movw %0,%%dx\n\t&quot; \</span><br><span class="line">4	&quot;movl %%eax,%1\n\t&quot; \</span><br><span class="line">5	&quot;movl %%edx,%2&quot; \</span><br><span class="line">6	: \</span><br><span class="line">7	: &quot;i&quot; ((short) (0x8000+(dpl&lt;&lt;13)+(type&lt;&lt;8))), \</span><br><span class="line">8	&quot;o&quot; (*((char *) (gate_addr))), \</span><br><span class="line">9	&quot;o&quot; (*(4+(char *) (gate_addr))), \</span><br><span class="line">10	&quot;d&quot; ((char *) (addr)),&quot;a&quot; (0x00080000))</span><br></pre></td></tr></table></figure>
+<p>首先从第6行输出寄存器开始阅读：输出寄存器为空。然后是第7至10行的输入寄存器。第%0个输入寄存器使用“i”表示输入立即数，第%1个输入寄存器使用“o”表示使用内存地址并可以加偏移值，第%2个输入寄存器依然使用“o”代码，第%3个寄存器使用“d”表示使用寄存器edx，第%4个寄存器使用“a”表示使用寄存器eax。</p>
+<p>之后再看下汇编语句：依次进行值的传递。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《Linux内核设计的艺术》新设计团队 著</p>
+<p>《Linux内核完全注释》赵炯 编著</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>BraveY
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://bravey.github.io/2019-10-31-内嵌汇编.html" title="内嵌汇编">https://bravey.github.io/2019-10-31-内嵌汇编.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/null" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/汇编/" rel="tag"># 汇编</a>
+              <a href="/tags/C语言/" rel="tag"># C语言</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019-10-14-数组中的主要元素.html" rel="next" title="数组中的主要元素">
+                  <i class="fa fa-chevron-left"></i> 数组中的主要元素
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019-11-07-Clementine教程.html" rel="prev" title="Clementine教程">
+                  Clementine教程 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments" id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#内嵌汇编"><span class="nav-number">1.</span> <span class="nav-text">内嵌汇编</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AT-amp-T基础知识"><span class="nav-number">1.1.</span> <span class="nav-text">AT&amp;T基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#操作数前缀"><span class="nav-number">1.1.1.</span> <span class="nav-text">操作数前缀</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#源-目的操作数顺序"><span class="nav-number">1.1.2.</span> <span class="nav-text">源/目的操作数顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标识长度的操作码后缀"><span class="nav-number">1.1.3.</span> <span class="nav-text">标识长度的操作码后缀</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GCC内嵌汇编"><span class="nav-number">1.2.</span> <span class="nav-text">GCC内嵌汇编</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本行内汇编"><span class="nav-number">1.2.1.</span> <span class="nav-text">基本行内汇编</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展的行内汇编"><span class="nav-number">1.2.2.</span> <span class="nav-text">扩展的行内汇编</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展的行内汇编的语法"><span class="nav-number">1.2.3.</span> <span class="nav-text">扩展的行内汇编的语法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#汇编语句模块"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">汇编语句模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#输出寄存器"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">输出寄存器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#限定字符串"><span class="nav-number">1.2.3.3.</span> <span class="nav-text">限定字符串</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#例子"><span class="nav-number">1.3.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">1.4.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="BraveY"
+      src="http://imgsrc.baidu.com/forum/w%3D580/sign=9ef55a639e22720e7bcee2f24bcb0a3a/072032adcbef7609dc34669e28dda3cc7dd99ecc.jpg">
+  <p class="site-author-name" itemprop="name">BraveY</p>
+  <div class="site-description" itemprop="description">To the time to life, rather than to life in time</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">77</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BraveY" title="GitHub → https://github.com/BraveY" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:kaiyongyang@gmail.com" title="E-Mail → mailto:kaiyongyang@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/yang-shan-zhi-14" title="知乎 → https://www.zhihu.com/people/yang-shan-zhi-14" rel="noopener" target="_blank"><i class="fa fa-fw fa-book"></i>知乎</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_33620071" title="CSDN → https://blog.csdn.net/qq_33620071" rel="noopener" target="_blank"><i class="fa fa-fw fa-copyright"></i>CSDN</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BraveY</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">161k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:26</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1
+  </div>
+  <span class="post-meta-divider">|</span>
+
+<span id="sitetime"></span>
+<script language=javascript>
+  function siteTime(){
+    window.setTimeout("siteTime()", 1000);
+    var seconds = 1000;
+    var minutes = seconds * 60;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var years = days * 365;
+    var today = new Date();
+    var todayYear = today.getFullYear();
+    var todayMonth = today.getMonth()+1;
+    var todayDate = today.getDate();
+    var todayHour = today.getHours();
+    var todayMinute = today.getMinutes();
+    var todaySecond = today.getSeconds();
+    /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+    year - 作为date对象的年份，为4位年份值
+    month - 0-11之间的整数，做为date对象的月份
+    day - 1-31之间的整数，做为date对象的天数
+    hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+    minutes - 0-59之间的整数，做为date对象的分钟数
+    seconds - 0-59之间的整数，做为date对象的秒数
+    microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+    var t1 = Date.UTC(2018,04,17,17,36,03); //北京时间2018-4-17 17:36:03
+    var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
+    var diff = t2-t1;
+    var diffYears = Math.floor(diff/years);
+    var diffDays = Math.floor((diff/days)-diffYears*365);
+    var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
+    var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
+    var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
+    document.getElementById("sitetime").innerHTML=" 已运行"+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒";
+  }/*因为建站时间还没有一年，就将之注释掉了。需要的可以取消*/
+  siteTime();
+</script>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.5.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=W6nLzKg0cpOi9OkACkaXg3YB-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'W6nLzKg0cpOi9OkACkaXg3YB-gzGzoHsz',
+            'X-LC-Key': '0M7O0e3b6oEuphDr3yhQLx3E',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://bravey.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  function loadComments() {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "https://bravey.github.io/2019-10-31-内嵌汇编.html",
+            identifier: "2019-10-31-内嵌汇编.html",
+            title: "内嵌汇编"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://bravey.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  }
+    window.addEventListener('load', loadComments, false);
+</script>
+
+</body>
+</html>
