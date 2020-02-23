@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>leetcode 140 Word Break II</title>
+    <url>/2020-02-13-leetcode-140-Word-Break-II.html</url>
+    <content><![CDATA[<h1 id="leetcode-140-Word-Break-II"><a href="#leetcode-140-Word-Break-II" class="headerlink" title="leetcode 140 Word Break II"></a>leetcode 140 Word Break II</h1><p><a href="https://leetcode.com/problems/word-break-ii/" target="_blank" rel="noopener">题目来源</a>,要求给出字符串由字典中的子字符串的所有组成方式。</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>同<a href="https://bravey.github.io/2020-02-11-leetcode-139-Word-Break.html#more">Word Break</a>的思路大致一致，也是有两种方法，但是动态规划有个样例被卡了无法通过。</p>
+<a id="more"></a>
+<h3 id="记忆化递归"><a href="#记忆化递归" class="headerlink" title="记忆化递归"></a>记忆化递归</h3><p>整体思路依然是将输入字符串s分成左边与右边两部分，先对右边的判断是否在字典中，如果是的话在递归的去寻找做左边的答案，然后将左边的答案各种组成方式加上在字典中的右边部分，作为s的答案。</p>
+<h3 id="动态规划-TLE"><a href="#动态规划-TLE" class="headerlink" title="动态规划(TLE)"></a>动态规划(TLE)</h3><p>动态规划的思路同<a href="https://bravey.github.io/2020-02-11-leetcode-139-Word-Break.html#more">Word Break</a>大体一致，转移方程也是：</p>
+<script type="math/tex; mode=display">
+if\;\{opt[i-len]\&\&inDict(word))\quad len<i\}\\
+opt[i] = true\;</script><p>只是额外开了个数组来存储不同长度的字符串的答案。然后在每次能够成功匹配的时候在上个状态的答案下去追加右边right部分。</p>
+<p>动态规划从更断的状态一步一步来填充答案，会造成一个问题：当样例为：</p>
+<figure class="highlight cc"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="built_in">string</span> s =</span><br><span class="line">    <span class="string">"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"</span></span><br><span class="line">    <span class="string">"aaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"</span></span><br><span class="line">    <span class="string">"aaaaaaa"</span>;</span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; wordDict(&#123;<span class="string">"a"</span>, <span class="string">"aa"</span>, <span class="string">"aaa"</span>, <span class="string">"aaaa"</span>, <span class="string">"aaaaa"</span>, <span class="string">"aaaaaa"</span>,</span><br><span class="line">                         <span class="string">"aaaaaaa"</span>, <span class="string">"aaaaaaaa"</span>, <span class="string">"aaaaaaaaa"</span>, <span class="string">"aaaaaaaaaa"</span>&#125;);</span><br></pre></td></tr></table></figure>
+<p>的时候，因为从短到长填充答案的时候，还没到判断后面的b的时候就会超时了。因为’b’前面的字符串都是有解得，所以一步一步填充的时候会非常慢。而记忆化递归有个首先先判断是否在dict中的逻辑，对于这样没有解的情况判断非常快。如果是”aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa”这样的样例记忆化递归也依然会TLE。</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p><a href="https://github.com/BraveY/Coding/blob/master/leetcode/140word-break-ii.cc" target="_blank" rel="noopener">代码源文件</a></p>
+<h3 id="记忆化递归-1"><a href="#记忆化递归-1" class="headerlink" title="记忆化递归"></a>记忆化递归</h3><figure class="highlight cc"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">https://zxi.mytechroad.com/blog/leetcode/leetcode-140-word-break-ii/</span></span><br><span class="line"><span class="comment">Runtime: 16 ms, faster than 69.32% of C++ online submissions for Word Break II.</span></span><br><span class="line"><span class="comment">Memory Usage: 15.1 MB, less than 54.55% of C++ online submissions for Word Break</span></span><br><span class="line"><span class="comment">II.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; wordBreak(<span class="built_in">string</span> s, <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt;&amp; wordDict) &#123;</span><br><span class="line">    <span class="built_in">unordered_set</span>&lt;<span class="built_in">string</span>&gt; dict(wordDict.cbegin(), wordDict.cend());</span><br><span class="line">    <span class="keyword">return</span> wordBreak(s, dict);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">  <span class="comment">// &gt;&gt; append(&#123;"cats and", "cat sand"&#125;, "dog");</span></span><br><span class="line">  <span class="comment">// &#123;"cats and dog", "cat sand dog"&#125;</span></span><br><span class="line">  <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; append(<span class="keyword">const</span> <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt;&amp; left, <span class="keyword">const</span> <span class="built_in">string</span>&amp; right) &#123;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; rtn;</span><br><span class="line">    <span class="comment">//左边为空的时候，不会加上右边，返回的也是空</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; iter : left) rtn.push_back(iter + <span class="string">" "</span> + right);</span><br><span class="line">    <span class="keyword">return</span> rtn;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; wordBreak(<span class="built_in">string</span> s, <span class="built_in">unordered_set</span>&lt;<span class="built_in">string</span>&gt;&amp; dict) &#123;</span><br><span class="line">    <span class="keyword">if</span> (memo.count(s)) <span class="keyword">return</span> memo[s];</span><br><span class="line">    <span class="keyword">int</span> n = s.length();</span><br><span class="line">    <span class="comment">// 空字符串的处理？空字符串默认为vector也为空，所以不用处理</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//记录答案</span></span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; ans;</span><br><span class="line">    <span class="comment">//如果完整字符串在字典里则直接加入到答案，</span></span><br><span class="line">    <span class="comment">//之所以提出来写是因为wordBreak("")为空，因此直接加上right，</span></span><br><span class="line">    <span class="comment">//不加上“ ”,不使用append函数</span></span><br><span class="line">    <span class="keyword">if</span> (dict.count(s)) ans.push_back(s);</span><br><span class="line">    <span class="comment">//不从0开始分割，为0的情况在上面if语句中已经判断过了</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">      <span class="keyword">const</span> <span class="built_in">string</span>&amp; right = s.substr(i);</span><br><span class="line">      <span class="comment">//先判断右边是否在字典中，这也是记忆化递归能比动态规划快的原因，</span></span><br><span class="line">      <span class="comment">//不会先去求解，从而造成TLE，而是先判断是否需要求解</span></span><br><span class="line">      <span class="keyword">if</span> (dict.count(right)) &#123;</span><br><span class="line">        <span class="keyword">const</span> <span class="built_in">string</span>&amp; left = s.substr(<span class="number">0</span>, i);</span><br><span class="line">        <span class="keyword">const</span> <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; left_ans =</span><br><span class="line">            append(wordBreak(left, dict), right);  <span class="comment">//左边的结果加上新的末尾</span></span><br><span class="line">        <span class="comment">//不能使用</span></span><br><span class="line">        <span class="comment">// memo[s]来填充,因为还没算完,只是其中一种解。所以后续的递归如果访问了memo[s]，结果是不一致的</span></span><br><span class="line">        <span class="comment">// memo[s].swap(</span></span><br><span class="line">        <span class="comment">//     append(left_ans, right));</span></span><br><span class="line">        ans.insert(ans.end(), left_ans.begin(),</span><br><span class="line">                   left_ans.end());  <span class="comment">//将left_ans的答案添加到ans</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    memo[s].swap(ans);</span><br><span class="line">    <span class="keyword">return</span> memo[s];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">  <span class="built_in">unordered_map</span>&lt;<span class="built_in">string</span>, <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt;&gt; memo;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="动态规划TLE"><a href="#动态规划TLE" class="headerlink" title="动态规划TLE"></a>动态规划TLE</h3><figure class="highlight cc"><table><tr><td class="code"><pre><span class="line"><span class="comment">//动态规划从小到大求解状态会造成花过多时间和内存在计算前面状态，如果为0的状态在很后面则不能快速求解，从而TLE</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TLESolution</span> &#123;</span></span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; wordBreak(<span class="built_in">string</span> s, <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt;&amp; wordDict) &#123;</span><br><span class="line">    <span class="keyword">int</span> n = s.length();</span><br><span class="line">    <span class="keyword">int</span> m = wordDict.size();</span><br><span class="line">    <span class="comment">// std::vector&lt;vector&lt;string&gt;&gt; memo(n + 1);</span></span><br><span class="line">    <span class="built_in">unordered_map</span>&lt;<span class="keyword">int</span>, <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt;&gt; memo;</span><br><span class="line">    <span class="built_in">unordered_set</span>&lt;<span class="built_in">string</span>&gt; dict(wordDict.cbegin(), wordDict.cend());</span><br><span class="line">    <span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt; lens;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; i++) &#123;</span><br><span class="line">      lens.insert(wordDict[i].length());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">bool</span>&gt; opt(n + <span class="number">1</span>);</span><br><span class="line">    opt[<span class="number">0</span>] = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">auto</span> j = lens.begin(); j != lens.end(); j++) &#123;</span><br><span class="line">        <span class="comment">// int len = wordDict[j].length();</span></span><br><span class="line">        <span class="keyword">int</span> len = *j;</span><br><span class="line">        <span class="keyword">if</span> (len &lt;= i) &#123;</span><br><span class="line">          <span class="keyword">const</span> <span class="built_in">string</span> word = s.substr(i - <span class="number">1</span> - len + <span class="number">1</span>, len);</span><br><span class="line">          <span class="keyword">if</span> (opt[i - len] &amp;&amp; dict.count(word)) &#123;</span><br><span class="line">            opt[i] = <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">int</span> l = memo[i - len].size();</span><br><span class="line">            <span class="keyword">if</span> (!l)</span><br><span class="line">              memo[i].push_back(word);</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">              <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; l; k++) &#123;</span><br><span class="line">                memo[i].push_back(memo[i - len][k] + <span class="string">" "</span> + word);</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> memo[n];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+      </categories>
+      <tags>
+        <tag>动态规划</tag>
+        <tag>记忆化递归</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>leetcode 139 Word Break</title>
     <url>/2020-02-11-leetcode-139-Word-Break.html</url>
     <content><![CDATA[<h1 id="leetcode-139-Word-Break"><a href="#leetcode-139-Word-Break" class="headerlink" title="leetcode 139 Word Break"></a>leetcode 139 Word Break</h1><p><a href="https://leetcode.com/problems/word-break/" target="_blank" rel="noopener">题目来源</a>,求解一个字符串能否由给定的子字符串组成。</p>
@@ -52,7 +78,81 @@ opt[i] = true\;</script><p>word是长度为len的字符串。</p>
       </categories>
       <tags>
         <tag>动态规划</tag>
-        <tag>递归</tag>
+        <tag>记忆化递归</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ICPP 2018 ImageNet Training in Minutes</title>
+    <url>/2020-02-08-ICPP-2018-ImageNet-Training-in-Minutes.html</url>
+    <content><![CDATA[<h2 id="来源"><a href="#来源" class="headerlink" title="来源"></a>来源</h2><p> <a href="https://dl.acm.org/doi/abs/10.1145/3225058.3225069" target="_blank" rel="noopener">ICPP2018 best paper</a></p>
+<h2 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h2><p>分布式机器学习，神经网络加速</p>
+<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>文章对大规模计算机的DNN加速能力进行了研究。通过使用LARS算法提供的Large batch来充分利用海量的计算资源，该方法在ImageNet-1k数据集上训练出的AlexNet和ResNet-50这两个网络达到了SOTA的精读。和Facebook以往提出的Baseline相比，该方法在batch size超过16k上有着更高的精度。使用2,048 Intel Xeon Platinum 8160处理器将100 epoch的AlexNext的训练时间从几小时下降到了11分钟，使用2,048 Intel Xeon Phi 7250处理器将90 epoch的训练时间从几小时下降到了20分钟。</p>
+<a id="more"></a>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>大意同摘要，文中讨论了大规模计算机来加速的优点与困难。</p>
+<hr>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>问题1：对于深度学习应用，更大的数据集和更复杂的模型带来了准确率的显著提高，随之而来的是<strong>更长的训练时间。</strong></p>
+<p>思路1：如果把神经网络的训练使用超级计算机来实现，短时间完成。</p>
+<p>同步SGD算法在目前取得了最好的效果，将batch size提高可以更好的利用机器。每个处理器处理更多的样本。增加处理器与batch size 来减少训练时间，但是large batch会带来测试准确率的下降。使用warm up和linear scaling rule 方法来扩大batch size 并减少训练时间。使用Layer-wise Adaptive Rate Scaling (LARS)可以扩大到32k。</p>
+<p>本文的出发点：使用LARS算法可以在ImageNet-1k上面将DNN的batch size扩大到多少？</p>
+<p>本文贡献：</p>
+<ul>
+<li>使用LARS，扩展到上千个CPU上训练DNN网络。</li>
+<li>检验了LARS在AlexNet和ResNet-50上的通用性。</li>
+<li>LARS在32k的batch size上展现了更好的鲁棒性</li>
+<li>工作已经开源</li>
+</ul>
+<p>其他相关工作：数据并行的SGD和模型并行的两种分布式并行DNN训练方法</p>
+<hr>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>关注数据平行的随机梯度下降方法SGD。因此通信开销与模型的复杂度（参数的数量）成比例。</p>
+<p>大批量large batch 不改变总的计算量，但是会减少通信的开销。</p>
+<p>模型选择了AlexNet and ResNet-50作为代表，因为二者有不同scaling ratio，ResNet-50更高的scaling ratio因此比AlexNet更容易扩大batch size</p>
+<p>目标：在测试准确率不降低的前提下来增大batch size</p>
+<p>保持准确率的现有的方法：</p>
+<ul>
+<li>Linear Scaling：学习率同batch size一样线性增长</li>
+<li>Warmup scheme：在前几代中从小学习率逐渐增长到大学习率</li>
+</ul>
+<p>本文使用的方法LARS+warmup算法：不同层需要使用不同的学习率，标准的SGD是所有层都一样的。调整的方式就是LARS：</p>
+<script type="math/tex; mode=display">
+\eta=l\times\gamma\times\frac{||w||_2}{||\nabla w||_2}</script><p>$l$是scaling 因子，$\gamma$是可调参数。</p>
+<p>LARS方法流程：</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1581581809/blog/paper/LARS1.jpg" alt=""></p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1581581804/blog/paper/lars2.jpg" alt=""></p>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>使用LARS方法与warmup在AlexNet上的测试精度</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1581581802/blog/paper/result1.jpg" alt=""></p>
+<p>ResNet50 在ImageNet上面才用不同16k和32kbatch size 的结果。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1581581802/blog/paper/figure3.jpg" alt=""></p>
+<p>不同batch size 的精度比较：</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1581581845/blog/paper/figure4.jpg" alt=""></p>
+<p>使用large batch可以减少训练时间与迭代次数：</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1581581802/blog/paper/fig78.jpg" alt=""></p>
+<h2 id="讨论"><a href="#讨论" class="headerlink" title="讨论"></a>讨论</h2><p>Large batch 的优点：</p>
+<ul>
+<li>缩短训练时间。总得计算时间未变，但是通信时间会减少。</li>
+<li>保持机器的高使用率</li>
+</ul>
+<p>将DNN扩展到多机的主要开销：多机之间的通信，Resnet50的scaling ratio是AlexNet的12.5倍，AlexNet要简单一些。</p>
+<p>Large batch的挑战</p>
+<ul>
+<li><p>简单使用同步SGD和Large batch会使得测试准确率下降。</p>
+<p>矫正准确率降低的方法</p>
+<ul>
+<li>Linear Scaling：学习率同batch size一样线性增长</li>
+<li>Warmup scheme：在前几代中从小学习率逐渐增长到大学习率</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ol>
+<li>可否验证LARS方法在其他数据集与其他网络上的性能？从而得到更全面的结果</li>
+</ol>
+]]></content>
+      <categories>
+        <category>论文阅读</category>
+      </categories>
+      <tags>
+        <tag>分布式机器学习</tag>
+        <tag>神经网络加速</tag>
       </tags>
   </entry>
   <entry>
@@ -208,8 +308,8 @@ T(n)=\left\{
         <category>题解</category>
       </categories>
       <tags>
-        <tag>leetcode</tag>
         <tag>分治</tag>
+        <tag>leetcode</tag>
         <tag>动态规划</tag>
       </tags>
   </entry>
@@ -251,8 +351,8 @@ T(n)&=2T[{\lfloor\frac{n}{2}\rfloor]+C}\\
         <category>题解</category>
       </categories>
       <tags>
-        <tag>leetcode</tag>
         <tag>分治</tag>
+        <tag>leetcode</tag>
         <tag>二叉树</tag>
       </tags>
   </entry>
@@ -733,8 +833,8 @@ T(n)&=2T[{\lfloor\frac{n}{2}\rfloor]+C}\\
         <category>题解</category>
       </categories>
       <tags>
-        <tag>leetcode</tag>
         <tag>分治</tag>
+        <tag>leetcode</tag>
         <tag>数组</tag>
         <tag>最小值</tag>
         <tag>二分查找</tag>
@@ -1103,9 +1203,9 @@ precision&=\dfrac{true\_pos}{true\_pos+true\_neg} /* 预测的精度*/\\
         <category>数据挖掘</category>
       </categories>
       <tags>
+        <tag>分类</tag>
         <tag>课程</tag>
         <tag>国科大</tag>
-        <tag>分类</tag>
         <tag>贝叶斯</tag>
         <tag>神经网络</tag>
         <tag>决策树</tag>
@@ -1342,10 +1442,43 @@ e_{11}=\dfrac{count(男)\times count(小说)}{n}=\dfrac{300\times450}{1500}=90</
         <category>数据挖掘</category>
       </categories>
       <tags>
-        <tag>数据仓库</tag>
-        <tag>OLAPS</tag>
         <tag>课程</tag>
         <tag>国科大</tag>
+        <tag>数据仓库</tag>
+        <tag>OLAPS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hexo博客Next主题优化</title>
+    <url>/2019-11-08-Hexo%E5%8D%9A%E5%AE%A2Next%E4%B8%BB%E9%A2%98%E4%BC%98%E5%8C%96.html</url>
+    <content><![CDATA[<h1 id="Hexo博客Next主题优化"><a href="#Hexo博客Next主题优化" class="headerlink" title="Hexo博客Next主题优化"></a>Hexo博客Next主题优化</h1><p>博客设置中的一些参考链接</p>
+<a id="more"></a>
+<h2 id="latex支持"><a href="#latex支持" class="headerlink" title="latex支持"></a>latex支持</h2><p>直接设置</p>
+<p><a href="https://jdhao.github.io/2017/10/06/hexo-markdown-latex-equation/" target="_blank" rel="noopener">https://jdhao.github.io/2017/10/06/hexo-markdown-latex-equation/</a> </p>
+<h2 id="Disquse评论支持"><a href="#Disquse评论支持" class="headerlink" title="Disquse评论支持"></a>Disquse评论支持</h2><p><a href="http://www.cylong.com/blog/2017/03/26/hexo-next-disqus/" target="_blank" rel="noopener">http://www.cylong.com/blog/2017/03/26/hexo-next-disqus/</a> </p>
+<p><a href="https://chenlifei.tech/posts/8838407/" target="_blank" rel="noopener">https://chenlifei.tech/posts/8838407/</a> </p>
+<h2 id="动态主题"><a href="#动态主题" class="headerlink" title="动态主题"></a>动态主题</h2><p>在config文件中设置，有个 git pull 更新的过程</p>
+<h2 id="建站时间"><a href="#建站时间" class="headerlink" title="建站时间"></a>建站时间</h2><p><a href="https://xian6ge.cn/posts/82ce1911/" target="_blank" rel="noopener">https://xian6ge.cn/posts/82ce1911/</a> </p>
+<h2 id="网站头像"><a href="#网站头像" class="headerlink" title="网站头像"></a>网站头像</h2><p><a href="https://www.jianshu.com/p/82c1d33420ba" target="_blank" rel="noopener">https://www.jianshu.com/p/82c1d33420ba</a> </p>
+<p><a href="https://tool.lu/favicon/" target="_blank" rel="noopener">https://tool.lu/favicon/</a> </p>
+<h2 id="社交链接"><a href="#社交链接" class="headerlink" title="社交链接"></a>社交链接</h2><p>在config文件直接设置</p>
+<h2 id="阅读统计"><a href="#阅读统计" class="headerlink" title="阅读统计"></a>阅读统计</h2><p><a href="https://hexo-guide.readthedocs.io/zh_CN/latest/third-service/[%E4%B8%8D%E8%92%9C%E5%AD%90]%E8%AE%BF%E5%AE%A2%E4%BA%BA%E6%95%B0.html" target="_blank" rel="noopener">https://hexo-guide.readthedocs.io/zh_CN/latest/third-service/[%E4%B8%8D%E8%92%9C%E5%AD%90]%E8%AE%BF%E5%AE%A2%E4%BA%BA%E6%95%B0.html</a> </p>
+<h2 id="SEO优化"><a href="#SEO优化" class="headerlink" title="SEO优化"></a>SEO优化</h2><p><a href="https://hoxis.github.io/Hexo+Next%20SEO%E4%BC%98%E5%8C%96.html" target="_blank" rel="noopener">https://hoxis.github.io/Hexo+Next%20SEO%E4%BC%98%E5%8C%96.html</a> </p>
+<h2 id="版权声明"><a href="#版权声明" class="headerlink" title="版权声明"></a>版权声明</h2><p>把js库给替换成了https</p>
+<p><a href="https://blog.pangao.vip/Hexo%E5%8D%9A%E5%AE%A2NexT%E4%B8%BB%E9%A2%98%E7%BE%8E%E5%8C%96%E4%B9%8B%E8%87%AA%E5%AE%9A%E4%B9%89%E6%96%87%E7%AB%A0%E5%BA%95%E9%83%A8%E7%89%88%E6%9D%83%E5%A3%B0%E6%98%8E/" target="_blank" rel="noopener">https://blog.pangao.vip/Hexo%E5%8D%9A%E5%AE%A2NexT%E4%B8%BB%E9%A2%98%E7%BE%8E%E5%8C%96%E4%B9%8B%E8%87%AA%E5%AE%9A%E4%B9%89%E6%96%87%E7%AB%A0%E5%BA%95%E9%83%A8%E7%89%88%E6%9D%83%E5%A3%B0%E6%98%8E/</a> </p>
+<h2 id="代码复制功能"><a href="#代码复制功能" class="headerlink" title="代码复制功能"></a>代码复制功能</h2><p><a href="https://blog.csdn.net/dataiyangu/article/details/88879328" target="_blank" rel="noopener">https://blog.csdn.net/dataiyangu/article/details/88879328</a> </p>
+<p><strong>加载不安全的脚本</strong> 问题 失败 </p>
+<h2 id="升级至新版本"><a href="#升级至新版本" class="headerlink" title="升级至新版本"></a>升级至新版本</h2><p><a href="https://sevencho.github.io/archives/14534beb.html" target="_blank" rel="noopener">https://sevencho.github.io/archives/14534beb.html</a></p>
+<p><a href="https://tding.top/archives/42c38b10" target="_blank" rel="noopener">https://tding.top/archives/42c38b10</a> </p>
+<p><a href="https://www.jianshu.com/p/e8d433a2c5b7" target="_blank" rel="noopener">https://www.jianshu.com/p/e8d433a2c5b7</a> </p>
+<h2 id="搜索无效"><a href="#搜索无效" class="headerlink" title="搜索无效"></a>搜索无效</h2><p><a href="https://blog.csdn.net/Aoman_Hao/article/details/86713171" target="_blank" rel="noopener">https://blog.csdn.net/Aoman_Hao/article/details/86713171</a> </p>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+        <tag>next</tag>
       </tags>
   </entry>
   <entry>
@@ -1571,10 +1704,10 @@ T(n)=2T[{\lfloor\frac{n}{2}\rfloor]+Cn}</script><p>根据主定理可以得出�
         <category>题解</category>
       </categories>
       <tags>
-        <tag>leetcode</tag>
         <tag>分治</tag>
         <tag>哈希</tag>
         <tag>摩尔投票</tag>
+        <tag>leetcode</tag>
       </tags>
   </entry>
   <entry>
@@ -1610,8 +1743,8 @@ T(n)=\left\{
         <category>题解</category>
       </categories>
       <tags>
-        <tag>leetcode</tag>
         <tag>分治</tag>
+        <tag>leetcode</tag>
         <tag>归并排序</tag>
       </tags>
   </entry>
@@ -1630,8 +1763,8 @@ T(n)=\left\{
         <category>题解</category>
       </categories>
       <tags>
-        <tag>快排</tag>
         <tag>leetcode</tag>
+        <tag>快排</tag>
       </tags>
   </entry>
   <entry>
@@ -2207,8 +2340,8 @@ f(n-1)+f(n-2)& \text {n>2}
         <category>Linux</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
         <tag>shell</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>

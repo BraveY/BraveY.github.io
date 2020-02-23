@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://bravey.github.io/2019-11-07-Clementine%E6%95%99%E7%A8%8B.html</loc>
-    <lastmod>2020-02-11</lastmod>
+    <loc>https://bravey.github.io/2020-02-13-leetcode-140-Word-Break-II.html</loc>
+    <lastmod>2020-02-13</lastmod>
+  </url>  <url>
+    <loc>https://bravey.github.io/2020-02-08-ICPP-2018-ImageNet-Training-in-Minutes.html</loc>
+    <lastmod>2020-02-13</lastmod>
   </url>  <url>
     <loc>https://bravey.github.io/2020-02-11-leetcode-139-Word-Break.html</loc>
+    <lastmod>2020-02-13</lastmod>
+  </url>  <url>
+    <loc>https://bravey.github.io/2019-11-08-Hexo%E5%8D%9A%E5%AE%A2Next%E4%B8%BB%E9%A2%98%E4%BC%98%E5%8C%96.html</loc>
+    <lastmod>2020-02-11</lastmod>
+  </url>  <url>
+    <loc>https://bravey.github.io/2019-11-07-Clementine%E6%95%99%E7%A8%8B.html</loc>
     <lastmod>2020-02-11</lastmod>
   </url>  <url>
     <loc>https://bravey.github.io/2020-02-07-leetcode-300-Longest-Increasing-Subsequence.html</loc>

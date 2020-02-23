@@ -1,4 +1,6 @@
+https://bravey.github.io/2020-02-13-leetcode-140-Word-Break-II.html
 https://bravey.github.io/2020-02-11-leetcode-139-Word-Break.html
+https://bravey.github.io/2020-02-08-ICPP-2018-ImageNet-Training-in-Minutes.html
 https://bravey.github.io/2020-02-07-leetcode-300-Longest-Increasing-Subsequence.html
 https://bravey.github.io/2020-02-05-c++拾遗.html
 https://bravey.github.io/2020-01-29-leetcode-53-Maximum-Subarray.html
@@ -15,6 +17,7 @@ https://bravey.github.io/2019-11-18-关联规则.html
 https://bravey.github.io/2019-11-17-分类与预测.html
 https://bravey.github.io/2019-11-16-数据预处理.html
 https://bravey.github.io/2019-11-15-数据仓库.html
+https://bravey.github.io/2019-11-08-Hexo博客Next主题优化.html
 https://bravey.github.io/2019-11-07-Clementine教程.html
 https://bravey.github.io/2019-10-31-内嵌汇编.html
 https://bravey.github.io/2019-10-14-数组中的主要元素.html
