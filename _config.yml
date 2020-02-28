@@ -5,7 +5,7 @@
 # Site
 title: BraveY
 subtitle:
-description: To the time to life, rather than to life in time
+description: 今日事，今日毕
 keywords:
 author: BraveY
 language: zh-CN
@@ -75,7 +75,8 @@ pagination_dir: page
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
 # theme: next
-theme: next-reloaded
+# theme: next-reloaded
+theme: Butterfly
 # theme: landscape
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html

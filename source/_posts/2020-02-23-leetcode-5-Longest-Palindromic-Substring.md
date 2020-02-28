@@ -12,6 +12,8 @@ copyright: true
 
 [题目来源](<https://leetcode.com/problems/longest-palindromic-substring/> ),要求出一个字符串中的最长回文子字符串。
 
+<!--more-->
+
 ## 思路
 
 ### 动态规划
