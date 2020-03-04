@@ -1,6 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>leetcode 10 Regular Expression Matching</title>
+    <url>/2020-02-28-leetcode-10-Regular-Expression-Matching.html</url>
+    <content><![CDATA[<h1 id="leetcode-10-Regular-Expression-Matching"><a href="#leetcode-10-Regular-Expression-Matching" class="headerlink" title="leetcode 10 Regular Expression Matching"></a>leetcode 10 Regular Expression Matching</h1><p><a href="https://leetcode.com/problems/regular-expression-matching/" target="_blank" rel="noopener">题目来源</a>，需要实现字符串正则匹配的’*’和’.’的匹配功能，判断给定字符串和模式能否匹配。</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><h3 id="递归"><a href="#递归" class="headerlink" title="递归"></a>递归</h3><p>因为字符串去掉一个字符后仍然是字符串，所以可以考虑递归的形式。首先判断字符串s和模式字符串t的第一个字符s[0]和t[0]，如果二者第一个字符相等则接下来考虑第二个字符。</p>
+<p>t的第二个字符有两种情况：</p>
+<p>s[1…n]表示s字符串的第二个字符一直到结尾的子字符串，t[1…m]表示从第二个字符开始一直到结尾的子字符串。</p>
+<ol>
+<li>t[1]==’<em>‘ 如果是星号匹配符而且前一个字符t[0]和s[0]匹配 则‘\</em>’可能复制前一个字符t[0]<ol>
+<li>0次。即不复制前一个字符 这时模式字符串t相当于去掉前两个字符用剩下的t[2…m]和s字符串去掉第一个匹配的字符剩下的s[1…n]进行匹配</li>
+<li>大于0次。即复制前一个字符至少1次，因为不确定*号具体复制了多少次，这时候应该理解成模式字符串的长度不变，但是消耗了s字符串的一个已经匹配的第一个字符，即结果由t[0…m]和s[1…n]的匹配结果决定</li>
+</ol>
+</li>
+<li>如果t字符串的第二个字符不是*号，则将s和t都去掉第一个字符后用剩下的s[1…n]和t[1…m]匹配。</li>
+</ol>
+<p>这种分支情况比较多的递归还是第一次遇到。</p>
+<h3 id="动态规划"><a href="#动态规划" class="headerlink" title="动态规划"></a>动态规划</h3><p>之前的动态规划一般都是从后往前来考虑子问题的，即数组A[0…n-1]去掉最末尾的元素然后变成子问题A[0…n-2]。我最开始也是用这种思维来定义子问题的，用opt[m][n]表示s字符串长度前m个和t模式字符串前n个字符的结果。然后从s和t只有一个字符的时候开始填充二维表，但是这样的话会有逻辑漏洞，比如s是“aa”和t是”c*a*”的时候第一个字符就不匹配，会导致前面就没有值为真的时候，无论状态怎么转移，也不可能转移到后面有值为真的状态。</p>
+<p>结合上面的递归思路，子问题的定义刚好是从后面往前的。最简单的子问题是最末尾只有一个字符的时候，然后才是向前逐个添加字符的。所以定义子问题opt[m][n] 为s字符串从第m个字符开始，t字符串从第n个字符开始的匹配结果。</p>
+<p>然后考虑状态转移方程，依然是第一个字符匹配的情况下：</p>
+<p>如果t[j]不是*号：opt[i][j] 由s和t各去掉第一个字符后的opt[i+1][j+1]状态转移</p>
+<p>如果t[j]是*号但选择不复制：opt[i][j] 由s去掉第一个字符而t去掉两个字符的状态opt[i+1][j+2] 转移</p>
+<p>如果t[j]是*号并且选择复制：opt[i][j] 由s去掉第一个字符而t不变的状态opt[i+1][j] 转移</p>
+<h3 id="复杂度"><a href="#复杂度" class="headerlink" title="复杂度"></a>复杂度</h3><p>两层循环所以时间复杂度是$O(mn)$,二维的空间所以空间复杂度是$O(mn)$</p>
+<p>m是s的长度，n是t的长度</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p><a href="https://github.com/BraveY/Coding/blob/master/leetcode/10regular-expression-matching.cc" target="_blank" rel="noopener">代码源文件</a></p>
+<h3 id="递归-1"><a href="#递归-1" class="headerlink" title="递归"></a>递归</h3><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">cc</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight cc"><table><tr><td class="code"><pre><span class="line"><span class="comment">//有分支的递归</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">Runtime: 224 ms, faster than 10.31% of C++ online submissions for Regular</span></span><br><span class="line"><span class="comment">Expression Matching. Memory Usage: 15.5 MB, less than 8.48% of C++ online</span></span><br><span class="line"><span class="comment">submissions for Regular Expression Matching.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">isMatch</span><span class="params">(<span class="built_in">string</span> s, <span class="built_in">string</span> p)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (p.empty()) <span class="keyword">return</span> s.empty();</span><br><span class="line">    <span class="keyword">bool</span> first_match = (!s.empty() &amp;&amp; (s[<span class="number">0</span>] == p[<span class="number">0</span>] || p[<span class="number">0</span>] == <span class="string">'.'</span>));</span><br><span class="line">    <span class="keyword">if</span> (p.length() &gt;= <span class="number">2</span> &amp;&amp;</span><br><span class="line">        p[<span class="number">1</span>] == <span class="string">'*'</span>) &#123;  <span class="comment">//*从头往后递归的，所以*只有在第二个位置才有意义</span></span><br><span class="line">      <span class="keyword">return</span> (isMatch(s, p.substr(<span class="number">2</span>)) ||</span><br><span class="line">              (first_match &amp;&amp; isMatch(s.substr(<span class="number">1</span>), p)));</span><br><span class="line">      <span class="comment">//*匹配0个，所以向后移动2个字符||*匹配的个数为正数，且第一个字符匹配，所以t-1，而pattern的格式仍然不变，因为*没有取0所以还存在</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;  <span class="comment">//没有*的情况看后面的是否匹配</span></span><br><span class="line">      <span class="keyword">return</span> (first_match &amp;&amp; isMatch(s.substr(<span class="number">1</span>), p.substr(<span class="number">1</span>)));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+<h3 id="动态规划-1"><a href="#动态规划-1" class="headerlink" title="动态规划"></a>动态规划</h3><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">cc</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight cc"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">Runtime: 4 ms, faster than 93.47% of C++ online submissions for Regular</span></span><br><span class="line"><span class="comment">Expression Matching. Memory Usage: 8.9 MB, less than 69.49% of C++ online</span></span><br><span class="line"><span class="comment">submissions for Regular Expression Matching.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution2</span> &#123;</span></span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">isMatch</span><span class="params">(<span class="built_in">string</span> s, <span class="built_in">string</span> p)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (p.empty() || s.empty()) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">// int m = s.length(), n = p.length();  为空仍然有匹配的 "" 和 "*"</span></span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">bool</span>&gt; &gt; opt(m + <span class="number">1</span>, <span class="built_in">vector</span>&lt;<span class="keyword">bool</span>&gt;(n + <span class="number">1</span>, <span class="literal">false</span>));</span><br><span class="line">    opt[m][n] = <span class="literal">true</span>;  <span class="comment">//代表两个空字符串是否匹配</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = m; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> j = n; j &gt;= <span class="number">0</span>; j--) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i == m &amp;&amp; j == n) <span class="keyword">continue</span>;  <span class="comment">// opt[m][n] 已经初始了</span></span><br><span class="line">        <span class="keyword">bool</span> first_match = (i &lt; m &amp;&amp; j &lt; n &amp;&amp; (s[i] == p[j] || p[j] == <span class="string">'.'</span>));</span><br><span class="line">        <span class="keyword">if</span> (j + <span class="number">1</span> &lt; n &amp;&amp; p[j + <span class="number">1</span>] == <span class="string">'*'</span>) &#123;</span><br><span class="line">          opt[i][j] = opt[i][j + <span class="number">2</span>] || (first_match &amp;&amp; opt[i + <span class="number">1</span>][j]);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          opt[i][j] = first_match &amp;&amp; opt[i + <span class="number">1</span>][j + <span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> opt[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://leetcode.wang/leetCode-10-Regular-Expression-Matching.html" target="_blank" rel="noopener">windliang </a></p>
+]]></content>
+      <categories>
+        <category>题解</category>
+      </categories>
+      <tags>
+        <tag>动态规划</tag>
+        <tag>字符串</tag>
+        <tag>递归</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>leetcode 5 Longest Palindromic Substring</title>
     <url>/2020-02-23-leetcode-5-Longest-Palindromic-Substring.html</url>
     <content><![CDATA[<h1 id="leetcode-5-Longest-Palindromic-Substring"><a href="#leetcode-5-Longest-Palindromic-Substring" class="headerlink" title="leetcode 5 Longest Palindromic Substring"></a>leetcode 5 Longest Palindromic Substring</h1><p><a href="https://leetcode.com/problems/longest-palindromic-substring/" target="_blank" rel="noopener">题目来源</a>,要求出一个字符串中的最长回文子字符串。</p>
@@ -939,8 +977,8 @@ F1-Score = \dfrac{2Precison\times Recall}{Precision+Recall}</script><p>精确率
         <category>数据挖掘</category>
       </categories>
       <tags>
-        <tag>课程</tag>
         <tag>国科大</tag>
+        <tag>课程</tag>
         <tag>余弦相似度</tag>
         <tag>推荐</tag>
       </tags>
@@ -970,8 +1008,8 @@ F1-Score = \dfrac{2Precison\times Recall}{Precision+Recall}</script><p>精确率
         <category>数据挖掘</category>
       </categories>
       <tags>
-        <tag>课程</tag>
         <tag>国科大</tag>
+        <tag>课程</tag>
         <tag>聚类</tag>
         <tag>K-Means</tag>
       </tags>
@@ -1055,8 +1093,8 @@ lift=\dfrac{P(A\bigcap B)}{P(A)P(B)}</script><p>当lift大于1的时候表示A�
         <category>数据挖掘</category>
       </categories>
       <tags>
-        <tag>课程</tag>
         <tag>国科大</tag>
+        <tag>课程</tag>
         <tag>关联规则</tag>
         <tag>Apriori</tag>
         <tag>FP-Growth</tag>
@@ -1254,8 +1292,8 @@ precision&=\dfrac{true\_pos}{true\_pos+true\_neg} /* 预测的精度*/\\
         <category>数据挖掘</category>
       </categories>
       <tags>
-        <tag>课程</tag>
         <tag>国科大</tag>
+        <tag>课程</tag>
         <tag>分类</tag>
         <tag>贝叶斯</tag>
         <tag>神经网络</tag>
@@ -1415,8 +1453,8 @@ e_{11}=\dfrac{count(男)\times count(小说)}{n}=\dfrac{300\times450}{1500}=90</
         <category>数据挖掘</category>
       </categories>
       <tags>
-        <tag>课程</tag>
         <tag>国科大</tag>
+        <tag>课程</tag>
         <tag>降维</tag>
         <tag>相关性分析</tag>
       </tags>
@@ -1493,10 +1531,10 @@ e_{11}=\dfrac{count(男)\times count(小说)}{n}=\dfrac{300\times450}{1500}=90</
         <category>数据挖掘</category>
       </categories>
       <tags>
+        <tag>国科大</tag>
+        <tag>课程</tag>
         <tag>数据仓库</tag>
         <tag>OLAPS</tag>
-        <tag>课程</tag>
-        <tag>国科大</tag>
       </tags>
   </entry>
   <entry>
@@ -1815,8 +1853,8 @@ T(n)=\left\{
         <category>题解</category>
       </categories>
       <tags>
-        <tag>快排</tag>
         <tag>leetcode</tag>
+        <tag>快排</tag>
       </tags>
   </entry>
   <entry>
