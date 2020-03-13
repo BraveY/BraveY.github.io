@@ -449,8 +449,6 @@ Accuracy of 8 : 94 %
 Accuracy of 9 : 92 %
 ```
 
-<https://res.cloudinary.com/bravey/image/upload/v1584031660/blog/deep-learning/MNIST_37_0.png> 
-
 # 参考
 
 https://blog.csdn.net/weixin_45885232/article/details/103950992
