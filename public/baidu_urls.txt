@@ -1,3 +1,6 @@
+https://bravey.github.io/2020-03-24-天池Docker练习场实践.html
+https://bravey.github.io/2020-03-13-使用Pytorch框架的CNN网络实现手写数字（MNIST）识别.html
+https://bravey.github.io/2020-03-05-使用SVM对鸢尾花分类.html
 https://bravey.github.io/2020-02-28-leetcode-10-Regular-Expression-Matching.html
 https://bravey.github.io/2020-02-23-leetcode-5-Longest-Palindromic-Substring.html
 https://bravey.github.io/2020-02-13-leetcode-140-Word-Break-II.html

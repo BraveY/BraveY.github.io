@@ -27,6 +27,6 @@
     "hexo-server": "^0.2.2",
     "hexo-symbols-count-time": "^0.6.3",
     "hexo-wordcount": "^6.0.1",
-    "save": "^2.3.2"
+    "save": "^2.4.0"
   }
 }
