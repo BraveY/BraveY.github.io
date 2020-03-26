@@ -6,6 +6,8 @@
     "version": "3.7.1"
   },
   "dependencies": {
+    "acorn": "^7.1.1",
+    "braces": "^3.0.2",
     "hexo": "^3.2.0",
     "hexo-asset-image": "git+https://github.com/CodeFalling/hexo-asset-image.git",
     "hexo-autonofollow": "^1.0.1",
@@ -27,6 +29,12 @@
     "hexo-server": "^0.2.2",
     "hexo-symbols-count-time": "^0.6.3",
     "hexo-wordcount": "^6.0.1",
+    "js-yaml": "^3.13.1",
+    "lodash": "^4.17.15",
+    "lodash.merge": "^4.6.2",
+    "minimist": "^1.2.5",
+    "mixin-deep": "^2.0.1",
+    "morgan": "^1.10.0",
     "save": "^2.4.0"
   }
 }
