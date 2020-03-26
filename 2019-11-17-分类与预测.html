@@ -1,0 +1,288 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>分类与预测 | BraveY</title><meta name="description" content="分类与预测"><meta name="keywords" content="课程,国科大,分类,贝叶斯,神经网络,决策树"><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.png"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="baidu-site-verification" content="8XIUcPkbzm"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="分类与预测"><meta name="twitter:description" content="分类与预测"><meta name="twitter:image" content="https://images.pexels.com/photos/611328/pexels-photo-611328.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500"><meta property="og:type" content="article"><meta property="og:title" content="分类与预测"><meta property="og:url" content="https://bravey.github.io/2019-11-17-分类与预测"><meta property="og:site_name" content="BraveY"><meta property="og:description" content="分类与预测"><meta property="og:image" content="https://images.pexels.com/photos/611328/pexels-photo-611328.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'false'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="https://bravey.github.io/2019-11-17-分类与预测"><link rel="prev" title="关联规则" href="https://bravey.github.io/2019-11-18-关联规则.html"><link rel="next" title="数据预处理" href="https://bravey.github.io/2019-11-16-数据预处理.html"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: {"text":"富强,民主,文明,和谐,自由,平等,公正,法治,爱国,敬业,诚信,友善","fontSize":"15px"},
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: true,
+  isHome: false,
+  isPost: true
+  
+}</script></head><body><canvas class="fireworks"></canvas><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">BraveY</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></span><span class="pull_right" id="search_button"><a class="site-page social-icon search"><i class="fa fa-search fa-fw"></i><span> 搜索</span></a></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar3.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">56</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">88</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">14</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">目录</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#分类与预测"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">分类与预测</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#分类与预测的差别"><span class="toc_mobile_items-number">1.1.</span> <span class="toc_mobile_items-text">分类与预测的差别</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#决策树"><span class="toc_mobile_items-number">1.2.</span> <span class="toc_mobile_items-text">决策树</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#构建决策树"><span class="toc_mobile_items-number">1.2.1.</span> <span class="toc_mobile_items-text">构建决策树</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#属性选择度量"><span class="toc_mobile_items-number">1.2.2.</span> <span class="toc_mobile_items-text">属性选择度量</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#信息增益"><span class="toc_mobile_items-number">1.2.2.1.</span> <span class="toc_mobile_items-text">信息增益</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#信息增益率"><span class="toc_mobile_items-number">1.2.2.2.</span> <span class="toc_mobile_items-text">信息增益率</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#基尼指数"><span class="toc_mobile_items-number">1.2.2.3.</span> <span class="toc_mobile_items-text">基尼指数</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#决策树决策规则"><span class="toc_mobile_items-number">1.2.3.</span> <span class="toc_mobile_items-text">决策树决策规则</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#过拟合与树剪枝"><span class="toc_mobile_items-number">1.2.4.</span> <span class="toc_mobile_items-text">过拟合与树剪枝</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#先剪枝"><span class="toc_mobile_items-number">1.2.4.1.</span> <span class="toc_mobile_items-text">先剪枝</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#后剪枝"><span class="toc_mobile_items-number">1.2.4.2.</span> <span class="toc_mobile_items-text">后剪枝</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#决策树评价"><span class="toc_mobile_items-number">1.2.5.</span> <span class="toc_mobile_items-text">决策树评价</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#贝叶斯分类"><span class="toc_mobile_items-number">1.3.</span> <span class="toc_mobile_items-text">贝叶斯分类</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#贝叶斯定理"><span class="toc_mobile_items-number">1.3.1.</span> <span class="toc_mobile_items-text">贝叶斯定理</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#朴素贝叶斯分类"><span class="toc_mobile_items-number">1.3.2.</span> <span class="toc_mobile_items-text">朴素贝叶斯分类</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#工作过程"><span class="toc_mobile_items-number">1.3.2.1.</span> <span class="toc_mobile_items-text">工作过程</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#零概率值的解决"><span class="toc_mobile_items-number">1.3.2.2.</span> <span class="toc_mobile_items-text">零概率值的解决</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#评价"><span class="toc_mobile_items-number">1.3.3.</span> <span class="toc_mobile_items-text">评价</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#BP神经网络"><span class="toc_mobile_items-number">1.4.</span> <span class="toc_mobile_items-text">BP神经网络</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#多层前馈神经网络"><span class="toc_mobile_items-number">1.4.1.</span> <span class="toc_mobile_items-text">多层前馈神经网络</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#网络拓扑的定义"><span class="toc_mobile_items-number">1.4.2.</span> <span class="toc_mobile_items-text">网络拓扑的定义</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#后向传播"><span class="toc_mobile_items-number">1.5.</span> <span class="toc_mobile_items-text">后向传播</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#步骤"><span class="toc_mobile_items-number">1.5.1.</span> <span class="toc_mobile_items-text">步骤</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#优缺点"><span class="toc_mobile_items-number">1.5.2.</span> <span class="toc_mobile_items-text">优缺点</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#其他分类方法"><span class="toc_mobile_items-number">1.6.</span> <span class="toc_mobile_items-text">其他分类方法</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#预测"><span class="toc_mobile_items-number">1.7.</span> <span class="toc_mobile_items-text">预测</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#准确率和误差的衡量"><span class="toc_mobile_items-number">1.8.</span> <span class="toc_mobile_items-text">准确率和误差的衡量</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#参考"><span class="toc_mobile_items-number">1.9.</span> <span class="toc_mobile_items-text">参考</span></a></li></ol></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分类与预测"><span class="toc-number">1.</span> <span class="toc-text">分类与预测</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#分类与预测的差别"><span class="toc-number">1.1.</span> <span class="toc-text">分类与预测的差别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#决策树"><span class="toc-number">1.2.</span> <span class="toc-text">决策树</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#构建决策树"><span class="toc-number">1.2.1.</span> <span class="toc-text">构建决策树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#属性选择度量"><span class="toc-number">1.2.2.</span> <span class="toc-text">属性选择度量</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#信息增益"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">信息增益</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#信息增益率"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">信息增益率</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#基尼指数"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">基尼指数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#决策树决策规则"><span class="toc-number">1.2.3.</span> <span class="toc-text">决策树决策规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过拟合与树剪枝"><span class="toc-number">1.2.4.</span> <span class="toc-text">过拟合与树剪枝</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#先剪枝"><span class="toc-number">1.2.4.1.</span> <span class="toc-text">先剪枝</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#后剪枝"><span class="toc-number">1.2.4.2.</span> <span class="toc-text">后剪枝</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#决策树评价"><span class="toc-number">1.2.5.</span> <span class="toc-text">决策树评价</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#贝叶斯分类"><span class="toc-number">1.3.</span> <span class="toc-text">贝叶斯分类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#贝叶斯定理"><span class="toc-number">1.3.1.</span> <span class="toc-text">贝叶斯定理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#朴素贝叶斯分类"><span class="toc-number">1.3.2.</span> <span class="toc-text">朴素贝叶斯分类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#工作过程"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">工作过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#零概率值的解决"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">零概率值的解决</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#评价"><span class="toc-number">1.3.3.</span> <span class="toc-text">评价</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BP神经网络"><span class="toc-number">1.4.</span> <span class="toc-text">BP神经网络</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#多层前馈神经网络"><span class="toc-number">1.4.1.</span> <span class="toc-text">多层前馈神经网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#网络拓扑的定义"><span class="toc-number">1.4.2.</span> <span class="toc-text">网络拓扑的定义</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后向传播"><span class="toc-number">1.5.</span> <span class="toc-text">后向传播</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#步骤"><span class="toc-number">1.5.1.</span> <span class="toc-text">步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#优缺点"><span class="toc-number">1.5.2.</span> <span class="toc-text">优缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他分类方法"><span class="toc-number">1.6.</span> <span class="toc-text">其他分类方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#预测"><span class="toc-number">1.7.</span> <span class="toc-text">预测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#准确率和误差的衡量"><span class="toc-number">1.8.</span> <span class="toc-text">准确率和误差的衡量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">1.9.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://images.pexels.com/photos/611328/pexels-photo-611328.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500)"><div id="post-info"><div id="post-title"><div class="posttitle">分类与预测</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 发表于 2019-11-17<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> 更新于 2020-03-04</time><span class="post-meta__separator">|</span><span><i class="fa fa-inbox post-meta__icon fa-fw" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/数据挖掘/">数据挖掘</a></span><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>阅读量:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><h1 id="分类与预测"><a href="#分类与预测" class="headerlink" title="分类与预测"></a>分类与预测</h1><h2 id="分类与预测的差别"><a href="#分类与预测的差别" class="headerlink" title="分类与预测的差别"></a>分类与预测的差别</h2><p>分类对给定的数据集一般是离散的，确定这些数据对应类别。而预测是对连续的数据，根据历史数据来预测未知的数据或者缺失值等。</p>
+<p>分类的过程分为两步：</p>
+<ul>
+<li><p>模型构建</p>
+<p>使用训练数据集对模型进行训练，模型可以被表示为一些分类的规则集合，决策树或者是数学公式。</p>
+</li>
+<li><p>模型使用</p>
+<p>先使用模型来对测试数据进行分类，如果准确率能够接受则使用模型去对没有标注过的数据进行分类。</p>
+</li>
+</ul>
+<p>分类属于有监督学习，训练的数据是经过标注的。聚类属于无监督学习训练数据未经过标注不知道样本的标签。</p>
+<a id="more"></a>
+<p>在进行分类和预测之前需要对数据进行预处理包括数据清洗来处理噪声和缺失值，相关性分析来进行特征提取，数据转换比如归一化等。</p>
+<p>对于分类方法的评测指标有：准确性，速度，鲁棒性，可规模性（硬盘数据），可解释性等</p>
+<h2 id="决策树"><a href="#决策树" class="headerlink" title="决策树"></a>决策树</h2><p>决策树是一个类似于流程图的树结构；其中，每个内部结点表示在一个属性上的测试，每个分枝代表一个测试输出，而每个树叶结点代表类或类分布。树的最顶层结点是根结点。给定数据经过决策树不同节点的决策最终走到叶子节点，从而完成了对数据的分类。决策树不需要任何领域知识也不需要参数，适合探测式知识发现。</p>
+<p>决策数的构建分为两步：</p>
+<ul>
+<li>树的构建 从根节点开始递归的选择属性进行建树</li>
+<li>剪枝 ：减去反映噪声或者离群点的分枝</li>
+</ul>
+<h3 id="构建决策树"><a href="#构建决策树" class="headerlink" title="构建决策树"></a>构建决策树</h3><p>算法伪代码为：</p>
+<p><a href="https://res.cloudinary.com/bravey/image/upload/v1574086256/blog/Data%20Mining/decision_tree_code.jpg" data-fancybox="group" data-caption="" class="fancybox"><img src="https://res.cloudinary.com/bravey/image/upload/v1574086256/blog/Data%20Mining/decision_tree_code.jpg" alt="" title=""></a></p>
+<p>三个参数D是输入的数据集,attribute_list是输入数据中的属性集合和Atrribute_selection_method是指定选择属性的启发式过程，可以选择信息增益或者是基尼指数Gini index。</p>
+<p>步骤为：</p>
+<ol>
+<li><p>首先从根节点N开始，根节点中的数据是原始的需要分类的原始数据集。</p>
+</li>
+<li><p>如果D中的数据都属于同一类，那么根节点N变成叶子节点，标记为这一类。</p>
+</li>
+<li><p>否则，调用Atrribute_selection_method来选择最佳的分裂属性，并给出分裂子集。理想情况下希望分裂子集尽可能的纯，也就是希望分裂自己尽可能的都属于同一类。</p>
+</li>
+<li><p>用选出来的分裂属性在节点N上进行划分，并输出划分的数据子集。并把分裂属性从属性列表中删除。</p>
+<ol>
+<li>选出来的属性是离散值的话，有多少个取值就产生多少个分支</li>
+<li>连续值的话选择一个分裂值，大于这个分裂值为一个分支，小于等于为另外一个分支</li>
+<li>离散值而且必须是二叉树的话：属于这个值为一个分支，否则为另外一个分支</li>
+</ol>
+<p><a href="https://res.cloudinary.com/bravey/image/upload/v1574086256/blog/Data%20Mining/split_choice.jpg" data-fancybox="group" data-caption="" class="fancybox"><img src="https://res.cloudinary.com/bravey/image/upload/v1574086256/blog/Data%20Mining/split_choice.jpg" alt="" title=""></a></p>
+</li>
+<li><p>对于每一个删除了最佳分裂属性的输出的子集$D_j$ 递归的调用算法。</p>
+</li>
+<li><p>递归的终止条件：</p>
+<ol>
+<li>数据集D都属于同一类</li>
+<li>属性列表为空，使用数据集中的多数类来标记节点。<strong>（多数投票）</strong></li>
+<li>如果一个分支的数据$D_j$为空，则新增加一个叶子节点，用父节点数据集D中的多数类来标记它。</li>
+</ol>
+</li>
+<li><p>返回决策数的节点N</p>
+</li>
+</ol>
+<h3 id="属性选择度量"><a href="#属性选择度量" class="headerlink" title="属性选择度量"></a>属性选择度量</h3><p>很明显，决策树的关键点是怎么选择分裂的属性。有如下三种方式。</p>
+<h4 id="信息增益"><a href="#信息增益" class="headerlink" title="信息增益"></a>信息增益</h4><p>ID3这种决策树方法使用。</p>
+<p>先计算数据集D的熵：</p>
+<script type="math/tex; mode=display">
+Info(D)=-\sum_{i=1}^{m}p_ilog_2(p_i)</script><p>假设数据集中D有m个类别${C_1,C_2\dots C_m}$，那么每一类的概率可以用所占的比例$p_i=\dfrac{count(C_i)}{count(D)}$来估计。</p>
+<p>假设属性A 具有v 个不同值${a_1 ,…, a_v}$。可以用属性A 将S 划分为v 个子集${S_1 ,…, S_v}$；其中，<br>$S_j$ 包含S 中这样一些样本，它们在A 上具有值$a_j$。如果A 选作测试属性,则获得的信息增益,也就是划分成了子集后的熵为：</p>
+<script type="math/tex; mode=display">
+Info_A(D)=\sum_{j=1}^{v}\dfrac{|D_j|}{|D|}\times Info(D_j)</script><p>信息增益定义为原来的的信息需求（近基于类比例）与新的信息需求（对A划分后）之间的差：</p>
+<script type="math/tex; mode=display">
+Gain(A)=Info(D)-Info_A(D)</script><p>具有最高信息增益的属性是最佳分裂属性。可以这样理解，划分后越纯那么整个状态越不混乱，也就是熵越低。所以选择划分后熵最低而信息增益最高的属性。</p>
+<h4 id="信息增益率"><a href="#信息增益率" class="headerlink" title="信息增益率"></a>信息增益率</h4><p>信息增益偏向有许多输出的测试，它倾向于选择具有大量值的属性。比如按照唯一的标识符id来划分，每个划分出来的都只包含一个数据都是纯的，但是这样的划分显然没有作用。</p>
+<p>C4.5使用增益率来进行选择分裂属性。增益率用分裂信息值将信息增益归一化。</p>
+<script type="math/tex; mode=display">
+SplitInfo_A(D)=-\sum_{j=1}^{v}\dfrac{|D_j|}{|D|}\times log_2(\dfrac{|D_j|}{D})</script><p>分裂信息值代表由训练数据集D根据属性A划分v个分区后，这v个分区的熵。前面的$Info_A(D)$是对每个分区还计算了一下分区里面的熵然后进行加权，而这里是全局地看待这v个分局而进行的计算。</p>
+<p>增益率定义为：</p>
+<script type="math/tex; mode=display">
+GainRate(A)=\dfrac{Gain(A)}{SplitInfo_A(D)}</script><p>选择具有最大增益率的属性作为分裂属性。</p>
+<h4 id="基尼指数"><a href="#基尼指数" class="headerlink" title="基尼指数"></a>基尼指数</h4><p>基尼指数在CART中使用，基尼指数度量数据集的不纯度，定义为：</p>
+<script type="math/tex; mode=display">
+Gini(D)=1-\sum_{i=1}^{m}p_i^2</script><p>$p_i=\dfrac{|C_i|}{|D|}$依然用每一类的比例来估计。基尼指数考虑每个属性的二元划分，根据属性A划分成两个两个子集$D_1,D_2$在这种划分下的基尼指数为：</p>
+<script type="math/tex; mode=display">
+Gini_A(D)=\dfrac{|D_1|}{|D|}Gini(D_1)+\dfrac{|D_2|}{|D|}Gini(D_2)</script><p>选择具有最低的基尼指数作为分裂属性。  </p>
+<h3 id="决策树决策规则"><a href="#决策树决策规则" class="headerlink" title="决策树决策规则"></a>决策树决策规则</h3><p>构建好了决策树后，决策规则使用IF-THEN的语句来表示。<a href="https://res.cloudinary.com/bravey/image/upload/v1574086256/blog/Data%20Mining/decision_tree_rules.jpg" data-fancybox="group" data-caption="" class="fancybox"><img src="https://res.cloudinary.com/bravey/image/upload/v1574086256/blog/Data%20Mining/decision_tree_rules.jpg" alt="" title=""></a></p>
+<p>比如上图的决策规则是：</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">Code</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">IF age is Middle_aged THEN buys_computer = yes</span><br><span class="line">IF age is youth AND student = no THEN buys_computer = no</span><br><span class="line">IF age is youth AND student = yes THEN buys_computer = yes</span><br><span class="line">IF age is senior AND credit_rating=excellent THEN buys_computer = no</span><br><span class="line">IF age is senior AND credit_rating=fair THEN buys_computer = yes</span><br></pre></td></tr></table></figure></div>
+<p>有多少个叶子节点相应的有多少决策规则，在到达叶子节点的路径上有多少个节点就有多少个并列的条件。</p>
+<h3 id="过拟合与树剪枝"><a href="#过拟合与树剪枝" class="headerlink" title="过拟合与树剪枝"></a>过拟合与树剪枝</h3><p>在创建决策树时，由于数据中的噪声和离群点，许多分支反映的是训练数据中的异常。使用剪枝的方法来处理这种过拟合的问题。</p>
+<h4 id="先剪枝"><a href="#先剪枝" class="headerlink" title="先剪枝"></a>先剪枝</h4><p>先剪枝prepruning方法提前停止树的创建。比如设定一个阈值当信息增益等度量超过阈值则分裂，不超过就停止分裂，用投票的方法确定标签。但是阈值的设置比较困难，所以不常用。</p>
+<h4 id="后剪枝"><a href="#后剪枝" class="headerlink" title="后剪枝"></a>后剪枝</h4><p>后剪枝postpruning方法从完全创建好了的决策树进行剪枝。剪去后也依然使用投票的方法来确定标签。</p>
+<p>CART使用<strong>代价复杂度</strong>剪枝算法，C4.5使用<strong>悲观剪枝</strong>的方法。二者都是根据错误率，简单说就是如果减去这个分支后错误率提升不大就可以减去。</p>
+<h3 id="决策树评价"><a href="#决策树评价" class="headerlink" title="决策树评价"></a>决策树评价</h3><p>比其他的分类方法有着相对更快的学习速度，能够转换成容易理解的决策规则，准确率也能接受，而且也可以适用于大规模的数据。</p>
+<h2 id="贝叶斯分类"><a href="#贝叶斯分类" class="headerlink" title="贝叶斯分类"></a>贝叶斯分类</h2><p>朴素贝叶斯分类发假定一个属性值在给定类上的影响独立于其他属性的值，这个假定称为类条件独立性。做这个假定是为了简化计算，因而称之为朴素的。</p>
+<h3 id="贝叶斯定理"><a href="#贝叶斯定理" class="headerlink" title="贝叶斯定理"></a>贝叶斯定理</h3><p>贝叶斯定理用来求解后验概率。公式为：</p>
+<script type="math/tex; mode=display">
+P(H|X)=\dfrac{P(H)P(X|H)}{P(X)}</script><p>X是数据样本，分类未知。H是对X的分类的假设，比如X属于C类。P(H)是猜测的类的概率，P(X)是观察到的样本X的概率，而P(H|X)是在给定H的假设下，观察到X样本的概率。</p>
+<h3 id="朴素贝叶斯分类"><a href="#朴素贝叶斯分类" class="headerlink" title="朴素贝叶斯分类"></a>朴素贝叶斯分类</h3><h4 id="工作过程"><a href="#工作过程" class="headerlink" title="工作过程"></a>工作过程</h4><ol>
+<li><p>训练数据集D中一个样本X向量用一个n维的列向量$[x_1,x_2\dots x_n]^T$来表示它对应的n个属性$[A_1,A_2\dots A_n]$的测量值。</p>
+</li>
+<li><p>假定有m个类$C_1,C_2\dots C_n$,将X预测为拥有最高后验概率的类。</p>
+<script type="math/tex; mode=display">
+max(P(C_i|X))=max(\dfrac{P(X|C_i)P(C_i)}{P(X)})</script></li>
+<li><p>因为$P(X)$是常数，所以只用最大化$P(X|C_i)P(C_i)$ $P(C_i)$用类的频率来估计</p>
+</li>
+<li><p>在类条件独立的假定下有：</p>
+<script type="math/tex; mode=display">
+P(X|C_i)=\prod_{k=1}^nP(x_k|C_i)=P(x_1|C_i)P(x_2|C_i)\dots P(x_n|C_i)</script><p>$x_k$表示样本X向量对应的第k个属性$A_k$的值。</p>
+<ol>
+<li><p>如果$A_k$是分类属性，那么$P(x_k|C_i)$是D中属性$A_k$的值为$x_k$的$C_i$类的元组数除以D中$C_i$的数目 </p>
+</li>
+<li><p>如果$A_k$是连续值，则假定连续值服从均值为$\mu$,标准差为$\sigma$的高斯分布。</p>
+<script type="math/tex; mode=display">
+g(x,\mu,\sigma)=\dfrac{1}{\sqrt{2\pi}\sigma}e^{-\dfrac{(x-\mu)^2}{2\sigma^2}}</script><p>所以可以得到：</p>
+<script type="math/tex; mode=display">
+P(x_k|C_i)=g(x_k,\mu_{C_i},\sigma_{C_i})</script></li>
+</ol>
+</li>
+<li><p>对每一类都分别计算$P(X|C_i)P(C_i)$ 最后选择最大的作为这个样本的分类。</p>
+</li>
+</ol>
+<h4 id="零概率值的解决"><a href="#零概率值的解决" class="headerlink" title="零概率值的解决"></a>零概率值的解决</h4><p>在做连乘的时候如果有一个的概率为0，那么整个计算结果都为0。可以假设训练数据集很大，将每个取值的计数都加1而造成的概率估计可以忽略不计。这样就可以避免出现零概率的情况，称之为<strong>拉普拉斯估计或这拉普拉斯校准法</strong></p>
+<h3 id="评价"><a href="#评价" class="headerlink" title="评价"></a>评价</h3><p>朴素贝叶斯的优势：比较容易实现，在大多数情况可以取得好结果。缺点是：因为做了属性互相独立的假设，因此会降低准确率。而且实际上，大部分属性之间并不互相独立。</p>
+<p>可以使用贝叶斯信念网络来处理。</p>
+<h2 id="BP神经网络"><a href="#BP神经网络" class="headerlink" title="BP神经网络"></a>BP神经网络</h2><h3 id="多层前馈神经网络"><a href="#多层前馈神经网络" class="headerlink" title="多层前馈神经网络"></a>多层前馈神经网络</h3><p>后向传播算法Back propagation在多层前馈神经网络上学习。由输入层、一个或多个隐藏层和一个输出层组成。</p>
+<p><a href="C:\Users\BraveY\Documents\BraveY\blog\images\data mining\multi_layer_feed_forward_network.jpg" data-fancybox="group" data-caption="" class="fancybox"><img src="C:\Users\BraveY\Documents\BraveY\blog\images\data mining\multi_layer_feed_forward_network.jpg" alt="" title=""></a></p>
+<p>输入层的单元称作输入单元，隐藏层和输出层单元称作输出单元或者神经节点。输入向量输入进输入单元，然后加权同时地提供给隐藏层的输出单元。在全连接的情况下每一层单元与前后层单元都会有相应的权重，因为权重不会回馈到输入节点，所以称为前馈的。因此一次输入就完成输出。</p>
+<h3 id="网络拓扑的定义"><a href="#网络拓扑的定义" class="headerlink" title="网络拓扑的定义"></a>网络拓扑的定义</h3><p>应该设计多少层隐藏层，每一层有多少单元，输入层单元应该有多少，是否全连接等都是网络拓扑需要考虑的。</p>
+<p>需要先对输入值进行归一化，将值落入[0,1]之间。离散值的属性可以进行重新编码，让每一个域值都有一个输入单元。如果属性A有3个可能的值${a_0, a_1, a_2}$那么就需要设计3个输入单元$I_0, I_1,I_2$，输入单元$I_1$为1对应属性$A=a_1$。</p>
+<p>如果进行分类的话如果只有两类那么输出单元只用一个就可以了，多于2类的情况每一类都有一个输出单元。</p>
+<p>隐藏层单元数目的设计，没有明确的规定，通过反复实验的过程，来确定。一般选择一个隐藏层就可以了，权重的初始值也会影响结果的准确率。</p>
+<h2 id="后向传播"><a href="#后向传播" class="headerlink" title="后向传播"></a>后向传播</h2><h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><p>后向传播通过迭代地处理训练数据，把每个样本的网络预测值与实际已知的目标值相比较。对每个训练样本，修改网络的权重使得网络预测和实际目标值之间的均方误差最小。修改后向进行，从输出层一直传递到输入层的，因此叫做后向传播。</p>
+<p>算法伪代码为：</p>
+<p><a href="https://res.cloudinary.com/bravey/image/upload/v1574086256/blog/Data%20Mining/bp_code.jpg" data-fancybox="group" data-caption="" class="fancybox"><img src="https://res.cloudinary.com/bravey/image/upload/v1574086256/blog/Data%20Mining/bp_code.jpg" alt="" title=""></a></p>
+<p>步骤为：</p>
+<p><strong>初始化权重：</strong>权重被初始化为小随机数（比如-1到1，或者-0.5到0.5），偏倚bias也初始化为小随机数。</p>
+<p><strong>向前传播输入</strong>：输入单元的输出就是输入值。隐藏层和输出层单元的净输入用上一层输入的线性组合计算。输出单元的输出用激活函数计算，激活函数是logistic或这S型sigmoid函数,激活函数将较大的输入值域映射到区间[0,1]</p>
+<p><a href="https://res.cloudinary.com/bravey/image/upload/v1574086256/blog/Data%20Mining/bpnn_io.jpg" data-fancybox="group" data-caption="" class="fancybox"><img src="https://res.cloudinary.com/bravey/image/upload/v1574086256/blog/Data%20Mining/bpnn_io.jpg" alt="" title=""></a></p>
+<p>隐藏层或者输出层单元j其输入为如下，其中$w_{ij}$是上层单元i到单元j的权重，$O_i$是上一层单元的输出，$\theta_j$是单元j的偏倚。偏倚用来充当阈值，改变单元的活性</p>
+<script type="math/tex; mode=display">
+I_j=\sum_{i}w_{ij}O_i+\theta_j</script><p>单元j的输出$O_j$为：</p>
+<script type="math/tex; mode=display">
+O_j=\dfrac{1}{1+e^{I_j}}</script><p><strong>向后传播误差</strong>：通过更新权重和反映网络预测误差的偏倚，向后传播误差。对于输出层单元j，误差如下，其中$O_j$ 是单元j的实际输出， $T_j$ 是j给定训练样本的实际目标值，$O_j(1-O_j)$是逻辑斯提函数的导数。</p>
+<script type="math/tex; mode=display">
+Err_j=O_j(1-O_j)(T_j-O_j)</script><p>隐藏层单元j的误差，考虑下一层中j连接的单元的误差加权和。误差如下：</p>
+<script type="math/tex; mode=display">
+Err_j=O_j(1-O_j)\sum_kErr_kw_{jk}</script><p>其中$w_{jk}$是下一层单元k与单元j的连接权重，而$Err_k$是单元k的误差。</p>
+<p>更新权重和偏倚，以反映误差的传播。权重更新公式如下，其中$\Delta w_{ij}$是权重的改变量。</p>
+<script type="math/tex; mode=display">
+\begin{split}
+\Delta w_{ij}&=l\times Err_jO_i\\
+w_{ij}&=w_{ij}+\Delta w_{ij}
+\end{split}</script><p>变量l是<strong>学习率</strong>，通常去[0,1]之间的常数值。学习率帮助避免陷入决策空间的局部极小，并有助于找到全局最小。学习率太低的话，学习将进行的很慢。学习率太高的话，可能出现在不适当的解之间的摆动。一种调整规则是将学习率设置为迭代次数的倒数。</p>
+<p>偏倚的更新公式为：其中$\Delta \theta_{ij}$是偏倚的改变量。</p>
+<script type="math/tex; mode=display">
+\begin{split}
+\Delta \theta_{ij}&=l\times Err_j\\
+\theta_{ij}&=\theta_{ij}+\Delta \theta_{ij}
+\end{split}</script><p>更新的策略有实例更新：每处理一个样本就更新权重和偏倚。周期更新为处理玩所有样本后再更新。实例更新通常产生更准确的结果。</p>
+<p><strong>终止条件：</strong></p>
+<ul>
+<li>前一周期所有的$\Delta w_{ij}$都太小，小于某个阈值</li>
+<li>前一周其误分类的数据百分比小于某个阈值</li>
+<li>超过预先指定的周期数。实践中权重收敛可能需要数十万个周期。</li>
+</ul>
+<p>和决策树一样，神经网络也可以剪枝，去除那些影响很小的连接。</p>
+<h3 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h3><p>优点：</p>
+<ul>
+<li>对噪声的高容忍</li>
+<li>对连续值的良好适配</li>
+<li>对真实数据的良好处理</li>
+<li>效果很好</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>很长的训练时间</li>
+<li>要求大量的参数</li>
+<li>解释性很差</li>
+</ul>
+<h2 id="其他分类方法"><a href="#其他分类方法" class="headerlink" title="其他分类方法"></a>其他分类方法</h2><p>包括KNN、集成学习比如（Baggin、Boosting）</p>
+<h2 id="预测"><a href="#预测" class="headerlink" title="预测"></a>预测</h2><p>线性回归模型、多项式回归模型、广义线性模型、对数线性模型（针对分类数据）</p>
+<h2 id="准确率和误差的衡量"><a href="#准确率和误差的衡量" class="headerlink" title="准确率和误差的衡量"></a>准确率和误差的衡量</h2><p>使用混淆矩阵confusion matrix来表示分类的情况。</p>
+<p><a href="https://res.cloudinary.com/bravey/image/upload/v1574086256/blog/Data%20Mining/confusion_matrix.jpg" data-fancybox="group" data-caption="" class="fancybox"><img src="https://res.cloudinary.com/bravey/image/upload/v1574086256/blog/Data%20Mining/confusion_matrix.jpg" alt="" title=""></a></p>
+<p>准确率和错误率表示为：</p>
+<script type="math/tex; mode=display">
+\begin{split}
+Accuracy&=\dfrac{(true\_pos+true\_neg)}{pos+neg}\\
+Error rate&=1-Accuracy
+\end{split}</script><p>还有其他几个指标</p>
+<script type="math/tex; mode=display">
+\begin{split}
+sensitivity&=\dfrac{true\_pos}{pos} /* 真阳的识别率*/\\
+specificity&=\dfrac{true\_neg}{neg} /* 真阴的识别率*/\\
+precision&=\dfrac{true\_pos}{true\_pos+true\_neg} /* 预测的精度*/\\
+\end{split}</script><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《数据挖掘概念与技术》第3版 第八章分类：基本概念 第九章 分类高级方法</p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/2019-11-17-分类与预测.html">https://bravey.github.io/2019-11-17-分类与预测.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://bravey.github.io">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/课程/">课程    </a><a class="post-meta__tags" href="/tags/国科大/">国科大    </a><a class="post-meta__tags" href="/tags/分类/">分类    </a><a class="post-meta__tags" href="/tags/贝叶斯/">贝叶斯    </a><a class="post-meta__tags" href="/tags/神经网络/">神经网络    </a><a class="post-meta__tags" href="/tags/决策树/">决策树    </a></div><div class="post_share"><div class="social-share" data-image="https://images.pexels.com/photos/611328/pexels-photo-611328.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><nav class="pagination_post" id="pagination"><div class="prev-post pull_left"><a href="/2019-11-18-关联规则.html"><img class="prev_cover lazyload" data-src="https://images.pexels.com/photos/165505/pexels-photo-165505.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'"><div class="label">上一篇</div><div class="prev_info"><span>关联规则</span></div></a></div><div class="next-post pull_right"><a href="/2019-11-16-数据预处理.html"><img class="next_cover lazyload" data-src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'"><div class="label">下一篇</div><div class="next_info"><span>数据预处理</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> 相关推荐</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2019-11-15-数据仓库.html" title="数据仓库"><img class="relatedPosts_cover lazyload"data-src="https://images.pexels.com/photos/417222/pexels-photo-417222.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2019-11-15</div><div class="relatedPosts_title">数据仓库</div></div></a></div><div class="relatedPosts_item"><a href="/2019-11-16-数据预处理.html" title="数据预处理"><img class="relatedPosts_cover lazyload"data-src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2019-11-16</div><div class="relatedPosts_title">数据预处理</div></div></a></div><div class="relatedPosts_item"><a href="/2019-11-19-聚类方法.html" title="聚类方法"><img class="relatedPosts_cover lazyload"data-src="https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2019-11-19</div><div class="relatedPosts_title">聚类方法</div></div></a></div><div class="relatedPosts_item"><a href="/2019-11-18-关联规则.html" title="关联规则"><img class="relatedPosts_cover lazyload"data-src="https://images.pexels.com/photos/165505/pexels-photo-165505.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2019-11-18</div><div class="relatedPosts_title">关联规则</div></div></a></div><div class="relatedPosts_item"><a href="/2019-11-19-推荐系统.html" title="推荐系统"><img class="relatedPosts_cover lazyload"data-src="https://images.pexels.com/photos/814499/pexels-photo-814499.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2019-11-19</div><div class="relatedPosts_title">推荐系统</div></div></a></div><div class="relatedPosts_item"><a href="/2019-12-08-线性判别函数.html" title="线性判别函数"><img class="relatedPosts_cover lazyload"data-src="https://images.pexels.com/photos/1832328/pexels-photo-1832328.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2019-12-08</div><div class="relatedPosts_title">线性判别函数</div></div></a></div></div><div class="clear_both"></div></div><hr><div id="post-comment"><div class="comment_headling"><i class="fa fa-comments fa-fw" aria-hidden="true"></i><span> 评论</span></div><div id="disqus_thread"></div><script>var unused = null;
+var disqus_config = function () {
+  this.page.url = 'https://bravey.github.io/2019-11-17-分类与预测.html';
+  this.page.identifier = '2019-11-17-分类与预测.html';
+  this.page.title = '分类与预测';
+}
+var d = document, s = d.createElement('script');
+s.src = "https://" + 'bravey' +".disqus.com/embed.js";
+s.setAttribute('data-timestamp', '' + +new Date());
+(d.head || d.body).appendChild(s);</script></div></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2018 - 2020 By BraveY</div><div class="framework-info"><span>驱动 </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="阅读模式"></i><i class="fa fa-plus" id="font_plus" title="放大字体"></i><i class="fa fa-minus" id="font_minus" title="缩小字体"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="简繁转换" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="夜间模式"></i></div><div id="rightside-config-show"><div id="rightside_config" title="设置"><i class="fa fa-cog" aria-hidden="true"></i></div><a id="to_comment" href="#post-comment" title="直达评论"><i class="scroll_to_comment fa fa-comments">  </i></a><i class="fa fa-list-ul close" id="mobile-toc-button" title="目录" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="回到顶部" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/fireworks.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script><script src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/ClickShowText.js"></script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>
