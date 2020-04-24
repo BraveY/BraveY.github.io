@@ -1,3 +1,9 @@
+https://bravey.github.io/2020-04-24-leetcode-134-Gas-Station.html
+https://bravey.github.io/2020-04-19-C++-return一个对象的执行细节.html
+https://bravey.github.io/2020-04-17-leetcode-454-4sum-Ⅱ.html
+https://bravey.github.io/2020-04-16-leetcode-287-Find-the-Duplicate-Number.html
+https://bravey.github.io/2020-04-10-Linux运维.html
+https://bravey.github.io/2020-04-02-leetcode-4-Median-of-Two-Sorted-Arrays.html
 https://bravey.github.io/2020-03-24-天池Docker练习场实践.html
 https://bravey.github.io/2020-03-13-使用Pytorch框架的CNN网络实现手写数字（MNIST）识别.html
 https://bravey.github.io/2020-03-05-使用SVM对鸢尾花分类.html
