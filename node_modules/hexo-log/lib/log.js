@@ -1,10 +1,10 @@
 'use strict';
 
-var bunyan = require('hexo-bunyan');
-var chalk = require('chalk');
-var Writable = require('stream').Writable;
+const bunyan = require('hexo-bunyan');
+const chalk = require('chalk');
+const Writable = require('stream').Writable;
 
-var levelNames = {
+const levelNames = {
   10: 'TRACE',
   20: 'DEBUG',
   30: 'INFO ',
@@ -13,7 +13,7 @@ var levelNames = {
   60: 'FATAL'
 };
 
-var levelColors = {
+const levelColors = {
   10: 'gray',
   20: 'gray',
   30: 'green',
@@ -31,8 +31,8 @@ function ConsoleStream(env) {
 require('util').inherits(ConsoleStream, Writable);
 
 ConsoleStream.prototype._write = function(data, enc, callback) {
-  var level = data.level;
-  var msg = '';
+  let level = data.level;
+  let msg = '';
 
   // Time
   if (this.debug) {
@@ -47,7 +47,7 @@ ConsoleStream.prototype._write = function(data, enc, callback) {
 
   // Error
   if (data.err) {
-    var err = data.err.stack || data.err.message;
+    let err = data.err.stack || data.err.message;
     if (err) msg += chalk.yellow(err) + '\n';
   }
 
@@ -67,7 +67,7 @@ function formatTime(date) {
 function createLogger(options) {
   options = options || {};
 
-  var streams = [];
+  let streams = [];
 
   if (!options.silent) {
     streams.push({
@@ -84,9 +84,9 @@ function createLogger(options) {
     });
   }
 
-  var logger = bunyan.createLogger({
+  let logger = bunyan.createLogger({
     name: options.name || 'hexo',
-    streams: streams,
+    streams,
     serializers: {
       err: bunyan.stdSerializers.err
     }

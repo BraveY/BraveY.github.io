@@ -1,24 +1,27 @@
-if theme.gitalk && theme.gitalk.enable
-  #gitalk-container
-  script.
-    var createIssueManually = #{ theme.gitalk.createIssueManually } == true ? true : false;
-    var distractionFreeMode = #{ theme.gitalk.distractionFreeMode } == true ? true : false;
-    var gitalk = new Gitalk({
-      clientID: '!{theme.gitalk.client_id}',
-      clientSecret: '!{theme.gitalk.client_secret}',
-      repo: '!{theme.gitalk.repo}',
-      owner: '!{theme.gitalk.owner}',
-      admin: '!{theme.gitalk.admin}',
-      id: md5(decodeURI(location.pathname)),
-      createIssueManually: createIssueManually,
-      distractionFreeMode: distractionFreeMode,
-      language: '!{theme.gitalk.language}',
-      updateCountCallback: commentCount
-    })
-    gitalk.render('gitalk-container')
+#gitalk-container
+script.
+  var gitalk = new Gitalk({
+    clientID: '!{theme.gitalk.client_id}',
+    clientSecret: '!{theme.gitalk.client_secret}',
+    repo: '!{theme.gitalk.repo}',
+    owner: '!{theme.gitalk.owner}',
+    admin: ['!{theme.gitalk.admin}'],
+    id: md5(decodeURI(location.pathname)),
+    language: '!{theme.gitalk.language}',
+    perPage: !{theme.gitalk.perPage},
+    distractionFreeMode: !{theme.gitalk.distractionFreeMode},
+    pagerDirection: '!{theme.gitalk.pagerDirection}',
+    createIssueManually: !{theme.gitalk.createIssueManually},
+    updateCountCallback: commentCount
+  })
+  gitalk.render('gitalk-container')
 
-    function commentCount(n){
+  function commentCount(n){
+    try {
       document.getElementsByClassName('gitalk-comment-count')[0].innerHTML= n
+    } catch (e) {
+      return false
     }
+  }
 
 

@@ -1,12 +1,12 @@
 var translate = GLOBAL_CONFIG.translate;
 var Snackbar_tl = GLOBAL_CONFIG.Snackbar;
 
-var defaultEncoding = translate.defaultEncoding; // 网站默认语言，1: 繁體中文, 2: 简体中文
-var translateDelay = translate.translateDelay; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
-var cookieDomain = translate.cookieDomain; //更改为你的博客网址
-var msgToTraditionalChinese = translate.msgToTraditionalChinese; //此处可以更改为你想要显示的文字
-var msgToSimplifiedChinese = translate.msgToSimplifiedChinese; //同上，但两处均不建议更改
-var translateButtonId = "translateLink"; //默认互换id
+var defaultEncoding = translate.defaultEncoding; // 網站默認語言，1: 繁體中文, 2: 簡體中文
+var translateDelay = translate.translateDelay; //延遲時間,若不在前, 要設定延遲翻譯時間, 如100表示100ms,默認為0
+var cookieDomain = translate.cookieDomain; //更改為你的博客網址
+var msgToTraditionalChinese = translate.msgToTraditionalChinese; //此處可以更改為你想要顯示的文字
+var msgToSimplifiedChinese = translate.msgToSimplifiedChinese; //同上，但兩處均不建議更改
+var translateButtonId = "translateLink"; //默認互換id
 var currentEncoding = defaultEncoding;
 var targetEncodingCookie = "targetEncoding" + cookieDomain.replace(/\./g, "");
 var targetEncoding =
