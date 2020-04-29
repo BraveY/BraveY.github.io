@@ -1,26 +1,24 @@
 language: node_js # 设置语言
 node_js: stable # 设置相应版本
-sudo: required
 cache:
   apt: true
   directories:
   - node_modules  # 缓存不经常更改的内容
 before_install:
 - export TZ='Asia/Shanghai' # 更改时区
-install:                    # 在安装项目环境阶段需要运行的命令，一条一行，类似的还有 before_install
 - npm install -g hexo-cli   # 全局安装 Hexo 命令行工具
+install:                    # 在安装项目环境阶段需要运行的命令，一条一行，类似的还有 before_install
 - npm install    # 安装 package.json 中的依赖
 script:
 - hexo clean
 - hexo g 
 after_script:
-# - git clone https://${GH_REF} .deploy_git
-# - cd .deploy_git
-# - git checkout master
-# - cd ../
-# - mv .deploy_git/.git/ ./public/
+- git clone https://${GH_REF} .deploy_git
+- cd .deploy_git
+- git checkout master
+- cd ../
+- mv .deploy_git/.git/ ./public/
 - cd ./public
-- git init
 - git config user.name "BraveY"
 - git config user.email "lsz_yky@163.com"
 - git add .
