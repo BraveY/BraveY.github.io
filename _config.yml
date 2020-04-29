@@ -75,8 +75,8 @@ pagination_dir: page
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
 # theme: next
-# theme: next-reloaded
-theme: hexo-theme-butterfly
+theme: next-reloaded
+# theme: hexo-theme-butterfly
 # theme: landscape
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
