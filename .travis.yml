@@ -12,6 +12,11 @@ install:                    # 在安装项目环境阶段需要运行的命令�
 script:
 - pwd
 - ls 
+- cat _config.yml | grep theme :
+- cat package.json
+- ls ./themes
+- ls ./source/_posts
+- cat ./source/_data/butterfly.yml  
 - hexo --version  
 - hexo clean
 - hexo g 
