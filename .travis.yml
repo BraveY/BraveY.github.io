@@ -1,5 +1,6 @@
 language: node_js # 设置语言
-node_js: 13.13.0 # 设置相应版本
+# node_js: 13.13.0 # 设置相应版本
+node_js: 8.11.3 # 设置相应版本
 cache:
   apt: true
   directories:
@@ -12,13 +13,13 @@ install:                    # 在安装项目环境阶段需要运行的命令�
 - cd ./themes/
 - git clone https://github.com/jerryc127/hexo-theme-butterfly.git
 - cd ./hexo-theme-butterfly
-- ls -lh
+# - ls -lh
 - git checkout 2.3.0
 - cd ../../
 script:
-- npm ls --depth 0   
+# - npm ls --depth 0   
 - hexo clean
-- ls -lh
+# - ls -lh
 - hexo g 
 after_script:
 # - git clone https://${GH_REF} .deploy_git
@@ -27,7 +28,7 @@ after_script:
 # - cd ../
 # - mv .deploy_git/.git/ ./public/
 - cd ./public
-- ls -lh
+# - ls -lh
 - git init
 - git config user.name "BraveY"
 - git config user.email "lsz_yky@163.com"
