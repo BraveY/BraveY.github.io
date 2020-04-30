@@ -12,6 +12,7 @@ install:                    # 在安装项目环境阶段需要运行的命令�
 - cd ./themes/
 - git clone https://github.com/jerryc127/hexo-theme-butterfly.git
 - cd ./hexo-theme-butterfly
+- ls -lh
 - git checkout 2.3.0
 - cd ../../
 script:
