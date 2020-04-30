@@ -16,6 +16,7 @@ install:                    # 在安装项目环境阶段需要运行的命令�
 - cd ../../
 script:
 - hexo clean
+- ls -lh
 - hexo g 
 after_script:
 # - git clone https://${GH_REF} .deploy_git
@@ -24,7 +25,7 @@ after_script:
 # - cd ../
 # - mv .deploy_git/.git/ ./public/
 - cd ./public
-- ls
+- ls -lh
 - git init
 - git config user.name "BraveY"
 - git config user.email "lsz_yky@163.com"
