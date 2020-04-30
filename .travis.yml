@@ -18,11 +18,11 @@ script:
 - hexo clean
 - hexo g 
 after_script:
-- git clone https://${GH_REF} .deploy_git
-- cd .deploy_git
-- git checkout master
-- cd ../
-- mv .deploy_git/.git/ ./public/
+# - git clone https://${GH_REF} .deploy_git
+# - cd .deploy_git
+# - git checkout master
+# - cd ../
+# - mv .deploy_git/.git/ ./public/
 - cd ./public
 - git config user.name "BraveY"
 - git config user.email "lsz_yky@163.com"
