@@ -24,6 +24,8 @@ after_script:
 # - cd ../
 # - mv .deploy_git/.git/ ./public/
 - cd ./public
+- ls
+- git init
 - git config user.name "BraveY"
 - git config user.email "lsz_yky@163.com"
 - git add .
