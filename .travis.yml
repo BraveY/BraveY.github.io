@@ -1,6 +1,5 @@
 language: node_js # 设置语言
 node_js: stable # 设置相应版本
-sudo: required
 cache:
   apt: true
   directories:
@@ -11,7 +10,11 @@ install:                    # 在安装项目环境阶段需要运行的命令�
 - npm install -g hexo-cli   # 全局安装 Hexo 命令行工具
 - npm install    # 安装 package.json 中的依赖
 script:
+- pwd
+- ls 
+- hexo --version  
 - hexo clean
+- node --trace-warnings 
 - hexo g 
 after_script:
 # - git clone https://${GH_REF} .deploy_git
@@ -20,6 +23,7 @@ after_script:
 # - cd ../
 # - mv .deploy_git/.git/ ./public/
 - cd ./public
+- ls 
 - git init
 - git config user.name "BraveY"
 - git config user.email "lsz_yky@163.com"
