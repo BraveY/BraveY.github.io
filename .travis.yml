@@ -10,7 +10,7 @@ before_install:
 - npm install -g hexo-cli   # 全局安装 Hexo 命令行工具
 install:                    # 在安装项目环境阶段需要运行的命令，一条一行，类似的还有 before_install
 - npm install    # 安装 package.json 中的依赖
-- ls /node_modules/mime
+- ls ./node_modules/mime
 - cd ./themes/
 - git clone https://github.com/jerryc127/hexo-theme-butterfly.git
 - cd ./hexo-theme-butterfly
