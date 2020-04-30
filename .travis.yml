@@ -1,5 +1,5 @@
 language: node_js # 设置语言
-node_js: LTS # 设置相应版本
+node_js: 13.13.0 # 设置相应版本
 cache:
   apt: true
   directories:
