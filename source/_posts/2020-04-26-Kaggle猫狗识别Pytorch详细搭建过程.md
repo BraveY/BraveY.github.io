@@ -359,14 +359,12 @@ writer = SummaryWriter('./tensortboard/')
 
 ```python
 def train( epoch, train_loader, device, model, criterion, optimizer,tensorboard_path):
-    model.train()
-    train_loss = 0.0
-    top1 = AvgrageMeter()
-    train_loader = tqdm(train_loader)  #转换成tqdm类型 以方便增加日志的输出
-
     model = model.to(device)
     for e in range(epoch):
-        running_loss = 0.0
+         model.train()
+    	top1 = AvgrageMeter()
+        train_loss = 0.0
+        train_loader = tqdm(train_loader)  #转换成tqdm类型 以方便增加日志的输出
         train_loader.set_description('[%s%04d/%04d %s%f]' % ('Epoch:', e + 1, epoch, 'lr:', 0.001))
         for i, data in enumerate(train_loader, 0):  # 0是下标起始位置默认为0
             inputs, labels = data[0].to(device), data[1].to(device)
