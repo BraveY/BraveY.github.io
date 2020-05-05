@@ -98,7 +98,7 @@ view_data(Config.poem_path)
 
 [Dive-into-DL-Pytorch](https://github.com/ShusenTang/Dive-into-DL-PyTorch/tree/master/docs/chapter06_RNN) 中的例子：
 
-![](C:\Users\BraveY\Documents\BraveY\blog\images\深度学习\RNN.jpg)
+![](https://pic3.zhimg.com/80/v2-d49f883912455f5c689190325d9e8b6e_720w.jpg)
 搞懂了标签是什么后，这一步的代码逻辑就好理解了，先从路径文件中得到原始数据poem_data，然后将poem_data中的空格数据给过滤掉并平整到一维得到no_space_data，之后就根据索引去得到对应迭代次数的数据和标签了。
 
 
@@ -337,12 +337,10 @@ MyPoetryModel_tanh(
 )
 ```
 
-
-
-# 训练
+## 训练
 
 ```python
-# model.load_state_dict(torch.load(Config.model_save_path))  # 模型加载
+# model.load_state_dict(torch.load(Config.model_save_path))  # 模型加载、
 ```
 
 
