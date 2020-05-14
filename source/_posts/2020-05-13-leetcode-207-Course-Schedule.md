@@ -53,7 +53,9 @@ Explanation: There are a total of 2 courses to take.
 
 ### 思路
 
-自己最开始以为这种非经典树结构不能使用DFS就没有往下面想了。整体的思路就是在DFS过程中设计一个数组来存储访问标志，visited和visiting，如果在DFS过程中访问到一个visiting的节点，说明图中有环需要返回false
+自己最开始以为这种非经典树结构不能使用DFS就没有往下面想了。整体的思路就是在DFS过程中设计一个数组来存储访问标志，visited和visiting，如果在DFS过程中访问到一个visiting的节点，说明图中有环需要返回false。
+
+需要注意的是，可能形成多个独立的子图，因此不是一次性DFS遍历后就可以更新了所有节点的状态，所以需要对每个节点都DFS遍历一遍，如果一个子图中出现了环就返回false。
 
 ### 代码
 
