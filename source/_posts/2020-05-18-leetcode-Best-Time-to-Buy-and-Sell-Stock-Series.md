@@ -1,8 +1,9 @@
 ---
 title: leetcode Best Time to Buy and Sell Stock Series
 date: 2020-05-18 15:42:02
-categories:
+categories: 题解
 tags:
+- 动态规划
 copyright: true
 ---
 

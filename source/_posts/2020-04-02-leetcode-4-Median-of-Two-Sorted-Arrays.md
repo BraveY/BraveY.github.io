@@ -10,6 +10,30 @@ copyright: true
 
 [题目链接](<https://leetcode.com/problems/median-of-two-sorted-arrays/> )要求求出两个有序数组的总的中位数，但是时间复杂度限制在了$log(m+n)$
 
+There are two sorted arrays **nums1** and **nums2** of size m and n respectively.
+
+Find the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)).
+
+You may assume **nums1** and **nums2** cannot be both empty.
+
+**Example 1:**
+
+```
+nums1 = [1, 3]
+nums2 = [2]
+
+The median is 2.0
+```
+
+**Example 2:**
+
+```
+nums1 = [1, 2]
+nums2 = [3, 4]
+
+The median is (2 + 3)/2 = 2.5
+```
+
 ## 思路
 
 ### 双指针
