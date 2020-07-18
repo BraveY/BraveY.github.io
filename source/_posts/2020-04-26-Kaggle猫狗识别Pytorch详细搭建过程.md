@@ -172,7 +172,7 @@ test_loader = torch.utils.data.DataLoader(test_ds, batch_size=32,
 
 
 ```python
-new_train_loader = torch.utils.data.DataLoader(train_ds, batch_size=32,
+new_train_loader = torch.utils.data.DataLoader(new_train_ds, batch_size=32,
                                             shuffle=True, pin_memory=True, num_workers=0)
 validate_loader = torch.utils.data.DataLoader(validate_ds, batch_size=32,
                                             shuffle=True, pin_memory=True, num_workers=0)
@@ -521,7 +521,7 @@ validate(validate_loader,device,val_net,criterion)
 ​    输出：
 
 
-    98.92
+    73.56
 
 
 
@@ -545,7 +545,7 @@ Kaggle上的评分是根据log loss来计算的，分数越低代表模型性能
 | 网络        | epochs | 训练数据            | 得分    | 验证集准确率 |
 | ----------- | ------ | ------------------- | ------- | ------------ |
 | ResNet50    | 3      | 完整训练数据集      | 0.06691 | -            |
-| MyCNN_net_1 | 12     | 划分的80%训练数据集 | 0.73358 | 98.92        |
+| MyCNN_net_1 | 12     | 划分的80%训练数据集 | 0.73358 | 73.56        |
 | MyCNN_net_2 | 12     | 完整训练数据集      | 0.94158 | -            |
 
 实验结果并不严谨，只进行了一次，所以存在一些随机性。
