@@ -1,5 +1,5 @@
 ---
-title: leetcode
+title: leetcode 289 Game of Life
 date: 2020-09-07 20:45:39
 categories: 题解
 tags:
