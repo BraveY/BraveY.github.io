@@ -89,7 +89,7 @@ baidu_url_submit:
 
 deploy:
 - type: git
-  repository:  https://BraveY:892536129yky@github.com/BraveY/BraveY.github.io.git
+  repository:  https://github.com/BraveY/BraveY.github.io.git
   branch: master
 - type: baidu_url_submitter
 
