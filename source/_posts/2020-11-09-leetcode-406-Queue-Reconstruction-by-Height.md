@@ -1,5 +1,5 @@
 ---
-title: 406 Queue Reconstruction by Height
+title: leetcode 406 Queue Reconstruction by Height
 date: 2020-11-09 20:28:16
 categories: 题解
 tags:
