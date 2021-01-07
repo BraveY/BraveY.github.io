@@ -13,6 +13,64 @@ copyright: true
 
 [题目来源](<https://leetcode.com/problems/regular-expression-matching/> )，需要实现字符串正则匹配的'*'和'.'的匹配功能，判断给定字符串和模式能否匹配。
 
+Given an input string (`s`) and a pattern (`p`), implement regular expression matching with support for `'.'` and `'*'` where:` `
+
+- `'.'` Matches any single character.
+- `'*'` Matches zero or more of the preceding element.
+
+The matching should cover the **entire** input string (not partial).
+
+ 
+
+**Example 1:**
+
+```
+Input: s = "aa", p = "a"
+Output: false
+Explanation: "a" does not match the entire string "aa".
+```
+
+**Example 2:**
+
+```
+Input: s = "aa", p = "a*"
+Output: true
+Explanation: '*' means zero or more of the preceding element, 'a'. Therefore, by repeating 'a' once, it becomes "aa".
+```
+
+**Example 3:**
+
+```
+Input: s = "ab", p = ".*"
+Output: true
+Explanation: ".*" means "zero or more (*) of any character (.)".
+```
+
+**Example 4:**
+
+```
+Input: s = "aab", p = "c*a*b"
+Output: true
+Explanation: c can be repeated 0 times, a can be repeated 1 time. Therefore, it matches "aab".
+```
+
+**Example 5:**
+
+```
+Input: s = "mississippi", p = "mis*is*p*."
+Output: false
+```
+
+ 
+
+**Constraints:**
+
+- `0 <= s.length <= 20`
+- `0 <= p.length <= 30`
+- `s` contains only lowercase English letters.
+- `p` contains only lowercase English letters, `'.'`, and `'*'`.
+- It is guaranteed for each appearance of the character `'*'`, there will be a previous valid character to match.
+
 ## 思路
 
 ### 递归
@@ -23,7 +81,7 @@ t的第二个字符有两种情况：
 
 s[1...n]表示s字符串的第二个字符一直到结尾的子字符串，t[1...m]表示从第二个字符开始一直到结尾的子字符串。
 
-1. t[1]=='*' 如果是星号匹配符而且前一个字符t[0]和s[0]匹配 则‘\*’可能复制前一个字符t[0]
+1. t[1]==* 如果是星号匹配符而且前一个字符t[0]和s[0]匹配 则*可能复制前一个字符t[0]
    1. 0次。即不复制前一个字符 这时模式字符串t相当于去掉前两个字符用剩下的t[2...m]和s字符串去掉第一个匹配的字符剩下的s[1...n]进行匹配
    2. 大于0次。即复制前一个字符至少1次，因为不确定*号具体复制了多少次，这时候应该理解成模式字符串的长度不变，但是消耗了s字符串的一个已经匹配的第一个字符，即结果由t[0...m]和s[1...n]的匹配结果决定
 2. 如果t字符串的第二个字符不是*号，则将s和t都去掉第一个字符后用剩下的s[1...n]和t[1...m]匹配。
@@ -34,7 +92,7 @@ s[1...n]表示s字符串的第二个字符一直到结尾的子字符串，t[1..
 
 之前的动态规划一般都是从后往前来考虑子问题的，即数组A[0...n-1]去掉最末尾的元素然后变成子问题A[0...n-2]。我最开始也是用这种思维来定义子问题的，用opt\[m][n]表示s字符串长度前m个和t模式字符串前n个字符的结果。然后从s和t只有一个字符的时候开始填充二维表，但是这样的话会有逻辑漏洞，比如s是“aa”和t是"c\*a*"的时候第一个字符就不匹配，会导致前面就没有值为真的时候，无论状态怎么转移，也不可能转移到后面有值为真的状态。
 
-结合上面的递归思路，子问题的定义刚好是从后面往前的。最简单的子问题是最末尾只有一个字符的时候，然后才是向前逐个添加字符的。所以定义子问题opt\[m][n] 为s字符串从第m个字符开始，t字符串从第n个字符开始的匹配结果。
+结合上面的递归思路，子问题的定义刚好是**从后面往前**的。最简单的子问题是最末尾只有一个字符的时候，然后才是向前逐个添加字符的。所以定义子问题opt\[m][n] 为s字符串从第m个字符开始，t字符串从第n个字符开始的匹配结果。
 
 然后考虑状态转移方程，依然是第一个字符匹配的情况下：
 
