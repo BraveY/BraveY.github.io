@@ -14,6 +14,42 @@ copyright: true
 
 <!--more-->
 
+Given an integer array `nums`, return the length of the longest strictly increasing subsequence.
+
+A **subsequence** is a sequence that can be derived from an array by deleting some or no elements without changing the order of the remaining elements. For example, `[3,6,2,7]` is a subsequence of the array `[0,3,1,6,2,2,7]`.
+
+**Example 1:**
+
+```
+Input: nums = [10,9,2,5,3,7,101,18]
+Output: 4
+Explanation: The longest increasing subsequence is [2,3,7,101], therefore the length is 4.
+```
+
+**Example 2:**
+
+```
+Input: nums = [0,1,0,3,2,3]
+Output: 4
+```
+
+**Example 3:**
+
+```
+Input: nums = [7,7,7,7,7,7,7]
+Output: 1
+```
+
+**Constraints:**
+
+- `1 <= nums.length <= 2500`
+- `-104 <= nums[i] <= 104`
+
+**Follow up:**
+
+- Could you come up with the `O(n2)` solution?
+- Could you improve it to `O(n log(n))` time complexity?
+
 ## 思路
 
 ### 动态规划
@@ -56,11 +92,13 @@ $$
 
 思路是建立一个一维数组opt，按照顺序读入原来的数组元素nums[i]，如果nums[i]比opt的首元素小，则更新首元素为nums[i]，如果比opt末尾元素还要大则在opt数组后面插入nums[i],如果nums[i]大于首元素却小于末尾元素，使用二分查找第一个大于等于nums[i]的数字，并将其更新为nums[i]。
 
-opt数组是一个递增数组，nums[i]每次都会更新进opt数组中。
+opt数组是一个**递增数组**，nums[i]每次都会更新进opt数组中。
 
 使用二分查找寻找在opt数组中第一个大于等于它数字。如果大于等于nums[i]的第一个数字存在就更新这个数字为nums[i]，如果不存在就在opt末尾增加这个元素。遍历完后返回opt数组的长度作为答案，需要注意opt数组存储的值并不一定对应着真实的LIS。
 
-之所以这样做能够得到答案，是因为记录了遍历以来出现过的最大值的个数，相当于是把增长的波峰给记录了下来，相当于是打破记录的次数，而打破记录的值一定是增序的。
+之所以这样做能够得到答案，是因为记
+
+录了遍历以来出现过的最大值的个数，相当于是把增长的波峰给记录了下来，相当于是打破记录的次数，而打破记录的值一定是增序的。
 
 ### 复杂度
 

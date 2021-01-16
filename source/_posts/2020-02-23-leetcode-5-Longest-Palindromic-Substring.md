@@ -5,6 +5,7 @@ categories: 题解
 tags:
 - 动态规划
 - 马拉车算法
+- 中心扩展
 copyright: true
 ---
 
@@ -14,11 +15,49 @@ copyright: true
 
 <!--more-->
 
+Given a string `s`, return *the longest palindromic substring* in `s`.
+
+**Example 1:**
+
+```
+Input: s = "babad"
+Output: "bab"
+Note: "aba" is also a valid answer.
+```
+
+**Example 2:**
+
+```
+Input: s = "cbbd"
+Output: "bb"
+```
+
+**Example 3:**
+
+```
+Input: s = "a"
+Output: "a"
+```
+
+**Example 4:**
+
+```
+Input: s = "ac"
+Output: "a" 
+```
+
+**Constraints:**
+
+- `1 <= s.length <= 1000`
+- `s` consist of only digits and English letters (lower-case and/or upper-case),
+
 ## 思路
 
 ### 动态规划
 
-自己最开始考虑的子问题定义是opt[i]表示以s[i]结尾的最长回文字符串，用的是一个一维的动态规划数组opt[i]来存储状态，这样行不通原因是与前一个字符形成的回文的可能是所有状态的。比如回文是1到i-1则与i形成回文的范围是从0到i，都是有可能的，而不是opt[i]简单的只从前面opt[i-1]转移。
+自己最开始考虑的子问题定义是opt[i]表示以s[i]结尾的最长回文字符串，用的是一个一维的动态规划数组opt[i]来存储状态，这样行不通的原因是无法清晰地列出状态转移方程，如果根据与前一个字符是否相等来进行状态转移，则不论相等或者不相等都不能将状态给分类进行归纳。以相等为例`abbaa` 最末尾的a并不能从上一个以a为结尾的最长回文子字符串转移而来。
+
+因为回文字符串需要关注首字符和末尾字符的状态，所以需要使用二维的动态规划，记录所有s[i...j]的状态。
 
 因此需要存储前面每一种长度的字符串是否为回文的状态，将子问题的形式定义为：从i开始到j结束的字符串是否为回文，使用opt\[i][j]二维数组来存储。定义好子问题的形式后考虑如何填充二维动态规划表，也就是状态转移方程。总共有三种情况：
 
@@ -43,7 +82,7 @@ $$
 
 ### 最长公共子串
 
-因为回文的对称性，将输入字符串逆向得到字符串t，然后问题可以转换为求两个字符串的最长公共子串。与[1143](<https://leetcode.com/problems/longest-common-subsequence/> ) 求最长公共子序列有点类似，依然是态规划，之前做过但没有写题解，后面找时间补上，1143[代码](<https://github.com/BraveY/Coding/blob/master/leetcode/longest-common-subsequence.cc> )参考。
+因为回文的对称性，将输入字符串逆向得到字符串t，然后问题可以转换为求两个字符串的最长公共子串。与[1143](<https://leetcode.com/problems/longest-common-subsequence/> ) 求最长公共子序列有点类似，依然是动态规划，之前做过但没有写题解，后面找时间补上，1143[代码](<https://github.com/BraveY/Coding/blob/master/leetcode/longest-common-subsequence.cc> )参考。
 
 ### 中心扩展法
 

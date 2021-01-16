@@ -15,6 +15,49 @@ copyright: true
 
 <!--more-->
 
+Given an integer array `nums`, find the contiguous subarray (containing at least one number) which has the largest sum and return *its sum*.
+
+**Example 1:**
+
+```
+Input: nums = [-2,1,-3,4,-1,2,1,-5,4]
+Output: 6
+Explanation: [4,-1,2,1] has the largest sum = 6.
+```
+
+**Example 2:**
+
+```
+Input: nums = [1]
+Output: 1
+```
+
+**Example 3:**
+
+```
+Input: nums = [0]
+Output: 0
+```
+
+**Example 4:**
+
+```
+Input: nums = [-1]
+Output: -1
+```
+
+**Example 5:**
+
+```
+Input: nums = [-100000]
+Output: -100000
+```
+
+**Constraints:**
+
+- `1 <= nums.length <= 3 * 104`
+- `-105 <= nums[i] <= 105`
+
 ## 思路
 
 ### 枚举
@@ -176,7 +219,9 @@ class Solution2 {
 };
 ```
 
+## 总结
 
+1. 对于子数组，子字符串等有连续性要求的，一般都是考虑使用以i结尾（只限定结尾）的动态规划方便进行分析，如果这样无法分析就可以考虑二维的动态规划，从i到j这样子限定首尾的
 
 ## 参考
 
