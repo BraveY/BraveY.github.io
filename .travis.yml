@@ -1,5 +1,5 @@
 language: node_js # 设置语言
-node_js: 13.13.0 # 设置相应版本
+node_js: 14.15.4 # 设置相应版本
 # node_js: 8.11.3 # 设置相应版本
 cache:
   apt: true
@@ -11,11 +11,12 @@ before_install:
 install:                    # 在安装项目环境阶段需要运行的命令，一条一行，类似的还有 before_install
 - npm install    # 安装 package.json 中的依赖
 - ls ./node_modules/mime
-- cd ./themes/
-- git clone https://github.com/jerryc127/hexo-theme-butterfly.git
-- cd ./hexo-theme-butterfly
+# - cd ./themes/
+- git clone -b master https://github.com/jerryc127/hexo-theme-butterfly.git themes/butterfly
+# - cd ./hexo-theme-butterfly
+- cd ./themes/butterfly
 # - ls -lh
-- git checkout 2.3.0
+- git checkout 3.5.1 # 切换到指定版本
 - cd ../../
 script:
 # - npm ls --depth 0   
