@@ -89,6 +89,51 @@ class Solution {
 };
 ```
 
+## 47 有重复值
+
+整体思路依然是回溯法，但是需要注意的是有重复值的情况下，每一层使用的数字都是唯一的，也就是这一层如果之前使用了数字A，那么数字A的索引状态`used[]`回退到未使用的时候，后续也不能再使用其他位置上值为A的数字了。所以在每一层使用一个哈希SET来记录已经使用的数字。
+
+### 代码
+
+```cc
+/*
+Runtime: 12 ms, faster than 56.19% of C++ online submissions for Permutations II.
+Memory Usage: 13.2 MB, less than 14.18% of C++ online submissions for Permutations II.
+*/
+class Solution {
+  public:
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        int depth = 0;
+        used = vector<bool> (nums.size(), false);
+        vector<int> path;
+        backtrack(nums, depth, path);
+        return ans;
+    }
+  private:
+    vector<bool> used;
+    vector<vector<int>> ans;
+    void backtrack(vector<int>& nums, int depth, vector<int> path){
+        if (depth == nums.size()) {
+            ans.push_back(path);
+            return;
+        } 
+		unordered_set<int> depthSet; // 每一层都使用哈希set来记录已经使用过的节点
+        for(int i = 0; i < used.size(); ++i){
+            if (used[i]) continue;
+			if(depthSet.count(nums[i])) continue; // 每一层的每个节点只能使用一次，之前已经使用过的不能再使用。
+            used[i] = true;
+            path.push_back(nums[i]);
+			depthSet.insert(nums[i]);
+            backtrack(nums, depth + 1, path);
+            path.pop_back();
+            used[i] = false;
+        }
+    }
+};
+```
+
+
+
 ## 参考
 
 [参考1 官方题解](<https://www.bilibili.com/video/BV1oa4y1v7Kz?from=search&seid=13759472018639491202> )
