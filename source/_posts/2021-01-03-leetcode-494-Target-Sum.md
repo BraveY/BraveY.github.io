@@ -62,31 +62,28 @@ There are 5 ways to assign symbols to make the sum of nums be target 3.
 
 ```cc
 /*
-Time Limit Exceeded
+TLE
+O(2^n)
 */
 class Solution1 {
   public:
-    int subarraySum(vector<int>& nums, int k) {
-        int n = nums.size();
-        if (!n) return  0;
-        int ans = 0;
-        vector<int> prefixSum(n, 0);
-        prefixSum[0] = nums[0];
-        for(int i = 0; i < n; ++i){
-            if(i > 0){
-                prefixSum[i] = prefixSum[i - 1] + nums[i];
-            }            
-        }
-        for(int i = 0; i < n; ++i) {
-            if(prefixSum[i] == k) ans++;
-            for(int j = 0; j < i; ++j){
-                if(prefixSum[i] - prefixSum[j] == k) ans++;
-            }
-        }
-        return ans;
+    int findTargetSumWays(vector<int>& nums, int S) {
+		DFS(0, 0, nums, S);
+		return ans;
     }
 
   private:
+	void DFS(int sum, int depth, vector<int>& nums, int S) {
+		if (depth == nums.size()){ // 到达 末尾
+			if (sum == S) ans++;
+			return;
+		}
+		int val = nums[depth];
+		DFS(sum + val, depth + 1, nums, S);
+		DFS(sum - val, depth + 1, nums, S);
+	}
+	int ans = 0;
+
 };
 ```
 
