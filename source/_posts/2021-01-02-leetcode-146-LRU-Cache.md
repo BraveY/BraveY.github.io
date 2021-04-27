@@ -99,18 +99,18 @@ class LRUCache {
   private:
     int _capacity;
     list<int> lru; //链表按序存放使用的key,新使用的放在最前面
-    unordered_map<int, list<int>::iterator> mp; //记录key在链表的位置。
+    unordered_map<int, list<int>::iterator> mp; //记录key在链表的位置。需要使用迭代器而不是指针，list::erase()需要传入指针
     unordered_map<int, int> kv;
 
     void updateLRU(int key) { 
         if (kv.count(key)){ //在kv中的key必须保证存在于lru链表中，所以必须先更新lru再插入新的key在kv中。
-            lru.erase(mp[key]); //已经存在的key需要删除后提到最前。
+            lru.erase(mp[key]); //已经存在的key需要删除后提到最前。 需要传入迭代器
         }
         lru.push_front(key); 
         mp[key] = lru.begin();
     }
     void evict(){
-        mp.erase(lru.back());
+        mp.erase(lru.back()); // map::erase() 直接传入值就可以，因为是唯一的key
         kv.erase(lru.back());
         lru.pop_back();
     }
@@ -119,7 +119,8 @@ class LRUCache {
 
 ## 总结
 
-链表自身就是有序的，所以可以维护这个数据结构来完成需要排序的操作。而不是进行排序算法。
+1. 链表自身就是有序的，所以可以维护这个数据结构来完成需要排序的操作。而不是进行排序算法。
+2. list::erase()只能使用使用迭代器所以需要记录迭代器。
 
 ## 参考
 

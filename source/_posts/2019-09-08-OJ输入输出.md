@@ -166,6 +166,33 @@ ABCD XVC
 
 第二次输入为3组字符串，与第一次同理。
 
+### 多组数据每组多行字符串
+
+首先输入一个t，代表t组输入每组会有多行字符串输入。
+
+```cc
+    int t;
+    cin >> t;
+    cin.ignore();// 忽略输入int 后的换行符
+    char c;
+    string a = ""; 
+    string b = "";
+    int cnt = 0;
+    while(t--){
+        getline(cin, a);
+        getline(cin, b);
+        bool rtn = solution(a, b);
+        if (rtn) cout << "YES" << endl;
+        else cout << "NO" << endl;
+        a = "";
+        b = "";
+    }
+```
+
+需要配合`cin.ignore()`来使用否则会让a读入空。
+
+
+
 ## 参考
 
 <https://blog.csdn.net/qiao1245/article/details/53020326> 

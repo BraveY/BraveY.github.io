@@ -54,7 +54,7 @@ class Solution {
 	ListNode* sortList(ListNode* head) {
 		if (!head || !head->next) return head; //递归必备的出口
 		ListNode* slow = head;
-		ListNode*	fast = head->next;
+		ListNode* fast = head->next; // 必须初始为head->next,初始为head会导致在2个节点的情况无限递归
 		// 寻找中间的节点
 		while (fast && fast->next) {
 			//fast 刚好到达末尾的时候 fast->next 为nullptr
@@ -168,6 +168,11 @@ class Solution2 {
 ```
 
 这里需要稍微说明的是taila->next 的修改就是对原来的节点next指针进行修改，后tail重新只想其他节点后，前面的修改依然会保留，而不是重置了。
+
+## 总结
+
+1. 快慢指针初始的问题，此处fast必须初始为head->next，否则在两个节点处无限递归.
+2. 其他链表找环等不严格控制中点的问题，可以初始为head，但建议统一初始为下一个head->next。
 
 ## 参考
 
