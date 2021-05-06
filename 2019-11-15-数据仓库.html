@@ -1,0 +1,280 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>数据仓库 | BraveY</title><meta name="keywords" content="数据仓库,OLAPS,课程,国科大"><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="数据仓库什么是数据仓库有多种定义，按照一位数据仓库系统构造方面的领衔设计师William H. Inmon的说法：数据仓库是一个面向主题的、集成的、时变的、非易失的数据集合，支持管理者的决策过程。 一句话总结：通过数据仓库来完成对一个项目的相关需求的快速分析，是一个联机分析处理（Online Analytical Processing System）系统，具体的定义见百度百科。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据仓库">
+<meta property="og:url" content="https://bravey.github.io/2019-11-15-%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93.html">
+<meta property="og:site_name" content="BraveY">
+<meta property="og:description" content="数据仓库什么是数据仓库有多种定义，按照一位数据仓库系统构造方面的领衔设计师William H. Inmon的说法：数据仓库是一个面向主题的、集成的、时变的、非易失的数据集合，支持管理者的决策过程。 一句话总结：通过数据仓库来完成对一个项目的相关需求的快速分析，是一个联机分析处理（Online Analytical Processing System）系统，具体的定义见百度百科。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images.pexels.com/photos/71104/utah-mountain-biking-bike-biking-71104.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500">
+<meta property="article:published_time" content="2019-11-15T12:13:46.000Z">
+<meta property="article:modified_time" content="2021-05-06T01:49:12.449Z">
+<meta property="article:author" content="BraveY">
+<meta property="article:tag" content="数据仓库">
+<meta property="article:tag" content="OLAPS">
+<meta property="article:tag" content="课程">
+<meta property="article:tag" content="国科大">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.pexels.com/photos/71104/utah-mountain-biking-bike-biking-71104.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/2019-11-15-%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="hDujO4MQUB7U9ir-4VXM5PW4fDFSq0-7G-LBX-Lh86M"/><meta name="baidu-site-verification" content="8XIUcPkbzm"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}
+
+// https://stackoverflow.com/questions/16839698/jquery-getscript-alternative-in-native-javascript
+const getScript = url => new Promise((resolve, reject) => {
+  const script = document.createElement('script')
+  script.src = url
+  script.async = true
+  script.onerror = reject
+  script.onload = script.onreadystatechange = function() {
+    const loadState = this.readyState
+    if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+    script.onload = script.onreadystatechange = null
+    resolve()
+  }
+  document.head.appendChild(script)
+})</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-05-06 09:49:12'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">113</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">119</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://images.pexels.com/photos/71104/utah-mountain-biking-bike-biking-71104.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">BraveY</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">数据仓库</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-11-15T12:13:46.000Z" title="发表于 2019-11-15 20:13:46">2019-11-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-05-06T01:49:12.449Z" title="更新于 2021-05-06 09:49:12">2021-05-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/">数据挖掘</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="数据仓库"><a href="#数据仓库" class="headerlink" title="数据仓库"></a>数据仓库</h1><h2 id="什么是数据仓库"><a href="#什么是数据仓库" class="headerlink" title="什么是数据仓库"></a>什么是数据仓库</h2><p>有多种定义，按照一位数据仓库系统构造方面的领衔设计师William H. Inmon的说法：数据仓库是一个面向主题的、集成的、时变的、非易失的数据集合，支持管理者的决策过程。</p>
+<p>一句话总结：通过数据仓库来完成对一个项目的相关需求的快速分析，是一个联机分析处理（Online Analytical Processing System）系统，具体的定义见<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93">百度百科</a>。</p>
+<a id="more"></a>
+<h3 id="特征"><a href="#特征" class="headerlink" title="特征"></a>特征</h3><ul>
+<li><strong>面向主题的</strong>：数据仓库围绕一些主题，如顾客、供应商、产品和销售组织。数据仓库关注决策者的数据建模与分析，而不是构造组织机构的日常操作和事务处理。</li>
+<li><strong>集成的：</strong>通常，构造数据仓库是将多个异种数据源，如关系数据库、一般文件和联机事务处理记录，集成在一起。</li>
+<li><strong>时变的</strong>：数据存储从历史的角度（例如，过去5-10 年）提供信息。</li>
+<li><strong>非易失的：</strong>数据仓库总是。物理地分离存放数据；这些数据源于操作环境下的应用数据</li>
+</ul>
+<h3 id="操作数据库系统与数据仓库的区别"><a href="#操作数据库系统与数据仓库的区别" class="headerlink" title="操作数据库系统与数据仓库的区别"></a>操作数据库系统与数据仓库的区别</h3><p>我们常见的关系数据库就是联机操作数据库，联机操作数据库系统的主要任务是执行联机事务和查询处理。这种系统称为联机事务处理（OLTP）系统。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875850/blog/OLTP_OLAP.jpg" alt=""></p>
+<h2 id="数据立方体"><a href="#数据立方体" class="headerlink" title="数据立方体"></a>数据立方体</h2><p>数据仓库基于<strong>多维数据模型</strong>，这种模型将数据看做数据立方体形式。</p>
+<p>数据立方体的定义：在一个多维的平台上面对数据建模和观察，由<strong>维和事实</strong>定义。</p>
+<p>每个维都可以有一个与之相关联的表，称作维表，在表中进一步的描述维更具体的属性（比如名字、类型等）。</p>
+<p>多维数据模型围绕一个具体的主题（比如销售）这样的中心主题来组织。主题用事实表表示。事实是数值度量的，事实表包括事实的<strong>名称或度量</strong>。</p>
+<p>一个具体的例子如下所示，表示的是关于销售这个事实的数据立方体。其中左边是一个二维的数据立方体，右边是一个三维的数据立方体。可以扩展到n维。以3d这个数据立方体，讲解下682这个值的含义，表示Toronto市，security项目在Q2季度的销售量。<img src="https://res.cloudinary.com/bravey/image/upload/v1573875852/blog/data_cube.jpg" alt=""></p>
+<h2 id="数据仓库建模"><a href="#数据仓库建模" class="headerlink" title="数据仓库建模"></a>数据仓库建模</h2><p>数据仓库最流行的数据模型是多维数据模型，这种模型有三种形式：星形模式（Star schema）、雪花模式（snowflake schema）、事实星座（fact constellation）</p>
+<h3 id="星形模式"><a href="#星形模式" class="headerlink" title="星形模式"></a>星形模式</h3><p>最常见的模式，在这种模式下，数据仓库包括：</p>
+<ul>
+<li>一个大的事实表，里面又包含<ul>
+<li>事实的维度</li>
+<li>事实的度量</li>
+</ul>
+</li>
+<li>多组小的维表，详细记录一个维度的属性</li>
+</ul>
+<p>例子如下，展开了很像星光四射，因而得名。<img src="https://res.cloudinary.com/bravey/image/upload/v1573875853/blog/start_schema.jpg" alt=""></p>
+<p>最中间的是销售事实表，总共有4个维度：时间、商品、部门（branch）、地点，3个度量：销售数量、销售金额、平均销售量。</p>
+<h3 id="雪花模式"><a href="#雪花模式" class="headerlink" title="雪花模式"></a>雪花模式</h3><p>雪花模式是星形模式的变种，其中某些维表被规范化，因而把数据进一步分解到附加的表中。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875852/blog/snowfake_schema.jpg" alt=""></p>
+<p>星形模式是只有一层的，而雪花模式可以延伸。图中在item维度又延伸出了供应商这个维度，在地点维度又延伸出了城市这个维度。</p>
+<h3 id="事实星座"><a href="#事实星座" class="headerlink" title="事实星座"></a>事实星座</h3><p>对于一些复杂的应用可能需要多个事实表共享维表，这种模式可以看成星形模式的汇集，所以称做事实星座。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875852/blog/fact_schema.jpg" alt=""></p>
+<p>上面总共有两个事实表：销售与运输(Shipping)。因为两个事实表有些维度是共享的，所以同时指向相同的维度就可以了。</p>
+<h3 id="概念分层"><a href="#概念分层" class="headerlink" title="概念分层"></a>概念分层</h3><p>概念分层(Concept Hierarchy)，对一个维度在概念上进行分层。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875852/blog/location_hierarchy.jpg" alt=""></p>
+<p>比如在地点上可以从办公室上升到城市上升到国家一直到最后的最高层所有。每个维度的最高层都是all所有这个级别。上图地点的分层是基于全序的层次结构，也可以组织成基于偏序的格结构，如下对时间的分层。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875851/blog/time_hierarchy.jpg" alt=""></p>
+<p>对于连续的属性值或或者维度，通过将其离散化来定义概念分层。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875851/blog/numeric_hierarchy.jpg" alt=""></p>
+<h3 id="OLAP操作"><a href="#OLAP操作" class="headerlink" title="OLAP操作"></a>OLAP操作</h3><p>进行实际分析的时候需要执行OLAP操作，典型的有下面四种。</p>
+<h4 id="上卷（roll-up）"><a href="#上卷（roll-up）" class="headerlink" title="上卷（roll-up）"></a>上卷（roll-up）</h4><p>上卷操作沿着一个维度的概念分层向上攀升。如下图所示的第1个操作，对location维度从城市上卷到国家，则原来的立方体的location维度从原来有4个城市变成只有两个国家。</p>
+<h4 id="下钻（drill-down）"><a href="#下钻（drill-down）" class="headerlink" title="下钻（drill-down）"></a>下钻（drill-down）</h4><p>下钻是上卷的逆操作，它由不太详细的数据到更详细的数据。</p>
+<p>比如从第1个上卷的操作得到的数据立方体做从国家到城市的逆操作就回到了原来的数据立方体。第二个操作就是下钻操作，在time维度上从季度下钻到了月。</p>
+<h4 id="切片（slice）和切块（dice）"><a href="#切片（slice）和切块（dice）" class="headerlink" title="切片（slice）和切块（dice）"></a>切片（slice）和切块（dice）</h4><p>切片操作在给定的立方体上一个维度上面进行选择，形成一个新的子立方体。比如第3个操作，切边选择了time=Q1，因而得到的子立方体都是在Q1季度上的数据。</p>
+<p>切块操作则是在多个维度上进行选择。比如第4个操作就是在location维度选择多伦多与温哥华，而在time维度上选择Q1与Q2季度，而在item维度上选择家庭娱乐与计算机。</p>
+<h4 id="转轴（pivot）"><a href="#转轴（pivot）" class="headerlink" title="转轴（pivot）"></a>转轴（pivot）</h4><p>转轴又称作旋转(rotate)，是一种目视操作，移动了数据的视角。比如第5个操作，将原来的item维度在下，location维度在上。旋转后变成了item维度在上，而location维度在下。类似于矩阵的转置。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875851/blog/olap_operation.jpg" alt=""></p>
+<h4 id="操作实例"><a href="#操作实例" class="headerlink" title="操作实例"></a>操作实例</h4><p> Starting with the base cuboid [day, doctor, patient],what OLAP operations should be performed in order<br>to list the total fee collected by each doctor in 1999?</p>
+<p>首先要求所有的费用，因此对patient维度做上卷操作，上卷到all所有这个层次。然后时间限定在了1999年，因此对day维度做上卷操作，上卷到年这个层次。最后进行切边操作，选择1999年这个年份。</p>
+<h2 id="数据仓库实现"><a href="#数据仓库实现" class="headerlink" title="数据仓库实现"></a>数据仓库实现</h2><h3 id="数据立方体的有效计算"><a href="#数据立方体的有效计算" class="headerlink" title="数据立方体的有效计算"></a>数据立方体的有效计算</h3><p>前述的OLAP操作依赖于对数据立方体的计算操作，既是针对不同维度上面的聚合，SQL的术语是分组（group-by）。对于n个维度的数据立方体，不考虑每个维度的概念分层，则总共可以构成的分组（不同维度组合的集合）有$2^n$种。如下所示，一个（city，item，year）的三维数据立方体可以有8种分组方式。</p>
+<p>其实不考虑概念分层意味着每个维度可以有最高层all和最低层两个分层。因此如果考虑概念分层，假设有n个维度</p>
+<p>，每个维度都有m个分层，则这样来说可有$m^n$个方体。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875850/blog/cube_group_by.jpg" alt=""></p>
+<p>为了实现快速返回OLAP的操作，需要提前将这些分组的结果存储下来，这样当指定OLAP操作，直接去访问这些分组就可以了。这种提前计算方体结果的方法，称作<strong>物化（materialization）</strong>但是考虑到概念分层，存储所有的分组结果是不现实的。采用<strong>部分物化（partial materaialiaztion）</strong>预先计算一部分适当的常用的子集。</p>
+<h3 id="OLAP索引"><a href="#OLAP索引" class="headerlink" title="OLAP索引"></a>OLAP索引</h3><h4 id="位图索引（bitmap-indexing）"><a href="#位图索引（bitmap-indexing）" class="headerlink" title="位图索引（bitmap indexing）"></a>位图索引（bitmap indexing）</h4><p>在给定属性的位图索引中，属性域中的每个值v，有一个不同的位向量bit vector(即一列值)Bv。如果给定的属性域包含n 个值，则位图索引中每项需要n 位（即，n 位向量）。如果数据表中给定行的属性值为v，则在位图索引的对应行，表示该值的位为1，该行的其它位均为0。可以理解成one hot 编码。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875851/blog/index_map.jpg" alt=""></p>
+<p>Region有3种取值，所以3个位向量，也就是对应3列值；Type有2种取值，所以对应2列值。</p>
+<h5 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h5><p>优点：与散列和树索引相比，位图索引有优势。对于基数较小的域它特别有用，因为比较、连接、和聚集操作都变成了位算术运算，大大减少了运行时间。由于字符串可以用单个位表示，位图索引大大降低了空间和I/O 开销。对于基数较高的域，使用压缩技术，这种方法可以接受。但是不是很适合。</p>
+<p>缺点：因为值域中的每一个可能的值都需要一个位向量来记录，所以当基数较大时，会需要开辟很大的存储空间，因为每一个记录其实只使用到了一位，因此造成了很大的浪费。同时当可取的值连续时无法使用位图来记录。</p>
+<h4 id="连接索引"><a href="#连接索引" class="headerlink" title="连接索引"></a>连接索引</h4><p>如果两个关系R(RID,A)和S(B,SID)在属性A和B 上连接，则连接索引记录包含(RID,SID)对，其中RID 和SID 分别为来自R 和S 的记录标识符。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875850/blog/join_index.jpg" alt=""></p>
+<p>在左边的销售事实表中有同location和item两个维度的链接，那么就可以有右边3中连接索引。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《数据挖掘概念与技术》第3版 第四章数据仓库与联机分析处理</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/2019-11-15-%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93.html">https://bravey.github.io/2019-11-15-%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://bravey.github.io" target="_blank">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/">数据仓库</a><a class="post-meta__tags" href="/tags/OLAPS/">OLAPS</a><a class="post-meta__tags" href="/tags/%E8%AF%BE%E7%A8%8B/">课程</a><a class="post-meta__tags" href="/tags/%E5%9B%BD%E7%A7%91%E5%A4%A7/">国科大</a></div><div class="post_share"><div class="social-share" data-image="https://images.pexels.com/photos/71104/utah-mountain-biking-bike-biking-71104.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2019-11-16-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86.html"><img class="prev-cover" src="https://images.pexels.com/photos/933843/pexels-photo-933843.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">数据预处理</div></div></a></div><div class="next-post pull-right"><a href="/2019-11-08-Hexo%E5%8D%9A%E5%AE%A2Next%E4%B8%BB%E9%A2%98%E4%BC%98%E5%8C%96.html"><img class="next-cover" src="https://images.pexels.com/photos/452780/pexels-photo-452780.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Hexo博客Next主题优化</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2019-11-19-推荐系统.html" title="推荐系统"><img class="cover" src="https://images.pexels.com/photos/868097/pexels-photo-868097.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-19</div><div class="title">推荐系统</div></div></a></div><div><a href="/2019-11-19-聚类方法.html" title="聚类方法"><img class="cover" src="/img/post.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-19</div><div class="title">聚类方法</div></div></a></div><div><a href="/2019-11-18-关联规则.html" title="关联规则"><img class="cover" src="https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-18</div><div class="title">关联规则</div></div></a></div><div><a href="/2019-11-17-分类与预测.html" title="分类与预测"><img class="cover" src="https://images.pexels.com/photos/358383/pexels-photo-358383.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-17</div><div class="title">分类与预测</div></div></a></div><div><a href="/2019-11-16-数据预处理.html" title="数据预处理"><img class="cover" src="https://images.pexels.com/photos/933843/pexels-photo-933843.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-16</div><div class="title">数据预处理</div></div></a></div><div><a href="/2019-12-08-线性判别函数.html" title="线性判别函数"><img class="cover" src="https://images.pexels.com/photos/629159/pexels-photo-629159.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-08</div><div class="title">线性判别函数</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">BraveY</div><div class="author-info__description">今日事，今日毕</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">113</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">119</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93"><span class="toc-number">1.</span> <span class="toc-text">数据仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93"><span class="toc-number">1.1.</span> <span class="toc-text">什么是数据仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E5%BE%81"><span class="toc-number">1.1.1.</span> <span class="toc-text">特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E4%B8%8E%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.1.2.</span> <span class="toc-text">操作数据库系统与数据仓库的区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%AB%8B%E6%96%B9%E4%BD%93"><span class="toc-number">1.2.</span> <span class="toc-text">数据立方体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E5%BB%BA%E6%A8%A1"><span class="toc-number">1.3.</span> <span class="toc-text">数据仓库建模</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%9F%E5%BD%A2%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.3.1.</span> <span class="toc-text">星形模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%AA%E8%8A%B1%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.3.2.</span> <span class="toc-text">雪花模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E5%AE%9E%E6%98%9F%E5%BA%A7"><span class="toc-number">1.3.3.</span> <span class="toc-text">事实星座</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5%E5%88%86%E5%B1%82"><span class="toc-number">1.3.4.</span> <span class="toc-text">概念分层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OLAP%E6%93%8D%E4%BD%9C"><span class="toc-number">1.3.5.</span> <span class="toc-text">OLAP操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8A%E5%8D%B7%EF%BC%88roll-up%EF%BC%89"><span class="toc-number">1.3.5.1.</span> <span class="toc-text">上卷（roll-up）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8B%E9%92%BB%EF%BC%88drill-down%EF%BC%89"><span class="toc-number">1.3.5.2.</span> <span class="toc-text">下钻（drill-down）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%87%E7%89%87%EF%BC%88slice%EF%BC%89%E5%92%8C%E5%88%87%E5%9D%97%EF%BC%88dice%EF%BC%89"><span class="toc-number">1.3.5.3.</span> <span class="toc-text">切片（slice）和切块（dice）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BD%AC%E8%BD%B4%EF%BC%88pivot%EF%BC%89"><span class="toc-number">1.3.5.4.</span> <span class="toc-text">转轴（pivot）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E5%AE%9E%E4%BE%8B"><span class="toc-number">1.3.5.5.</span> <span class="toc-text">操作实例</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.4.</span> <span class="toc-text">数据仓库实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%AB%8B%E6%96%B9%E4%BD%93%E7%9A%84%E6%9C%89%E6%95%88%E8%AE%A1%E7%AE%97"><span class="toc-number">1.4.1.</span> <span class="toc-text">数据立方体的有效计算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OLAP%E7%B4%A2%E5%BC%95"><span class="toc-number">1.4.2.</span> <span class="toc-text">OLAP索引</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%8D%E5%9B%BE%E7%B4%A2%E5%BC%95%EF%BC%88bitmap-indexing%EF%BC%89"><span class="toc-number">1.4.2.1.</span> <span class="toc-text">位图索引（bitmap indexing）</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.4.2.1.1.</span> <span class="toc-text">优缺点</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E7%B4%A2%E5%BC%95"><span class="toc-number">1.4.2.2.</span> <span class="toc-text">连接索引</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.5.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021-04-27-leetcode-153-Find-Minimum-in-Rotated-Sorted-Array.html" title="leetcode 153 Find Minimum in Rotated Sorted Array"><img src="https://images.pexels.com/photos/611328/pexels-photo-611328.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 153 Find Minimum in Rotated Sorted Array"/></a><div class="content"><a class="title" href="/2021-04-27-leetcode-153-Find-Minimum-in-Rotated-Sorted-Array.html" title="leetcode 153 Find Minimum in Rotated Sorted Array">leetcode 153 Find Minimum in Rotated Sorted Array</a><time datetime="2021-04-27T14:59:17.000Z" title="发表于 2021-04-27 22:59:17">2021-04-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-04-23-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9F%A5%E6%89%BE.html" title="二叉树的查找"><img src="https://images.pexels.com/photos/351448/pexels-photo-351448.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="二叉树的查找"/></a><div class="content"><a class="title" href="/2021-04-23-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9F%A5%E6%89%BE.html" title="二叉树的查找">二叉树的查找</a><time datetime="2021-04-23T02:24:11.000Z" title="发表于 2021-04-23 10:24:11">2021-04-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-04-22-NC92-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97-NC127-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2.html" title="NC92 最长公共子序列 NC127 最长公共子串"><img src="https://images.pexels.com/photos/351448/pexels-photo-351448.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NC92 最长公共子序列 NC127 最长公共子串"/></a><div class="content"><a class="title" href="/2021-04-22-NC92-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97-NC127-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2.html" title="NC92 最长公共子序列 NC127 最长公共子串">NC92 最长公共子序列 NC127 最长公共子串</a><time datetime="2021-04-22T06:38:18.000Z" title="发表于 2021-04-22 14:38:18">2021-04-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-04-05-%E5%89%91%E6%8C%87Offer36-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E8%BD%AC%E6%8D%A2%E4%B8%BA%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.html" title="剑指Offer36 二叉搜索树转换为双向链表"><img src="https://images.pexels.com/photos/46253/mt-fuji-sea-of-clouds-sunrise-46253.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="剑指Offer36 二叉搜索树转换为双向链表"/></a><div class="content"><a class="title" href="/2021-04-05-%E5%89%91%E6%8C%87Offer36-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E8%BD%AC%E6%8D%A2%E4%B8%BA%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.html" title="剑指Offer36 二叉搜索树转换为双向链表">剑指Offer36 二叉搜索树转换为双向链表</a><time datetime="2021-04-05T11:15:52.000Z" title="发表于 2021-04-05 19:15:52">2021-04-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-03-29-leetcode-295-Find-Median-from-Data-Stream.html" title="leetcode 295 Find Median from Data Stream"><img src="https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 295 Find Median from Data Stream"/></a><div class="content"><a class="title" href="/2021-03-29-leetcode-295-Find-Median-from-Data-Stream.html" title="leetcode 295 Find Median from Data Stream">leetcode 295 Find Median from Data Stream</a><time datetime="2021-03-29T11:45:06.000Z" title="发表于 2021-03-29 19:45:06">2021-03-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By BraveY</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

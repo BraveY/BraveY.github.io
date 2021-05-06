@@ -1,0 +1,313 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BraveY</title><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="今日事，今日毕">
+<meta property="og:type" content="website">
+<meta property="og:title" content="BraveY">
+<meta property="og:url" content="https://bravey.github.io/page/7/index.html">
+<meta property="og:site_name" content="BraveY">
+<meta property="og:description" content="今日事，今日毕">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg">
+<meta property="article:author" content="BraveY">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg"><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/page/7/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="hDujO4MQUB7U9ir-4VXM5PW4fDFSq0-7G-LBX-Lh86M"/><meta name="baidu-site-verification" content="8XIUcPkbzm"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}
+
+// https://stackoverflow.com/questions/16839698/jquery-getscript-alternative-in-native-javascript
+const getScript = url => new Promise((resolve, reject) => {
+  const script = document.createElement('script')
+  script.src = url
+  script.async = true
+  script.onerror = reject
+  script.onload = script.onreadystatechange = function() {
+    const loadState = this.readyState
+    if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+    script.onload = script.onreadystatechange = null
+    resolve()
+  }
+  document.head.appendChild(script)
+})</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2021-05-06 09:49:44'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">113</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">119</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(https://res.cloudinary.com/bravey/image/upload/v1582873485/wallroom-2880x1620-bg-3cad5d2.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">BraveY</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">BraveY</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020-03-05-%E4%BD%BF%E7%94%A8SVM%E5%AF%B9%E9%B8%A2%E5%B0%BE%E8%8A%B1%E5%88%86%E7%B1%BB.html" title="使用SVM对鸢尾花分类">     <img class="post_bg" src="https://images.pexels.com/photos/390051/surfer-wave-sunset-the-indian-ocean-390051.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用SVM对鸢尾花分类"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-03-05-%E4%BD%BF%E7%94%A8SVM%E5%AF%B9%E9%B8%A2%E5%B0%BE%E8%8A%B1%E5%88%86%E7%B1%BB.html" title="使用SVM对鸢尾花分类">使用SVM对鸢尾花分类</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-03-05T09:06:04.000Z" title="发表于 2020-03-05 17:06:04">2020-03-05</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/%E5%88%86%E7%B1%BB/">分类</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/SVM/">SVM</a></span></div><div class="content">使用SVM对鸢尾花分类百度AI Studio中的一个入门项目，增加了自己在实践时的一些注释，对小白来说阅读更顺畅。源码和数据在github上。
+任务描述：构建一个模型，根据鸢尾花的花萼和花瓣大小将其分为三种不同的品种。
+
+数据集总共包含150行数据
+每一行数据由 4 个特征值及一个目标值组成。
+4 个特征值分别为：萼片长度、萼片宽度、花瓣长度、花瓣宽度
+目标值为三种不同类别的鸢尾花，分别为：    Iris Setosa、Iris Versicolour、Iris Virginica
+
+首先导入必要的包：
+numpy：python第三方库，用于科学计算
+matplotlib:python第三方库，主要用于进行可视化
+sklearn:python的重要机器学习库，其中封装了大量的机器学习算法，如：分类、回归、降维以及聚类
+1234567import numpy as np                from matplotlib import colors     from sklearn import svm            from sklearn.svm import S ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020-02-28-leetcode-10-Regular-Expression-Matching.html" title="leetcode 10 Regular Expression Matching">     <img class="post_bg" src="https://images.pexels.com/photos/71104/utah-mountain-biking-bike-biking-71104.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 10 Regular Expression Matching"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-02-28-leetcode-10-Regular-Expression-Matching.html" title="leetcode 10 Regular Expression Matching">leetcode 10 Regular Expression Matching</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-02-28T08:07:23.000Z" title="发表于 2020-02-28 16:07:23">2020-02-28</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/">字符串</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E9%80%92%E5%BD%92/">递归</a></span></div><div class="content">leetcode 10 Regular Expression Matching题目来源，需要实现字符串正则匹配的’*’和’.’的匹配功能，判断给定字符串和模式能否匹配。
+Given an input string (s) and a pattern (p), implement regular expression matching with support for &#39;.&#39; and &#39;*&#39; where: 
+
+&#39;.&#39; Matches any single character.
+&#39;*&#39; Matches zero or more of the preceding element.
+
+The matching should cover the entire input string (not partial).
+Example 1:
+123Input: s &#x3D; &quot;aa&quot;, p &#x3D; &quot;a&quot;Output: falseExplanation: &quot;a&quot; doe ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020-02-23-leetcode-5-Longest-Palindromic-Substring.html" title="leetcode 5 Longest Palindromic Substring">     <img class="post_bg" src="https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 5 Longest Palindromic Substring"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-02-23-leetcode-5-Longest-Palindromic-Substring.html" title="leetcode 5 Longest Palindromic Substring">leetcode 5 Longest Palindromic Substring</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-02-23T08:52:07.000Z" title="发表于 2020-02-23 16:52:07">2020-02-23</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E9%A9%AC%E6%8B%89%E8%BD%A6%E7%AE%97%E6%B3%95/">马拉车算法</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E4%B8%AD%E5%BF%83%E6%89%A9%E5%B1%95/">中心扩展</a></span></div><div class="content">leetcode 5 Longest Palindromic Substring题目来源,要求出一个字符串中的最长回文子字符串。
+
+Given a string s, return the longest palindromic substring in s.
+Example 1:
+123Input: s &#x3D; &quot;babad&quot;Output: &quot;bab&quot;Note: &quot;aba&quot; is also a valid answer.
+Example 2:
+12Input: s &#x3D; &quot;cbbd&quot;Output: &quot;bb&quot;
+Example 3:
+12Input: s &#x3D; &quot;a&quot;Output: &quot;a&quot;
+Example 4:
+12Input: s &#x3D; &quot;ac&quot;Output: &quot;a&quot; 
+Constraints:
+
+1 &lt;= s.length &lt;= 1000
+s consist of  ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020-02-13-leetcode-140-Word-Break-II.html" title="leetcode 140 Word Break II">     <img class="post_bg" src="https://images.pexels.com/photos/814499/pexels-photo-814499.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 140 Word Break II"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-02-13-leetcode-140-Word-Break-II.html" title="leetcode 140 Word Break II">leetcode 140 Word Break II</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-02-13T03:13:45.000Z" title="发表于 2020-02-13 11:13:45">2020-02-13</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E8%AE%B0%E5%BF%86%E5%8C%96%E9%80%92%E5%BD%92/">记忆化递归</a></span></div><div class="content">leetcode 140 Word Break II题目来源,要求给出字符串由字典中的子字符串的所有组成方式。
+思路同Word Break的思路大致一致，也是有两种方法，但是动态规划有个样例被卡了无法通过。
+
+记忆化递归整体思路依然是将输入字符串s分成左边与右边两部分，先对右边的判断是否在字典中，如果是的话在递归的去寻找做左边的答案，然后将左边的答案各种组成方式加上在字典中的右边部分，作为s的答案。
+动态规划(TLE)动态规划的思路同Word Break大体一致，转移方程也是：
+
+if\;\{opt[i-len]\&\&inDict(word))\quad len</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020-02-11-leetcode-139-Word-Break.html" title="leetcode 139 Word Break">     <img class="post_bg" src="https://images.pexels.com/photos/33545/sunrise-phu-quoc-island-ocean.jpg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 139 Word Break"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-02-11-leetcode-139-Word-Break.html" title="leetcode 139 Word Break">leetcode 139 Word Break</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-02-11T05:09:23.000Z" title="发表于 2020-02-11 13:09:23">2020-02-11</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E8%AE%B0%E5%BF%86%E5%8C%96%E9%80%92%E5%BD%92/">记忆化递归</a></span></div><div class="content">leetcode 139 Word Break题目来源,求解一个字符串能否由给定的子字符串组成。
+
+思路这道题涉及到字符串的操作，之前不是很熟悉。
+记忆化递归输入的是字符串，也是属于可分的数据结构，因此可以考虑分成子问题后使用递归的方法来求解。将字符串分为left和right部分，对于left部分递归调用子问题去求解left这部分是否为真，对于right部分判断是否在字典中。只有left部分的解为真而且right部分在字典中，完整的字符串才是可以被字典中的字符串组成的。因为划分为两部分的方法总共有字符串长度n种，所以需要对n种划分方法都遍历，只要有一种划分方法为真，那么原问题的字符串方法为真。
+以“leetcode”为例有：
+
+\begin{equation}\nonumber
+\begin{split}
+wB("leetcode")&=wB("")\&\&inDict("leetcode")\\
+&||wB("l")\&\&inDict("eetcode")\\
+&||wB("le")\&\&inDict("etcode")\\
+&||wB("lee")\&\&inDict("tco ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020-02-08-ICPP-2018-ImageNet-Training-in-Minutes.html" title="ICPP 2018 ImageNet Training in Minutes">     <img class="post_bg" src="https://images.pexels.com/photos/164041/pexels-photo-164041.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ICPP 2018 ImageNet Training in Minutes"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-02-08-ICPP-2018-ImageNet-Training-in-Minutes.html" title="ICPP 2018 ImageNet Training in Minutes">ICPP 2018 ImageNet Training in Minutes</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-02-08T01:06:25.000Z" title="发表于 2020-02-08 09:06:25">2020-02-08</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/">论文阅读</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">分布式机器学习</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%8A%A0%E9%80%9F/">神经网络加速</a></span></div><div class="content">来源 ICPP2018 best paper
+关键词分布式机器学习，神经网络加速
+摘要文章对大规模计算机的DNN加速能力进行了研究。通过使用LARS算法提供的Large batch来充分利用海量的计算资源，该方法在ImageNet-1k数据集上训练出的AlexNet和ResNet-50这两个网络达到了SOTA的精读。和Facebook以往提出的Baseline相比，该方法在batch size超过16k上有着更高的精度。使用2,048 Intel Xeon Platinum 8160处理器将100 epoch的AlexNext的训练时间从几小时下降到了11分钟，使用2,048 Intel Xeon Phi 7250处理器将90 epoch的训练时间从几小时下降到了20分钟。
+
+结论大意同摘要，文中讨论了大规模计算机来加速的优点与困难。
+
+引言问题1：对于深度学习应用，更大的数据集和更复杂的模型带来了准确率的显著提高，随之而来的是更长的训练时间。
+思路1：如果把神经网络的训练使用超级计算机来实现，短时间完成。
+同步SGD算法在目前取得了最好的效果，将batch size提高可以更好的利用 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020-02-07-leetcode-300-Longest-Increasing-Subsequence.html" title="leetcode 300 Longest Increasing Subsequence">     <img class="post_bg" src="https://images.pexels.com/photos/1656687/pexels-photo-1656687.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 300 Longest Increasing Subsequence"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-02-07-leetcode-300-Longest-Increasing-Subsequence.html" title="leetcode 300 Longest Increasing Subsequence">leetcode 300 Longest Increasing Subsequence</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-02-07T13:19:32.000Z" title="发表于 2020-02-07 21:19:32">2020-02-07</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/">二分查找</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></span></div><div class="content">leetcode 300 Longest Increasing Subsequence题目来源，需要求解数组中的升序子数组的最大长度。
+
+Given an integer array nums, return the length of the longest strictly increasing subsequence.
+A subsequence is a sequence that can be derived from an array by deleting some or no elements without changing the order of the remaining elements. For example, [3,6,2,7] is a subsequence of the array [0,3,1,6,2,2,7].
+Example 1:
+123Input: nums &#x3D; [10,9,2,5,3,7,101,18]Output: 4Explanation: The longest increasing subsequence is [2,3 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020-02-05-c++%E6%8B%BE%E9%81%97.html" title="C/C++拾遗">     <img class="post_bg" src="https://images.pexels.com/photos/632522/pexels-photo-632522.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C/C++拾遗"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-02-05-c++%E6%8B%BE%E9%81%97.html" title="C/C++拾遗">C/C++拾遗</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-02-05T00:46:58.000Z" title="发表于 2020-02-05 08:46:58">2020-02-05</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/c/">c++</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E6%8C%87%E9%92%88/">指针</a></span></div><div class="content">C/C++拾遗虚函数和纯虚函数虚函数：virtual void fun (){………..};定义后了可以实现，并且主要是为了子类会对这个函数进行重写，从而实现多态性。声明一个基类指针对象，但指向子类实例对象，这样如果基类是虚函数，则可以根据指向的子类的不同而实现不同的方法。不使用虚函数的话，将无法使用子类重写过的函数。
+纯虚函数：virtual +函数+ =0 。只声明，不会在基类完成定义，需要在子类中定义实现的方法。
+
+
+重写和重载重载：
+
+相同的范围（同一个作用域中）比如同一个类中
+函数的名字相同
+函数的参数不同
+virtual可有可无
+返回值可以不同（不能仅只有返回值不同，否则编译器无法分辨调用的是哪一个函数）
+
+重写覆盖：
+
+不同范围 （基类与子类）
+名字相同
+参数相同
+基类函数必须有virtual
+
+重写隐藏：
+
+不同范围
+名字相同
+参数不同
+virtual可有可无
+
+结构体和类的区别结构体 ：使用struct声明，可以包含构造函数，常数，字段，方法，属性，索引器，运算符和嵌套类型等，不过，结构是值类型。
+区别：类的成员默认是私有的，而结构体的成员则是公有的。
+继承类的构造顺 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020-01-29-leetcode-53-Maximum-Subarray.html" title="leetcode 53 Maximum Subarray">     <img class="post_bg" src="https://images.pexels.com/photos/358383/pexels-photo-358383.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 53 Maximum Subarray"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-01-29-leetcode-53-Maximum-Subarray.html" title="leetcode 53 Maximum Subarray">leetcode 53 Maximum Subarray</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-01-29T06:33:50.000Z" title="发表于 2020-01-29 14:33:50">2020-01-29</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/leetcode/">leetcode</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%88%86%E6%B2%BB/">分治</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></span></div><div class="content">leetcode 53 Maximum Subarray题目来源。题意要求给出一个数组中拥有最大和的连续子数组。
+
+Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.
+Example 1:
+123Input: nums &#x3D; [-2,1,-3,4,-1,2,1,-5,4]Output: 6Explanation: [4,-1,2,1] has the largest sum &#x3D; 6.
+Example 2:
+12Input: nums &#x3D; [1]Output: 1
+Example 3:
+12Input: nums &#x3D; [0]Output: 0
+Example 4:
+12Input: nums &#x3D; [-1]Output: -1
+Example 5:
+12Input: nums &#x3D; [-100000]Output:  ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020-01-06-leetcode-543-Diameter-of-Binary-Tree.html" title="leetcode 543 Diameter of Binary Tree">     <img class="post_bg" src="https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 543 Diameter of Binary Tree"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-01-06-leetcode-543-Diameter-of-Binary-Tree.html" title="leetcode 543 Diameter of Binary Tree">leetcode 543 Diameter of Binary Tree</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-01-06T11:08:33.000Z" title="发表于 2020-01-06 19:08:33">2020-01-06</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/leetcode/">leetcode</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%88%86%E6%B2%BB/">分治</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/">二叉树</a></span></div><div class="content">leetcode 543 Diameter of Binary Tree题目来源，需要求解一颗二叉树的最大路径的长度，第一次做出来了，第二次没有做对，所以记录下。
+
+思路首先观察到问题的输入是一颗二叉树，其左右子节点仍然是一个二叉树，属于可以分解成子问题的数据结构，不是求解最优解，所以很自然的想到分治的方法。
+对于每一个节点而言，经过该节点的最长路径分为两种情况：
+
+不经过其父节点，是左节点的最长深度+右节点的最长深度
+经过其父节点，且经过其左右子节点中拥有最大深度的一个子节点
+
+第二种情况对于该节点的父节点而言，是第一种情况，因此对于输入的二叉树而言，更新最大深度只存在第一种情况就是某一节点的左节点最大深度与右节点的最大深度相加，因此每个节点需要返回其左右子节点中拥有最大深度的一个子节点。这样从得到叶子节点这个最小的子问题的解开始，就可以不断向上叠加，得到每一个节点的解，最终得到原始问题的解了。
+所以这里的子问题应该是左右子节点的最长深度，而不是左右子节点的最长路径，因为每个节点只能经过一次，也就是对于父节点而言，只能选择左边或者右边的一条路径，不能左右两边都同时选择。我第二次做错就 ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/6/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/8/"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">BraveY</div><div class="author-info__description">今日事，今日毕</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">113</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">119</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021-04-27-leetcode-153-Find-Minimum-in-Rotated-Sorted-Array.html" title="leetcode 153 Find Minimum in Rotated Sorted Array"><img src="https://images.pexels.com/photos/611328/pexels-photo-611328.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 153 Find Minimum in Rotated Sorted Array"/></a><div class="content"><a class="title" href="/2021-04-27-leetcode-153-Find-Minimum-in-Rotated-Sorted-Array.html" title="leetcode 153 Find Minimum in Rotated Sorted Array">leetcode 153 Find Minimum in Rotated Sorted Array</a><time datetime="2021-04-27T14:59:17.000Z" title="发表于 2021-04-27 22:59:17">2021-04-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-04-23-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9F%A5%E6%89%BE.html" title="二叉树的查找"><img src="https://images.pexels.com/photos/351448/pexels-photo-351448.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="二叉树的查找"/></a><div class="content"><a class="title" href="/2021-04-23-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9F%A5%E6%89%BE.html" title="二叉树的查找">二叉树的查找</a><time datetime="2021-04-23T02:24:11.000Z" title="发表于 2021-04-23 10:24:11">2021-04-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-04-22-NC92-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97-NC127-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2.html" title="NC92 最长公共子序列 NC127 最长公共子串"><img src="https://images.pexels.com/photos/351448/pexels-photo-351448.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NC92 最长公共子序列 NC127 最长公共子串"/></a><div class="content"><a class="title" href="/2021-04-22-NC92-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97-NC127-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2.html" title="NC92 最长公共子序列 NC127 最长公共子串">NC92 最长公共子序列 NC127 最长公共子串</a><time datetime="2021-04-22T06:38:18.000Z" title="发表于 2021-04-22 14:38:18">2021-04-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-04-05-%E5%89%91%E6%8C%87Offer36-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E8%BD%AC%E6%8D%A2%E4%B8%BA%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.html" title="剑指Offer36 二叉搜索树转换为双向链表"><img src="https://images.pexels.com/photos/46253/mt-fuji-sea-of-clouds-sunrise-46253.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="剑指Offer36 二叉搜索树转换为双向链表"/></a><div class="content"><a class="title" href="/2021-04-05-%E5%89%91%E6%8C%87Offer36-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E8%BD%AC%E6%8D%A2%E4%B8%BA%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.html" title="剑指Offer36 二叉搜索树转换为双向链表">剑指Offer36 二叉搜索树转换为双向链表</a><time datetime="2021-04-05T11:15:52.000Z" title="发表于 2021-04-05 19:15:52">2021-04-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-03-29-leetcode-295-Find-Median-from-Data-Stream.html" title="leetcode 295 Find Median from Data Stream"><img src="https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 295 Find Median from Data Stream"/></a><div class="content"><a class="title" href="/2021-03-29-leetcode-295-Find-Median-from-Data-Stream.html" title="leetcode 295 Find Median from Data Stream">leetcode 295 Find Median from Data Stream</a><time datetime="2021-03-29T11:45:06.000Z" title="发表于 2021-03-29 19:45:06">2021-03-29</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline"><i class="fas fa-folder-open"></i><span>分类</span></div><ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Hexo/"><span class="card-category-list-name">Hexo</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Linux/"><span class="card-category-list-name">Linux</span><span class="card-category-list-count">12</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/algorithm/"><span class="card-category-list-name">algorithm</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/deploy/"><span class="card-category-list-name">deploy</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%85%B6%E4%BB%96/"><span class="card-category-list-name">其他</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/"><span class="card-category-list-name">数据挖掘</span><span class="card-category-list-count">7</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">机器学习</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">深度学习</span><span class="card-category-list-count">5</span></a></li>
+            <li class="card-category-list-item more is-center"><a class="card-category-list-link-more" href="/categories/">
+                <span>查看更多</span><i class="fas fa-angle-right"></i></a></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Apriori/" style="font-size: 1.1em; color: #999">Apriori</a> <a href="/tags/BFS/" style="font-size: 1.34em; color: #99a3b0">BFS</a> <a href="/tags/BIOS/" style="font-size: 1.1em; color: #999">BIOS</a> <a href="/tags/BST/" style="font-size: 1.1em; color: #999">BST</a> <a href="/tags/C/" style="font-size: 1.1em; color: #999">C</a> <a href="/tags/CNN/" style="font-size: 1.1em; color: #999">CNN</a> <a href="/tags/Clementine/" style="font-size: 1.1em; color: #999">Clementine</a> <a href="/tags/C%E8%AF%AD%E8%A8%80/" style="font-size: 1.18em; color: #999ca1">C语言</a> <a href="/tags/DFS/" style="font-size: 1.5em; color: #99a9bf">DFS</a> <a href="/tags/FP-Growth/" style="font-size: 1.1em; color: #999">FP-Growth</a> <a href="/tags/Hash/" style="font-size: 1.1em; color: #999">Hash</a> <a href="/tags/Hexo/" style="font-size: 1.1em; color: #999">Hexo</a> <a href="/tags/K-Means/" style="font-size: 1.1em; color: #999">K-Means</a> <a href="/tags/LSTM/" style="font-size: 1.26em; color: #999fa8">LSTM</a> <a href="/tags/Linux/" style="font-size: 1.42em; color: #99a6b7">Linux</a> <a href="/tags/MNIST/" style="font-size: 1.1em; color: #999">MNIST</a> <a href="/tags/Makefile/" style="font-size: 1.1em; color: #999">Makefile</a> <a href="/tags/OJ/" style="font-size: 1.1em; color: #999">OJ</a> <a href="/tags/OLAPS/" style="font-size: 1.1em; color: #999">OLAPS</a> <a href="/tags/Prophet/" style="font-size: 1.1em; color: #999">Prophet</a> <a href="/tags/Pytorch/" style="font-size: 1.26em; color: #999fa8">Pytorch</a> <a href="/tags/SPEC-SERT/" style="font-size: 1.1em; color: #999">SPEC SERT</a> <a href="/tags/SVM/" style="font-size: 1.1em; color: #999">SVM</a> <a href="/tags/String/" style="font-size: 1.1em; color: #999">String</a> <a href="/tags/TRIE/" style="font-size: 1.1em; color: #999">TRIE</a> <a href="/tags/Travis-CI/" style="font-size: 1.1em; color: #999">Travis-CI</a> <a href="/tags/benchmark/" style="font-size: 1.1em; color: #999">benchmark</a> <a href="/tags/bigdatabench/" style="font-size: 1.1em; color: #999">bigdatabench</a> <a href="/tags/c/" style="font-size: 1.18em; color: #999ca1">c++</a> <a href="/tags/ceph/" style="font-size: 1.1em; color: #999">ceph</a> <a href="/tags/coding/" style="font-size: 1.1em; color: #999">coding</a> <a href="/tags/command/" style="font-size: 1.18em; color: #999ca1">command</a> <a href="/tags/dict/" style="font-size: 1.1em; color: #999">dict</a> <a href="/tags/docker/" style="font-size: 1.18em; color: #999ca1">docker</a> <a href="/tags/gcc/" style="font-size: 1.1em; color: #999">gcc</a> <a href="/tags/gdb/" style="font-size: 1.1em; color: #999">gdb</a> <a href="/tags/graph/" style="font-size: 1.1em; color: #999">graph</a> <a href="/tags/hash-table/" style="font-size: 1.1em; color: #999">hash table</a> <a href="/tags/hexo/" style="font-size: 1.1em; color: #999">hexo</a> <a href="/tags/ipv6/" style="font-size: 1.1em; color: #999">ipv6</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/04/"><span class="card-archive-list-date">四月 2021</span><span class="card-archive-list-count">4</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/03/"><span class="card-archive-list-date">三月 2021</span><span class="card-archive-list-count">5</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/02/"><span class="card-archive-list-date">二月 2021</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/01/"><span class="card-archive-list-date">一月 2021</span><span class="card-archive-list-count">7</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/12/"><span class="card-archive-list-date">十二月 2020</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/11/"><span class="card-archive-list-date">十一月 2020</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/10/"><span class="card-archive-list-date">十月 2020</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/09/"><span class="card-archive-list-date">九月 2020</span><span class="card-archive-list-count">8</span></a></li><li class="card-archive-list-item more is-center"><a class="card-archive-list-link-more" href="/archives/">
+              <span>查看更多</span><i class="fas fa-angle-right"  ></i></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">113</div></div><div class="webinfo-item"><div class="item-name">已运行时间 :</div><div class="item-count" id="runtimeshow" data-publishDate="2021-05-06T01:49:43.690Z"></div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">153.4k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2021-05-06T01:49:43.819Z"></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By BraveY</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>function subtitleType () {
+  getScript('https://sdk.jinrishici.com/v2/browser/jinrishici.js').then(() => {
+    jinrishici.load(function (result) {
+      if (true) {
+        var sub = "给时光以生命，而不是给生命以时光,To the time to life&#44;rather than to life in time".length == 0 ? new Array() : "给时光以生命，而不是给生命以时光,To the time to life&#44;rather than to life in time".split(',')
+        var content = result.data.content
+        var both = sub.unshift(content)
+        var typed = new Typed('#subtitle', {
+          strings: sub,
+          startDelay: 300,
+          typeSpeed: 150,
+          loop: true,
+          backSpeed: 50,
+        })
+      } else {
+        document.getElementById('subtitle').innerHTML = result.data.content
+      }
+    })
+  })
+}
+
+if (true) {
+  if (typeof Typed === 'function') {
+    subtitleType()
+  } else {
+    getScript('https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js').then(subtitleType)
+  }
+} else {
+  subtitleType()
+}
+</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

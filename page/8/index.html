@@ -1,0 +1,323 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BraveY</title><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="今日事，今日毕">
+<meta property="og:type" content="website">
+<meta property="og:title" content="BraveY">
+<meta property="og:url" content="https://bravey.github.io/page/8/index.html">
+<meta property="og:site_name" content="BraveY">
+<meta property="og:description" content="今日事，今日毕">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg">
+<meta property="article:author" content="BraveY">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg"><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/page/8/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="hDujO4MQUB7U9ir-4VXM5PW4fDFSq0-7G-LBX-Lh86M"/><meta name="baidu-site-verification" content="8XIUcPkbzm"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}
+
+// https://stackoverflow.com/questions/16839698/jquery-getscript-alternative-in-native-javascript
+const getScript = url => new Promise((resolve, reject) => {
+  const script = document.createElement('script')
+  script.src = url
+  script.async = true
+  script.onerror = reject
+  script.onload = script.onreadystatechange = function() {
+    const loadState = this.readyState
+    if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+    script.onload = script.onreadystatechange = null
+    resolve()
+  }
+  document.head.appendChild(script)
+})</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2021-05-06 09:49:44'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">113</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">119</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(https://res.cloudinary.com/bravey/image/upload/v1582873485/wallroom-2880x1620-bg-3cad5d2.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">BraveY</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">BraveY</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2019-12-28-%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9%E5%92%8C%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96.html" title="特征选择和特征提取">     <img class="post_bg" src="https://images.pexels.com/photos/33545/sunrise-phu-quoc-island-ocean.jpg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="特征选择和特征提取"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-12-28-%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9%E5%92%8C%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96.html" title="特征选择和特征提取">特征选择和特征提取</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-12-28T06:19:43.000Z" title="发表于 2019-12-28 14:19:43">2019-12-28</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/%E9%99%8D%E7%BB%B4/">降维</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/">特征提取</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E8%B7%9D%E7%A6%BB%E7%9F%A9%E9%98%B5/">距离矩阵</a></span></div><div class="content">特征选择和特征提取意义
+降低维度，后续的分类器设计更容易计算，可以加快速度
+消除特征之间可能存在的相关性，减少与分类无关的信息（理解成降噪？），从而更好的分类。
+
+
+类别可分性质的度量距离
+点到点之间的距离
+欧式距离：
+
+D(a, b) = || a – b ||平方形式（向量转置相乘，点积的形式）：
+
+D^{2}(a,b) = (a - b)^{T}(a - b) = \sum_{k = 1}^{n}{(a_{k} - b_{k})^{2}}其中a和b为n维向量，其第k个特征分别是$a_k$和$b_k$。 各自对应的特征维度差的平方之和。
+
+点到点集之间的距离
+在n维空间中，点x到点$a^{(i)}$之间的距离平方为：
+
+D^{2}(x,a^{(i)}) = \sum_{k = 1}^{n}{(x_{k} - a_{k}^{(i)})^{2}}因此x到有K个点组合的均方距离，就是到每个点均方距离相加之后取均值。
+
+\overline{D^{2}(x,\{ a^{(i)}\})} = \frac{1}{K}\sum_{i = 1}^{K}{D^{2}(x,a^{(i)}) =}\fra ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2019-12-27-%E5%A5%87%E6%80%9D%E5%A6%99%E6%83%B3.html" title="奇思妙想">     <img class="post_bg" src="https://images.pexels.com/photos/868097/pexels-photo-868097.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="奇思妙想"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-12-27-%E5%A5%87%E6%80%9D%E5%A6%99%E6%83%B3.html" title="奇思妙想">奇思妙想</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-12-27T11:17:47.000Z" title="发表于 2019-12-27 19:17:47">2019-12-27</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/%E6%95%B0%E5%AD%A6/">数学</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E7%82%B9%E5%AD%90/">点子</a></span></div><div class="content">奇思妙想记录一些觉得有用的点子，公式推导等。当成便利贴来使用的。23333
+
+条件联合分布的推导首先搞清楚逗号是与的意思，把逗号去掉，加个括号就好理解了。
+$P(S,A|T)$:事件T发生的条件下，事件S、A均发生的概率。直接把逗号给去掉，就是$P((SA)|T)$竖线的优先级别高。因此有：$P(S,A|T)=\frac{P(SAT)}{P(T)}$
+$P(S|A,T)$ ：事件A、T均发生的条件下，事件S发生的概率 。
+
+P(X=a,Y=b|Z=c)=P(X=a|Y=b,Z=c)P(Y=b|Z=c)上式的证明如下：
+
+\begin{equation}\nonumber
+\begin{split}
+P(X=a,Y=b|Z=c)&=\frac{P(X=a,Y=b,Z=c)}{P(Z=c)}\\
+&=\frac{P(X=a|Y=b,Z=c)P(Y=b,Z=c)}{P(Z=c)}\\
+&=\frac{P(X=a|Y=b,Z=c)P(Y=b|Z=c)P(Z=c)}{P(Z=c)}\\
+&=P(X=a|Y=b,Z=c)P(Y=b|Z=c)
+\end{split} 
+\end{equation}贝 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2019-12-08-%E7%BA%BF%E6%80%A7%E5%88%A4%E5%88%AB%E5%87%BD%E6%95%B0.html" title="线性判别函数">     <img class="post_bg" src="https://images.pexels.com/photos/629159/pexels-photo-629159.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="线性判别函数"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-12-08-%E7%BA%BF%E6%80%A7%E5%88%A4%E5%88%AB%E5%87%BD%E6%95%B0.html" title="线性判别函数">线性判别函数</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-12-08T02:16:31.000Z" title="发表于 2019-12-08 10:16:31">2019-12-08</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/%E8%AF%BE%E7%A8%8B/">课程</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E6%A8%A1%E5%BC%8F%E8%AF%86%E5%88%AB/">模式识别</a></span></div><div class="content">线性判别函数模式识别与机器学习第三章的笔记。
+
+线性判别函数n维线性判别函数的一般形式一个n维线性判别函数的一般形式： 
+
+d(x)=w_1x_1+w_2x_2+\dots+w_nx_n+b=W_0^tx+b其中$W_0=(w_1,w_2,\dots,w_n)^T$称为权向量，如果把b也加入到权向量则$d(x)=W^Tx$ 其中$x=(x_1,x_2,\dots,x_n,1)$ 称为增广模式向量 (b对应的特征维度取值为1),而权向量也对应的加入b$W=((w_1,w_2,\dots,w_n,b)^T)$ 称为增广权向量 。
+两类情况样本如果只有两类$\omega_1,\omega_2$则可以只用一个线性判别函数进行判别：
+
+d(x)=W^Tx=\left\{
+  \begin{array}{**lr**}  
+             >0 &  if\;x\in \omega_1\\\\  
+             \le0& if\;x\in\omega_2
+             \end{array}  
+\right.多类情况多类情况1用线性判别函数将属于$ω_i$类的 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2019-11-29-leetcode-881-Boats-to-Save-People.html" title="leetcode 881 Boats to Save People">     <img class="post_bg" src="https://images.pexels.com/photos/611328/pexels-photo-611328.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 881 Boats to Save People"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-11-29-leetcode-881-Boats-to-Save-People.html" title="leetcode 881 Boats to Save People">leetcode 881 Boats to Save People</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-11-29T07:49:08.000Z" title="发表于 2019-11-29 15:49:08">2019-11-29</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/leetcode/">leetcode</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E8%B4%AA%E5%BF%83/">贪心</a></span></div><div class="content">leetcode 881 Boats to Save People题目来源。要求在船有载重量和人数限制为2的情况下，给出将所有人运过河的最小船数。
+
+思路使用贪心算法，进行求解。
+桶排序首先是自己的思路：贪心的考虑每只船都尽可能的装满限重，然后优先让胖的人先上船，之后寻找在剩下载重量限制的情况下，找最胖的人。
+在具体实现上，先遍历一遍人数的重量，按照重量进行桶排序，因为重量不会超过limit，而且都是整数所以是可以实现的。每个桶记录该重量下的人数，然后先将重量最大的给安排上船，并寻找能够匹配的第二个重量。直到最轻的被遍历完得到答案。
+双指针提交后发现网上的思路和自己有一点差别：配对的贪心规则是最胖的先走之后，选择最轻的进行匹配。这样就很容易的使用双指针来实现。不过为什么两种规则都能够过，自己还在思考中,参考链接中有对这种贪心规则的证明。
+代码桶排序12345678910111213141516171819202122232425262728293031323334class Solution &#123;public:	/* 桶排序 贪心的选择最胖的先走	Runtime: 96 ms	 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2019-11-22-leetcode153-154-Find-Minimum-in-Rotated-Sorted-Array-III.html" title="leetcode153 154 Find Minimum in Rotated Sorted Array I/II">     <img class="post_bg" src="https://images.pexels.com/photos/531602/pexels-photo-531602.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode153 154 Find Minimum in Rotated Sorted Array I/II"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-11-22-leetcode153-154-Find-Minimum-in-Rotated-Sorted-Array-III.html" title="leetcode153 154 Find Minimum in Rotated Sorted Array I/II">leetcode153 154 Find Minimum in Rotated Sorted Array I/II</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-11-22T13:07:54.000Z" title="发表于 2019-11-22 21:07:54">2019-11-22</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/leetcode/">leetcode</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%88%86%E6%B2%BB/">分治</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E6%95%B0%E7%BB%84/">数组</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E6%9C%80%E5%B0%8F%E5%80%BC/">最小值</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/">二分查找</a></span></div><div class="content">leetcode153 154. Find Minimum in Rotated Sorted Array I/II题目来源leetcode153 和leetcode154 要求在排序的旋转数组中寻找最小值。最小值可以很简单的遍历一次数组得到，时间复杂度为$O(n)$但是没有用到题目给的性质，所以会超时。
+
+解题思路leetcode153 无重复元素先分析leetcode153中没有重复值的情况，采用二分查找的思路，设输入的数组长度为n表示为$A[n]$,经过观察可以发现pivot将A划分成了两个递增子数组L，R。使用指针p指向A的第一个元素A[0],指针q指向A的最后一个元素$A[n-1]$,使用指针m指向A的中间元素$A[\frac{n}{2}]$。如果中间元素位于第一个递增数组L，则有关系：A[p]A[q],此时最小元素在m与q之间，将p移动到m，原来规模为n的问题变成规模为$q-m=\frac{n}{2}$的子问题。如果中间元素位于第二个递增数组R，则有关系：A[p]&gt;A[m],A[m]&lt;A[q],此时最小元素在p与m之间，将q移动到m，原来规模为n的问题变成规模为 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2019-11-19-%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F.html" title="推荐系统">     <img class="post_bg" src="https://images.pexels.com/photos/868097/pexels-photo-868097.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="推荐系统"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-11-19-%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F.html" title="推荐系统">推荐系统</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-11-19T08:27:02.000Z" title="发表于 2019-11-19 16:27:02">2019-11-19</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/">数据挖掘</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/%E8%AF%BE%E7%A8%8B/">课程</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%9B%BD%E7%A7%91%E5%A4%A7/">国科大</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E4%BD%99%E5%BC%A6%E7%9B%B8%E4%BC%BC%E5%BA%A6/">余弦相似度</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E6%8E%A8%E8%8D%90/">推荐</a></span></div><div class="content">推荐系统定义推荐的基本思路是根据历史数据比如用户以往的喜好或者相似用户的喜好来预测用户未来的喜好。基本假设是：（1）用户的喜好是会保持的并且随着时间而缓慢改变。（2）拥有相同品味的用户对与一个项目的打分也是相似的。因此可以根据以往的历史数据来进行推荐。
+与搜索的不同：搜索的数据不是根据用户的资料而定制的，给出的答案是与搜素查询语句相关联的结果。
+
+推荐算法基于内容的方法基于内容的方法基于这样一个事实：一个用户的兴趣应该和被推荐物品的描述想匹配。核心思路是找到用户资料与物品之间的相似度，推荐相似度高的物品。
+步骤为：
+
+描述将被推荐的物品I
+建立用户个人资料U来描述用户喜欢的物品
+比较物品和用户个人资料来决定推荐的物品
+
+用户个人资料与物品的描述可以根据关键词进行向量化。使用例如TF-IDF的方法将物品与个人资料向量话后，就可以计算两者的相似度了。
+余弦相似度使用预先相似度计算这两个向量的相似度。对与两个n维向量X和Y其余弦相似度为：
+
+sim(X,Y)=\dfrac{X\cdot Y}{||X||\times ||Y||}分子是点乘，$||X||=\sqrt {x_1^2+x_2^2+ ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2019-11-19-%E8%81%9A%E7%B1%BB%E6%96%B9%E6%B3%95.html" title="聚类方法">     <img class="post_bg" src="/img/post.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="聚类方法"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-11-19-%E8%81%9A%E7%B1%BB%E6%96%B9%E6%B3%95.html" title="聚类方法">聚类方法</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-11-19T07:44:49.000Z" title="发表于 2019-11-19 15:44:49">2019-11-19</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/">数据挖掘</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/%E8%AF%BE%E7%A8%8B/">课程</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%9B%BD%E7%A7%91%E5%A4%A7/">国科大</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E8%81%9A%E7%B1%BB/">聚类</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/K-Means/">K-Means</a></span></div><div class="content">聚类方法聚类属于无监督学习，因为输入的数据是没有标签的，通过算法每个样本自动的划分到相应的簇中。
+K-meansk均值是一种基于形心的技术。给定一个包含n 个数据对象的数据库，以及要生成的簇的数目k，一个划分类的算法将数据对象组织为k 个划分（k≤n），其中每个划分代表一个簇。通常会采用一个划分准则（经常称为相似度函数，similarity function），例如距离dist(i,j)，以便在同一个簇中的对象是“相似的”，而不同簇中的对象是“相异的”。
+K-means把簇的形心定义为簇内点的均值，通过贪心的方法不断迭代形心的坐标，直到形心的坐标不再改变而结束迭代。
+
+步骤算法的步骤为：
+
+首先在数据集D中选择k个对象，每个对象代表一个簇的初试均值即形心。
+对剩下的对象，根据其与这个k个形心的欧式距离将其分配到距离最近的形心的簇。
+完成了分配后重新计算每个簇的均值中心点并更新。
+使用更新后的均值中心点，重新分配每一个对象。
+不断迭代，直到本轮的中心点与上一轮的相同，即本轮形成的簇与上一轮相同。
+
+伪代码伪代码为：
+
+K-means对离群点敏感，因为当一个离群点被分配到一个簇的时候，可能 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2019-11-18-%E5%85%B3%E8%81%94%E8%A7%84%E5%88%99.html" title="关联规则">     <img class="post_bg" src="https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="关联规则"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-11-18-%E5%85%B3%E8%81%94%E8%A7%84%E5%88%99.html" title="关联规则">关联规则</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-11-18T14:58:08.000Z" title="发表于 2019-11-18 22:58:08">2019-11-18</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/">数据挖掘</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/%E8%AF%BE%E7%A8%8B/">课程</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%9B%BD%E7%A7%91%E5%A4%A7/">国科大</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%85%B3%E8%81%94%E8%A7%84%E5%88%99/">关联规则</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/Apriori/">Apriori</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/FP-Growth/">FP-Growth</a></span></div><div class="content">关联规则基本概念关联规则挖掘Association rules mining 挖掘出数据库中的频繁模式，频繁项之间的关联规则。
+
+关联规则的形式为
+
+A\Rightarrow B[support=?, confident=?]规则的支持度support和置信度confident分别反映出规则的有用性和确定性。定义为：
+
+\begin{split}
+support(A\Rightarrow B)&=P(A\bigcap B)=\dfrac{count(A\bigcap B)}{count(total)}\\
+confident(A\Rightarrow B)&=P(B|A)=\dfrac{count(A\bigcap B)}{count(A)}
+\end{split}$A\bigcap B$ 表示A事件和B事件一起发生。使用比例的支持度称为相对支持度，使用直接的次数称为绝对支持度。当规则满足设定的最小支持度和最小置信度的时候，规则是强关联规则。强关联规则并不一定是有趣的，使用提升度lift来衡量两个事件之间的相关性
+
+lift=\dfrac{P(A\bigcap B)}{P(A)P(B) ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2019-11-17-%E5%88%86%E7%B1%BB%E4%B8%8E%E9%A2%84%E6%B5%8B.html" title="分类与预测">     <img class="post_bg" src="https://images.pexels.com/photos/358383/pexels-photo-358383.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="分类与预测"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-11-17-%E5%88%86%E7%B1%BB%E4%B8%8E%E9%A2%84%E6%B5%8B.html" title="分类与预测">分类与预测</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-11-17T12:41:23.000Z" title="发表于 2019-11-17 20:41:23">2019-11-17</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/">数据挖掘</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/%E8%AF%BE%E7%A8%8B/">课程</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%9B%BD%E7%A7%91%E5%A4%A7/">国科大</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%88%86%E7%B1%BB/">分类</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E8%B4%9D%E5%8F%B6%E6%96%AF/">贝叶斯</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">神经网络</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%86%B3%E7%AD%96%E6%A0%91/">决策树</a></span></div><div class="content">分类与预测分类与预测的差别分类对给定的数据集一般是离散的，确定这些数据对应类别。而预测是对连续的数据，根据历史数据来预测未知的数据或者缺失值等。
+分类的过程分为两步：
+
+模型构建
+使用训练数据集对模型进行训练，模型可以被表示为一些分类的规则集合，决策树或者是数学公式。
+
+模型使用
+先使用模型来对测试数据进行分类，如果准确率能够接受则使用模型去对没有标注过的数据进行分类。
+
+
+分类属于有监督学习，训练的数据是经过标注的。聚类属于无监督学习训练数据未经过标注不知道样本的标签。
+
+在进行分类和预测之前需要对数据进行预处理包括数据清洗来处理噪声和缺失值，相关性分析来进行特征提取，数据转换比如归一化等。
+对于分类方法的评测指标有：准确性，速度，鲁棒性，可规模性（硬盘数据），可解释性等
+决策树决策树是一个类似于流程图的树结构；其中，每个内部结点表示在一个属性上的测试，每个分枝代表一个测试输出，而每个树叶结点代表类或类分布。树的最顶层结点是根结点。给定数据经过决策树不同节点的决策最终走到叶子节点，从而完成了对数据的分类。决策树不需要任何领域知识也不需要参数，适合探测式知识发现。
+决策数的构建分为两步 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2019-11-16-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86.html" title="数据预处理">     <img class="post_bg" src="https://images.pexels.com/photos/933843/pexels-photo-933843.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="数据预处理"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-11-16-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86.html" title="数据预处理">数据预处理</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-11-16T07:30:46.000Z" title="发表于 2019-11-16 15:30:46">2019-11-16</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/">数据挖掘</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/%E8%AF%BE%E7%A8%8B/">课程</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%9B%BD%E7%A7%91%E5%A4%A7/">国科大</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E9%99%8D%E7%BB%B4/">降维</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E7%9B%B8%E5%85%B3%E6%80%A7%E5%88%86%E6%9E%90/">相关性分析</a></span></div><div class="content">数据预处理为什么数据预处理原始数据可能掺杂着噪音、空值或者不正确、不一致、充满冗余值等。没有高质量的数据，很难挖掘出高质量的规则，因此需要数据预处理。数据预处理主要有：数据清洗、数据集成、数据归约、数据离散等几个任务。
+
+数据描述得到一份数据后，需要先对数据进行一个大概的认识，主要从中心趋势和发散特征两方面统计进行描述。
+中心趋势度量平均值 mean均值又分为：
+
+算术均值
+ $\bar x=\frac{1}{n}\sum_{i=1}^{n}x_i$
+
+加权均值
+$\bar x= \frac{\sum_{i=1}^{n}w_ix_i}{\sum_{i=1}^{n}w_i}$
+
+截尾均值 Trimmed mean
+均值对极端数据比如离群点很敏感。因此截取高低两端的一部分数据后再计算均值，但是截去的部分不能太多不超过$20\%$
+
+
+中位数 median对于倾斜（非对称）数据，数据中心的更好度量是中位数。
+假定数据有序，则当n为奇数时中位数是中间的值，当n为偶数的时候，中位数不唯一，可以是中间两个值和之间的任意值。如果属性是数值属性，那么一般约定取中间两个值的平均值。
+众数 mode另一种 ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/7/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/9/"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">BraveY</div><div class="author-info__description">今日事，今日毕</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">113</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">119</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021-04-27-leetcode-153-Find-Minimum-in-Rotated-Sorted-Array.html" title="leetcode 153 Find Minimum in Rotated Sorted Array"><img src="https://images.pexels.com/photos/611328/pexels-photo-611328.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 153 Find Minimum in Rotated Sorted Array"/></a><div class="content"><a class="title" href="/2021-04-27-leetcode-153-Find-Minimum-in-Rotated-Sorted-Array.html" title="leetcode 153 Find Minimum in Rotated Sorted Array">leetcode 153 Find Minimum in Rotated Sorted Array</a><time datetime="2021-04-27T14:59:17.000Z" title="发表于 2021-04-27 22:59:17">2021-04-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-04-23-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9F%A5%E6%89%BE.html" title="二叉树的查找"><img src="https://images.pexels.com/photos/351448/pexels-photo-351448.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="二叉树的查找"/></a><div class="content"><a class="title" href="/2021-04-23-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9F%A5%E6%89%BE.html" title="二叉树的查找">二叉树的查找</a><time datetime="2021-04-23T02:24:11.000Z" title="发表于 2021-04-23 10:24:11">2021-04-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-04-22-NC92-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97-NC127-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2.html" title="NC92 最长公共子序列 NC127 最长公共子串"><img src="https://images.pexels.com/photos/351448/pexels-photo-351448.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NC92 最长公共子序列 NC127 最长公共子串"/></a><div class="content"><a class="title" href="/2021-04-22-NC92-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97-NC127-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2.html" title="NC92 最长公共子序列 NC127 最长公共子串">NC92 最长公共子序列 NC127 最长公共子串</a><time datetime="2021-04-22T06:38:18.000Z" title="发表于 2021-04-22 14:38:18">2021-04-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-04-05-%E5%89%91%E6%8C%87Offer36-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E8%BD%AC%E6%8D%A2%E4%B8%BA%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.html" title="剑指Offer36 二叉搜索树转换为双向链表"><img src="https://images.pexels.com/photos/46253/mt-fuji-sea-of-clouds-sunrise-46253.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="剑指Offer36 二叉搜索树转换为双向链表"/></a><div class="content"><a class="title" href="/2021-04-05-%E5%89%91%E6%8C%87Offer36-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E8%BD%AC%E6%8D%A2%E4%B8%BA%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.html" title="剑指Offer36 二叉搜索树转换为双向链表">剑指Offer36 二叉搜索树转换为双向链表</a><time datetime="2021-04-05T11:15:52.000Z" title="发表于 2021-04-05 19:15:52">2021-04-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-03-29-leetcode-295-Find-Median-from-Data-Stream.html" title="leetcode 295 Find Median from Data Stream"><img src="https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 295 Find Median from Data Stream"/></a><div class="content"><a class="title" href="/2021-03-29-leetcode-295-Find-Median-from-Data-Stream.html" title="leetcode 295 Find Median from Data Stream">leetcode 295 Find Median from Data Stream</a><time datetime="2021-03-29T11:45:06.000Z" title="发表于 2021-03-29 19:45:06">2021-03-29</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline"><i class="fas fa-folder-open"></i><span>分类</span></div><ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Hexo/"><span class="card-category-list-name">Hexo</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Linux/"><span class="card-category-list-name">Linux</span><span class="card-category-list-count">12</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/algorithm/"><span class="card-category-list-name">algorithm</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/deploy/"><span class="card-category-list-name">deploy</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%85%B6%E4%BB%96/"><span class="card-category-list-name">其他</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/"><span class="card-category-list-name">数据挖掘</span><span class="card-category-list-count">7</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">机器学习</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">深度学习</span><span class="card-category-list-count">5</span></a></li>
+            <li class="card-category-list-item more is-center"><a class="card-category-list-link-more" href="/categories/">
+                <span>查看更多</span><i class="fas fa-angle-right"></i></a></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Apriori/" style="font-size: 1.1em; color: #999">Apriori</a> <a href="/tags/BFS/" style="font-size: 1.34em; color: #99a3b0">BFS</a> <a href="/tags/BIOS/" style="font-size: 1.1em; color: #999">BIOS</a> <a href="/tags/BST/" style="font-size: 1.1em; color: #999">BST</a> <a href="/tags/C/" style="font-size: 1.1em; color: #999">C</a> <a href="/tags/CNN/" style="font-size: 1.1em; color: #999">CNN</a> <a href="/tags/Clementine/" style="font-size: 1.1em; color: #999">Clementine</a> <a href="/tags/C%E8%AF%AD%E8%A8%80/" style="font-size: 1.18em; color: #999ca1">C语言</a> <a href="/tags/DFS/" style="font-size: 1.5em; color: #99a9bf">DFS</a> <a href="/tags/FP-Growth/" style="font-size: 1.1em; color: #999">FP-Growth</a> <a href="/tags/Hash/" style="font-size: 1.1em; color: #999">Hash</a> <a href="/tags/Hexo/" style="font-size: 1.1em; color: #999">Hexo</a> <a href="/tags/K-Means/" style="font-size: 1.1em; color: #999">K-Means</a> <a href="/tags/LSTM/" style="font-size: 1.26em; color: #999fa8">LSTM</a> <a href="/tags/Linux/" style="font-size: 1.42em; color: #99a6b7">Linux</a> <a href="/tags/MNIST/" style="font-size: 1.1em; color: #999">MNIST</a> <a href="/tags/Makefile/" style="font-size: 1.1em; color: #999">Makefile</a> <a href="/tags/OJ/" style="font-size: 1.1em; color: #999">OJ</a> <a href="/tags/OLAPS/" style="font-size: 1.1em; color: #999">OLAPS</a> <a href="/tags/Prophet/" style="font-size: 1.1em; color: #999">Prophet</a> <a href="/tags/Pytorch/" style="font-size: 1.26em; color: #999fa8">Pytorch</a> <a href="/tags/SPEC-SERT/" style="font-size: 1.1em; color: #999">SPEC SERT</a> <a href="/tags/SVM/" style="font-size: 1.1em; color: #999">SVM</a> <a href="/tags/String/" style="font-size: 1.1em; color: #999">String</a> <a href="/tags/TRIE/" style="font-size: 1.1em; color: #999">TRIE</a> <a href="/tags/Travis-CI/" style="font-size: 1.1em; color: #999">Travis-CI</a> <a href="/tags/benchmark/" style="font-size: 1.1em; color: #999">benchmark</a> <a href="/tags/bigdatabench/" style="font-size: 1.1em; color: #999">bigdatabench</a> <a href="/tags/c/" style="font-size: 1.18em; color: #999ca1">c++</a> <a href="/tags/ceph/" style="font-size: 1.1em; color: #999">ceph</a> <a href="/tags/coding/" style="font-size: 1.1em; color: #999">coding</a> <a href="/tags/command/" style="font-size: 1.18em; color: #999ca1">command</a> <a href="/tags/dict/" style="font-size: 1.1em; color: #999">dict</a> <a href="/tags/docker/" style="font-size: 1.18em; color: #999ca1">docker</a> <a href="/tags/gcc/" style="font-size: 1.1em; color: #999">gcc</a> <a href="/tags/gdb/" style="font-size: 1.1em; color: #999">gdb</a> <a href="/tags/graph/" style="font-size: 1.1em; color: #999">graph</a> <a href="/tags/hash-table/" style="font-size: 1.1em; color: #999">hash table</a> <a href="/tags/hexo/" style="font-size: 1.1em; color: #999">hexo</a> <a href="/tags/ipv6/" style="font-size: 1.1em; color: #999">ipv6</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/04/"><span class="card-archive-list-date">四月 2021</span><span class="card-archive-list-count">4</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/03/"><span class="card-archive-list-date">三月 2021</span><span class="card-archive-list-count">5</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/02/"><span class="card-archive-list-date">二月 2021</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/01/"><span class="card-archive-list-date">一月 2021</span><span class="card-archive-list-count">7</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/12/"><span class="card-archive-list-date">十二月 2020</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/11/"><span class="card-archive-list-date">十一月 2020</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/10/"><span class="card-archive-list-date">十月 2020</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/09/"><span class="card-archive-list-date">九月 2020</span><span class="card-archive-list-count">8</span></a></li><li class="card-archive-list-item more is-center"><a class="card-archive-list-link-more" href="/archives/">
+              <span>查看更多</span><i class="fas fa-angle-right"  ></i></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">113</div></div><div class="webinfo-item"><div class="item-name">已运行时间 :</div><div class="item-count" id="runtimeshow" data-publishDate="2021-05-06T01:49:43.690Z"></div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">153.4k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2021-05-06T01:49:43.819Z"></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By BraveY</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>function subtitleType () {
+  getScript('https://sdk.jinrishici.com/v2/browser/jinrishici.js').then(() => {
+    jinrishici.load(function (result) {
+      if (true) {
+        var sub = "给时光以生命，而不是给生命以时光,To the time to life&#44;rather than to life in time".length == 0 ? new Array() : "给时光以生命，而不是给生命以时光,To the time to life&#44;rather than to life in time".split(',')
+        var content = result.data.content
+        var both = sub.unshift(content)
+        var typed = new Typed('#subtitle', {
+          strings: sub,
+          startDelay: 300,
+          typeSpeed: 150,
+          loop: true,
+          backSpeed: 50,
+        })
+      } else {
+        document.getElementById('subtitle').innerHTML = result.data.content
+      }
+    })
+  })
+}
+
+if (true) {
+  if (typeof Typed === 'function') {
+    subtitleType()
+  } else {
+    getScript('https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js').then(subtitleType)
+  }
+} else {
+  subtitleType()
+}
+</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

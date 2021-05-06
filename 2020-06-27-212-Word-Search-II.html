@@ -1,0 +1,231 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>212 Word Search II | BraveY</title><meta name="keywords" content="回溯,TRIE"><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="题意题目链接 Given a 2D board and a list of words from the dictionary, find all words in the board. Each word must be constructed from letters of sequentially adjacent cell, where “adjacent” cells are those">
+<meta property="og:type" content="article">
+<meta property="og:title" content="212 Word Search II">
+<meta property="og:url" content="https://bravey.github.io/2020-06-27-212-Word-Search-II.html">
+<meta property="og:site_name" content="BraveY">
+<meta property="og:description" content="题意题目链接 Given a 2D board and a list of words from the dictionary, find all words in the board. Each word must be constructed from letters of sequentially adjacent cell, where “adjacent” cells are those">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images.pexels.com/photos/165505/pexels-photo-165505.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500">
+<meta property="article:published_time" content="2020-06-27T15:25:01.000Z">
+<meta property="article:modified_time" content="2021-05-06T01:49:12.453Z">
+<meta property="article:author" content="BraveY">
+<meta property="article:tag" content="回溯">
+<meta property="article:tag" content="TRIE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.pexels.com/photos/165505/pexels-photo-165505.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/2020-06-27-212-Word-Search-II"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="hDujO4MQUB7U9ir-4VXM5PW4fDFSq0-7G-LBX-Lh86M"/><meta name="baidu-site-verification" content="8XIUcPkbzm"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}
+
+// https://stackoverflow.com/questions/16839698/jquery-getscript-alternative-in-native-javascript
+const getScript = url => new Promise((resolve, reject) => {
+  const script = document.createElement('script')
+  script.src = url
+  script.async = true
+  script.onerror = reject
+  script.onload = script.onreadystatechange = function() {
+    const loadState = this.readyState
+    if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+    script.onload = script.onreadystatechange = null
+    resolve()
+  }
+  document.head.appendChild(script)
+})</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-05-06 09:49:12'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">113</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">119</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://images.pexels.com/photos/165505/pexels-photo-165505.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">BraveY</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">212 Word Search II</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-06-27T15:25:01.000Z" title="发表于 2020-06-27 23:25:01">2020-06-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-05-06T01:49:12.453Z" title="更新于 2021-05-06 09:49:12">2021-05-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h2><p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/word-search-ii/">题目链接</a></p>
+<p>Given a 2D board and a list of words from the dictionary, find all words in the board.</p>
+<p>Each word must be constructed from letters of sequentially adjacent cell, where “adjacent” cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.</p>
+<p><strong>Example:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Input: </span><br><span class="line">board &#x3D; [</span><br><span class="line">  [&#39;o&#39;,&#39;a&#39;,&#39;a&#39;,&#39;n&#39;],</span><br><span class="line">  [&#39;e&#39;,&#39;t&#39;,&#39;a&#39;,&#39;e&#39;],</span><br><span class="line">  [&#39;i&#39;,&#39;h&#39;,&#39;k&#39;,&#39;r&#39;],</span><br><span class="line">  [&#39;i&#39;,&#39;f&#39;,&#39;l&#39;,&#39;v&#39;]</span><br><span class="line">]</span><br><span class="line">words &#x3D; [&quot;oath&quot;,&quot;pea&quot;,&quot;eat&quot;,&quot;rain&quot;]</span><br><span class="line"></span><br><span class="line">Output: [&quot;eat&quot;,&quot;oath&quot;]</span><br></pre></td></tr></table></figure>
+<h2 id="回溯"><a href="#回溯" class="headerlink" title="回溯"></a>回溯</h2><h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>思路比较简单就是对每个字符串都用回溯的方法判断是否可以在board中组成。也就是<a href="https://bravey.github.io/2020-06-22-leetcode-79-Word-Search.html">79</a>的调用</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">Runtime: 1132 ms, faster than 9.24% of C++ online submissions for Word Search II.</span></span><br><span class="line"><span class="comment">Memory Usage: 13.6 MB, less than 93.56% of C++ online submissions for Word Search II.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; <span class="title">findWords</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">char</span>&gt;&gt;&amp; board, <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt;&amp; words)</span> </span>&#123;</span><br><span class="line">		<span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; ans;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> str : words) &#123;</span><br><span class="line">			<span class="keyword">if</span> (exist(board, str))</span><br><span class="line">				ans.push_back(str);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> ans;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">	<span class="function"><span class="keyword">bool</span> <span class="title">exist</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">char</span>&gt;&gt;&amp; board, <span class="keyword">const</span> <span class="built_in">string</span>&amp; word)</span> </span>&#123;</span><br><span class="line">		m = board.size();</span><br><span class="line">		n = board[<span class="number">0</span>].size();</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; i++) &#123;</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) &#123;</span><br><span class="line">				<span class="keyword">if</span> (word[<span class="number">0</span>] == board[i][j]) &#123;</span><br><span class="line">					<span class="keyword">if</span> (backtrack(board, word, i , j , <span class="number">0</span>))</span><br><span class="line">						<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">bool</span> <span class="title">backtrack</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">char</span>&gt;&gt;&amp; board, <span class="keyword">const</span> <span class="built_in">string</span>&amp; word, <span class="keyword">int</span> i, <span class="keyword">int</span> j, <span class="keyword">int</span> d)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (word.length() == d) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">		<span class="keyword">if</span> ( i &lt; <span class="number">0</span> || i &gt; m - <span class="number">1</span> || j &lt; <span class="number">0</span> || j &gt; n - <span class="number">1</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">		<span class="keyword">if</span> (word[d] != board[i][j]) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">		board[i][j] = <span class="string">&#x27;1&#x27;</span>;</span><br><span class="line">		<span class="comment">// string next = word.substr(1);</span></span><br><span class="line">		<span class="keyword">bool</span> found = backtrack(board, word, i, j - <span class="number">1</span>, d + <span class="number">1</span>)</span><br><span class="line">		             || backtrack(board, word, i, j + <span class="number">1</span>, d + <span class="number">1</span>)</span><br><span class="line">		             || backtrack(board, word, i - <span class="number">1</span>, j, d + <span class="number">1</span>)</span><br><span class="line">		             || backtrack(board, word, i + <span class="number">1</span>, j, d + <span class="number">1</span>);</span><br><span class="line">		board[i][j] = word[d];</span><br><span class="line">		<span class="keyword">return</span> found;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">int</span> m , n;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="TRIE前缀树"><a href="#TRIE前缀树" class="headerlink" title="TRIE前缀树"></a>TRIE前缀树</h2><h3 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h3><p>将给定的候选字符串存储在TRIE树中，然后只进行一遍深度遍历就可以了。</p>
+<p>记录下这个TRIE树的构成，属性上，每个节点有26个指针分别指向26个英文字母（代码上实现的时候使用一个26大小的指针数组nodes就可以了）,一个字符串指针word，记录当前节点是否是一个字符串的结尾，是的话记录该字符串的值，不是的话则为空指针。</p>
+<p>整个的构建过程有点类似与FP树的构建。</p>
+<p>用图来描述：</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1593316256/blog/coding/trie.jpg" alt=""></p>
+<p>拥有相同前缀的字符串会有一段相同的节点。</p>
+<p>根据给出的候选字符串建立好TRIE树之后，与上一个回溯法正好相反，根据board里面给出的字符作为下一个节点，root做为入口去对trie树进行遍历，如果能够走到末尾的叶子节点就将叶子节点的字符串加入的ans返回数组中。</p>
+<p>这种方法之所以比第一个方法要快是因为二者进行dfs遍历的次数不同，第一个方法每个字符串都需要对board数组进行遍历。而第二种方法只需要对board进行一次遍历就可以找出所有符合条件的。相当于避免了对有重复前缀的字符串部分进行重复遍历的过程。</p>
+<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><figure class="highlight cc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">Runtime: 164 ms, faster than 54.99% of C++ online submissions for Word Search II.</span></span><br><span class="line"><span class="comment">Memory Usage: 36.4 MB, less than 51.95% of C++ online submissions for Word Search II.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TrieNode</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">vector</span>&lt;TrieNode*&gt; nodes;  <span class="comment">//指向下一个节点，有26个可以选择</span></span><br><span class="line">  <span class="keyword">const</span> <span class="built_in">string</span>* word; <span class="comment">//对应的字符串</span></span><br><span class="line">  TrieNode(): nodes(<span class="number">26</span>), word(<span class="literal">nullptr</span>) &#123;&#125;</span><br><span class="line">  ~TrieNode() &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> node : nodes) <span class="keyword">delete</span> node;</span><br><span class="line">  &#125;  </span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; <span class="title">findWords</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">char</span>&gt;&gt;&amp; board, <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt;&amp; words)</span> </span>&#123;</span><br><span class="line">    TrieNode root;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Add all the words into Trie.</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> <span class="built_in">string</span>&amp; word : words) &#123;</span><br><span class="line">      TrieNode* cur = &amp;root; <span class="comment">// 每次从root开始构建</span></span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">char</span> c : word) &#123;</span><br><span class="line">        <span class="keyword">auto</span>&amp; next = cur-&gt;nodes[c - <span class="string">&#x27;a&#x27;</span>];<span class="comment">//字母的索引 从a开始</span></span><br><span class="line">        <span class="keyword">if</span> (!next) next = <span class="keyword">new</span> TrieNode(); <span class="comment">//没有已经建立的字符节点则新建</span></span><br><span class="line">        cur = next;</span><br><span class="line">      &#125;</span><br><span class="line">      cur-&gt;word = &amp;word;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">int</span> n = board.size();</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">int</span> m = board[<span class="number">0</span>].size();    </span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; ans;</span><br><span class="line">    </span><br><span class="line">    function&lt;<span class="keyword">void</span>(<span class="keyword">int</span>, <span class="keyword">int</span>, TrieNode*)&gt; walk = [&amp;](<span class="keyword">int</span> x, <span class="keyword">int</span> y, TrieNode* node) &#123; <span class="comment">//回溯的过程     </span></span><br><span class="line">      <span class="keyword">if</span> (x &lt; <span class="number">0</span> || x == m || y &lt; <span class="number">0</span> || y == n || board[y][x] == <span class="string">&#x27;#&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span>;      </span><br><span class="line">      </span><br><span class="line">      <span class="keyword">const</span> <span class="keyword">char</span> cur = board[y][x];</span><br><span class="line">      TrieNode* next_node = node-&gt;nodes[cur - <span class="string">&#x27;a&#x27;</span>];</span><br><span class="line">      </span><br><span class="line">      <span class="comment">// Pruning, only expend paths that are in the trie.</span></span><br><span class="line">      <span class="keyword">if</span> (!next_node) <span class="keyword">return</span>;</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">if</span> (next_node-&gt;word) &#123;</span><br><span class="line">        ans.push_back(*next_node-&gt;word);</span><br><span class="line">        next_node-&gt;word = <span class="literal">nullptr</span>;</span><br><span class="line">      &#125;</span><br><span class="line"> </span><br><span class="line">      board[y][x] = <span class="string">&#x27;#&#x27;</span>;</span><br><span class="line">      walk(x + <span class="number">1</span>, y, next_node);</span><br><span class="line">      walk(x - <span class="number">1</span>, y, next_node);</span><br><span class="line">      walk(x, y + <span class="number">1</span>, next_node);</span><br><span class="line">      walk(x, y - <span class="number">1</span>, next_node);</span><br><span class="line">      board[y][x] = cur;</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Try all possible pathes.</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; n; i++)</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span> ; j &lt; m; j++)</span><br><span class="line">        walk(j, i, &amp;root);        </span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://zxi.mytechroad.com/blog/searching/leetcode-212-word-search-ii/">https://zxi.mytechroad.com/blog/searching/leetcode-212-word-search-ii/</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/2020-06-27-212-Word-Search-II.html">https://bravey.github.io/2020-06-27-212-Word-Search-II.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://bravey.github.io" target="_blank">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%9B%9E%E6%BA%AF/">回溯</a><a class="post-meta__tags" href="/tags/TRIE/">TRIE</a></div><div class="post_share"><div class="social-share" data-image="https://images.pexels.com/photos/165505/pexels-photo-165505.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020-07-14-Measuring-and-Benchmarking-Power-Consumption-and-Energy-Efficiency.html"><img class="prev-cover" src="https://images.pexels.com/photos/452780/pexels-photo-452780.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Measuring and Benchmarking Power Consumption and Energy Efficiency</div></div></a></div><div class="next-post pull-right"><a href="/2020-06-22-leetcode-79-Word-Search.html"><img class="next-cover" src="https://images.pexels.com/photos/933843/pexels-photo-933843.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">leetcode 79 Word Search</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020-06-22-leetcode-79-Word-Search.html" title="leetcode 79 Word Search"><img class="cover" src="https://images.pexels.com/photos/933843/pexels-photo-933843.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-06-22</div><div class="title">leetcode 79 Word Search</div></div></a></div><div><a href="/2020-06-11-leetcode-39-Combination-Sum.html" title="leetcode 39 Combination Sum"><img class="cover" src="https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-06-11</div><div class="title">leetcode 39 Combination Sum</div></div></a></div><div><a href="/2020-05-29-leetcode-46-Permutations.html" title="leetcode 46 Permutations"><img class="cover" src="https://images.pexels.com/photos/640809/pexels-photo-640809.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-05-29</div><div class="title">leetcode 46 Permutations</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">BraveY</div><div class="author-info__description">今日事，今日毕</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">113</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">119</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E6%84%8F"><span class="toc-number">1.</span> <span class="toc-text">题意</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9E%E6%BA%AF"><span class="toc-number">2.</span> <span class="toc-text">回溯</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF"><span class="toc-number">2.1.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">2.2.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TRIE%E5%89%8D%E7%BC%80%E6%A0%91"><span class="toc-number">3.</span> <span class="toc-text">TRIE前缀树</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF-1"><span class="toc-number">3.1.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="toc-number">3.2.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021-04-27-leetcode-153-Find-Minimum-in-Rotated-Sorted-Array.html" title="leetcode 153 Find Minimum in Rotated Sorted Array"><img src="https://images.pexels.com/photos/611328/pexels-photo-611328.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 153 Find Minimum in Rotated Sorted Array"/></a><div class="content"><a class="title" href="/2021-04-27-leetcode-153-Find-Minimum-in-Rotated-Sorted-Array.html" title="leetcode 153 Find Minimum in Rotated Sorted Array">leetcode 153 Find Minimum in Rotated Sorted Array</a><time datetime="2021-04-27T14:59:17.000Z" title="发表于 2021-04-27 22:59:17">2021-04-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-04-23-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9F%A5%E6%89%BE.html" title="二叉树的查找"><img src="https://images.pexels.com/photos/351448/pexels-photo-351448.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="二叉树的查找"/></a><div class="content"><a class="title" href="/2021-04-23-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9F%A5%E6%89%BE.html" title="二叉树的查找">二叉树的查找</a><time datetime="2021-04-23T02:24:11.000Z" title="发表于 2021-04-23 10:24:11">2021-04-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-04-22-NC92-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97-NC127-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2.html" title="NC92 最长公共子序列 NC127 最长公共子串"><img src="https://images.pexels.com/photos/351448/pexels-photo-351448.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NC92 最长公共子序列 NC127 最长公共子串"/></a><div class="content"><a class="title" href="/2021-04-22-NC92-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97-NC127-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2.html" title="NC92 最长公共子序列 NC127 最长公共子串">NC92 最长公共子序列 NC127 最长公共子串</a><time datetime="2021-04-22T06:38:18.000Z" title="发表于 2021-04-22 14:38:18">2021-04-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-04-05-%E5%89%91%E6%8C%87Offer36-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E8%BD%AC%E6%8D%A2%E4%B8%BA%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.html" title="剑指Offer36 二叉搜索树转换为双向链表"><img src="https://images.pexels.com/photos/46253/mt-fuji-sea-of-clouds-sunrise-46253.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="剑指Offer36 二叉搜索树转换为双向链表"/></a><div class="content"><a class="title" href="/2021-04-05-%E5%89%91%E6%8C%87Offer36-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E8%BD%AC%E6%8D%A2%E4%B8%BA%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.html" title="剑指Offer36 二叉搜索树转换为双向链表">剑指Offer36 二叉搜索树转换为双向链表</a><time datetime="2021-04-05T11:15:52.000Z" title="发表于 2021-04-05 19:15:52">2021-04-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-03-29-leetcode-295-Find-Median-from-Data-Stream.html" title="leetcode 295 Find Median from Data Stream"><img src="https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 295 Find Median from Data Stream"/></a><div class="content"><a class="title" href="/2021-03-29-leetcode-295-Find-Median-from-Data-Stream.html" title="leetcode 295 Find Median from Data Stream">leetcode 295 Find Median from Data Stream</a><time datetime="2021-03-29T11:45:06.000Z" title="发表于 2021-03-29 19:45:06">2021-03-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By BraveY</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

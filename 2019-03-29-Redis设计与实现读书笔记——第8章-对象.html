@@ -1,0 +1,657 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Redis设计与实现读书笔记——第8章 对象 | BraveY</title><meta name="keywords" content="redis,object"><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="Redis设计与实现读书笔记——第8章 对象Redis 并没有直接使用sds、dict等数据结构来实现键值对数据库， 而是基于这些数据结构创建了一个对象系统， 这个系统包含字符串对象、列表对象、哈希对象、集合对象和有序集合对象这五种类型的对象， 每种对象都用到了至少一种前面所介绍的数据结构。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis设计与实现读书笔记——第8章 对象">
+<meta property="og:url" content="https://bravey.github.io/2019-03-29-Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%AC%AC8%E7%AB%A0-%E5%AF%B9%E8%B1%A1.html">
+<meta property="og:site_name" content="BraveY">
+<meta property="og:description" content="Redis设计与实现读书笔记——第8章 对象Redis 并没有直接使用sds、dict等数据结构来实现键值对数据库， 而是基于这些数据结构创建了一个对象系统， 这个系统包含字符串对象、列表对象、哈希对象、集合对象和有序集合对象这五种类型的对象， 每种对象都用到了至少一种前面所介绍的数据结构。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images.pexels.com/photos/868097/pexels-photo-868097.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500">
+<meta property="article:published_time" content="2019-03-29T01:28:19.000Z">
+<meta property="article:modified_time" content="2021-05-06T01:49:12.449Z">
+<meta property="article:author" content="BraveY">
+<meta property="article:tag" content="redis">
+<meta property="article:tag" content="object">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.pexels.com/photos/868097/pexels-photo-868097.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/2019-03-29-Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%AC%AC8%E7%AB%A0-%E5%AF%B9%E8%B1%A1"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="hDujO4MQUB7U9ir-4VXM5PW4fDFSq0-7G-LBX-Lh86M"/><meta name="baidu-site-verification" content="8XIUcPkbzm"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}
+
+// https://stackoverflow.com/questions/16839698/jquery-getscript-alternative-in-native-javascript
+const getScript = url => new Promise((resolve, reject) => {
+  const script = document.createElement('script')
+  script.src = url
+  script.async = true
+  script.onerror = reject
+  script.onload = script.onreadystatechange = function() {
+    const loadState = this.readyState
+    if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+    script.onload = script.onreadystatechange = null
+    resolve()
+  }
+  document.head.appendChild(script)
+})</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-05-06 09:49:12'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">113</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">119</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://images.pexels.com/photos/868097/pexels-photo-868097.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">BraveY</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Redis设计与实现读书笔记——第8章 对象</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-03-29T01:28:19.000Z" title="发表于 2019-03-29 09:28:19">2019-03-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-05-06T01:49:12.449Z" title="更新于 2021-05-06 09:49:12">2021-05-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>12分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Redis设计与实现读书笔记——第8章-对象"><a href="#Redis设计与实现读书笔记——第8章-对象" class="headerlink" title="Redis设计与实现读书笔记——第8章 对象"></a>Redis设计与实现读书笔记——第8章 对象</h1><p>Redis 并没有直接使用sds、dict等数据结构来实现键值对数据库， 而是基于这些数据结构创建了一个对象系统， 这个系统包含字符串对象、列表对象、哈希对象、集合对象和有序集合对象这五种类型的对象， 每种对象都用到了至少一种前面所介绍的数据结构。</p>
+<a id="more"></a>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>对象的好处：</p>
+<ul>
+<li>根据对象的类型来判断是否可以执行给定的命令。</li>
+<li>针对不同的使用场景， 为对象设置多种不同的数据结构实现， 从而优化对象在不同场景下的使用效率。</li>
+</ul>
+<p>对象的特性：</p>
+<ul>
+<li>基于引用计数技术的内存回收机制（和java的是否原理相似）</li>
+<li>通过引用计数技术实现对象共享机制，多个键共享同一个对象来节约内存</li>
+<li>带有访问时间记录信息，可以用来删除空转时长较大的键</li>
+</ul>
+<h2 id="8-1-对象的类型与编码"><a href="#8-1-对象的类型与编码" class="headerlink" title="8.1 对象的类型与编码"></a>8.1 对象的类型与编码</h2><p>Redis 使用对象来表示数据库中的键和值，创建一个新的键值对的时候，至少包含两个对象：1. 键对象 2. 值对象</p>
+<p>对象都由一个 <code>redisObject</code> 结构表示，保存数据相关的属性</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">redisObject</span> &#123;</span></span><br><span class="line">    <span class="comment">// 对象类型</span></span><br><span class="line">    <span class="keyword">unsigned</span> type:<span class="number">4</span>;</span><br><span class="line">    <span class="comment">// 编码</span></span><br><span class="line">    <span class="keyword">unsigned</span> encoding:<span class="number">4</span>;</span><br><span class="line">    <span class="comment">//lru 时钟 记录最后被访问的时间，也就是空转时长</span></span><br><span class="line">    <span class="keyword">unsigned</span> lru:LRU_BITS; <span class="comment">/* LRU time (relative to global lru_clock) or</span></span><br><span class="line"><span class="comment">                            * LFU data (least significant 8 bits frequency</span></span><br><span class="line"><span class="comment">                            * and most significant 16 bits decreas time). */</span></span><br><span class="line">    <span class="comment">// 引用计数 实现内存自动回收等。</span></span><br><span class="line">    <span class="keyword">int</span> refcount;</span><br><span class="line">    <span class="comment">// 指向底层实现数据结构的指针</span></span><br><span class="line">    <span class="keyword">void</span> *ptr;</span><br><span class="line">&#125; robj;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>ptr指向的就是之前的sds，dict这些数据结构的内存地址。</p>
+<p>变量申明加冒号的用法： 是C语言的位域的用法。<code>:</code>后面的数字用来限定成员变量占用的位数。冒号后面的数字说明只会用到对应多少个bit位。type只会用到4个bit，encoding 也只会用的4个bit。变量占用的内存不再是有类型决定，而是位域。</p>
+<h3 id="8-1-1-类型"><a href="#8-1-1-类型" class="headerlink" title="8.1.1 类型"></a>8.1.1 类型</h3><p>type属性的值包括5种：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">类型常量</th>
+<th style="text-align:left">对象的名称</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>REDIS_STRING</code></td>
+<td style="text-align:left">字符串对象</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_LIST</code></td>
+<td style="text-align:left">列表对象</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_HASH</code></td>
+<td style="text-align:left">哈希对象</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_SET</code></td>
+<td style="text-align:left">集合对象</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_ZSET</code></td>
+<td style="text-align:left">有序集合对象</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>键对象只能是字符串对象，而值对象则5种之一。所以执行TYPE命令返回的是键值对中值对象的类型。</p>
+<p>type命令的</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">对象</th>
+<th style="text-align:left">对象 <code>type</code> 属性的值</th>
+<th style="text-align:left">TYPE 命令的输出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">字符串对象</td>
+<td style="text-align:left"><code>REDIS_STRING</code></td>
+<td style="text-align:left"><code>&quot;string&quot;</code></td>
+</tr>
+<tr>
+<td style="text-align:left">列表对象</td>
+<td style="text-align:left"><code>REDIS_LIST</code></td>
+<td style="text-align:left"><code>&quot;list&quot;</code></td>
+</tr>
+<tr>
+<td style="text-align:left">哈希对象</td>
+<td style="text-align:left"><code>REDIS_HASH</code></td>
+<td style="text-align:left"><code>&quot;hash&quot;</code></td>
+</tr>
+<tr>
+<td style="text-align:left">集合对象</td>
+<td style="text-align:left"><code>REDIS_SET</code></td>
+<td style="text-align:left"><code>&quot;set&quot;</code></td>
+</tr>
+<tr>
+<td style="text-align:left">有序集合对象</td>
+<td style="text-align:left"><code>REDIS_ZSET</code></td>
+<td style="text-align:left"><code>&quot;zset&quot;</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="8-2-编码和底层实现"><a href="#8-2-编码和底层实现" class="headerlink" title="8.2 编码和底层实现"></a>8.2 编码和底层实现</h3><p>ptr指向底层数据结构，而encoding则决定了具体应该指向什么样的数据结构实现。之所以不能用type来决定指向的具体数据结构，是因为同一种对象，但是底层实现会有不同的数据结构。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">编码常量</th>
+<th style="text-align:left">编码所对应的底层数据结构</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>REDIS_ENCODING_INT</code></td>
+<td style="text-align:left"><code>long</code> 类型的整数</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_ENCODING_EMBSTR</code></td>
+<td style="text-align:left"><code>embstr</code> 编码的简单动态字符串</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_ENCODING_RAW</code></td>
+<td style="text-align:left">简单动态字符串</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_ENCODING_HT</code></td>
+<td style="text-align:left">字典</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_ENCODING_LINKEDLIST</code></td>
+<td style="text-align:left">双端链表</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_ENCODING_ZIPLIST</code></td>
+<td style="text-align:left">压缩列表</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_ENCODING_INTSET</code></td>
+<td style="text-align:left">整数集合</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_ENCODING_SKIPLIST</code></td>
+<td style="text-align:left">跳跃表和字典</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>每种类型的对象都至少使用了两种不同的编码，对应关系为：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">编码</th>
+<th style="text-align:left">对象</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>REDIS_STRING</code></td>
+<td style="text-align:left"><code>REDIS_ENCODING_INT</code></td>
+<td style="text-align:left">使用整数值实现的字符串对象。</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_STRING</code></td>
+<td style="text-align:left"><code>REDIS_ENCODING_EMBSTR</code></td>
+<td style="text-align:left">使用 <code>embstr</code> 编码的简单动态字符串实现的字符串对象。</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_STRING</code></td>
+<td style="text-align:left"><code>REDIS_ENCODING_RAW</code></td>
+<td style="text-align:left">使用简单动态字符串实现的字符串对象。</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_LIST</code></td>
+<td style="text-align:left"><code>REDIS_ENCODING_ZIPLIST</code></td>
+<td style="text-align:left">使用压缩列表实现的列表对象。</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_LIST</code></td>
+<td style="text-align:left"><code>REDIS_ENCODING_LINKEDLIST</code></td>
+<td style="text-align:left">使用双端链表实现的列表对象。</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_HASH</code></td>
+<td style="text-align:left"><code>REDIS_ENCODING_ZIPLIST</code></td>
+<td style="text-align:left">使用压缩列表实现的哈希对象。</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_HASH</code></td>
+<td style="text-align:left"><code>REDIS_ENCODING_HT</code></td>
+<td style="text-align:left">使用字典实现的哈希对象。</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_SET</code></td>
+<td style="text-align:left"><code>REDIS_ENCODING_INTSET</code></td>
+<td style="text-align:left">使用整数集合实现的集合对象。</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_SET</code></td>
+<td style="text-align:left"><code>REDIS_ENCODING_HT</code></td>
+<td style="text-align:left">使用字典实现的集合对象。</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_ZSET</code></td>
+<td style="text-align:left"><code>REDIS_ENCODING_ZIPLIST</code></td>
+<td style="text-align:left">使用压缩列表实现的有序集合对象。</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIS_ZSET</code></td>
+<td style="text-align:left"><code>REDIS_ENCODING_SKIPLIST</code></td>
+<td style="text-align:left">使用跳跃表和字典实现的有序集合对象。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>使用 OBJECT ENCODING 命令可以查看一个数据库键的值对象的编码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">redis&gt; SET msg &quot;hello wrold&quot;</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">redis&gt; OBJECT ENCODING msg</span><br><span class="line">&quot;embstr&quot;</span><br></pre></td></tr></table></figure>
+<p>不同编码的对象所对应的OBJECT ENCODING输出：</p>
+<p>表 8-5 OBJECT ENCODING 对不同编码的输出</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">对象所使用的底层数据结构</th>
+<th style="text-align:left">编码常量</th>
+<th style="text-align:left">OBJECT ENCODING 命令输出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">整数</td>
+<td style="text-align:left"><code>REDIS_ENCODING_INT</code></td>
+<td style="text-align:left"><code>&quot;int&quot;</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>embstr</code> 编码的简单动态字符串（SDS）</td>
+<td style="text-align:left"><code>REDIS_ENCODING_EMBSTR</code></td>
+<td style="text-align:left"><code>&quot;embstr&quot;</code></td>
+</tr>
+<tr>
+<td style="text-align:left">简单动态字符串</td>
+<td style="text-align:left"><code>REDIS_ENCODING_RAW</code></td>
+<td style="text-align:left"><code>&quot;raw&quot;</code></td>
+</tr>
+<tr>
+<td style="text-align:left">字典</td>
+<td style="text-align:left"><code>REDIS_ENCODING_HT</code></td>
+<td style="text-align:left"><code>&quot;hashtable&quot;</code></td>
+</tr>
+<tr>
+<td style="text-align:left">双端链表</td>
+<td style="text-align:left"><code>REDIS_ENCODING_LINKEDLIST</code></td>
+<td style="text-align:left"><code>&quot;linkedlist&quot;</code></td>
+</tr>
+<tr>
+<td style="text-align:left">压缩列表</td>
+<td style="text-align:left"><code>REDIS_ENCODING_ZIPLIST</code></td>
+<td style="text-align:left"><code>&quot;ziplist&quot;</code></td>
+</tr>
+<tr>
+<td style="text-align:left">整数集合</td>
+<td style="text-align:left"><code>REDIS_ENCODING_INTSET</code></td>
+<td style="text-align:left"><code>&quot;intset&quot;</code></td>
+</tr>
+<tr>
+<td style="text-align:left">跳跃表和字典</td>
+<td style="text-align:left"><code>REDIS_ENCODING_SKIPLIST</code></td>
+<td style="text-align:left"><code>&quot;skiplist&quot;</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>使用encoding属性来设定对象指向的具体数据结构实现的好处：灵活与效率。根据不同场景来给同一种对象设置不同的数据结构实现。</p>
+<p>举个例子， 在列表对象包含的元素比较少时， Redis 使用压缩列表作为列表对象的底层实现：</p>
+<ul>
+<li>因为压缩列表比双端链表更节约内存， 并且在元素数量较少时， 在内存中以连续块方式保存的压缩列表比起双端链表可以更快被载入到缓存中；</li>
+<li>随着列表对象包含的元素越来越多， 使用压缩列表来保存元素的优势逐渐消失时， 对象就会将底层实现从压缩列表转向功能更强、也更适合保存大量元素的双端链表上面；</li>
+</ul>
+<p>是不是也可以理解成多态呢？</p>
+<h2 id="8-2-字符串对象"><a href="#8-2-字符串对象" class="headerlink" title="8.2 字符串对象"></a>8.2 字符串对象</h2><p>字符串对象的编码可以是 <code>int</code> 、 <code>raw</code> 或者 <code>embstr</code> 。</p>
+<ol>
+<li>保存的对象是整数，而且可以用long类型表示：ptr指针指向一个long类型的内存地址。（是不是不用指向sdshdr了），然后将encoding 设置为REDIS_ENCODING_INT (应该在源码中有个宏定义)</li>
+<li>保存的对象是字符串值，长度小于44字节（书上的39字节，但是先版本已经更新）。这种短字符串对象，直接<strong>只调用一次内存分配</strong>函数来分配一块<strong>连续的空间</strong>  依次包含redisObject和sdshdr两个结构。</li>
+<li>字符串长度大于等于44字节的时候使用raw编码。会调用两次内存分配函数来创建redisObject结构和sdshdr结构。</li>
+</ol>
+<p>embstr编码的好处：</p>
+<ul>
+<li>只用分配一次内存，raw编码需要两次</li>
+<li>释放embstr的sds也只需要一次内存释放函数，raw两次</li>
+<li>embstr的所有数据（对象结构，字符串结构）在连续的一块内存里面，从而可以更好地利用缓存带来的优势</li>
+</ul>
+<p>embstr和raw的示意图，摘自书上，但是注意sds的结构稍有变化。</p>
+<p>raw编码：</p>
+<p><img src="http://redisbook.com/_images/graphviz-8731210637d0567af28d3a9d4089d5f864d29950.png" alt=""></p>
+<p>embstr编码：</p>
+<p><img src="http://redisbook.com/_images/graphviz-900c13b23ce79372939259603be936c955ccaa62.png" alt=""></p>
+<p>注意：</p>
+<p>long double类型的浮点数是转换成字符串值来保存的。执行的时候取出字符串再转换成long double 类型。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">值</th>
+<th style="text-align:left">编码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">可以用 <code>long</code> 类型保存的整数。</td>
+<td style="text-align:left"><code>int</code></td>
+</tr>
+<tr>
+<td style="text-align:left">可以用 <code>long double</code> 类型保存的浮点数。</td>
+<td style="text-align:left"><code>embstr</code> 或者 <code>raw</code></td>
+</tr>
+<tr>
+<td style="text-align:left">字符串值， 或者因为长度太大而没办法用 <code>long</code> 类型表示的整数， 又或者因为长度太大而没办法用 <code>long double</code> 类型表示的浮点数。</td>
+<td style="text-align:left"><code>embstr</code> 或者 <code>raw</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="8-2-1-编码的转换"><a href="#8-2-1-编码的转换" class="headerlink" title="8.2.1 编码的转换"></a>8.2.1 编码的转换</h3><p>当保存的值发生变化的时候会进行转换，比如保存的整数值变成了字符串，那么编码从int 变成raw或者embstr。</p>
+<p><strong>注意</strong>： Redis 没有为embstr编写任何修改程序，只有int和raw编码的字符串对象有这些程序，所以embstr编码的对象是只读，因此发生修改的话会从embstr变成raw。</p>
+<p>发生修改的源码中应该是将原来的ptr指向的数据结构内存释放掉后，重新指向新创建的对象。</p>
+<h3 id="8-2-2-字符串命令的实现"><a href="#8-2-2-字符串命令的实现" class="headerlink" title="8.2.2 字符串命令的实现"></a>8.2.2 字符串命令的实现</h3><p>所有命令都是针对字符串对象的。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">命令</th>
+<th style="text-align:left"><code>int</code> 编码的实现方法</th>
+<th style="text-align:left"><code>embstr</code> 编码的实现方法</th>
+<th style="text-align:left"><code>raw</code> 编码的实现方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">SET</td>
+<td style="text-align:left">使用 <code>int</code> 编码保存值。</td>
+<td style="text-align:left">使用 <code>embstr</code> 编码保存值。</td>
+<td style="text-align:left">使用 <code>raw</code> 编码保存值。</td>
+</tr>
+<tr>
+<td style="text-align:left">GET</td>
+<td style="text-align:left">拷贝对象所保存的整数值， 将这个拷贝转换成字符串值， 然后向客户端返回这个字符串值。</td>
+<td style="text-align:left">直接向客户端返回字符串值。</td>
+<td style="text-align:left">直接向客户端返回字符串值。</td>
+</tr>
+<tr>
+<td style="text-align:left">APPEND</td>
+<td style="text-align:left">将对象转换成 <code>raw</code> 编码， 然后按 <code>raw</code>编码的方式执行此操作。</td>
+<td style="text-align:left">将对象转换成 <code>raw</code> 编码， 然后按 <code>raw</code>编码的方式执行此操作。</td>
+<td style="text-align:left">调用 <code>sdscatlen</code> 函数， 将给定字符串追加到现有字符串的末尾。</td>
+</tr>
+<tr>
+<td style="text-align:left">INCRBYFLOAT</td>
+<td style="text-align:left">取出整数值并将其转换成 <code>longdouble</code> 类型的浮点数， 对这个浮点数进行加法计算， 然后将得出的浮点数结果保存起来。</td>
+<td style="text-align:left">取出字符串值并尝试将其转换成<code>long double</code> 类型的浮点数， 对这个浮点数进行加法计算， 然后将得出的浮点数结果保存起来。 如果字符串值不能被转换成浮点数， 那么向客户端返回一个错误。</td>
+<td style="text-align:left">取出字符串值并尝试将其转换成 <code>longdouble</code> 类型的浮点数， 对这个浮点数进行加法计算， 然后将得出的浮点数结果保存起来。 如果字符串值不能被转换成浮点数， 那么向客户端返回一个错误。</td>
+</tr>
+<tr>
+<td style="text-align:left">INCRBY</td>
+<td style="text-align:left">对整数值进行加法计算， 得出的计算结果会作为整数被保存起来。</td>
+<td style="text-align:left"><code>embstr</code> 编码不能执行此命令， 向客户端返回一个错误。</td>
+<td style="text-align:left"><code>raw</code> 编码不能执行此命令， 向客户端返回一个错误。</td>
+</tr>
+<tr>
+<td style="text-align:left">DECRBY</td>
+<td style="text-align:left">对整数值进行减法计算， 得出的计算结果会作为整数被保存起来。</td>
+<td style="text-align:left"><code>embstr</code> 编码不能执行此命令， 向客户端返回一个错误。</td>
+<td style="text-align:left"><code>raw</code> 编码不能执行此命令， 向客户端返回一个错误。</td>
+</tr>
+<tr>
+<td style="text-align:left">STRLEN</td>
+<td style="text-align:left">拷贝对象所保存的整数值， 将这个拷贝转换成字符串值， 计算并返回这个字符串值的长度。</td>
+<td style="text-align:left">调用 <code>sdslen</code> 函数， 返回字符串的长度。</td>
+<td style="text-align:left">调用 <code>sdslen</code> 函数， 返回字符串的长度。</td>
+</tr>
+<tr>
+<td style="text-align:left">SETRANGE</td>
+<td style="text-align:left">将对象转换成 <code>raw</code> 编码， 然后按 <code>raw</code>编码的方式执行此命令。</td>
+<td style="text-align:left">将对象转换成 <code>raw</code> 编码， 然后按 <code>raw</code>编码的方式执行此命令。</td>
+<td style="text-align:left">将字符串特定索引上的值设置为给定的字符。</td>
+</tr>
+<tr>
+<td style="text-align:left">GETRANGE</td>
+<td style="text-align:left">拷贝对象所保存的整数值， 将这个拷贝转换成字符串值， 然后取出并返回字符串指定索引上的字符。</td>
+<td style="text-align:left">直接取出并返回字符串指定索引上的字符。</td>
+<td style="text-align:left">直接取出并返回字符串指定索引上的字符。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="8-8-内存回收"><a href="#8-8-内存回收" class="headerlink" title="8.8 内存回收"></a>8.8 内存回收</h2><p>Redis通过跟踪对象的引用计数信息，在适当的时候自动释放对象并进行内存回收。</p>
+<p>计数信息由 <code>redisObject</code> 结构的 <code>refcount</code> 属性记录</p>
+<ul>
+<li>在创建一个新对象时， 引用计数的值会被初始化为 <code>1</code> ；</li>
+<li>当对象被一个新程序使用时， 它的引用计数值会被增一；</li>
+<li>当对象不再被一个程序使用时， 它的引用计数值会被减一；</li>
+<li>当对象的引用计数值变为 <code>0</code> 时， 对象所占用的内存会被释放。</li>
+</ul>
+<p>对应的API：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">函数</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>incrRefCount</code></td>
+<td style="text-align:left">将对象的引用计数值增一。</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>decrRefCount</code></td>
+<td style="text-align:left">将对象的引用计数值减一， 当对象的引用计数值等于 <code>0</code> 时， 释放对象。</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>resetRefCount</code></td>
+<td style="text-align:left">将对象的引用计数值设置为 <code>0</code> ， 但并不释放对象， 这个函数通常在需要重新设置对象的引用计数值时使用。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>对象生命周期可以划分为创建对象、操作对象、释放对象三个阶段</p>
+<p>一个字符串对象从创建到释放的整个过程：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个字符串对象 s ，对象的引用计数为 1</span></span><br><span class="line">robj *s = createStringObject(...)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对象 s 执行各种操作 ...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 将对象 s 的引用计数减一，使得对象的引用计数变为 0</span></span><br><span class="line"><span class="comment">// 导致对象 s 被释放</span></span><br><span class="line">decrRefCount(s)</span><br></pre></td></tr></table></figure>
+<p>是不是通过计算指向对象这块内存的指针数量来实现的？</p>
+<h3 id="8-9-对象共享"><a href="#8-9-对象共享" class="headerlink" title="8.9 对象共享"></a>8.9 对象共享</h3><p>对于整数值的字符串对象（int编码），在新创建一个字符串对象的时候如果有这个值的字符串对象存在，就不再为新键创建字符串对象，而是将这个新键指向之前已经存在了的字符串对象。然后将这个字符串对象的引用+1。主要目的是节约内存。</p>
+<p>Redis初始化服务器的时候创建一万个字符串对象， 这些对象包含了从 <code>0</code> 到 <code>9999</code> 的所有整数值， 当服务器需要用到值为 <code>0</code>到 <code>9999</code> 的字符串对象时， 服务器就会使用这些共享对象， 而不是新创建对象。</p>
+<p>创建共享字符串对象的数量可以通过修改 <code>redis.h/REDIS_SHARED_INTEGERS</code> 常量来修改。</p>
+<p><strong>为什么 Redis 不共享包含字符串的对象？</strong></p>
+<p>当服务器考虑将一个共享对象设置为键的值对象时， 程序需要先检查给定的共享对象和键想创建的目标对象是否完全相同， 只有在共享对象和目标对象完全相同的情况下， 程序才会将共享对象用作键的值对象， 而一个共享对象保存的值越复杂， 验证共享对象和目标对象是否相同所需的复杂度就会越高， 消耗的 CPU 时间也会越多：</p>
+<ul>
+<li>如果共享对象是保存整数值的字符串对象， 那么验证操作的复杂度为 O(1) ；</li>
+<li>如果共享对象是保存字符串值的字符串对象， 那么验证操作的复杂度为 O(N) ；</li>
+<li>如果共享对象是包含了多个值（或者对象的）对象， 比如列表对象或者哈希对象， 那么验证操作的复杂度将会是 O(N^2) 。</li>
+</ul>
+<p>因此， 尽管共享更复杂的对象可以节约更多的内存， 但受到 CPU 时间的限制， Redis 只对包含整数值的字符串对象进行共享。 （时刻在空间与时间上做权衡）</p>
+<h2 id="8-9-对象的空转时长"><a href="#8-9-对象的空转时长" class="headerlink" title="8.9 对象的空转时长"></a>8.9 对象的空转时长</h2><p><code>lru</code> 属性， 该属性记录了对象最后一次被<strong>命令程序访问</strong>的时间。</p>
+<p>OBJECT IDLETIME 命令可以打印出给定键的空转时长， 这一空转时长就是通过将当前时间减去键的值对象的 <code>lru</code> 时间计算得出的。</p>
+<p>OBJECT IDLETIME 命令的实现是特殊的， 这个命令在访问键的值对象时， 不会修改值对象的 <code>lru</code> 属性。</p>
+<p>lru的主要作用就是配合maxmemory选项，淘汰不常用的键值对。</p>
+<p>如果服务器打开了 <code>maxmemory</code> 选项， 并且服务器用于回收内存的算法为 <code>volatile-lru</code> 或者 <code>allkeys-lru</code> ， 那么当服务器占用的内存数超过了 <code>maxmemory</code> 选项所设置的上限值时， 空转时长较高的那部分键会优先被服务器释放， 从而回收内存。</p>
+<h2 id="疑惑"><a href="#疑惑" class="headerlink" title="疑惑"></a>疑惑</h2><ol>
+<li>为什么在一块连续的内存里面可以更好地利用缓存带来的优势？</li>
+<li>引用计数的程序怎么定义？是指线程吗？</li>
+<li>引用计数的具体实现？</li>
+<li>对象共享的时候怎么去判断存不存在已经创建了这个整数值的对象？对整个数据库遍历吗？</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/2019-03-29-Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%AC%AC8%E7%AB%A0-%E5%AF%B9%E8%B1%A1.html">https://bravey.github.io/2019-03-29-Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%AC%AC8%E7%AB%A0-%E5%AF%B9%E8%B1%A1.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://bravey.github.io" target="_blank">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/redis/">redis</a><a class="post-meta__tags" href="/tags/object/">object</a></div><div class="post_share"><div class="social-share" data-image="https://images.pexels.com/photos/868097/pexels-photo-868097.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2019-03-31-%E8%AE%A1%E7%AE%97Linux%E7%B3%BB%E7%BB%9F%E7%9A%84CPU%E5%88%A9%E7%94%A8%E7%8E%87.html"><img class="prev-cover" src="https://images.pexels.com/photos/814499/pexels-photo-814499.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">计算Linux系统的CPU利用率</div></div></a></div><div class="next-post pull-right"><a href="/2019-03-27-%E5%89%91%E6%8C%87offer-%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%AC%AC2%E7%AB%A0.html"><img class="next-cover" src="https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">剑指offer 读书笔记——第2章</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2019-04-26-Redis-Makefile注解.html" title="Redis Makefile注解"><img class="cover" src="https://images.pexels.com/photos/655674/pexels-photo-655674.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-04-26</div><div class="title">Redis Makefile注解</div></div></a></div><div><a href="/2019-03-27-Redis-设计与实现读书笔记——第四章-字典.html" title="Redis 设计与实现读书笔记——第四章 字典"><img class="cover" src="https://images.pexels.com/photos/640809/pexels-photo-640809.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-03-27</div><div class="title">Redis 设计与实现读书笔记——第四章 字典</div></div></a></div><div><a href="/Redis源码阅读——SDS/2019-03-22-Redis源码阅读——SDS.html" title="Redis源码阅读——SDS"><img class="cover" src="https://images.pexels.com/photos/165505/pexels-photo-165505.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-03-22</div><div class="title">Redis源码阅读——SDS</div></div></a></div><div><a href="/2019-03-20-Redis设计与实现读书笔记.html" title="Redis设计与实现读书笔记——第二章SDS"><img class="cover" src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-03-20</div><div class="title">Redis设计与实现读书笔记——第二章SDS</div></div></a></div><div><a href="/使用shell脚本遍历redis数据库中的所有kv对.html" title="shell 脚本遍历redis数据库"><img class="cover" src="https://images.pexels.com/photos/632522/pexels-photo-632522.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-03-14</div><div class="title">shell 脚本遍历redis数据库</div></div></a></div><div><a href="/使用YCSB 评测redis性能.html" title="使用YCSB 评测redis性能"><img class="cover" src="https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-03-12</div><div class="title">使用YCSB 评测redis性能</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">BraveY</div><div class="author-info__description">今日事，今日毕</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">113</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">119</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%AC%AC8%E7%AB%A0-%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.</span> <span class="toc-text">Redis设计与实现读书笔记——第8章 对象</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-1-%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%B1%BB%E5%9E%8B%E4%B8%8E%E7%BC%96%E7%A0%81"><span class="toc-number">1.2.</span> <span class="toc-text">8.1 对象的类型与编码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-1-%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.2.1.</span> <span class="toc-text">8.1.1 类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-%E7%BC%96%E7%A0%81%E5%92%8C%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.2.</span> <span class="toc-text">8.2 编码和底层实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-2-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.3.</span> <span class="toc-text">8.2 字符串对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-1-%E7%BC%96%E7%A0%81%E7%9A%84%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.3.1.</span> <span class="toc-text">8.2.1 编码的转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-2-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%91%BD%E4%BB%A4%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.3.2.</span> <span class="toc-text">8.2.2 字符串命令的实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-8-%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6"><span class="toc-number">1.4.</span> <span class="toc-text">8.8 内存回收</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-9-%E5%AF%B9%E8%B1%A1%E5%85%B1%E4%BA%AB"><span class="toc-number">1.4.1.</span> <span class="toc-text">8.9 对象共享</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-9-%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%A9%BA%E8%BD%AC%E6%97%B6%E9%95%BF"><span class="toc-number">1.5.</span> <span class="toc-text">8.9 对象的空转时长</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%96%91%E6%83%91"><span class="toc-number">1.6.</span> <span class="toc-text">疑惑</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021-04-27-leetcode-153-Find-Minimum-in-Rotated-Sorted-Array.html" title="leetcode 153 Find Minimum in Rotated Sorted Array"><img src="https://images.pexels.com/photos/611328/pexels-photo-611328.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 153 Find Minimum in Rotated Sorted Array"/></a><div class="content"><a class="title" href="/2021-04-27-leetcode-153-Find-Minimum-in-Rotated-Sorted-Array.html" title="leetcode 153 Find Minimum in Rotated Sorted Array">leetcode 153 Find Minimum in Rotated Sorted Array</a><time datetime="2021-04-27T14:59:17.000Z" title="发表于 2021-04-27 22:59:17">2021-04-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-04-23-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9F%A5%E6%89%BE.html" title="二叉树的查找"><img src="https://images.pexels.com/photos/351448/pexels-photo-351448.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="二叉树的查找"/></a><div class="content"><a class="title" href="/2021-04-23-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9F%A5%E6%89%BE.html" title="二叉树的查找">二叉树的查找</a><time datetime="2021-04-23T02:24:11.000Z" title="发表于 2021-04-23 10:24:11">2021-04-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-04-22-NC92-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97-NC127-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2.html" title="NC92 最长公共子序列 NC127 最长公共子串"><img src="https://images.pexels.com/photos/351448/pexels-photo-351448.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NC92 最长公共子序列 NC127 最长公共子串"/></a><div class="content"><a class="title" href="/2021-04-22-NC92-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97-NC127-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2.html" title="NC92 最长公共子序列 NC127 最长公共子串">NC92 最长公共子序列 NC127 最长公共子串</a><time datetime="2021-04-22T06:38:18.000Z" title="发表于 2021-04-22 14:38:18">2021-04-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-04-05-%E5%89%91%E6%8C%87Offer36-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E8%BD%AC%E6%8D%A2%E4%B8%BA%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.html" title="剑指Offer36 二叉搜索树转换为双向链表"><img src="https://images.pexels.com/photos/46253/mt-fuji-sea-of-clouds-sunrise-46253.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="剑指Offer36 二叉搜索树转换为双向链表"/></a><div class="content"><a class="title" href="/2021-04-05-%E5%89%91%E6%8C%87Offer36-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E8%BD%AC%E6%8D%A2%E4%B8%BA%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.html" title="剑指Offer36 二叉搜索树转换为双向链表">剑指Offer36 二叉搜索树转换为双向链表</a><time datetime="2021-04-05T11:15:52.000Z" title="发表于 2021-04-05 19:15:52">2021-04-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-03-29-leetcode-295-Find-Median-from-Data-Stream.html" title="leetcode 295 Find Median from Data Stream"><img src="https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 295 Find Median from Data Stream"/></a><div class="content"><a class="title" href="/2021-03-29-leetcode-295-Find-Median-from-Data-Stream.html" title="leetcode 295 Find Median from Data Stream">leetcode 295 Find Median from Data Stream</a><time datetime="2021-03-29T11:45:06.000Z" title="发表于 2021-03-29 19:45:06">2021-03-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By BraveY</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

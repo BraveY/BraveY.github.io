@@ -1,0 +1,345 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Measuring and Benchmarking Power Consumption and Energy Efficiency | BraveY</title><meta name="keywords" content="能耗,SPEC SERT"><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="来源ICPE 18 关键词功率，能效，性能，基准，测量，负载水平，SPEC 摘要 显存能耗测量方法不考虑多个负载级别和工作负载组合。 介绍了PTDaemon 能耗测量工具和Chauffeur 能耗评测框架 SPEC SERT 包含的工作负载，并介绍行业标准的计算效率基准  引言 如何精确测量能耗？ 数据中心的冗余机制（灾难备份）导致的额外负载需要被考虑 SPEC 能耗方法学多重负载级别下进行能耗效">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Measuring and Benchmarking Power Consumption and Energy Efficiency">
+<meta property="og:url" content="https://bravey.github.io/2020-07-14-Measuring-and-Benchmarking-Power-Consumption-and-Energy-Efficiency.html">
+<meta property="og:site_name" content="BraveY">
+<meta property="og:description" content="来源ICPE 18 关键词功率，能效，性能，基准，测量，负载水平，SPEC 摘要 显存能耗测量方法不考虑多个负载级别和工作负载组合。 介绍了PTDaemon 能耗测量工具和Chauffeur 能耗评测框架 SPEC SERT 包含的工作负载，并介绍行业标准的计算效率基准  引言 如何精确测量能耗？ 数据中心的冗余机制（灾难备份）导致的额外负载需要被考虑 SPEC 能耗方法学多重负载级别下进行能耗效">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images.pexels.com/photos/452780/pexels-photo-452780.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500">
+<meta property="article:published_time" content="2020-07-14T08:05:52.000Z">
+<meta property="article:modified_time" content="2021-05-06T01:49:12.453Z">
+<meta property="article:author" content="BraveY">
+<meta property="article:tag" content="能耗">
+<meta property="article:tag" content="SPEC SERT">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.pexels.com/photos/452780/pexels-photo-452780.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/2020-07-14-Measuring-and-Benchmarking-Power-Consumption-and-Energy-Efficiency"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="hDujO4MQUB7U9ir-4VXM5PW4fDFSq0-7G-LBX-Lh86M"/><meta name="baidu-site-verification" content="8XIUcPkbzm"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}
+
+// https://stackoverflow.com/questions/16839698/jquery-getscript-alternative-in-native-javascript
+const getScript = url => new Promise((resolve, reject) => {
+  const script = document.createElement('script')
+  script.src = url
+  script.async = true
+  script.onerror = reject
+  script.onload = script.onreadystatechange = function() {
+    const loadState = this.readyState
+    if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+    script.onload = script.onreadystatechange = null
+    resolve()
+  }
+  document.head.appendChild(script)
+})</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-05-06 09:49:12'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">113</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">119</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://images.pexels.com/photos/452780/pexels-photo-452780.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">BraveY</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Measuring and Benchmarking Power Consumption and Energy Efficiency</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-07-14T08:05:52.000Z" title="发表于 2020-07-14 16:05:52">2020-07-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-05-06T01:49:12.453Z" title="更新于 2021-05-06 09:49:12">2021-05-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/">论文阅读</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="来源"><a href="#来源" class="headerlink" title="来源"></a>来源</h2><p>ICPE 18</p>
+<h2 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h2><p>功率，能效，性能，基准，测量，负载水平，SPEC</p>
+<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><ol>
+<li>显存能耗测量方法不考虑多个负载级别和工作负载组合。</li>
+<li>介绍了PTDaemon 能耗测量工具和Chauffeur 能耗评测框架</li>
+<li>SPEC SERT 包含的工作负载，并介绍行业标准的计算效率基准</li>
+</ol>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><ol>
+<li>如何精确测量能耗？</li>
+<li>数据中心的冗余机制（灾难备份）导致的额外负载需要被考虑</li>
+<li>SPEC 能耗方法学多重负载级别下进行能耗效率测评</li>
+<li>功率测量是在SPEC PTDaemon中实现的，它与功率分析仪和温度传感器进行通信。工作负载分派，结果收集和测试执行由Chauffeur框架处理。</li>
+</ol>
+<hr>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><h3 id="遵守的原则"><a href="#遵守的原则" class="headerlink" title="遵守的原则"></a>遵守的原则</h3><ol>
+<li>可重现</li>
+<li>公平</li>
+<li>可验证</li>
+<li>可使用</li>
+</ol>
+<h3 id="评测电力要求"><a href="#评测电力要求" class="headerlink" title="评测电力要求"></a>评测电力要求</h3><ol>
+<li>均方根电力测量</li>
+<li>每秒通过通讯接口将测量值记录到外部设备上</li>
+<li>不确定性少于1%</li>
+<li>定期校准至国家标准</li>
+<li>设备配置控制和程序界面记录</li>
+<li>能够处理安培数峰值（波峰因数），以在恶劣的功率条件下实现正确的读数</li>
+</ol>
+<p>考虑环境温度</p>
+<h3 id="PTDaemon"><a href="#PTDaemon" class="headerlink" title="PTDaemon"></a>PTDaemon</h3><p>基于TCP-IP的公共接口集成到基准线束中，对评测软件隐藏不同硬件接口的协议和行为</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1594956254/blog/paper/批注_2020-07-15_095058.jpg" alt=""></p>
+<p>通过PTDaemon与传感器进行交互（TCP/IP），设备类型由守护程序初始调用时在命令行上本地传递的参数指定。</p>
+<p>SUT和PTDaemon之间的通信协议独立于特定的功率测量设备类型,可以独立于要支持的测量设备来开发基准。</p>
+<p>PTDaemon实现：</p>
+<ul>
+<li>主进程：控制初试化网络命令界面</li>
+<li>单独线程：管理功耗仪与温度传感器</li>
+</ul>
+<p>为了支持不同的功率分析仪，每个受支持的设备都需要在PTDaemon中拥有自己的模块。周期性的更新各个模块以增加设备支持。可以根据手册来自己提交设备支持。</p>
+<h3 id="能耗效率方法学"><a href="#能耗效率方法学" class="headerlink" title="能耗效率方法学"></a>能耗效率方法学</h3><p><strong>校准步</strong> ：被测机器上的目标负载最大事务率？记为100%。负载的多层次测量。</p>
+<p>负载层次定义为最大应用<strong>程序吞吐量的百分比</strong>，而不是目标CPU利用率。CPU利用率在不同核心和系统上差异较大。使用吞吐量百分比更加精确</p>
+<h4 id="设备安装"><a href="#设备安装" class="headerlink" title="设备安装"></a>设备安装</h4><p>两个物理系统：</p>
+<ul>
+<li>控制系统：运行线束，报告器，并与外部测量设备连接。</li>
+<li>被测机：运行负载</li>
+</ul>
+<p>通过网络进行同步，数据收集</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1594956254/blog/paper/批注_2020-07-15_105031.jpg" alt=""></p>
+<p>每个逻辑CPU生成一个客户端，事务负载在客户端上单独运行。通过运行多个客户端实现并行性。</p>
+<p>至少一个功耗仪与温度传感器。温度传感器确保实验环境一致。</p>
+<h3 id="负载和工作量"><a href="#负载和工作量" class="headerlink" title="负载和工作量"></a>负载和工作量</h3><p>多个worklet构成一个workload，一个worklet是小规模的单元（事务）</p>
+<h3 id="阶段和间隔"><a href="#阶段和间隔" class="headerlink" title="阶段和间隔"></a>阶段和间隔</h3><p>worklet的三个阶段：</p>
+<ul>
+<li>warmup：不记录测量值，避免瞬时影响</li>
+<li>校准：得到负载的最大层次</li>
+<li><p>测量：实际测量</p>
+<p>每个阶段一个或多个间隔，用于阶段配置工作执行。</p>
+</li>
+</ul>
+<p>每个间隔包含前测量期与后测量期pre-measurement and a post-measurement period.，事务被在目标层次被执行，但不记录测量值。15s</p>
+<p>测量阶段在两个时期之间，120s</p>
+<p>切换负载，10s的缓冲期避免影响。间隔顺序执行，渐进测量顺序（多层次性能负载的测量 ）</p>
+<p>事务吞吐率：校准阶段结果和目标负载层次的百分比决定</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1594956254/blog/paper/批注_2020-07-15_111230.jpg" alt=" "></p>
+<p>使用每个间隔的能耗与吞吐率的平均值计算间隔的能耗效率</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1594956254/blog/paper/批注_2020-07-15_111713.jpg" alt=""></p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h3 id="Chauffeur"><a href="#Chauffeur" class="headerlink" title="Chauffeur"></a>Chauffeur</h3><p>框架支持在多种负载下测量能耗。</p>
+<p>SPEC PTDaemon与功率分析仪和温度传感器连接，Chauffeur对PTDaemon进行必要的调用，以便在适当的时间间隔内收集数据。</p>
+<p>多种用途下运行的能力。与ssh2008相同原则。</p>
+<p><strong>可伸缩性</strong> ：多进程与多线程，在各种服务器上提供伸缩性。支持多节点运行</p>
+<p><strong>易用</strong> ： 自动配置，自动验证结果</p>
+<p><strong>便携性</strong> Java实现，跨系统</p>
+<p><strong>灵活性</strong> 灵活的改变运行时行为，（收集不同数据格式）通过配置文件，XML，HTML，TXT，CSV格式进行报告</p>
+<h3 id="Chauffeur-WDK-测量任意负载"><a href="#Chauffeur-WDK-测量任意负载" class="headerlink" title="Chauffeur WDK 测量任意负载"></a>Chauffeur WDK 测量任意负载</h3><p>代码编写逻辑</p>
+<p>使用框架简化了测试逻辑，只用专注测试逻辑。</p>
+<p>自动对负载进行多层次测试</p>
+<p>开发一个worklet两个组件：（代码逻辑）</p>
+<ul>
+<li>Transaction事务 ：worklet测试的业务逻辑 两个方法<ul>
+<li>产生输入（事务的随机数据）</li>
+<li>处理（接受输入然后处理并得到结果）</li>
+</ul>
+</li>
+<li>User用户：获取状态信息</li>
+</ul>
+<p>支持协同worklet，多个worklet同时工作。IO写入模拟</p>
+<h3 id="SERT-和负载"><a href="#SERT-和负载" class="headerlink" title="SERT 和负载"></a>SERT 和负载</h3><p>最基础的配置要求：一个功耗仪，温度传感器，SUT，Controller</p>
+<p>使用Chauffeur框架。控制安装在Controller上的软件，处理能耗记录的后勤工作。</p>
+<p>SUT从Chauffeur实例（Director）接收指令来执行负载集合。负载集合由Worklet组成，Worklets是实际的代码，旨在强调特定的一个或多个特定系统资源，例如CPU，内存或存储IO。</p>
+<p>每个功率分析仪和温度传感器均与SPEC <strong>PTDaemon的专用实例进行交互</strong>，该SPEC PTDaemon实例在执行Worklet时收集其读数。</p>
+<p><strong>报告器</strong>收集整理数据产出HTML，XML等格式的输出</p>
+<p>评测的挑战：复杂的配置。（格式错误等等）</p>
+<p><strong>系统配置发现</strong></p>
+<p>SERT通过自动硬件发现过程和易于使用的GUI工作流程来解决这些问题，该流程可帮助用户生成高质量的准确报告。GUI减轻了测试配置，执行和报告编辑的负担，因此用户可以<strong>专注于获得结果</strong>。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1594956254/blog/paper/批注_2020-07-15_152831.jpg" alt=""></p>
+<p><strong>定义和执行</strong></p>
+<p>SERT由worklets套件组成，每个worklet从具体放方面测试被测机。LUworklet：CPU密集型的矩阵分解。序列IOworklet执行序列化IO操作。</p>
+<p>不同方面的<strong>负载</strong>：CPU，内存和存储IO。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1594956254/blog/paper/批注_2020-07-15_153316.jpg" alt=""></p>
+<p>Worklet连续执行，运行在自己的JVM或进程中避免干扰。每个JVM固定到特定处理器，以避免人为限制扩展。</p>
+<p>多个JVM来运行单个worklet避免软件瓶颈限制伸缩性，主要是测量硬件的能耗不是软件的堆栈。</p>
+<p><strong>Worklet</strong></p>
+<p>12个</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1594956254/blog/paper/批注_2020-07-15_155322.jpg" alt=""></p>
+<p><strong>CPU</strong></p>
+<p>数据压缩，加密/解密，复数算法，矩阵分解，浮点数组处理，排序算法，字符串处理</p>
+<p><strong>存储IO</strong></p>
+<p>读与写的事务</p>
+<p><strong>内存</strong></p>
+<p>使用预计算和缓存的数据查找来进行XML文档的操作和验证，以及对数据转换的四个主要类别进行具有读/写操作的数组操作；</p>
+<p><strong>主动怠速</strong></p>
+<p>稳定阶段，空闲阶段</p>
+<p>没有网络IO的worklet,由配置修改器处理</p>
+<h3 id="SPECpower-ssj2008"><a href="#SPECpower-ssj2008" class="headerlink" title="SPECpower_ssj2008"></a>SPECpower_ssj2008</h3><p>略过</p>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>刻画了SPEC Power的方法学</p>
+<p>SPEC PTDaemon可实现功耗的精确测量，而Chauffeur框架可实现工作负荷的调度，布置，执行和结果收集。<br>可以在ChauffeurWDK中使用PTDaemon和Chauffeur，以实现和测试研发工作负载的能源效率。<br>另一方面，SPEC SERT已经提供了大量可用于研究和服务器评级的工作负载。</p>
+<hr>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ol>
+<li><p>PTDaemon Chauffeur，SERT，ssj2008之间的关系？<a target="_blank" rel="noopener" href="http://trickmore.blogspot.com/search/label/SERT">参考</a> <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/45518506">参考2</a></p>
+<ol>
+<li>ssj是基础，SERT通过PTDaemon</li>
+</ol>
+</li>
+<li><p>支持比较多的功耗仪，定期更新（优点），配置性高</p>
+</li>
+<li><p>transaction?怎么翻译？ 事务一个工作流程，或模块</p>
+<ol>
+<li>一次数据压缩就是一个transaction</li>
+</ol>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/2020-07-14-Measuring-and-Benchmarking-Power-Consumption-and-Energy-Efficiency.html">https://bravey.github.io/2020-07-14-Measuring-and-Benchmarking-Power-Consumption-and-Energy-Efficiency.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://bravey.github.io" target="_blank">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%83%BD%E8%80%97/">能耗</a><a class="post-meta__tags" href="/tags/SPEC-SERT/">SPEC SERT</a></div><div class="post_share"><div class="social-share" data-image="https://images.pexels.com/photos/452780/pexels-photo-452780.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020-07-18-leetcode-3-Longest-Substring-Without-Repeating-Characters.html"><img class="prev-cover" src="https://images.pexels.com/photos/165505/pexels-photo-165505.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">leetcode 3 Longest Substring Without Repeating Characters</div></div></a></div><div class="next-post pull-right"><a href="/2020-06-27-212-Word-Search-II.html"><img class="next-cover" src="https://images.pexels.com/photos/165505/pexels-photo-165505.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">212 Word Search II</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">BraveY</div><div class="author-info__description">今日事，今日毕</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">113</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">119</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A5%E6%BA%90"><span class="toc-number">1.</span> <span class="toc-text">来源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E8%AF%8D"><span class="toc-number">2.</span> <span class="toc-text">关键词</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">3.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-number">4.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">5.</span> <span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%81%B5%E5%AE%88%E7%9A%84%E5%8E%9F%E5%88%99"><span class="toc-number">5.1.</span> <span class="toc-text">遵守的原则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%84%E6%B5%8B%E7%94%B5%E5%8A%9B%E8%A6%81%E6%B1%82"><span class="toc-number">5.2.</span> <span class="toc-text">评测电力要求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PTDaemon"><span class="toc-number">5.3.</span> <span class="toc-text">PTDaemon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%83%BD%E8%80%97%E6%95%88%E7%8E%87%E6%96%B9%E6%B3%95%E5%AD%A6"><span class="toc-number">5.4.</span> <span class="toc-text">能耗效率方法学</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E5%A4%87%E5%AE%89%E8%A3%85"><span class="toc-number">5.4.1.</span> <span class="toc-text">设备安装</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%9F%E8%BD%BD%E5%92%8C%E5%B7%A5%E4%BD%9C%E9%87%8F"><span class="toc-number">5.5.</span> <span class="toc-text">负载和工作量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B6%E6%AE%B5%E5%92%8C%E9%97%B4%E9%9A%94"><span class="toc-number">5.6.</span> <span class="toc-text">阶段和间隔</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">6.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Chauffeur"><span class="toc-number">6.1.</span> <span class="toc-text">Chauffeur</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Chauffeur-WDK-%E6%B5%8B%E9%87%8F%E4%BB%BB%E6%84%8F%E8%B4%9F%E8%BD%BD"><span class="toc-number">6.2.</span> <span class="toc-text">Chauffeur WDK 测量任意负载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SERT-%E5%92%8C%E8%B4%9F%E8%BD%BD"><span class="toc-number">6.3.</span> <span class="toc-text">SERT 和负载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SPECpower-ssj2008"><span class="toc-number">6.4.</span> <span class="toc-text">SPECpower_ssj2008</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C"><span class="toc-number">7.</span> <span class="toc-text">结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%9D%E8%80%83"><span class="toc-number">8.</span> <span class="toc-text">思考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021-04-27-leetcode-153-Find-Minimum-in-Rotated-Sorted-Array.html" title="leetcode 153 Find Minimum in Rotated Sorted Array"><img src="https://images.pexels.com/photos/611328/pexels-photo-611328.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 153 Find Minimum in Rotated Sorted Array"/></a><div class="content"><a class="title" href="/2021-04-27-leetcode-153-Find-Minimum-in-Rotated-Sorted-Array.html" title="leetcode 153 Find Minimum in Rotated Sorted Array">leetcode 153 Find Minimum in Rotated Sorted Array</a><time datetime="2021-04-27T14:59:17.000Z" title="发表于 2021-04-27 22:59:17">2021-04-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-04-23-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9F%A5%E6%89%BE.html" title="二叉树的查找"><img src="https://images.pexels.com/photos/351448/pexels-photo-351448.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="二叉树的查找"/></a><div class="content"><a class="title" href="/2021-04-23-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9F%A5%E6%89%BE.html" title="二叉树的查找">二叉树的查找</a><time datetime="2021-04-23T02:24:11.000Z" title="发表于 2021-04-23 10:24:11">2021-04-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-04-22-NC92-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97-NC127-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2.html" title="NC92 最长公共子序列 NC127 最长公共子串"><img src="https://images.pexels.com/photos/351448/pexels-photo-351448.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NC92 最长公共子序列 NC127 最长公共子串"/></a><div class="content"><a class="title" href="/2021-04-22-NC92-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97-NC127-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2.html" title="NC92 最长公共子序列 NC127 最长公共子串">NC92 最长公共子序列 NC127 最长公共子串</a><time datetime="2021-04-22T06:38:18.000Z" title="发表于 2021-04-22 14:38:18">2021-04-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-04-05-%E5%89%91%E6%8C%87Offer36-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E8%BD%AC%E6%8D%A2%E4%B8%BA%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.html" title="剑指Offer36 二叉搜索树转换为双向链表"><img src="https://images.pexels.com/photos/46253/mt-fuji-sea-of-clouds-sunrise-46253.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="剑指Offer36 二叉搜索树转换为双向链表"/></a><div class="content"><a class="title" href="/2021-04-05-%E5%89%91%E6%8C%87Offer36-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E8%BD%AC%E6%8D%A2%E4%B8%BA%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.html" title="剑指Offer36 二叉搜索树转换为双向链表">剑指Offer36 二叉搜索树转换为双向链表</a><time datetime="2021-04-05T11:15:52.000Z" title="发表于 2021-04-05 19:15:52">2021-04-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-03-29-leetcode-295-Find-Median-from-Data-Stream.html" title="leetcode 295 Find Median from Data Stream"><img src="https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 295 Find Median from Data Stream"/></a><div class="content"><a class="title" href="/2021-03-29-leetcode-295-Find-Median-from-Data-Stream.html" title="leetcode 295 Find Median from Data Stream">leetcode 295 Find Median from Data Stream</a><time datetime="2021-03-29T11:45:06.000Z" title="发表于 2021-03-29 19:45:06">2021-03-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By BraveY</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
