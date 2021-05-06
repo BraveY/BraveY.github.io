@@ -12,7 +12,7 @@ copyright: true
 
 [题目链接](https://leetcode.com/problems/remove-linked-list-elements/)
 
-Remove all elements from a linked list of integers that have value ***val\***.
+Remove all elements from a linked list of integers that have value ***val***.
 
 **Example:**
 
@@ -25,7 +25,9 @@ Output: 1->2->3->4->5
 
 ### 思路
 
-思路很简单主要是第一次写有很多小bug没有debug出来，记下方便后面总结
+判断当前节点的下一个节点的值是否需要删除，是的话直接将next指针指向被删除的下一个节点。
+
+思路很简单主要是第一次写有很多小bug没有debug出来，记下方便后面总结。
 
 ### 复杂度
 
@@ -64,5 +66,7 @@ class Solution {
 ## 总结
 
 一些代码上的小漏洞，不考虑清楚会很容易浪费时间。详细看代码注释。
+
+循环每次只做一件事：要么移动next指针，要么移动cur指针，不加else就变成移动next指针后再移动cur指针，不够分离。
 
 ## 参考

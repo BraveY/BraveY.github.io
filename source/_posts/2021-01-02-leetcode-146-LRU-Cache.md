@@ -88,7 +88,7 @@ class LRUCache {
         return kv[key];
     }
     
-    void put(int key, int value) {
+    void put(int key, int value) {//put包含只修改值与新插入值两种，当需要新插入时还需要判断容量是否足够，不够则需要evict。
         if(!kv.count(key) && kv.size() == _capacity) {
             evict();
         }
@@ -120,7 +120,12 @@ class LRUCache {
 ## 总结
 
 1. 链表自身就是有序的，所以可以维护这个数据结构来完成需要排序的操作。而不是进行排序算法。
+
 2. list::erase()只能使用使用迭代器所以需要记录迭代器。
+
+3. 在updateLRU函数中只进行修改的key的工作，而将判断是否需要驱逐的逻辑放在put中
+
+   
 
 ## 参考
 
