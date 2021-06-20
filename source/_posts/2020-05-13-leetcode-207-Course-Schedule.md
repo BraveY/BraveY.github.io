@@ -5,6 +5,7 @@ categories: 题解
 tags:
 - BFS
 - DFS
+- 拓扑排序
 copyright: true
 ---
 
@@ -121,12 +122,12 @@ class Solution {
 		int n = prerequisites.size();
 		vector<int> degree(numCourses, 0);
 		for (int i = 0; i < n; i++) {
-			graph_[prerequisites[i][0]].push_back(prerequisites[i][1]);
-			degree[prerequisites[i][1]]++; // in degree 入度表示需要先修的课的门数
+			graph_[prerequisites[i][0]].push_back(prerequisites[i][1]); // 图可以不用n*n来形成严格的邻接表，类似于树指向下一个就好。
+			degree[prerequisites[i][1]]++; // in degree 入度表示被依赖的门数
 		}
 		queue<int> q;
 		for (int i = 0; i < numCourses; i++)
-			if (degree[i] == 0) q.push(i); //先从不需要先修课的开始遍历
+			if (degree[i] == 0) q.push(i); //先从入度为0的开始遍历
 		while (!q.empty()) {
 			int curr = q.front(); q.pop(); numCourses--;//将待遍历的节点减1
 			for (auto next : graph_[curr])
@@ -140,6 +141,12 @@ class Solution {
 ### 复杂度
 
 时间复杂度也是O(N) N为节点数。
+
+### 总结
+
+1. 需要先建立一个二维数组来存储图形，这二维数组不许要n*n的大小（n为节点个数），类似于树。
+2. 从入度为0的开始遍历是根据树的思路来的。
+3. 队列中存储的是入度为0的节点。
 
 ## 参考
 
