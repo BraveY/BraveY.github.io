@@ -3,7 +3,7 @@
 const pathFn = require('path');
 const fs = require('hexo-fs');
 const chalk = require('chalk');
-const swig = require('swig-templates');
+const nunjucks = require('nunjucks');
 const moment = require('moment');
 const Promise = require('bluebird');
 const spawn = require('hexo-util/lib/spawn');
@@ -83,7 +83,7 @@ module.exports = function(args) {
     });
   }
 
-  return fs.exists(deployDir).then(function(exist) {
+  return fs.exists(deployDir).then(exist => {
     if (exist) return;
 
     log.info('Setting up Git deployment...');
@@ -143,12 +143,12 @@ module.exports = function(args) {
     });
   }).then(() => {
     return parseConfig(args);
-  }).each(function(repo) {
+  }).each(repo => {
     return push(repo);
   });
 };
 
 function commitMessage(args) {
   const message = args.m || args.msg || args.message || 'Site updated: {{ now(\'YYYY-MM-DD HH:mm:ss\') }}';
-  return swig.compile(message)(swigHelpers);
+  return nunjucks.renderString(message, swigHelpers);
 }
