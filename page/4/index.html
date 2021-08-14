@@ -1,143 +1,326 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BraveY</title><meta name="description" content="今日事，今日毕"><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="dns-prefetch" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="crossorigin"/><link rel="dns-prefetch" href="https://fonts.googleapis.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="dns-prefetch" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="hDujO4MQUB7U9ir-4VXM5PW4fDFSq0-7G-LBX-Lh86M"/><meta name="baidu-site-verification" content="8XIUcPkbzm"/><meta name="twitter:card" content="summary"><meta name="twitter:title" content="BraveY"><meta name="twitter:description" content="今日事，今日毕"><meta name="twitter:image" content="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg"><meta property="og:type" content="website"><meta property="og:title" content="BraveY"><meta property="og:url" content="https://bravey.github.io/page/4/"><meta property="og:site_name" content="BraveY"><meta property="og:description" content="今日事，今日毕"><meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg"><meta property="article:published_time" content="2020-09-16T01:19:02.910Z"><meta property="article:modified_time" content="2020-09-16T01:19:02.910Z"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>var autoChangeMode = '1'
-var t = Cookies.get("theme")
-if (autoChangeMode == '1'){
-  var isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
-  var isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
-  var isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
-  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
-
-  if (t === undefined){
-    if (isLightMode) activateLightMode()
-    else if (isDarkMode) activateDarkMode()
-    else if (isNotSpecified || hasNoSupport){
-      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
-      var now = new Date()
-      var hour = now.getHours()
-      var isNight = hour < 6 || hour >= 18
-      isNight ? activateDarkMode() : activateLightMode()
-  }
-  } else if (t == 'light') activateLightMode()
-  else activateDarkMode()
-
-} else if (autoChangeMode == '2'){
-  now = new Date();
-  hour = now.getHours();
-  isNight = hour < 6 || hour >= 18
-  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
-  else if (t === 'light') activateLightMode()
-  else activateDarkMode() 
-} else {
-  if ( t == 'dark' ) activateDarkMode()
-  else if ( t == 'light') activateLightMode()
-}
-
-function activateDarkMode(){
-  document.documentElement.setAttribute('data-theme', 'dark')
-  if (document.querySelector('meta[name="theme-color"]') !== null){
-    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
-  }
-}
-function activateLightMode(){
-  document.documentElement.setAttribute('data-theme', 'light')
-  if (document.querySelector('meta[name="theme-color"]') !== null){
-  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
-  }
-}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="https://bravey.github.io/page/4/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BraveY</title><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="今日事，今日毕">
+<meta property="og:type" content="website">
+<meta property="og:title" content="BraveY">
+<meta property="og:url" content="https://bravey.github.io/page/4/index.html">
+<meta property="og:site_name" content="BraveY">
+<meta property="og:description" content="今日事，今日毕">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg">
+<meta property="article:author" content="BraveY">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg"><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/page/4/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="hDujO4MQUB7U9ir-4VXM5PW4fDFSq0-7G-LBX-Lh86M"/><meta name="baidu-site-verification" content="8XIUcPkbzm"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>var GLOBAL_CONFIG = { 
   root: '/',
   algolia: undefined,
-  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
-  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
   copy: {
     success: '复制成功',
     error: '复制错误',
     noSupport: '浏览器不支持'
   },
-  bookmark: {
-    message_prev: '按',
-    message_next: '键将本页加入书签'
+  relativeDate: {
+    homepage: false,
+    post: false
   },
-  runtime_unit: '天',
-  runtime: true,
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
   copyright: undefined,
-  ClickShowText: {"text":"富强,民主,文明,和谐,自由,平等,公正,法治,爱国,敬业,诚信,友善","fontSize":"15px"},
-  medium_zoom: false,
-  fancybox: true,
+  lightbox: 'fancybox',
   Snackbar: undefined,
-  baiduPush: true,
-  highlightCopy: true,
-  highlightLang: true,
-  highlightShrink: 'false',
-  isFontAwesomeV5: false,
-  isPhotoFigcaption: false
-  
-}</script><script>var GLOBAL_CONFIG_SITE = { 
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}
+
+// https://stackoverflow.com/questions/16839698/jquery-getscript-alternative-in-native-javascript
+const getScript = url => new Promise((resolve, reject) => {
+  const script = document.createElement('script')
+  script.src = url
+  script.async = true
+  script.onerror = reject
+  script.onload = script.onreadystatechange = function() {
+    const loadState = this.readyState
+    if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+    script.onload = script.onreadystatechange = null
+    resolve()
+  }
+  document.head.appendChild(script)
+})</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
   isPost: false,
   isHome: true,
-  isSidebar: false  
-  }</script><noscript><style>
-#page-header {
-  opacity: 1
-}
-.justified-gallery img{
-  opacity: 1
-}
-</style></noscript><meta name="generator" content="Hexo 4.2.0"></head><body><canvas class="fireworks"></canvas><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">88</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">109</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">14</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div id="body-wrap"><div id="web_bg" data-type="photo"></div><div class="full_page" id="nav" style="background-image: url(https://res.cloudinary.com/bravey/image/upload/v1582873485/wallroom-2880x1620-bg-3cad5d2.jpg)"><div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">BraveY</a></span><span class="pull_right menus"><div id="search_button"><a class="site-page social-icon search"><i class="fa fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span></span></div><div id="site-info"><h1 id="site_title">BraveY</h1><div id="site_subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github" aria-hidden="true"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope" aria-hidden="true"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss" aria-hidden="true"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright" aria-hidden="true"></i></a></div></div><div id="scroll_down"><i class="fa fa-angle-down scroll-down-effects"></i></div></div><main class="layout_page" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020-04-16-leetcode-287-Find-the-Duplicate-Number.html" title="leetcode 287 Find the Duplicate Number">     <img class="post_bg lazyload" data-src="https://images.pexels.com/photos/238622/pexels-photo-238622.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 287 Find the Duplicate Number"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-04-16-leetcode-287-Find-the-Duplicate-Number.html" title="leetcode 287 Find the Duplicate Number">leetcode 287 Find the Duplicate Number</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-04-16 22:43:49"><i class="fa fa-calendar" aria-hidden="true"></i>2020-04-16</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2/">二分搜索</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E9%93%BE%E8%A1%A8/">链表</a></span></div><div class="content">leetcode 287 Find the Duplicate Number题目描述题目链接,寻找一个数组中的重复值。
-Given an array nums containing n + 1 integers where each integer is between 1 and n (inclu ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020-04-10-Linux%E8%BF%90%E7%BB%B4.html" title="Linux运维">     <img class="post_bg lazyload" data-src="https://images.pexels.com/photos/165505/pexels-photo-165505.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux运维"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-04-10-Linux%E8%BF%90%E7%BB%B4.html" title="Linux运维">Linux运维</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-04-10 10:24:39"><i class="fa fa-calendar" aria-hidden="true"></i>2020-04-10</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Linux/">Linux</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E8%BF%90%E7%BB%B4/">运维</a></span></div><div class="content">Linux运维记录在使用Linux过程中遇到的一些问题的解决方式
-jupyter lab无权限创建文件
-chmod 777 file_path 解决
-jupyter lab 服务器地址访问被拒绝
-启动时加上 —ip=0.0.0.0
-jupyter lab --port=8889 --ip=0.0.0 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020-04-02-leetcode-4-Median-of-Two-Sorted-Arrays.html" title="leetcode 4 Median of Two Sorted Arrays">     <img class="post_bg lazyload" data-src="https://images.pexels.com/photos/655674/pexels-photo-655674.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 4 Median of Two Sorted Arrays"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-04-02-leetcode-4-Median-of-Two-Sorted-Arrays.html" title="leetcode 4 Median of Two Sorted Arrays">leetcode 4 Median of Two Sorted Arrays</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-04-02 20:40:12"><i class="fa fa-calendar" aria-hidden="true"></i>2020-04-02</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2/">二分搜索</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E5%88%86%E6%94%AF/">分支</a></span></div><div class="content">题目链接要求求出两个有序数组的总的中位数，但是时间复杂度限制在了$log(m+n)$
-There are two sorted arrays nums1 and nums2 of size m and n respectively.
-Find the median of the two sorted ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020-03-24-%E5%A4%A9%E6%B1%A0Docker%E7%BB%83%E4%B9%A0%E5%9C%BA%E5%AE%9E%E8%B7%B5.html" title="天池Docker练习场实践">     <img class="post_bg lazyload" data-src="https://images.pexels.com/photos/747016/pexels-photo-747016.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="天池Docker练习场实践"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-03-24-%E5%A4%A9%E6%B1%A0Docker%E7%BB%83%E4%B9%A0%E5%9C%BA%E5%AE%9E%E8%B7%B5.html" title="天池Docker练习场实践">天池Docker练习场实践</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-03-24 10:04:28"><i class="fa fa-calendar" aria-hidden="true"></i>2020-03-24</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Linux/">Linux</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/docker/">docker</a></span></div><div class="content">天池Docker练习场实践基本的操作框架详细参考官方的手把手教程即可，主要记录下自己实践过程中遇到的问题。
-任务描述参与者可分阶段提交容器镜像完成以下3个任务（分数依次占 30/30/40），根据评分系统的分数返回验证任务的完成情况。
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2021-08-14 20:39:07'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
 
-输出Hello world
-计算 /tcdata/num_li ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020-03-13-%E4%BD%BF%E7%94%A8Pytorch%E6%A1%86%E6%9E%B6%E7%9A%84CNN%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%EF%BC%88MNIST%EF%BC%89%E8%AF%86%E5%88%AB.html" title="使用Pytorch框架的CNN网络实现手写数字（MNIST）识别">     <img class="post_bg lazyload" data-src="https://images.pexels.com/photos/46253/mt-fuji-sea-of-clouds-sunrise-46253.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用Pytorch框架的CNN网络实现手写数字（MNIST）识别"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-03-13-%E4%BD%BF%E7%94%A8Pytorch%E6%A1%86%E6%9E%B6%E7%9A%84CNN%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%EF%BC%88MNIST%EF%BC%89%E8%AF%86%E5%88%AB.html" title="使用Pytorch框架的CNN网络实现手写数字（MNIST）识别">使用Pytorch框架的CNN网络实现手写数字（MNIST）识别</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-03-13 00:30:40"><i class="fa fa-calendar" aria-hidden="true"></i>2020-03-13</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/MNIST/">MNIST</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/CNN/">CNN</a></span></div><div class="content">使用Pytorch框架的CNN网络实现手写数字（MNIST）识别本实践使用卷积神经网络（CNN）模型，用于预测手写数字图片。代码源文件在github上面
-
-首先导入必要的包
-numpy—————&gt;python第三方库，用于进行科学计算
-PIL——————&gt; Python Image Li ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020-03-05-%E4%BD%BF%E7%94%A8SVM%E5%AF%B9%E9%B8%A2%E5%B0%BE%E8%8A%B1%E5%88%86%E7%B1%BB.html" title="使用SVM对鸢尾花分类">     <img class="post_bg lazyload" data-src="https://images.pexels.com/photos/747016/pexels-photo-747016.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用SVM对鸢尾花分类"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-03-05-%E4%BD%BF%E7%94%A8SVM%E5%AF%B9%E9%B8%A2%E5%B0%BE%E8%8A%B1%E5%88%86%E7%B1%BB.html" title="使用SVM对鸢尾花分类">使用SVM对鸢尾花分类</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-03-05 17:06:04"><i class="fa fa-calendar" aria-hidden="true"></i>2020-03-05</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E5%88%86%E7%B1%BB/">分类</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/SVM/">SVM</a></span></div><div class="content">使用SVM对鸢尾花分类百度AI Studio中的一个入门项目，增加了自己在实践时的一些注释，对小白来说阅读更顺畅。源码和数据在github上。
-任务描述：构建一个模型，根据鸢尾花的花萼和花瓣大小将其分为三种不同的品种。
-
-数据集总共包含150行数据
-每一行数据由 4 个特征值及一个目标值组成。
-4  ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020-02-28-leetcode-10-Regular-Expression-Matching.html" title="leetcode 10 Regular Expression Matching">     <img class="post_bg lazyload" data-src="https://images.pexels.com/photos/2174656/pexels-photo-2174656.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 10 Regular Expression Matching"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-02-28-leetcode-10-Regular-Expression-Matching.html" title="leetcode 10 Regular Expression Matching">leetcode 10 Regular Expression Matching</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-02-28 16:07:23"><i class="fa fa-calendar" aria-hidden="true"></i>2020-02-28</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/">字符串</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E9%80%92%E5%BD%92/">递归</a></span></div><div class="content">leetcode 10 Regular Expression Matching题目来源，需要实现字符串正则匹配的’*’和’.’的匹配功能，判断给定字符串和模式能否匹配。
-思路递归因为字符串去掉一个字符后仍然是字符串，所以可以考虑递归的形式。首先判断字符串s和模式字符串t的第一个字符s[0]和t[0] ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020-02-23-leetcode-5-Longest-Palindromic-Substring.html" title="leetcode 5 Longest Palindromic Substring">     <img class="post_bg lazyload" data-src="https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 5 Longest Palindromic Substring"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-02-23-leetcode-5-Longest-Palindromic-Substring.html" title="leetcode 5 Longest Palindromic Substring">leetcode 5 Longest Palindromic Substring</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-02-23 16:52:07"><i class="fa fa-calendar" aria-hidden="true"></i>2020-02-23</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E9%A9%AC%E6%8B%89%E8%BD%A6%E7%AE%97%E6%B3%95/">马拉车算法</a></span></div><div class="content">leetcode 5 Longest Palindromic Substring题目来源,要求出一个字符串中的最长回文子字符串。
-
-思路动态规划自己最开始考虑的子问题定义是opt[i]表示以s[i]结尾的最长回文字符串，用的是一个一维的动态规划数组opt[i]来存储状态，这样行不通原因是与前一个字符 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020-02-13-leetcode-140-Word-Break-II.html" title="leetcode 140 Word Break II">     <img class="post_bg lazyload" data-src="/img/post.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 140 Word Break II"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-02-13-leetcode-140-Word-Break-II.html" title="leetcode 140 Word Break II">leetcode 140 Word Break II</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-02-13 11:13:45"><i class="fa fa-calendar" aria-hidden="true"></i>2020-02-13</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E8%AE%B0%E5%BF%86%E5%8C%96%E9%80%92%E5%BD%92/">记忆化递归</a></span></div><div class="content">leetcode 140 Word Break II题目来源,要求给出字符串由字典中的子字符串的所有组成方式。
-思路同Word Break的思路大致一致，也是有两种方法，但是动态规划有个样例被卡了无法通过。
-
-记忆化递归整体思路依然是将输入字符串s分成左边与右边两部分，先对右边的判断是否在字典中，如 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020-02-11-leetcode-139-Word-Break.html" title="leetcode 139 Word Break">     <img class="post_bg lazyload" data-src="https://images.pexels.com/photos/6758/wildernessculture-rei1440project-welltravelled-awesomeearth.jpg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 139 Word Break"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-02-11-leetcode-139-Word-Break.html" title="leetcode 139 Word Break">leetcode 139 Word Break</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-02-11 13:09:23"><i class="fa fa-calendar" aria-hidden="true"></i>2020-02-11</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E8%AE%B0%E5%BF%86%E5%8C%96%E9%80%92%E5%BD%92/">记忆化递归</a></span></div><div class="content">leetcode 139 Word Break题目来源,求解一个字符串能否由给定的子字符串组成。
-
-思路这道题涉及到字符串的操作，之前不是很熟悉。
-记忆化递归输入的是字符串，也是属于可分的数据结构，因此可以考虑分成子问题后使用递归的方法来求解。将字符串分为left和right部分，对于left部分递 ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-fw fa-chevron-left" aria-hidden="true"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-fw fa-chevron-right" aria-hidden="true"></i></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">BraveY</div><div class="author-info__description">今日事，今日毕</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives"><div class="headline">文章</div><div class="length_num">88</div></a></div><div class="card-info-data-item is-center">      <a href="/tags"><div class="headline">标签</div><div class="length_num">109</div></a></div><div class="card-info-data-item is-center">     <a href="/categories"><div class="headline">分类</div><div class="length_num">14</div></a></div></div><div class="card-info-bookmark is-center"><a class="bookmark button--primary button--animated" id="bookmark-it" href="javascript:;" title="加入书签" target="_self"><i class="fa fa-bookmark" aria-hidden="true"></i><span>加入书签</span></a></div><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github" aria-hidden="true"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope" aria-hidden="true"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss" aria-hidden="true"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright" aria-hidden="true"></i></a></div></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fa fa-bullhorn card-announcement-animation" aria-hidden="true"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fa fa-history" aria-hidden="true"></i><span>最新文章</span></div><div class="aside-recent-item"><div class="aside-recent-post"><a href="/2020-09-15-leetcode-128-Longest-Consecutive-Sequence.html"><div class="aside-post-cover"><img class="aside-post-bg lazyload" data-src="https://images.pexels.com/photos/2174656/pexels-photo-2174656.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" title="leetcode 128 Longest Consecutive Sequence" alt="leetcode 128 Longest Consecutive Sequence"/></div><div class="aside-post-title"><div class="aside-post_title" href="/2020-09-15-leetcode-128-Longest-Consecutive-Sequence.html" title="leetcode 128 Longest Consecutive Sequence">leetcode 128 Longest Consecutive Sequence</div><time class="aside-post_meta post-meta__date" title="发表于 2020-09-15 20:43:12">2020-09-15</time></div></a></div><div class="aside-recent-post"><a href="/2020-09-09-leetcode-73-Set-Matrix-Zeroes.html"><div class="aside-post-cover"><img class="aside-post-bg lazyload" data-src="https://images.pexels.com/photos/452780/pexels-photo-452780.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" title="leetcode 73 Set Matrix Zeroes" alt="leetcode 73 Set Matrix Zeroes"/></div><div class="aside-post-title"><div class="aside-post_title" href="/2020-09-09-leetcode-73-Set-Matrix-Zeroes.html" title="leetcode 73 Set Matrix Zeroes">leetcode 73 Set Matrix Zeroes</div><time class="aside-post_meta post-meta__date" title="发表于 2020-09-09 13:06:00">2020-09-09</time></div></a></div><div class="aside-recent-post"><a href="/2020-09-07-leetcode-289-Game-of-Life.html"><div class="aside-post-cover"><img class="aside-post-bg lazyload" data-src="https://images.pexels.com/photos/33109/fall-autumn-red-season.jpg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" title="leetcode 289 Game of Life" alt="leetcode 289 Game of Life"/></div><div class="aside-post-title"><div class="aside-post_title" href="/2020-09-07-leetcode-289-Game-of-Life.html" title="leetcode 289 Game of Life">leetcode 289 Game of Life</div><time class="aside-post_meta post-meta__date" title="发表于 2020-09-07 20:45:39">2020-09-07</time></div></a></div><div class="aside-recent-post"><a href="/2020-09-06-leetcode-48-Rotate-Image.html"><div class="aside-post-cover"><img class="aside-post-bg lazyload" data-src="https://images.pexels.com/photos/452780/pexels-photo-452780.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" title="leetcode 48 Rotate Image" alt="leetcode 48 Rotate Image"/></div><div class="aside-post-title"><div class="aside-post_title" href="/2020-09-06-leetcode-48-Rotate-Image.html" title="leetcode 48 Rotate Image">leetcode 48 Rotate Image</div><time class="aside-post_meta post-meta__date" title="发表于 2020-09-06 16:41:56">2020-09-06</time></div></a></div><div class="aside-recent-post"><a href="/2020-09-03-leetcode-227-Basic-Calculator-II.html"><div class="aside-post-cover"><img class="aside-post-bg lazyload" data-src="https://images.pexels.com/photos/164041/pexels-photo-164041.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" title="leetcode 227 Basic Calculator II" alt="leetcode 227 Basic Calculator II"/></div><div class="aside-post-title"><div class="aside-post_title" href="/2020-09-03-leetcode-227-Basic-Calculator-II.html" title="leetcode 227 Basic Calculator II">leetcode 227 Basic Calculator II</div><time class="aside-post_meta post-meta__date" title="发表于 2020-09-03 12:49:09">2020-09-03</time></div></a></div></div></div></div><div class="card-widget card-categories"><div class="card-content"><div class="item-headline"><i class="fa fa-folder-open" aria-hidden="true"></i><span>分类</span></div><ul class="card-category-list">
-            <li class="card-category-list-item"><a class="card-category-list-link" href="/categories/Hexo/"><span class="card-category-list-name">Hexo</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item"><a class="card-category-list-link" href="/categories/Linux/"><span class="card-category-list-name">Linux</span><span class="card-category-list-count">12</span></a></li><li class="card-category-list-item"><a class="card-category-list-link" href="/categories/algorithm/"><span class="card-category-list-name">algorithm</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item"><a class="card-category-list-link" href="/categories/deploy/"><span class="card-category-list-name">deploy</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item"><a class="card-category-list-link" href="/categories/%E5%85%B6%E4%BB%96/"><span class="card-category-list-name">其他</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item"><a class="card-category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/"><span class="card-category-list-name">数据挖掘</span><span class="card-category-list-count">7</span></a></li><li class="card-category-list-item"><a class="card-category-list-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">机器学习</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item"><a class="card-category-list-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">深度学习</span><span class="card-category-list-count">5</span></a></li>
-            <li class="card-category-list-item more is-center"><a class="card-category-list-link-more" href="/categories">
-                <span>查看更多</span><i class="fa fa-angle-right" aria-hidden="true"></i></a></li>           
-            </ul></div></div><div class="card-widget card-tags"><div class="card-content"><div class="item-headline"><i class="fa fa-tags" aria-hidden="true"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Apriori/" style="font-size: 16px; color: #999">Apriori</a> <a href="/tags/BFS/" style="font-size: 18.4px; color: #999fa8">BFS</a> <a href="/tags/BIOS/" style="font-size: 16px; color: #999">BIOS</a> <a href="/tags/CNN/" style="font-size: 16px; color: #999">CNN</a> <a href="/tags/Clementine/" style="font-size: 16px; color: #999">Clementine</a> <a href="/tags/C%E8%AF%AD%E8%A8%80/" style="font-size: 16px; color: #999">C语言</a> <a href="/tags/DFS/" style="font-size: 20.8px; color: #99a6b7">DFS</a> <a href="/tags/FP-Growth/" style="font-size: 16px; color: #999">FP-Growth</a> <a href="/tags/Hexo/" style="font-size: 16px; color: #999">Hexo</a> <a href="/tags/K-Means/" style="font-size: 16px; color: #999">K-Means</a> <a href="/tags/LSTM/" style="font-size: 18.4px; color: #999fa8">LSTM</a> <a href="/tags/Linux/" style="font-size: 19.6px; color: #99a3b0">Linux</a> <a href="/tags/MNIST/" style="font-size: 16px; color: #999">MNIST</a> <a href="/tags/Makefile/" style="font-size: 16px; color: #999">Makefile</a> <a href="/tags/OJ/" style="font-size: 16px; color: #999">OJ</a> <a href="/tags/OLAPS/" style="font-size: 16px; color: #999">OLAPS</a> <a href="/tags/Prophet/" style="font-size: 16px; color: #999">Prophet</a> <a href="/tags/Pytorch/" style="font-size: 18.4px; color: #999fa8">Pytorch</a> <a href="/tags/SPEC-SERT/" style="font-size: 16px; color: #999">SPEC SERT</a> <a href="/tags/SVM/" style="font-size: 16px; color: #999">SVM</a> <a href="/tags/String/" style="font-size: 16px; color: #999">String</a> <a href="/tags/TRIE/" style="font-size: 16px; color: #999">TRIE</a> <a href="/tags/Travis-CI/" style="font-size: 16px; color: #999">Travis-CI</a> <a href="/tags/benchmark/" style="font-size: 16px; color: #999">benchmark</a> <a href="/tags/bigdatabench/" style="font-size: 16px; color: #999">bigdatabench</a> <a href="/tags/c/" style="font-size: 17.2px; color: #999ca1">c++</a> <a href="/tags/ceph/" style="font-size: 16px; color: #999">ceph</a> <a href="/tags/coding/" style="font-size: 16px; color: #999">coding</a> <a href="/tags/command/" style="font-size: 17.2px; color: #999ca1">command</a> <a href="/tags/dict/" style="font-size: 16px; color: #999">dict</a> <a href="/tags/docker/" style="font-size: 17.2px; color: #999ca1">docker</a> <a href="/tags/gcc/" style="font-size: 16px; color: #999">gcc</a> <a href="/tags/gdb/" style="font-size: 16px; color: #999">gdb</a> <a href="/tags/graph/" style="font-size: 16px; color: #999">graph</a> <a href="/tags/hash-table/" style="font-size: 16px; color: #999">hash table</a> <a href="/tags/hexo/" style="font-size: 16px; color: #999">hexo</a> <a href="/tags/ipv6/" style="font-size: 16px; color: #999">ipv6</a> <a href="/tags/leetcode/" style="font-size: 22px; color: #99a9bf">leetcode</a> <a href="/tags/make/" style="font-size: 17.2px; color: #999ca1">make</a> <a href="/tags/next/" style="font-size: 16px; color: #999">next</a></div></div></div><div class="card-widget card-archives"><div class="card-content"><div class="item-headline"><i class="fa fa-archive" aria-hidden="true"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/09/"><span class="card-archive-list-date">九月 2020</span><span class="card-archive-list-count">5</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/08/"><span class="card-archive-list-date">八月 2020</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/07/"><span class="card-archive-list-date">七月 2020</span><span class="card-archive-list-count">4</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/06/"><span class="card-archive-list-date">六月 2020</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/05/"><span class="card-archive-list-date">五月 2020</span><span class="card-archive-list-count">9</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/04/"><span class="card-archive-list-date">四月 2020</span><span class="card-archive-list-count">9</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/03/"><span class="card-archive-list-date">三月 2020</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/02/"><span class="card-archive-list-date">二月 2020</span><span class="card-archive-list-count">7</span></a></li><li class="card-archive-list-item more is-center"><a class="card-archive-list-link-more" href="/archives">
-              <span>查看更多</span><i class="fa fa-angle-right" aria-hidden="true"></i></a></li></ul></div></div><div class="card-widget card-webinfo"><div class="card-content"><div class="item-headline"><i class="fa fa-line-chart" aria-hidden="true"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="webinfo-article-name">文章数目 :</div><div class="webinfo-article-count">88</div></div><div class="webinfo-item"><div class="webinfo-runtime-name">已运行时间 :</div><div class="webinfo-runtime-count" id="webinfo-runtime-count" start_date="6/23/2018 15:55:00">     </div></div><div class="webinfo-item"><div class="webinfo-site-wordcount-name">本站总字数 :</div><div class="webinfo-site-wordcount">128.4k</div></div><div class="webinfo-item">      <div class="webinfo-site-uv-name">本站访客数 :</div><div class="webinfo-site-uv-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="webinfo-site-name">本站总访问量 :</div><div class="webinfo-site-pv-count" id="busuanzi_value_site_pv"></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://res.cloudinary.com/bravey/image/upload/v1582873485/wallroom-2880x1620-bg-3cad5d2.jpg)" data-type="photo"><div id="footer-wrap"><div class="copyright">&copy;2018 - 2020 By BraveY</div><div class="framework-info"><span>驱动 </span><a href="https://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="简繁转换" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="夜间模式"></i></div><div id="rightside-config-show"><div id="rightside_config" title="设置"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-arrow-up" id="go-up" title="回到顶部" aria-hidden="true"></i></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a>
- <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="/js/third-party/fireworks.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script><script src="/js/third-party/ClickShowText.js"></script><script src="/js/search/local-search.js"></script><script src="https://cdn.jsdelivr.net/npm/typed.js"></script><script>var subtitleType = function () {
-  loadScript('https://sdk.jinrishici.com/v2/browser/jinrishici.js',function () {
-      var subtitleEffect = true
-      jinrishici.load(function (result) {
-        if (subtitleEffect) {
-          var sub = '给时光以生命，而不是给生命以时光,To the time to life&#44;rather than to life in time'.length == 0 ? new Array() : '给时光以生命，而不是给生命以时光,To the time to life&#44;rather than to life in time'.split(',')
-          var content = result.data.content
-          var both = sub.unshift(content)
-          var typed = new Typed('#subtitle', {
-            strings: sub,
-            startDelay: 300,
-            typeSpeed: 150,
-            loop: true,
-            backSpeed: 50,
-          })
-        } else {
-          document.getElementById('subtitle').innerHTML = result.data.content
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
         }
       })
-    }
-  )
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(https://res.cloudinary.com/bravey/image/upload/v1582873485/wallroom-2880x1620-bg-3cad5d2.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">BraveY</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">BraveY</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2019-04-25-GCC%E7%9A%84%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9.html" title="GCC的编译选项">     <img class="post_bg" src="https://images.pexels.com/photos/640809/pexels-photo-640809.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="GCC的编译选项"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-04-25-GCC%E7%9A%84%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9.html" title="GCC的编译选项">GCC的编译选项</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-04-25T06:18:49.000Z" title="发表于 2019-04-25 14:18:49">2019-04-25</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/Linux/">Linux</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/gcc/">gcc</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/make/">make</a></span></div><div class="content">GCC的编译选项Makefile 中的gcc的编译选项有很多，因此学习记录下。
+
+这些选项在Makefile文件中常用CFLAGS（gcc 用在c语言的编译），CXXFLAGS（g++用在c++的编译）来表示。
+程序编译的过程gcc 与 g++ 分别是 gnu 的 c &amp; c++ 编译器 gcc/g++ 在执行编译工作的时候，总共需要4步：
+
+1、预处理,生成 .i 的文件[预处理器cpp]
+2、将预处理后的文件转换成汇编语言, 生成文件 .s [编译器egcs]
+3、将汇编代码变为目标代码(机器代码)生成 .o 的obj文件[汇编器as]
+4、连接目标代码, 生成可执行程序 [链接器ld]
+
+选项
+
+
+
+选项
+释义
+
+
+
+
+-c
+只激活预处理,编译,和汇编。只把程序做成obj文件，不是可执行文件（因为没有链接,有的程序中也没有main入口）
+
+
+-S
+只激活预处理和编译，就是只把文件编译成为汇编代码。生成.s的汇编代码
+
+
+-E
+只激活预处理,不生成文件,你需要把它重定向到一个输出文件里面 例子：gcc -E hello.c &gt; pianoapan.txt
+
+
+-o
+指 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2019-04-10-Linux-shell%E8%84%9A%E6%9C%AC%E8%AE%A1%E7%AE%97%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4.html" title="Linux shell脚本计算运行时间">     <img class="post_bg" src="https://images.pexels.com/photos/46253/mt-fuji-sea-of-clouds-sunrise-46253.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux shell脚本计算运行时间"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-04-10-Linux-shell%E8%84%9A%E6%9C%AC%E8%AE%A1%E7%AE%97%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4.html" title="Linux shell脚本计算运行时间">Linux shell脚本计算运行时间</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-04-10T15:27:45.000Z" title="发表于 2019-04-10 23:27:45">2019-04-10</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/Linux/">Linux</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/shell/">shell</a></span></div><div class="content">Linux shell脚本计算运行时间这个功能经常用但是，总是现用现查，很麻烦。
+
+代码
+123456789101112131415161718192021222324252627282930313233343536# filename: msec_diff.shfunction timediff() &#123;# time format:date +&quot;%s.%N&quot;, such as 1502758855.907197692    start_time=$1    end_time=$2        start_s=$&#123;start_time%.*&#125;    start_nanos=$&#123;start_time#*.&#125;    end_s=$&#123;end_time%.*&#125;    end_nanos=$&#123;end_time#*.&#125;        # end_nanos &gt; start_nanos?     # Another way, the time part may start with 0 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2019-04-03-gdb-%E8%B0%83%E8%AF%95.html" title="gdb 调试">     <img class="post_bg" src="https://images.pexels.com/photos/868097/pexels-photo-868097.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="gdb 调试"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-04-03-gdb-%E8%B0%83%E8%AF%95.html" title="gdb 调试">gdb 调试</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-04-03T08:29:00.000Z" title="发表于 2019-04-03 16:29:00">2019-04-03</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/Linux/">Linux</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/gdb/">gdb</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%B7%A5%E5%85%B7/">工具</a></span></div><div class="content">gdb调试以前学习过，用得少，又忘记了，现在刚好为了调试redis 的dict 模块，所以再次记录。
+
+使用摘自参考&lt;https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/gdb.html&gt;。 主要是补充实例
+对C/C++程序的调试，需要在编译前就加上-g选项:
+1$g++ -g hello.cpp -o hello
+自己的Makefile里面修改成：
+12dict-benchmark: dict.c sds.c siphash.c        $(CC) -g -o $@ $^
+但是好像没加之前也是可以直接就使用gdb  了？ 不知道为什么（可以使用但是出错不会显示所在的行，相当于没有调试）
+调试可执行文件:
+1$gdb &lt;program&gt;
+program也就是你的执行文件，一般在当前目录下。
+调试core文件(core是程序非法执行后core dump后产生的文件):
+12$gdb &lt;program&gt; &lt;core dump file&gt;$gdb program core.111 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2019-04-01-Docker-%E5%AD%A6%E4%B9%A0.html" title="Docker 学习">     <img class="post_bg" src="https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Docker 学习"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-04-01-Docker-%E5%AD%A6%E4%B9%A0.html" title="Docker 学习">Docker 学习</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-04-01T06:18:41.000Z" title="发表于 2019-04-01 14:18:41">2019-04-01</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/Linux/">Linux</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/docker/">docker</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%AE%B9%E5%99%A8/">容器</a></span></div><div class="content">Docker 学习之前一直听说容器可以免去配置环境的麻烦，但是一直没有机会接触，现在刚好有机会可以使用。
+
+三大基础镜像、容器、仓库
+类比的话：镜像是类（iso），容器是实例（操作系统），仓库类似于git的仓库。
+镜像的构建是一层层的继承而来的，镜像和容器都是文件，容器退出的时候容器文件依然存在。除非手动使用-rm指定，才会删除。
+从仓库下载镜像，加载镜像后进入容器，容器保存后构成镜像，镜像推送至仓库。
+命令加载镜像，进入一个新的容器：docker run --name mydocker image:tag command
+实例 摘自：https://yeasy.gitbooks.io/docker_practice/image/pull.html
+123docker run -it --rm \    ubuntu:18.04 \    bash
+docker run 就是运行容器的命令 从镜像中新建一个容器
+
+-it：这是两个参数，一个是 -i：交互式操作，一个是 -t 终端。我们这里打算进入 bash 执行一些命令并查看返回结果，因此我们需要交互式终端。
+--rm：这个参数是说容 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2019-03-31-%E8%AE%A1%E7%AE%97Linux%E7%B3%BB%E7%BB%9F%E7%9A%84CPU%E5%88%A9%E7%94%A8%E7%8E%87.html" title="计算Linux系统的CPU利用率">     <img class="post_bg" src="https://images.pexels.com/photos/351448/pexels-photo-351448.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="计算Linux系统的CPU利用率"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-03-31-%E8%AE%A1%E7%AE%97Linux%E7%B3%BB%E7%BB%9F%E7%9A%84CPU%E5%88%A9%E7%94%A8%E7%8E%87.html" title="计算Linux系统的CPU利用率">计算Linux系统的CPU利用率</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-03-31T03:44:01.000Z" title="发表于 2019-03-31 11:44:01">2019-03-31</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/Linux/">Linux</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/Linux/">Linux</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/shell/">shell</a></span></div><div class="content">计算Linux系统的CPU利用率通过读取系统的/proc/stat 信息来计算CPU的利用率
+
+cpu 信息的读取摘自参考博客：https://blog.csdn.net/x_i_y_u_e/article/details/50684508
+在Linux/Unix下，CPU利用率分为用户态，系统态和空闲态，分别表示CPU处于用户态执行的时间，系统内核执行的时间，和空闲系统进程执行的时间。平时所说的CPU利用率是指：CPU执行非系统空闲进程的时间 / CPU总的执行时间。
+在Linux的内核中，有一个全局变量：Jiffies。 Jiffies代表时间。它的单位随硬件平台的不同而不同。系统里定义了一个常数HZ，代表每秒种最小时间间隔的数目。这样jiffies的单位就是1/HZ。Intel平台jiffies的单位是1/100秒，这就是系统所能分辨的最小时间间隔了。每个CPU时间片，Jiffies都要加1。 CPU的利用率就是用执行用户态+系统态的Jiffies除以总的Jifffies来表示。
+在Linux系统中，可以用/proc/stat文件来计算cpu的利用率(详细的解释可参考：http: ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2019-03-29-Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%AC%AC8%E7%AB%A0-%E5%AF%B9%E8%B1%A1.html" title="Redis设计与实现读书笔记——第8章 对象">     <img class="post_bg" src="https://images.pexels.com/photos/164041/pexels-photo-164041.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Redis设计与实现读书笔记——第8章 对象"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-03-29-Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%AC%AC8%E7%AB%A0-%E5%AF%B9%E8%B1%A1.html" title="Redis设计与实现读书笔记——第8章 对象">Redis设计与实现读书笔记——第8章 对象</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-03-29T01:28:19.000Z" title="发表于 2019-03-29 09:28:19">2019-03-29</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/redis/">redis</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/object/">object</a></span></div><div class="content">Redis设计与实现读书笔记——第8章 对象Redis 并没有直接使用sds、dict等数据结构来实现键值对数据库， 而是基于这些数据结构创建了一个对象系统， 这个系统包含字符串对象、列表对象、哈希对象、集合对象和有序集合对象这五种类型的对象， 每种对象都用到了至少一种前面所介绍的数据结构。
+
+简介对象的好处：
+
+根据对象的类型来判断是否可以执行给定的命令。
+针对不同的使用场景， 为对象设置多种不同的数据结构实现， 从而优化对象在不同场景下的使用效率。
+
+对象的特性：
+
+基于引用计数技术的内存回收机制（和java的是否原理相似）
+通过引用计数技术实现对象共享机制，多个键共享同一个对象来节约内存
+带有访问时间记录信息，可以用来删除空转时长较大的键
+
+8.1 对象的类型与编码Redis 使用对象来表示数据库中的键和值，创建一个新的键值对的时候，至少包含两个对象：1. 键对象 2. 值对象
+对象都由一个 redisObject 结构表示，保存数据相关的属性
+123456789101112131415typedef struct redisObject &#123;    // 对象类型    ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2019-03-27-Redis-%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E5%AD%97%E5%85%B8.html" title="Redis 设计与实现读书笔记——第四章 字典">     <img class="post_bg" src="https://images.pexels.com/photos/238622/pexels-photo-238622.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Redis 设计与实现读书笔记——第四章 字典"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-03-27-Redis-%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E5%AD%97%E5%85%B8.html" title="Redis 设计与实现读书笔记——第四章 字典">Redis 设计与实现读书笔记——第四章 字典</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-03-27T02:34:14.000Z" title="发表于 2019-03-27 10:34:14">2019-03-27</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/redis/">redis</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/dict/">dict</a></span></div><div class="content">Redis 设计与实现读书笔记——第四章 字典字典在Redis中应用很广泛，Redis的数据库就是用字典作为底层实现的，对数据库的增删改查操作也是构建在对字典的操作之上的。
+
+简介作用：
+
+数据库底层实现
+哈希键底层实现
+哈希键包含的键值对比较多，或者键值对中的元素都是比较长的字符串时，使用字典来实现。
+
+
+其他功能
+
+4.1 字典的实现字典使用哈希表实现，一个哈希表里面可以有多个哈希表节点，一个哈希表节点就保存了字典中的一个键值对。（python的dict也是使用哈希表实现的）。
+哈希的本质就是预留内存空间，将需要存储的元素计算索引值(通过哈希函数)来确定对应的存储位置。当需要访问的时候可以通过哈希函数直接获得对应的地址。（编译器将变量名与地址做了映射，变量名是地址的别名，哈希则是将键与地址做了映射（通过哈希函数），大大提高了访问的效率。访问任何元素都是O（1），感觉是两个层面的映射，有点相似的感觉）。
+4.1.1 哈希表Redis使用的哈希表由dict.h/dictht 结构定义。
+1234567891011typedef struct dictht &#123;    //哈希表 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2019-03-26-%E4%BD%BF%E7%94%A8Travis-CI%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2%E5%8D%9A%E5%AE%A2.html" title="使用Travis-CI自动部署博客">     <img class="post_bg" src="https://images.pexels.com/photos/71104/utah-mountain-biking-bike-biking-71104.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用Travis-CI自动部署博客"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-03-26-%E4%BD%BF%E7%94%A8Travis-CI%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2%E5%8D%9A%E5%AE%A2.html" title="使用Travis-CI自动部署博客">使用Travis-CI自动部署博客</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-03-26T01:52:01.000Z" title="发表于 2019-03-26 09:52:01">2019-03-26</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/Hexo/">Hexo</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/Hexo/">Hexo</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/Travis-CI/">Travis-CI</a></span></div><div class="content">使用Travis-CI自动部署博客因为在github上面存储的是编译好的html代码，不是hexo博客中的博客源文件，所以如果没有备份源文件的话，丢失了源文件（包括md,一堆配置文件）后就不能继续更新博客了，而且也不能多端部署Hexo。网上看到可以使用Travis-CI来自动部署，同时解决了博客源文件的备份问题。
+
+新建hexo分支来保存源文件新建分支直接在对应的github.io项目上的branch 按钮处点击新建分支 hexo。
+官方文档https://help.github.com/en/articles/setting-the-default-branch 
+12# 克隆项目到本地&gt; git clone https:&#x2F;&#x2F;github.com&#x2F;BraveY&#x2F;BraveY.github.io.git
+设置默认分支参照官方文档设置https://help.github.com/en/articles/setting-the-default-branch
+修改推送hexo分支现将原来的文件BraveY.github.io 修改为BraveY ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/Redis%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E2%80%94%E2%80%94SDS/2019-03-22-Redis%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E2%80%94%E2%80%94SDS.html" title="Redis源码阅读——SDS">     <img class="post_bg" src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Redis源码阅读——SDS"></a></div><div class="recent-post-info"><a class="article-title" href="/Redis%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E2%80%94%E2%80%94SDS/2019-03-22-Redis%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E2%80%94%E2%80%94SDS.html" title="Redis源码阅读——SDS">Redis源码阅读——SDS</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-03-22T07:58:45.000Z" title="发表于 2019-03-22 15:58:45">2019-03-22</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/">源码阅读</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/redis/">redis</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/">源码阅读</a></span></div><div class="content">Redis源码阅读——SDS参考Redis设计与实现 以及网上博客阅读Redis源码。
+
+SDS相关知识点见读书笔记。
+创建和销毁为了能够对sds进行相关API的测试，因此把sds模块单独提出来。阅读Redis的Makefile发现，编译sds模块需要的源文件包括sds.c, sds.h zmalloc.c 
+123test-sds: sds.c sds.h        $(REDIS_CC) sds.c zmalloc.c -DSDS_TEST_MAIN $(FINAL_LIBS) -o &#x2F;tmp&#x2F;sds_test        &#x2F;tmp&#x2F;sds_test
+但是实际编译后会发现会报很多函数未定义的错。原因是redis源码里面sds的内存分配、释放、重分配这些函数是封装成zmalloc,zfee这些函数的，只单纯的把zmalloc.c提取出来是远远不够的。后面发现redis的作者已经把sds给单独提出来了。包括三个源文件sds.c,sds.h,sdsalloc.h 因此执行如下操作即可单独把redis的sds模块提取出来。
+提取sds模块
+新建 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2019-03-20-Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="Redis设计与实现读书笔记——第二章SDS">     <img class="post_bg" src="https://images.pexels.com/photos/640809/pexels-photo-640809.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Redis设计与实现读书笔记——第二章SDS"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-03-20-Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="Redis设计与实现读书笔记——第二章SDS">Redis设计与实现读书笔记——第二章SDS</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-03-20T07:20:23.000Z" title="发表于 2019-03-20 15:20:23">2019-03-20</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/redis/">redis</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/">源码阅读</a></span></div><div class="content">Redis设计与实现读书笔记——第二章为了做Redis相关实验，在网上粗略看了Redis设计与实现的电子版，感觉收获很多，但是因为是旧版，所以买了第二版，重读第二次。
+
+第二章 简单动态字符串简介
+字符串值的键值对在底层都是由SDS实现的。
+sds的功能：
+存储字符串值
+用作缓冲区
+AOF模块缓冲区
+客户端状态的输入缓冲区
+
+
+
+
+
+2.1 SDS的定义文件：sds.h/sdshdr 结构体 
+书中的为3.0版本，4.0版本有较大改动。
+version: redis-4.02 
+参考：https://www.cnblogs.com/chenpingzhao/p/7292182.html
+https://www.codesheep.cn/2018/08/09/Redis%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%B1%BB%E5%9E%8B%E5%86%85%E9%83%A8%E7%BC%96%E7%A0%81%E5%89%96%E6%9E%90/
+123456789101112131415161718192021222324252627282930313233type ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/3/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">BraveY</div><div class="author-info__description">今日事，今日毕</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记"><img src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C专家编程读书笔记"/></a><div class="content"><a class="title" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记">C专家编程读书笔记</a><time datetime="2021-03-18T04:59:02.000Z" title="发表于 2021-03-18 12:59:02">2021-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱"><img src="https://images.pexels.com/photos/531602/pexels-photo-531602.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C语言传递指针参数的陷阱"/></a><div class="content"><a class="title" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱">C语言传递指针参数的陷阱</a><time datetime="2020-12-12T13:39:57.000Z" title="发表于 2020-12-12 21:39:57">2020-12-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-07-14-Measuring-and-Benchmarking-Power-Consumption-and-Energy-Efficiency.html" title="Measuring and Benchmarking Power Consumption and Energy Efficiency"><img src="https://images.pexels.com/photos/164041/pexels-photo-164041.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Measuring and Benchmarking Power Consumption and Energy Efficiency"/></a><div class="content"><a class="title" href="/2020-07-14-Measuring-and-Benchmarking-Power-Consumption-and-Energy-Efficiency.html" title="Measuring and Benchmarking Power Consumption and Energy Efficiency">Measuring and Benchmarking Power Consumption and Energy Efficiency</a><time datetime="2020-07-14T08:05:52.000Z" title="发表于 2020-07-14 16:05:52">2020-07-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-05-12-%E4%BD%BF%E7%94%A8LSTM+Pytorch%E5%AF%B9%E7%94%B5%E5%BD%B1%E8%AF%84%E8%AE%BA%E8%BF%9B%E8%A1%8C%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB.html" title="使用LSTM+Pytorch对电影评论进行情感分类"><img src="https://images.pexels.com/photos/452780/pexels-photo-452780.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用LSTM+Pytorch对电影评论进行情感分类"/></a><div class="content"><a class="title" href="/2020-05-12-%E4%BD%BF%E7%94%A8LSTM+Pytorch%E5%AF%B9%E7%94%B5%E5%BD%B1%E8%AF%84%E8%AE%BA%E8%BF%9B%E8%A1%8C%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB.html" title="使用LSTM+Pytorch对电影评论进行情感分类">使用LSTM+Pytorch对电影评论进行情感分类</a><time datetime="2020-05-12T14:48:08.000Z" title="发表于 2020-05-12 22:48:08">2020-05-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-05-05-%E8%8C%83%E9%97%B2%E5%86%99%E8%AF%97%E5%99%A8%E4%B9%8B%E7%94%A8LSTM+Pytorch%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%86%99%E8%AF%97.html" title="范闲写诗器之用LSTM+Pytorch实现自动写诗"><img src="https://images.pexels.com/photos/390051/surfer-wave-sunset-the-indian-ocean-390051.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="范闲写诗器之用LSTM+Pytorch实现自动写诗"/></a><div class="content"><a class="title" href="/2020-05-05-%E8%8C%83%E9%97%B2%E5%86%99%E8%AF%97%E5%99%A8%E4%B9%8B%E7%94%A8LSTM+Pytorch%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%86%99%E8%AF%97.html" title="范闲写诗器之用LSTM+Pytorch实现自动写诗">范闲写诗器之用LSTM+Pytorch实现自动写诗</a><time datetime="2020-05-05T07:15:15.000Z" title="发表于 2020-05-05 15:15:15">2020-05-05</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline"><i class="fas fa-folder-open"></i><span>分类</span></div><ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Hexo/"><span class="card-category-list-name">Hexo</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Linux/"><span class="card-category-list-name">Linux</span><span class="card-category-list-count">12</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/algorithm/"><span class="card-category-list-name">algorithm</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/deploy/"><span class="card-category-list-name">deploy</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%85%B6%E4%BB%96/"><span class="card-category-list-name">其他</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/"><span class="card-category-list-name">数据挖掘</span><span class="card-category-list-count">7</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">机器学习</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">深度学习</span><span class="card-category-list-count">5</span></a></li>
+            <li class="card-category-list-item more is-center"><a class="card-category-list-link-more" href="/categories/">
+                <span>查看更多</span><i class="fas fa-angle-right"></i></a></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Apriori/" style="font-size: 1.1em; color: #999">Apriori</a> <a href="/tags/BIOS/" style="font-size: 1.1em; color: #999">BIOS</a> <a href="/tags/C/" style="font-size: 1.1em; color: #999">C</a> <a href="/tags/CNN/" style="font-size: 1.1em; color: #999">CNN</a> <a href="/tags/Clementine/" style="font-size: 1.1em; color: #999">Clementine</a> <a href="/tags/C%E8%AF%AD%E8%A8%80/" style="font-size: 1.2em; color: #999da3">C语言</a> <a href="/tags/FP-Growth/" style="font-size: 1.1em; color: #999">FP-Growth</a> <a href="/tags/Hexo/" style="font-size: 1.1em; color: #999">Hexo</a> <a href="/tags/K-Means/" style="font-size: 1.1em; color: #999">K-Means</a> <a href="/tags/LSTM/" style="font-size: 1.3em; color: #99a1ac">LSTM</a> <a href="/tags/Linux/" style="font-size: 1.4em; color: #99a5b6">Linux</a> <a href="/tags/MNIST/" style="font-size: 1.1em; color: #999">MNIST</a> <a href="/tags/Makefile/" style="font-size: 1.1em; color: #999">Makefile</a> <a href="/tags/OJ/" style="font-size: 1.1em; color: #999">OJ</a> <a href="/tags/OLAPS/" style="font-size: 1.1em; color: #999">OLAPS</a> <a href="/tags/Prophet/" style="font-size: 1.1em; color: #999">Prophet</a> <a href="/tags/Pytorch/" style="font-size: 1.3em; color: #99a1ac">Pytorch</a> <a href="/tags/SPEC-SERT/" style="font-size: 1.1em; color: #999">SPEC SERT</a> <a href="/tags/SVM/" style="font-size: 1.1em; color: #999">SVM</a> <a href="/tags/Travis-CI/" style="font-size: 1.1em; color: #999">Travis-CI</a> <a href="/tags/benchmark/" style="font-size: 1.1em; color: #999">benchmark</a> <a href="/tags/bigdatabench/" style="font-size: 1.1em; color: #999">bigdatabench</a> <a href="/tags/c/" style="font-size: 1.1em; color: #999">c++</a> <a href="/tags/ceph/" style="font-size: 1.1em; color: #999">ceph</a> <a href="/tags/command/" style="font-size: 1.2em; color: #999da3">command</a> <a href="/tags/dict/" style="font-size: 1.1em; color: #999">dict</a> <a href="/tags/docker/" style="font-size: 1.2em; color: #999da3">docker</a> <a href="/tags/gcc/" style="font-size: 1.1em; color: #999">gcc</a> <a href="/tags/gdb/" style="font-size: 1.1em; color: #999">gdb</a> <a href="/tags/graph/" style="font-size: 1.1em; color: #999">graph</a> <a href="/tags/hexo/" style="font-size: 1.1em; color: #999">hexo</a> <a href="/tags/ipv6/" style="font-size: 1.1em; color: #999">ipv6</a> <a href="/tags/make/" style="font-size: 1.2em; color: #999da3">make</a> <a href="/tags/next/" style="font-size: 1.1em; color: #999">next</a> <a href="/tags/nlp/" style="font-size: 1.1em; color: #999">nlp</a> <a href="/tags/object/" style="font-size: 1.1em; color: #999">object</a> <a href="/tags/redis/" style="font-size: 1.5em; color: #99a9bf">redis</a> <a href="/tags/shadowsocks/" style="font-size: 1.1em; color: #999">shadowsocks</a> <a href="/tags/shell/" style="font-size: 1.3em; color: #99a1ac">shell</a> <a href="/tags/%E4%BD%99%E5%BC%A6%E7%9B%B8%E4%BC%BC%E5%BA%A6/" style="font-size: 1.1em; color: #999">余弦相似度</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/03/"><span class="card-archive-list-date">三月 2021</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/12/"><span class="card-archive-list-date">十二月 2020</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/07/"><span class="card-archive-list-date">七月 2020</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/05/"><span class="card-archive-list-date">五月 2020</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/04/"><span class="card-archive-list-date">四月 2020</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/03/"><span class="card-archive-list-date">三月 2020</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/02/"><span class="card-archive-list-date">二月 2020</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2019/12/"><span class="card-archive-list-date">十二月 2019</span><span class="card-archive-list-count">4</span></a></li><li class="card-archive-list-item more is-center"><a class="card-archive-list-link-more" href="/archives/">
+              <span>查看更多</span><i class="fas fa-angle-right"  ></i></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">50</div></div><div class="webinfo-item"><div class="item-name">已运行时间 :</div><div class="item-count" id="runtimeshow" data-publishDate="2021-08-14T12:39:07.133Z"></div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">92.6k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2021-08-14T12:39:07.188Z"></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By BraveY</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>function subtitleType () {
+  getScript('https://sdk.jinrishici.com/v2/browser/jinrishici.js').then(() => {
+    jinrishici.load(function (result) {
+      if (true) {
+        var sub = "给时光以生命，而不是给生命以时光,To the time to life&#44;rather than to life in time".length == 0 ? new Array() : "给时光以生命，而不是给生命以时光,To the time to life&#44;rather than to life in time".split(',')
+        var content = result.data.content
+        var both = sub.unshift(content)
+        var typed = new Typed('#subtitle', {
+          strings: sub,
+          startDelay: 300,
+          typeSpeed: 150,
+          loop: true,
+          backSpeed: 50,
+        })
+      } else {
+        document.getElementById('subtitle').innerHTML = result.data.content
+      }
+    })
+  })
 }
-window.addEventListener('load', subtitleType)
-</script></body></html>
+
+if (true) {
+  if (typeof Typed === 'function') {
+    subtitleType()
+  } else {
+    getScript('https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js').then(subtitleType)
+  }
+} else {
+  subtitleType()
+}
+</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

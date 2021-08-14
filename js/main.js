@@ -1,364 +1,203 @@
-$(function () {
-  const isSnackbar = GLOBAL_CONFIG.Snackbar !== undefined
-  const $pageHead = $('#page-header')
-  const $rightside = $('#rightside')
-  const $body = $('body')
+document.addEventListener('DOMContentLoaded', function () {
+  let blogNameWidth = document.getElementById('site-name').offsetWidth
+  const $menusEle = document.querySelector('#menus .menus_items')
+  let menusWidth = $menusEle && $menusEle.offsetWidth
+  const $searchEle = document.querySelector('#search-button')
+  let searchWidth = $searchEle && $searchEle.offsetWidth
+  let detectFontSizeChange = false
 
-  /**
-   * 當menu過多時，自動適配，避免UI錯亂
-    * 傳入 1 sidebar打開時
-   * 傳入 2 正常狀態下
-   */
-  var blogNameWidth = $('#blog_name').width()
-  var menusWidth = $('.menus').width()
-  var sidebarWidth = $('#sidebar').width()
-
-  function isAdjust (n) {
-    var t
-    if (n === 1) {
-      t = blogNameWidth + menusWidth > $pageHead.width() - sidebarWidth - 20
-    } else if (n === 2) {
-      t = blogNameWidth + menusWidth > $pageHead.width() - 20
+  const adjustMenu = () => {
+    if (detectFontSizeChange) {
+      blogNameWidth = document.getElementById('site-name').offsetWidth
+      menusWidth = $menusEle && $menusEle.offsetWidth
+      searchWidth = $searchEle && $searchEle.offsetWidth
+      detectFontSizeChange = false
     }
+    const $nav = document.getElementById('nav')
+    let t
+    if (window.innerWidth < 768) t = true
+    else t = blogNameWidth + menusWidth + searchWidth > $nav.offsetWidth - 120
 
-    if (t) headerAdjust()
-    else headerAdjustBack()
-  }
-
-  function headerAdjust () {
-    $pageHead.find('.toggle-menu').addClass('is-visible-inline')
-    $pageHead.find('.menus_items').addClass('is_invisible')
-    $pageHead.find('#search_button span').addClass('is_invisible')
-  }
-
-  function headerAdjustBack () {
-    $pageHead.find('.toggle-menu').removeClass('is-visible-inline')
-    $pageHead.find('.menus_items').removeClass('is_invisible')
-    $pageHead.find('#search_button span').removeClass('is_invisible')
+    if (t) {
+      $nav.classList.add('hide-menu')
+    } else {
+      $nav.classList.remove('hide-menu')
+    }
   }
 
   // 初始化header
-  function initAjust () {
-    if (window.innerWidth < 768) headerAdjust()
-    else isAdjust(2)
+  const initAdjust = () => {
+    adjustMenu()
+    document.getElementById('nav').classList.add('show')
   }
 
-  initAjust()
-  $('#page-header').css({ opacity: '1', animation: 'headerNoOpacity 1s' })
+  // sidebar menus
+  const sidebarFn = () => {
+    const $toggleMenu = document.getElementById('toggle-menu')
+    const $mobileSidebarMenus = document.getElementById('sidebar-menus')
+    const $menuMask = document.getElementById('menu-mask')
+    const $body = document.body
 
-  $(window).on('resize', function () {
-    if ($('#sidebar').hasClass('tocOpenPc') && $pageHead.hasClass('fixed')) {
-      isAdjust(1)
-    } else {
-      initAjust()
-    }
-  })
-
-  /**
-   * windows時 設置主頁top_img 為 fixed
-   */
-  if (GLOBAL_CONFIG_SITE.isHome) {
-    var isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)
-    if (!isSafari && isDesktop()) {
-      $('#nav').css('background-attachment', 'fixed')
-    }
-  }
-
-  /**
-   * 進入post頁sidebar處理
-   */
-  if (GLOBAL_CONFIG_SITE.isPost) {
-    if (window.innerWidth > 1024 && $('#toggle-sidebar').hasClass('on')) {
-      setTimeout(function () {
-        openSidebar()
-      }, 400)
-    }
-  }
-
-  /**
-   * 點擊左下角箭頭,顯示sidebar
-   */
-
-  function closeSidebar () {
-    $('#sidebar').removeClass('tocOpenPc')
-    $('.menus').animate({
-      paddingRight: 0
-    }, 400)
-    $('#body-wrap').animate({
-      paddingLeft: 0
-    }, 400)
-    $('#sidebar').animate({
-      left: '-300px'
-    }, 400)
-    $('#toggle-sidebar').css({
-      transform: 'rotateZ(0deg)',
-      color: '#1F2D3D',
-      opacity: '1'
-    })
-    setTimeout(function () {
-      isAdjust(2)
-    }, 400)
-  }
-
-  function openSidebar () {
-    $('#sidebar').addClass('tocOpenPc')
-    $('.menus').animate({
-      paddingRight: 300
-    }, 400)
-    $('#body-wrap').animate({
-      paddingLeft: 300
-    }, 400)
-    $('#sidebar').animate({
-      left: 0
-    }, 400)
-    $('#toggle-sidebar').css({
-      transform: 'rotateZ(180deg)',
-      color: '#99a9bf',
-      opacity: '1'
-    })
-    var isAdjustTimeCount = window.setInterval(function () {
-      if ($pageHead.hasClass('fixed')) isAdjust(1)
-      else isAdjust(2)
-    }, 100)
-    setTimeout(function () {
-      clearInterval(isAdjustTimeCount)
-    }, 400)
-  }
-
-  $('#toggle-sidebar').on('click', function () {
-    var isOpen = $(this).hasClass('on')
-    isOpen ? $(this).removeClass('on') : $(this).addClass('on')
-    if (isOpen) {
-      closeSidebar()
-    } else {
-      openSidebar()
-    }
-  })
-
-  /**
-   * 手機menu和toc按鈕點擊
-   * 顯示menu和toc的sidebar
-   */
-
-  var $toggleMenu = $('.toggle-menu')
-  var $mobileSidevarMenus = $('#mobile-sidebar-menus')
-  var $mobileTocButton = $('#mobile-toc-button')
-  var $menuMask = $('#menu_mask')
-
-  function openMobileSidebar (name) {
-    sidebarPaddingR()
-    $('body').css('overflow', 'hidden')
-    $menuMask.fadeIn()
-
-    if (name === 'menu') {
-      $toggleMenu.removeClass('close').addClass('open')
-      $mobileSidevarMenus.css('transform', 'translate3d(-100%,0,0)')
-      var $mobileSidevarMenusChild = $mobileSidevarMenus.children()
-      for (let i = 0; i <= $mobileSidevarMenusChild.length; i++) {
-        const duration = i / 5 + 0.2
-        $mobileSidevarMenusChild.eq(i).css('animation', 'sidebarItem ' + duration + 's')
-      }
+    function openMobileSidebar () {
+      btf.sidebarPaddingR()
+      $body.style.overflow = 'hidden'
+      btf.fadeIn($menuMask, 0.5)
+      $mobileSidebarMenus.classList.add('open')
     }
 
-    if (name === 'toc') {
-      $mobileTocButton.removeClass('close').addClass('open')
-      $('#sidebar').addClass('tocOpenMobile')
-      $('#sidebar').css({ transform: 'translate3d(-100%,0,0)', left: '' })
-    }
-  }
-
-  function closeMobileSidebar (name) {
-    $('body').css({ overflow: '', 'padding-right': '' })
-    $menuMask.fadeOut()
-
-    if (name === 'menu') {
-      $toggleMenu.removeClass('open').addClass('close')
-      $mobileSidevarMenus.css('transform', '')
-      $('#mobile-sidebar-menus > div,#mobile-sidebar-menus > hr').css('animation', '')
+    function closeMobileSidebar () {
+      $body.style.overflow = ''
+      $body.style.paddingRight = ''
+      btf.fadeOut($menuMask, 0.5)
+      $mobileSidebarMenus.classList.remove('open')
     }
 
-    if (name === 'toc') {
-      $mobileTocButton.removeClass('open').addClass('close')
-      $('#sidebar').removeClass('tocOpenMobile')
-      $('#sidebar').css({ transform: '' })
-    }
-  }
+    $toggleMenu.addEventListener('click', openMobileSidebar)
 
-  $toggleMenu.on('click', function () {
-    openMobileSidebar('menu')
-  })
-
-  $mobileTocButton.on('click', function () {
-    openMobileSidebar('toc')
-  })
-
-  $menuMask.on('click touchstart', function (e) {
-    if ($toggleMenu.hasClass('open')) {
-      closeMobileSidebar('menu')
-    }
-    if ($mobileTocButton.hasClass('open')) {
-      closeMobileSidebar('toc')
-    }
-  })
-
-  $(window).on('resize', function (e) {
-    if (!$toggleMenu.is(':visible')) {
-      if ($toggleMenu.hasClass('open')) closeMobileSidebar('menu')
-    }
-  })
-
-  const mql = window.matchMedia('(max-width: 1024px)')
-  mql.addListener(function (ev) {
-    if (ev.matches) {
-      if ($('#sidebar').hasClass('tocOpenPc')) closeSidebar()
-    } else {
-      if ($('#toggle-sidebar').hasClass('on')) openSidebar()
-      if ($mobileTocButton.hasClass('open')) closeMobileSidebar('toc')
-    }
-  })
-
-  /**
-   * 首頁top_img底下的箭頭
-   */
-  $('#scroll_down').on('click', function () {
-    scrollTo('#content-inner')
-  })
-
-  /**
-   * BOOKMARK 書簽
-   */
-  $('#bookmark-it').on('click', function () {
-    if (window.sidebar && window.sidebar.addPanel) { // Mozilla Firefox Bookmark
-      window.sidebar.addPanel(document.title, window.location.href, '')
-    } else if (window.external && ('AddFavorite' in window.external)) { // IE Favorite
-      window.external.AddFavorite(location.href, document.title)
-    } else if (window.opera && window.print) { // Opera Hotlist
-      this.title = document.title
-      return true
-    } else { // webkit - safari/chrome
-      if (isSnackbar) {
-        var bookmarkText = GLOBAL_CONFIG.Snackbar.bookmark.message_prev + ' ' + (navigator.userAgent.toLowerCase().indexOf('mac') !== -1 ? 'Command/Cmd' : 'CTRL') + '+ D ' + GLOBAL_CONFIG.Snackbar.bookmark.message_next + '.'
-        snackbarShow(bookmarkText)
-      } else {
-        alert(GLOBAL_CONFIG.bookmark.message_prev + ' ' + (navigator.userAgent.toLowerCase().indexOf('mac') !== -1 ? 'Command/Cmd' : 'CTRL') + '+ D ' + GLOBAL_CONFIG.bookmark.message_next + '.')
-      }
-    }
-  })
-
-  /**
-   * 代碼
-   * 只適用於Hexo默認的代碼渲染
-   */
-  const $figureHighlight = $('figure.highlight')
-
-  if ($figureHighlight.length) {
-    const isHighlightCopy = GLOBAL_CONFIG.highlightCopy
-    const isHighlightLang = GLOBAL_CONFIG.highlightLang
-    const isHighlightShrink = GLOBAL_CONFIG.highlightShrink
-
-    if (isHighlightCopy || isHighlightLang || isHighlightShrink !== 'none') {
-      $figureHighlight.wrap('<div class="code-area-wrap"></div>').before('<div class="highlight-tools"></div>')
-    }
-
-    /**
-   * 代碼收縮
-   */
-    const $highlightTools = $('.highlight-tools')
-    if (isHighlightShrink === 'true') {
-      $highlightTools.append('<i class="fa fa-angle-down code-expand code-closed" aria-hidden="true"></i>')
-    } else if (isHighlightShrink === 'false') {
-      $highlightTools.append('<i class="fa fa-angle-down code-expand" aria-hidden="true"></i>')
-    }
-
-    $(document).on('click', '.highlight-tools >.code-expand', function () {
-      var $table = $(this).parent().next()
-      if ($(this).hasClass('code-closed')) {
-        $table.css('display', 'block')
-        $(this).removeClass('code-closed')
-      } else {
-        $table.css('display', 'none')
-        $(this).addClass('code-closed')
+    $menuMask.addEventListener('click', e => {
+      if ($mobileSidebarMenus.classList.contains('open')) {
+        closeMobileSidebar()
       }
     })
 
-    /**
-    * 代碼語言
-  */
-    if (isHighlightLang) {
-      var langNameIndex, langName
-      $figureHighlight.each(function () {
-        langNameIndex = langName = $(this).attr('class').split(' ')[1]
-        if (langNameIndex === 'plain') langName = 'Code'
-        $(this).prev().append('<div class="code-lang">' + langName + '</div>')
-      })
-    }
-    /**
-   * 代碼copy
-   * copy function
-   */
-    if (isHighlightCopy) {
-      $highlightTools.append('<div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i>')
-      var copy = function (text, ctx) {
+    window.addEventListener('resize', e => {
+      if (btf.isHidden($toggleMenu)) {
+        if ($mobileSidebarMenus.classList.contains('open')) closeMobileSidebar()
+      }
+    })
+  }
+
+  /**
+ * 首頁top_img底下的箭頭
+ */
+  const scrollDownInIndex = () => {
+    const $scrollDownEle = document.getElementById('scroll-down')
+    $scrollDownEle && $scrollDownEle.addEventListener('click', function () {
+      btf.scrollToDest(document.getElementById('content-inner').offsetTop, 300)
+    })
+  }
+
+  /**
+ * 代碼
+ * 只適用於Hexo默認的代碼渲染
+ */
+  const addHighlightTool = function () {
+    const isHighlightCopy = GLOBAL_CONFIG.highlight.highlightCopy
+    const isHighlightLang = GLOBAL_CONFIG.highlight.highlightLang
+    const isHighlightShrink = GLOBAL_CONFIG_SITE.isHighlightShrink
+    const isShowTool = isHighlightCopy || isHighlightLang || isHighlightShrink !== undefined
+    const $figureHighlight = GLOBAL_CONFIG.highlight.plugin === 'highlighjs' ? document.querySelectorAll('figure.highlight') : document.querySelectorAll('pre[class*="language-"]')
+
+    if (isShowTool && $figureHighlight.length) {
+      const isPrismjs = GLOBAL_CONFIG.highlight.plugin === 'prismjs'
+
+      let highlightShrinkEle = ''
+      let highlightCopyEle = ''
+      const highlightShrinkClass = isHighlightShrink === true ? 'closed' : ''
+
+      if (isHighlightShrink !== undefined) {
+        highlightShrinkEle = `<i class="fas fa-angle-down expand ${highlightShrinkClass}"></i>`
+      }
+
+      if (isHighlightCopy) {
+        highlightCopyEle = '<div class="copy-notice"></div><i class="fas fa-paste copy-button"></i>'
+      }
+
+      const copy = (text, ctx) => {
         if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
-          try {
-            document.execCommand('copy') // Security exception may be thrown by some browsers.
-            if (isSnackbar) {
-              snackbarShow(GLOBAL_CONFIG.copy.success)
-            } else {
-              $(ctx).prev('.copy-notice')
-                .text(GLOBAL_CONFIG.copy.success)
-                .animate({
-                  opacity: 1,
-                  right: 30
-                }, 450, function () {
-                  setTimeout(function () {
-                    $(ctx).prev('.copy-notice').animate({
-                      opacity: 0,
-                      right: 0
-                    }, 650)
-                  }, 400)
-                })
-            }
-          } catch (ex) {
-            if (isSnackbar) {
-              snackbarShow(GLOBAL_CONFIG.copy.success)
-            } else {
-              $(ctx).prev('.copy-notice')
-                .text(GLOBAL_CONFIG.copy.error)
-                .animate({
-                  opacity: 1,
-                  right: 30
-                }, 650, function () {
-                  setTimeout(function () {
-                    $(ctx).prev('.copy-notice').animate({
-                      opacity: 0,
-                      right: 0
-                    }, 650)
-                  }, 400)
-                })
-              return false
-            }
+          document.execCommand('copy')
+          if (GLOBAL_CONFIG.Snackbar !== undefined) {
+            btf.snackbarShow(GLOBAL_CONFIG.copy.success)
+          } else {
+            const prevEle = ctx.previousElementSibling
+            prevEle.innerText = GLOBAL_CONFIG.copy.success
+            prevEle.style.opacity = 1
+            setTimeout(() => { prevEle.style.opacity = 0 }, 700)
           }
         } else {
-          if (isSnackbar) {
-            snackbarShow(GLOBAL_CONFIG.copy.noSupport)
+          if (GLOBAL_CONFIG.Snackbar !== undefined) {
+            btf.snackbarShow(GLOBAL_CONFIG.copy.noSupport)
           } else {
-            $(ctx).prev('.copy-notice').text(GLOBAL_CONFIG.copy.noSupport)
+            ctx.previousElementSibling.innerText = GLOBAL_CONFIG.copy.noSupport
           }
         }
       }
 
       // click events
-      $(document).on('click', '.highlight-tools>.fa-clipboard', function () {
-        var selection = window.getSelection()
-        var range = document.createRange()
-        range.selectNodeContents($(this).parent().next().find('.code pre')[0])
+      const highlightCopyFn = (ele) => {
+        const $buttonParent = ele.parentNode
+        $buttonParent.classList.add('copy-true')
+        const selection = window.getSelection()
+        const range = document.createRange()
+        if (isPrismjs) range.selectNodeContents($buttonParent.querySelectorAll('pre code')[0])
+        else range.selectNodeContents($buttonParent.querySelectorAll('table .code pre')[0])
         selection.removeAllRanges()
         selection.addRange(range)
-        var text = selection.toString()
-        copy(text, this)
+        const text = selection.toString()
+        copy(text, ele.lastChild)
         selection.removeAllRanges()
-      })
+        $buttonParent.classList.remove('copy-true')
+      }
+
+      const highlightShrinkFn = (ele) => {
+        const $nextEle = [...ele.parentNode.children].slice(1)
+        ele.firstChild.classList.toggle('closed')
+        if (btf.isHidden($nextEle[0])) {
+          $nextEle.forEach(e => { e.style.display = 'block' })
+        } else {
+          $nextEle.forEach(e => { e.style.display = 'none' })
+        }
+      }
+
+      const highlightToolsFn = function (e) {
+        const $target = e.target.classList
+        if ($target.contains('expand')) highlightShrinkFn(this)
+        else if ($target.contains('copy-button')) highlightCopyFn(this)
+      }
+
+      const createEle = () => {
+        const newEle = document.createElement('div')
+        newEle.className = `highlight-tools ${highlightShrinkClass}`
+        newEle.addEventListener('click', highlightToolsFn)
+        return newEle
+      }
+
+      if (isHighlightLang) {
+        if (isPrismjs) {
+          $figureHighlight.forEach(function (item) {
+            const langName = item.getAttribute('data-language') !== undefined ? item.getAttribute('data-language') : 'Code'
+            const highlightLangEle = `<div class="code-lang">${langName}</div>`
+            btf.wrap(item, 'figure', '', 'highlight')
+            const newEle = createEle()
+            newEle.innerHTML = highlightShrinkEle + highlightLangEle + highlightCopyEle
+            item.parentNode.insertBefore(newEle, item)
+          })
+        } else {
+          $figureHighlight.forEach(function (item) {
+            let langName = item.getAttribute('class').split(' ')[1]
+            if (langName === 'plain' || langName === undefined) langName = 'Code'
+            const highlightLangEle = `<div class="code-lang">${langName}</div>`
+            const newEle = createEle()
+            newEle.innerHTML = highlightShrinkEle + highlightLangEle + highlightCopyEle
+            item.insertBefore(newEle, item.firstChild)
+          })
+        }
+      } else {
+        if (isPrismjs) {
+          $figureHighlight.forEach(function (item) {
+            btf.wrap(item, 'figure', '', 'highlight')
+            const newEle = createEle()
+            newEle.innerHTML = highlightShrinkEle + highlightCopyEle
+            item.parentNode.insertBefore(newEle, item)
+          })
+        } else {
+          $figureHighlight.forEach(function (item) {
+            const newEle = createEle()
+            newEle.innerHTML = highlightShrinkEle + highlightCopyEle
+            item.insertBefore(newEle, item.firstChild)
+          })
+        }
+      }
     }
   }
 
@@ -366,411 +205,633 @@ $(function () {
  * PhotoFigcaption
  */
   function addPhotoFigcaption () {
-    var images = $('#article-container img')
-    images.each(function (i, o) {
-      var $this = $(o)
-      if ($this.attr('alt')) {
-        var t = $('<div class="img-alt is-center">' + $this.attr('alt') + '</div>')
-        $this.after(t)
+    document.querySelectorAll('#article-container img').forEach(function (item) {
+      const parentEle = item.parentNode
+      if (!parentEle.parentNode.classList.contains('justified-gallery')) {
+        const ele = document.createElement('div')
+        ele.className = 'img-alt is-center'
+        ele.textContent = item.getAttribute('alt')
+        parentEle.insertBefore(ele, item.nextSibling)
       }
     })
   }
-  if (GLOBAL_CONFIG.isPhotoFigcaption) addPhotoFigcaption()
 
   /**
-   * justified-gallery 圖庫排版
-   */
-  var $justifiedGallery = $('.justified-gallery')
-  var isJustifiedGallery = false
-  if ($justifiedGallery.length) {
-    isJustifiedGallery = true
-    var $imgList = $justifiedGallery.find('img')
+ * justified-gallery 圖庫排版
+ * 需要 jQuery
+ */
+
+  let detectJgJsLoad = false
+  const runJustifiedGallery = function (ele) {
+    const $justifiedGallery = $(ele)
+    const $imgList = $justifiedGallery.find('img')
     $imgList.unwrap()
     if ($imgList.length) {
       $imgList.each(function (i, o) {
-        if ($(o).attr('data-src')) $(o).attr('src', $(o).attr('data-src'))
+        if ($(o).attr('data-lazy-src')) $(o).attr('src', $(o).attr('data-lazy-src'))
         $(o).wrap('<div></div>')
       })
     }
-    $('head').append('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css">')
-    loadScript('https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js', function () {
-      initJustifiedGallery($justifiedGallery)
-    })
 
-    var initJustifiedGallery = function (selector) {
-      selector.each(function (i, o) {
-        if ($(this).is(':visible')) {
-          $(this).justifiedGallery({
-            rowHeight: 220,
-            margins: 4
-          })
-        }
+    if (detectJgJsLoad) btf.initJustifiedGallery($justifiedGallery)
+    else {
+      $('head').append(`<link rel="stylesheet" type="text/css" href="${GLOBAL_CONFIG.source.justifiedGallery.css}">`)
+      $.getScript(`${GLOBAL_CONFIG.source.justifiedGallery.js}`, function () {
+        btf.initJustifiedGallery($justifiedGallery)
       })
+      detectJgJsLoad = true
     }
   }
 
   /**
-   * fancybox和 mediumZoom
-   */
+ * fancybox和 mediumZoom
+ */
+  const addFancybox = function (ele) {
+    const runFancybox = (ele) => {
+      ele.each(function (i, o) {
+        const $this = $(o)
+        const lazyloadSrc = $this.attr('data-lazy-src') || $this.attr('src')
+        const dataCaption = $this.attr('alt') || ''
+        $this.wrap(`<a href="${lazyloadSrc}" data-fancybox="group" data-caption="${dataCaption}" class="fancybox"></a>`)
+      })
 
-  var isMediumZoom = GLOBAL_CONFIG.medium_zoom
-  var isFancybox = GLOBAL_CONFIG.fancybox
-  if (isFancybox) {
-    var images = $('#article-container img:not(.gallery-group-img)').not($('a>img'))
-    images.each(function (i, o) {
-      var lazyloadSrc = $(o).attr('data-src') ? $(o).attr('data-src') : $(o).attr('src')
-      $(o).wrap(
-        '<a href="' +
-        lazyloadSrc +
-        '" data-fancybox="group" data-caption="' +
-        $(o).attr('alt') +
-        '" class="fancybox"></a>'
-      )
-    })
+      $().fancybox({
+        selector: '[data-fancybox]',
+        loop: true,
+        transitionEffect: 'slide',
+        protect: true,
+        buttons: ['slideShow', 'fullScreen', 'thumbs', 'close'],
+        hash: false
+      })
+    }
 
-    $().fancybox({
-      selector: '[data-fancybox]',
-      loop: true,
-      transitionEffect: 'slide',
-      protect: true,
-      buttons: ['slideShow', 'fullScreen', 'thumbs', 'close']
-    })
-  } else if (isMediumZoom) {
+    if (typeof $.fancybox === 'undefined') {
+      $('head').append(`<link rel="stylesheet" type="text/css" href="${GLOBAL_CONFIG.source.fancybox.css}">`)
+      $.getScript(`${GLOBAL_CONFIG.source.fancybox.js}`, function () {
+        runFancybox($(ele))
+      })
+    } else {
+      runFancybox($(ele))
+    }
+  }
+
+  const addMediumZoom = () => {
     const zoom = mediumZoom(document.querySelectorAll('#article-container :not(a)>img'))
-    zoom.on('open', function (event) {
-      var photoBg = $(document.documentElement).attr('data-theme') === 'dark' ? '#121212' : '#fff'
+    zoom.on('open', e => {
+      const photoBg = document.documentElement.getAttribute('data-theme') === 'dark' ? '#121212' : '#fff'
       zoom.update({
         background: photoBg
       })
     })
   }
 
-  /**
-   * 滾動處理
-   */
-  var initTop = 0
-  $(window).scroll(function (event) {
-    var currentTop = $(this).scrollTop()
-    var isUp = scrollDirection(currentTop)
-    if (currentTop > 56) {
-      if (isUp) {
-        if ($pageHead.hasClass('visible')) $pageHead.removeClass('visible')
-      } else {
-        if (!$pageHead.hasClass('visible')) $pageHead.addClass('visible')
-      }
-      $pageHead.addClass('fixed')
-      if ($rightside.css('opacity') === '0') {
-        $rightside.css({ opacity: '1', transform: 'translateX(-38px)' })
-      }
-    } else {
-      if (currentTop === 0) {
-        $pageHead.removeClass('fixed').removeClass('visible')
-      }
-      $rightside.css({ opacity: '', transform: '' })
-    }
-  })
+  const jqLoadAndRun = () => {
+    const $fancyboxEle = GLOBAL_CONFIG.lightbox === 'fancybox'
+      ? document.querySelectorAll('#article-container :not(a):not(.gallery-group) > img, #article-container > img')
+      : []
+    const fbLengthNoZero = $fancyboxEle.length > 0
+    const $jgEle = document.querySelectorAll('#article-container .justified-gallery')
+    const jgLengthNoZero = $jgEle.length > 0
 
-  // find the scroll direction
-  function scrollDirection (currentTop) {
-    var result = currentTop > initTop // true is down & false is up
-    initTop = currentTop
-    return result
+    if (jgLengthNoZero || fbLengthNoZero) {
+      btf.isJqueryLoad(() => {
+        jgLengthNoZero && runJustifiedGallery($jgEle)
+        fbLengthNoZero && addFancybox($fancyboxEle)
+      })
+    }
   }
 
   /**
-   * 點擊滾回頂部
-   */
-  $('#go-up').on('click', function () {
-    scrollTo('body')
-  })
+ * 滾動處理
+ */
+  const scrollFn = function () {
+    const $rightside = document.getElementById('rightside')
+    const innerHeight = window.innerHeight + 56
+
+    // 當滾動條小于 56 的時候
+    if (document.body.scrollHeight <= innerHeight) {
+      $rightside.style.cssText = 'opacity: 1; transform: translateX(-38px)'
+      return
+    }
+
+    let initTop = 0
+    let isChatShow = true
+    const $nav = document.getElementById('nav')
+    const isChatBtnHide = typeof chatBtnHide === 'function'
+    const isChatBtnShow = typeof chatBtnShow === 'function'
+    window.addEventListener('scroll', btf.throttle(function (e) {
+      const currentTop = window.scrollY || document.documentElement.scrollTop
+      const isDown = scrollDirection(currentTop)
+      if (currentTop > 56) {
+        if (isDown) {
+          if ($nav.classList.contains('visible')) $nav.classList.remove('visible')
+          if (isChatBtnShow && isChatShow === true) {
+            chatBtnHide()
+            isChatShow = false
+          }
+        } else {
+          if (!$nav.classList.contains('visible')) $nav.classList.add('visible')
+          if (isChatBtnHide && isChatShow === false) {
+            chatBtnShow()
+            isChatShow = true
+          }
+        }
+        $nav.classList.add('fixed')
+        if (window.getComputedStyle($rightside).getPropertyValue('opacity') === '0') {
+          $rightside.style.cssText = 'opacity: 1; transform: translateX(-38px)'
+        }
+      } else {
+        if (currentTop === 0) {
+          $nav.classList.remove('fixed', 'visible')
+        }
+        $rightside.style.cssText = "opacity: ''; transform: ''"
+      }
+
+      if (document.body.scrollHeight <= innerHeight) {
+        $rightside.style.cssText = 'opacity: 1; transform: translateX(-38px)'
+      }
+    }, 200))
+
+    // find the scroll direction
+    function scrollDirection (currentTop) {
+      const result = currentTop > initTop // true is down & false is up
+      initTop = currentTop
+      return result
+    }
+  }
 
   /**
-   *  toc
-   */
-
-  if (GLOBAL_CONFIG_SITE.isPost && GLOBAL_CONFIG_SITE.isSidebar) {
-    $('.toc-child').hide()
+ *  toc
+ */
+  const tocFn = function () {
+    const $cardTocLayout = document.getElementById('card-toc')
+    const $cardToc = $cardTocLayout.getElementsByClassName('toc-content')[0]
+    const $tocLink = $cardToc.querySelectorAll('.toc-link')
+    const $article = document.getElementById('article-container')
 
     // main of scroll
-    $(window).scroll(throttle(function (event) {
-      var currentTop = $(this).scrollTop()
+    window.addEventListener('scroll', btf.throttle(function (e) {
+      const currentTop = window.scrollY || document.documentElement.scrollTop
       scrollPercent(currentTop)
       findHeadPosition(currentTop)
-      autoScrollToc(currentTop)
     }, 100))
 
-    // scroll
-    $('.toc-link').on('click', function (e) {
-      if (window.innerWidth <= 1024) {
-        closeMobileSidebar('toc')
-      } else {
-        e.preventDefault()
-        scrollTo($(this).attr('href'))
+    const scrollPercent = function (currentTop) {
+      const docHeight = $article.clientHeight
+      const winHeight = document.documentElement.clientHeight
+      const headerHeight = $article.offsetTop
+      const contentMath = (docHeight > winHeight) ? (docHeight - winHeight) : (document.documentElement.scrollHeight - winHeight)
+      const scrollPercent = (currentTop - headerHeight) / (contentMath)
+      const scrollPercentRounded = Math.round(scrollPercent * 100)
+      const percentage = (scrollPercentRounded > 100) ? 100 : (scrollPercentRounded <= 0) ? 0 : scrollPercentRounded
+      $cardToc.setAttribute('progress-percentage', percentage)
+    }
+
+    // anchor
+    const isAnchor = GLOBAL_CONFIG.isanchor
+    const updateAnchor = function (anchor) {
+      if (window.history.replaceState && anchor !== window.location.hash) {
+        if (!anchor) anchor = location.pathname
+        window.history.replaceState({}, '', anchor)
+      }
+    }
+
+    const mobileToc = {
+      open: () => {
+        $cardTocLayout.style.cssText = 'animation: toc-open .3s; opacity: 1; right: 45px'
+      },
+
+      close: () => {
+        $cardTocLayout.style.animation = 'toc-close .2s'
+        setTimeout(() => {
+          $cardTocLayout.style.cssText = "opacity:''; animation: ''; right: ''"
+        }, 100)
+      }
+    }
+
+    document.getElementById('mobile-toc-button').addEventListener('click', () => {
+      if (window.getComputedStyle($cardTocLayout).getPropertyValue('opacity') === '0') mobileToc.open()
+      else mobileToc.close()
+    })
+
+    // toc元素點擊
+    $cardToc.addEventListener('click', (e) => {
+      e.preventDefault()
+      const $target = e.target.classList.contains('toc-link')
+        ? e.target
+        : e.target.parentElement
+      btf.scrollToDest(btf.getEleTop(document.getElementById(decodeURI($target.getAttribute('href')).replace('#', ''))), 300)
+      if (window.innerWidth < 900) {
+        mobileToc.close()
       }
     })
 
-    // expand toc-item
-    var expandToc = function ($item) {
-      if ($item.is(':visible')) {
-        return
+    const autoScrollToc = function (item) {
+      const activePosition = item.getBoundingClientRect().top
+      const sidebarScrollTop = $cardToc.scrollTop
+      if (activePosition > (document.documentElement.clientHeight - 100)) {
+        $cardToc.scrollTop = sidebarScrollTop + 150
       }
-      $item.fadeIn(400)
+      if (activePosition < 100) {
+        $cardToc.scrollTop = sidebarScrollTop - 150
+      }
     }
-
-    var scrollPercent = function (currentTop) {
-      var docHeight = $('#article-container').height()
-      var winHeight = $(window).height()
-      var contentMath = (docHeight > winHeight) ? (docHeight - winHeight) : ($(document).height() - winHeight)
-      var scrollPercent = (currentTop) / (contentMath)
-      var scrollPercentRounded = Math.round(scrollPercent * 100)
-      var percentage = (scrollPercentRounded > 100) ? 100
-        : (scrollPercentRounded <= 0) ? 0
-          : scrollPercentRounded
-      $('.progress-num').text(percentage)
-      $('.sidebar-toc__progress-bar').animate({
-        width: percentage + '%'
-      }, 100)
-    }
-
-    // function updateAnchor (anchor) {
-    //   if (window.history.replaceState && anchor !== window.location.hash) {
-    //     window.history.replaceState(null, null, anchor)
-    //   }
-    // }
 
     // find head position & add active class
-    // DOM Hierarchy:
-    // ol.toc > (li.toc-item, ...)
-    // li.toc-item > (a.toc-link, ol.toc-child > (li.toc-item, ...))
-    var findHeadPosition = function (top) {
-    // assume that we are not in the post page if no TOC link be found,
-    // thus no need to update the status
-      if ($('.toc-link').length === 0) {
+    const list = $article.querySelectorAll('h1,h2,h3,h4,h5,h6')
+    let detectItem = ''
+    const findHeadPosition = function (top) {
+      if ($tocLink.length === 0 || top === 0) {
         return false
       }
 
-      var list = $('#article-container').find('h1,h2,h3,h4,h5,h6')
-      var currentId = ''
-      list.each(function () {
-        var head = $(this)
-        if (top > head.offset().top - 25) {
-          currentId = '#' + $(this).attr('id')
+      let currentId = ''
+      let currentIndex = ''
+
+      list.forEach(function (ele, index) {
+        if (top > btf.getEleTop(ele) - 70) {
+          currentId = '#' + encodeURI(ele.getAttribute('id'))
+          currentIndex = index
         }
       })
 
+      if (detectItem === currentIndex) return
+
+      if (isAnchor) updateAnchor(currentId)
+
       if (currentId === '') {
-        $('.toc-link').removeClass('active')
-        $('.toc-child').hide()
+        $cardToc.querySelectorAll('.active').forEach(i => { i.classList.remove('active') })
+        detectItem = currentIndex
+        return
       }
 
-      var currentActive = $('.toc-link.active')
-      if (currentId && currentActive.attr('href') !== currentId) {
-        // updateAnchor(currentId)
+      detectItem = currentIndex
 
-        $('.toc-link').removeClass('active')
+      $cardToc.querySelectorAll('.active').forEach(item => { item.classList.remove('active') })
+      const currentActive = $tocLink[currentIndex]
+      currentActive.classList.add('active')
 
-        var _this = $('.toc-link[href="' + currentId + '"]')
-        _this.addClass('active')
+      setTimeout(() => {
+        autoScrollToc(currentActive)
+      }, 0)
 
-        var parents = _this.parents('.toc-child')
-        // Returned list is in reverse order of the DOM elements
-        // Thus `parents.last()` is the outermost .toc-child container
-        // i.e. list of subsections
-        var topLink = (parents.length > 0) ? parents.last() : _this
-        expandToc(topLink.closest('.toc-item').find('.toc-child'))
-        topLink
-          // Find all top-level .toc-item containers, i.e. sections
-          // excluding the currently active one
-          .closest('.toc-item').siblings('.toc-item')
-          // Hide their respective list of subsections
-          .find('.toc-child').hide()
-      }
-    }
+      let parent = currentActive.parentNode
 
-    var autoScrollToc = function (currentTop) {
-      if ($('.toc-link').hasClass('active')) {
-        var activePosition = $('.active').offset().top
-        var sidebarScrolltop = $('#sidebar .sidebar-toc__content').scrollTop()
-        if (activePosition > (currentTop + $(window).height() - 100)) {
-          $('#sidebar .sidebar-toc__content').scrollTop(sidebarScrolltop + 100)
-        }
-        if (activePosition < currentTop + 100) {
-          $('#sidebar .sidebar-toc__content').scrollTop(sidebarScrolltop - 100)
-        }
+      for (; !parent.matches('.toc'); parent = parent.parentNode) {
+        if (parent.matches('li')) parent.classList.add('active')
       }
     }
   }
 
   /**
-   * 閲讀模式
-   */
-  $('#readmode').click(function () {
-    $('body').toggleClass('read-mode')
-  })
+ * Rightside
+ */
+  const rightSideFn = {
+    switchReadMode: () => { // read-mode
+      const $body = document.body
+      $body.classList.add('read-mode')
+      const newEle = document.createElement('button')
+      newEle.type = 'button'
+      newEle.className = 'fas fa-sign-out-alt exit-readmode'
+      $body.appendChild(newEle)
 
-  /**
-   * 字體調整
-   */
-  $('#font_plus').click(function () {
-    $body.css('font-size', parseFloat($body.css('font-size')) + 1)
-  })
-  $('#font_minus').click(function () {
-    $body.css('font-size', parseFloat($body.css('font-size')) - 1)
-  })
+      function clickFn () {
+        $body.classList.remove('read-mode')
+        newEle.remove()
+        newEle.removeEventListener('click', clickFn)
+      }
 
-  /**
-   * menu
-   * 側邊欄sub-menu 展開/收縮
-   * 解決menus在觸摸屏下，滑動屏幕menus_item_child不消失的問題（手機hover的bug)
-   */
-  $('#mobile-sidebar-menus .menus-expand').on('click', function () {
-    if ($(this).hasClass('menus-closed')) {
-      $(this).parents('.menus_item').find('.menus_item_child').slideDown()
-      $(this).removeClass('menus-closed')
-    } else {
-      $(this).parents('.menus_item').find('.menus_item_child').slideUp()
-      $(this).addClass('menus-closed')
+      newEle.addEventListener('click', clickFn)
+    },
+    switchDarkMode: () => { // Switch Between Light And Dark Mode
+      const nowMode = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+      if (nowMode === 'light') {
+        activateDarkMode()
+        saveToLocal.set('theme', 'dark', 2)
+        GLOBAL_CONFIG.Snackbar !== undefined && btf.snackbarShow(GLOBAL_CONFIG.Snackbar.day_to_night)
+      } else {
+        activateLightMode()
+        saveToLocal.set('theme', 'light', 2)
+        GLOBAL_CONFIG.Snackbar !== undefined && btf.snackbarShow(GLOBAL_CONFIG.Snackbar.night_to_day)
+      }
+      // handle some cases
+      typeof utterancesTheme === 'function' && utterancesTheme()
+      typeof FB === 'object' && window.loadFBComment()
+      window.DISQUS && document.getElementById('disqus_thread').children.length && setTimeout(() => window.disqusReset(), 200)
+    },
+    showOrHideBtn: () => { // rightside 點擊設置 按鈕 展開
+      document.getElementById('rightside-config-hide').classList.toggle('show')
+    },
+    scrollToTop: () => { // Back to top
+      btf.scrollToDest(0, 500)
+    },
+    hideAsideBtn: () => { // Hide aside
+      const $htmlDom = document.documentElement.classList
+      $htmlDom.contains('hide-aside')
+        ? saveToLocal.set('aside-status', 'show', 2)
+        : saveToLocal.set('aside-status', 'hide', 2)
+      $htmlDom.toggle('hide-aside')
+    },
+
+    adjustFontSize: (plus) => {
+      const fontSizeVal = parseInt(window.getComputedStyle(document.documentElement).getPropertyValue('--global-font-size'))
+      let newValue = ''
+      detectFontSizeChange = true
+      if (plus) {
+        if (fontSizeVal >= 20) return
+        newValue = fontSizeVal + 1
+        document.documentElement.style.setProperty('--global-font-size', newValue + 'px')
+        !document.getElementById('nav').classList.contains('hide-menu') && adjustMenu()
+      } else {
+        if (fontSizeVal <= 10) return
+        newValue = fontSizeVal - 1
+        document.documentElement.style.setProperty('--global-font-size', newValue + 'px')
+        document.getElementById('nav').classList.contains('hide-menu') && adjustMenu()
+      }
+
+      saveToLocal.set('global-font-size', newValue, 2)
+      // document.getElementById('font-text').innerText = newValue
+    }
+  }
+
+  document.getElementById('rightside').addEventListener('click', function (e) {
+    const $target = e.target.id || e.target.parentNode.id
+    switch ($target) {
+      case 'go-up':
+        rightSideFn.scrollToTop()
+        break
+      case 'rightside_config':
+        rightSideFn.showOrHideBtn()
+        break
+      case 'readmode':
+        rightSideFn.switchReadMode()
+        break
+      case 'darkmode':
+        rightSideFn.switchDarkMode()
+        break
+      case 'hide-aside-btn':
+        rightSideFn.hideAsideBtn()
+        break
+      case 'font-plus':
+        rightSideFn.adjustFontSize(true)
+        break
+      case 'font-minus':
+        rightSideFn.adjustFontSize()
+        break
+      default:
+        break
     }
   })
 
-  $(window).on('touchmove', function (e) {
-    var $menusChild = $('#page-header .menus_item_child')
-    if ($menusChild.is(':visible')) {
-      $menusChild.css('display', 'none')
-    }
-  })
+  /**
+ * menu
+ * 側邊欄sub-menu 展開/收縮
+ * 解決menus在觸摸屏下，滑動屏幕menus_item_child不消失的問題（手機hover的bug)
+ */
+  const clickFnOfSubMenu = function () {
+    document.querySelectorAll('#sidebar-menus .expand').forEach(function (e) {
+      e.addEventListener('click', function () {
+        this.classList.toggle('hide')
+        const $dom = this.parentNode.nextElementSibling
+        if (btf.isHidden($dom)) {
+          $dom.style.display = 'block'
+        } else {
+          $dom.style.display = 'none'
+        }
+      })
+    })
+
+    window.addEventListener('touchmove', function (e) {
+      const $menusChild = document.querySelectorAll('#nav .menus_item_child')
+      $menusChild.forEach(item => {
+        if (!btf.isHidden(item)) item.style.display = 'none'
+      })
+    })
+  }
 
   /**
-   * rightside 點擊設置 按鈕 展開
-   */
-  $('#rightside_config').on('click', function () {
-    if ($('#rightside-config-hide').hasClass('rightside-in')) {
-      $('#rightside-config-hide').removeClass('rightside-in').addClass('rightside-out')
-    } else {
-      $('#rightside-config-hide').removeClass('rightside-out').addClass('rightside-in')
-    }
-  })
-
-  /**
-   * 複製時加上版權信息
-   */
-  var copyright = GLOBAL_CONFIG.copyright
-  if (copyright !== undefined) {
-    document.body.oncopy = function (event) {
-      event.preventDefault()
+ * 複製時加上版權信息
+ */
+  const addCopyright = () => {
+    const copyright = GLOBAL_CONFIG.copyright
+    document.body.oncopy = (e) => {
+      e.preventDefault()
       let textFont; const copyFont = window.getSelection(0).toString()
-      if (copyFont.length > 45) {
+      if (copyFont.length > copyright.limitCount) {
         textFont = copyFont + '\n' + '\n' + '\n' +
-          copyright.languages.author + '\n' +
-          copyright.languages.link + window.location.href + '\n' +
-          copyright.languages.source + '\n' +
-          copyright.languages.info
+        copyright.languages.author + '\n' +
+        copyright.languages.link + window.location.href + '\n' +
+        copyright.languages.source + '\n' +
+        copyright.languages.info
       } else {
         textFont = copyFont
       }
-      if (event.clipboardData) {
-        return event.clipboardData.setData('text', textFont)
+      if (e.clipboardData) {
+        return e.clipboardData.setData('text', textFont)
       } else {
-        // 兼容IE
         return window.clipboardData.setData('text', textFont)
       }
     }
   }
 
   /**
-   * Darkmode
-   */
-  var isFontAwesomeV5 = GLOBAL_CONFIG.isFontAwesomeV5
-  var $darkModeButtom = $('#darkmode')
-  if (typeof autoChangeMode !== 'undefined') {
-    document.documentElement.getAttribute('data-theme') === 'dark' ? changeLightIcon() : changeDarkIcon()
-  }
-
-  function changeLightIcon () {
-    isFontAwesomeV5 ? $darkModeButtom.removeClass('fa-moon').addClass('fa-sun') : $darkModeButtom.removeClass('fa-moon-o').addClass('fa-sun-o')
-  }
-
-  function changeDarkIcon () {
-    isFontAwesomeV5 ? $darkModeButtom.removeClass('fa-sun').addClass('fa-moon') : $darkModeButtom.removeClass('fa-sun-o').addClass('fa-moon-o')
-  }
-
-  function switchReadMode () {
-    var nowMode = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
-    if (nowMode === 'light') {
-      changeLightIcon()
-      activateDarkMode()
-      Cookies.set('theme', 'dark', { expires: 2 })
-      if (isSnackbar) snackbarShow(GLOBAL_CONFIG.Snackbar.day_to_night)
-    } else {
-      changeDarkIcon()
-      activateLightMode()
-      Cookies.set('theme', 'light', { expires: 2 })
-      if (isSnackbar) snackbarShow(GLOBAL_CONFIG.Snackbar.night_to_day)
+ * 網頁運行時間
+ */
+  const addRuntime = () => {
+    const $runtimeCount = document.getElementById('runtimeshow')
+    if ($runtimeCount) {
+      const publishDate = $runtimeCount.getAttribute('data-publishDate')
+      $runtimeCount.innerText = btf.diffDate(publishDate) + ' ' + GLOBAL_CONFIG.runtime
     }
   }
 
-  $darkModeButtom.click(function () {
-    switchReadMode()
-    try {
-      utterancesTheme()
-    } catch (e) {
-      return false
-    }
-  })
-
   /**
-   * 網頁運行時間
-   */
-  if (GLOBAL_CONFIG.runtime) {
-    // get user config
-    var $runtimeCount = $('#webinfo-runtime-count')
-    var startDate = $runtimeCount.attr('start_date')
-    var showDateTime = function () {
-      var BirthDay = new Date(startDate)
-      var today = new Date()
-      var timeold = (today.getTime() - BirthDay.getTime())
-      var daysold = Math.floor(timeold / (24 * 60 * 60 * 1000))
-      $runtimeCount.text(daysold + ' ' + GLOBAL_CONFIG.runtime_unit)
+ * 最後一次更新時間
+ */
+  const addLastPushDate = () => {
+    const $lastPushDateItem = document.getElementById('last-push-date')
+    if ($lastPushDateItem) {
+      const lastPushDate = $lastPushDateItem.getAttribute('data-lastPushDate')
+      $lastPushDateItem.innerText = btf.diffDate(lastPushDate, true)
     }
-    var interval
-    showDateTime()
-    clearInterval(interval)
-    interval = setInterval(showDateTime, 10000)
   }
 
   /**
-   * 百度推送
-   */
-  if (GLOBAL_CONFIG.baiduPush) {
-    (function () {
-      var bp = document.createElement('script')
-      var curProtocol = window.location.protocol.split(':')[0]
-      if (curProtocol === 'https') {
-        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js'
-      } else {
-        bp.src = 'http://push.zhanzhang.baidu.com/push.js'
-      }
-      var s = document.getElementsByTagName('script')[0]
-      s.parentNode.insertBefore(bp, s)
-    })()
+ * table overflow
+ */
+  const addTableWrap = function () {
+    const $table = document.querySelectorAll('#article-container :not(.highlight) > table, #article-container > table')
+    if ($table.length) {
+      $table.forEach(item => {
+        btf.wrap(item, 'div', '', 'table-wrap')
+      })
+    }
   }
 
   /**
-   * tag-hide
-   */
-  var $hideInline = $('.hide-button')
-  if ($hideInline.length) {
-    $hideInline.on('click', function (e) {
-      e.preventDefault()
-      var $this = $(this)
-      var $hideContent = $(this).next('.hide-content')
-      $this.toggleClass('open')
-      $hideContent.toggle()
-      if ($this.hasClass('open')) {
-        if (isJustifiedGallery && $hideContent.find('.justified-gallery').length > 0) {
-          initJustifiedGallery($hideContent.find('.justified-gallery'))
+ * tag-hide
+ */
+  const clickFnOfTagHide = function () {
+    const $hideInline = document.querySelectorAll('#article-container .hide-button')
+    if ($hideInline.length) {
+      $hideInline.forEach(function (item) {
+        item.addEventListener('click', function (e) {
+          const $this = this
+          const $hideContent = $this.nextElementSibling
+          $this.classList.toggle('open')
+          if ($this.classList.contains('open')) {
+            if ($hideContent.querySelectorAll('.justified-gallery').length > 0) {
+              btf.initJustifiedGallery($hideContent.querySelectorAll('.justified-gallery'))
+            }
+          }
+        })
+      })
+    }
+  }
+
+  const tabsFn = {
+    clickFnOfTabs: function () {
+      document.querySelectorAll('#article-container .tab > button').forEach(function (item) {
+        item.addEventListener('click', function (e) {
+          const $this = this
+          const $tabItem = $this.parentNode
+
+          if (!$tabItem.classList.contains('active')) {
+            const $tabContent = $tabItem.parentNode.nextElementSibling
+            const $siblings = btf.siblings($tabItem, '.active')[0]
+            $siblings && $siblings.classList.remove('active')
+            $tabItem.classList.add('active')
+            const tabId = $this.getAttribute('data-href').replace('#', '')
+            const childList = [...$tabContent.children]
+            childList.forEach(item => {
+              if (item.id === tabId) item.classList.add('active')
+              else item.classList.remove('active')
+            })
+            const $isTabJustifiedGallery = $tabContent.querySelectorAll(`#${tabId} .justified-gallery`)
+            if ($isTabJustifiedGallery.length > 0) {
+              btf.initJustifiedGallery($isTabJustifiedGallery)
+            }
+          }
+        })
+      })
+    },
+    backToTop: () => {
+      document.querySelectorAll('#article-container .tabs .tab-to-top').forEach(function (item) {
+        item.addEventListener('click', function () {
+          btf.scrollToDest(btf.getEleTop(btf.getParents(this, '.tabs')), 300)
+        })
+      })
+    }
+  }
+
+  const toggleCardCategory = function () {
+    const $cardCategory = document.querySelectorAll('#aside-cat-list .card-category-list-item.parent i')
+    if ($cardCategory.length) {
+      $cardCategory.forEach(function (item) {
+        item.addEventListener('click', function (e) {
+          e.preventDefault()
+          const $this = this
+          $this.classList.toggle('expand')
+          const $parentEle = $this.parentNode.nextElementSibling
+          if (btf.isHidden($parentEle)) {
+            $parentEle.style.display = 'block'
+          } else {
+            $parentEle.style.display = 'none'
+          }
+        })
+      })
+    }
+  }
+
+  const switchComments = function () {
+    let switchDone = false
+    const $switchBtn = document.querySelector('#comment-switch > .switch-btn')
+    $switchBtn && $switchBtn.addEventListener('click', function () {
+      this.classList.toggle('move')
+      document.querySelectorAll('#post-comment > .comment-wrap > div').forEach(function (item) {
+        if (btf.isHidden(item)) {
+          item.style.cssText = 'display: block;animation: tabshow .5s'
+        } else {
+          item.style.cssText = "display: none;animation: ''"
         }
+      })
+
+      if (!switchDone && typeof loadOtherComment === 'function') {
+        switchDone = true
+        loadOtherComment()
       }
     })
   }
+
+  const addPostOutdateNotice = function () {
+    const data = GLOBAL_CONFIG.noticeOutdate
+    const diffDay = btf.diffDate(GLOBAL_CONFIG_SITE.postUpdate)
+    if (diffDay >= data.limitDay) {
+      const ele = document.createElement('div')
+      ele.className = 'post-outdate-notice'
+      ele.textContent = data.messagePrev + ' ' + diffDay + ' ' + data.messageNext
+      const $targetEle = document.getElementById('article-container')
+      if (data.position === 'top') {
+        $targetEle.insertBefore(ele, $targetEle.firstChild)
+      } else {
+        $targetEle.appendChild(ele)
+      }
+    }
+  }
+
+  const lazyloadImg = () => {
+    window.lazyLoadInstance = new LazyLoad({
+      elements_selector: 'img',
+      threshold: 0,
+      data_src: 'lazy-src'
+    })
+  }
+
+  const relativeDate = function (selector) {
+    selector.forEach(item => {
+      const $this = item
+      const timeVal = $this.getAttribute('datetime')
+      $this.innerText = btf.diffDate(timeVal, true)
+      $this.style.display = 'inline'
+    })
+  }
+
+  const unRefreshFn = function () {
+    window.addEventListener('resize', adjustMenu)
+
+    clickFnOfSubMenu()
+    GLOBAL_CONFIG.islazyload && lazyloadImg()
+    GLOBAL_CONFIG.copyright !== undefined && addCopyright()
+  }
+
+  window.refreshFn = function () {
+    initAdjust()
+
+    if (GLOBAL_CONFIG_SITE.isPost) {
+      GLOBAL_CONFIG_SITE.isToc && tocFn()
+      GLOBAL_CONFIG.noticeOutdate !== undefined && addPostOutdateNotice()
+      GLOBAL_CONFIG.relativeDate.post && relativeDate(document.querySelectorAll('#post-meta time'))
+    } else {
+      GLOBAL_CONFIG.relativeDate.homepage && relativeDate(document.querySelectorAll('#recent-posts time'))
+      GLOBAL_CONFIG.runtime && addRuntime()
+      addLastPushDate()
+      toggleCardCategory()
+    }
+
+    sidebarFn()
+    GLOBAL_CONFIG_SITE.isHome && scrollDownInIndex()
+    GLOBAL_CONFIG.highlight && addHighlightTool()
+    GLOBAL_CONFIG.isPhotoFigcaption && addPhotoFigcaption()
+    jqLoadAndRun()
+    GLOBAL_CONFIG.lightbox === 'mediumZoom' && addMediumZoom()
+    scrollFn()
+    addTableWrap()
+    clickFnOfTagHide()
+    tabsFn.clickFnOfTabs()
+    tabsFn.backToTop()
+    switchComments()
+  }
+
+  refreshFn()
+  unRefreshFn()
 })

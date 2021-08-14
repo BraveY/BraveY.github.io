@@ -1,0 +1,247 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>C语言传递指针参数的陷阱 | BraveY</title><meta name="keywords" content="指针,C"><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="简介师兄发来一段代码问代码是否有误。 12345678910void Malloc1(char *p, int num) &amp;#123;	p &#x3D; (char*)malloc(num * sizeof(char));&#x2F;&#x2F; 传进来的地址值没有用到，没有使用解引用。&amp;#125;void MyTest1() &amp;#123;	char *s &#x3D; NULL;	Malloc1(s, 10);	strcpy(s, &amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C语言传递指针参数的陷阱">
+<meta property="og:url" content="https://bravey.github.io/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html">
+<meta property="og:site_name" content="BraveY">
+<meta property="og:description" content="简介师兄发来一段代码问代码是否有误。 12345678910void Malloc1(char *p, int num) &amp;#123;	p &#x3D; (char*)malloc(num * sizeof(char));&#x2F;&#x2F; 传进来的地址值没有用到，没有使用解引用。&amp;#125;void MyTest1() &amp;#123;	char *s &#x3D; NULL;	Malloc1(s, 10);	strcpy(s, &amp;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images.pexels.com/photos/531602/pexels-photo-531602.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500">
+<meta property="article:published_time" content="2020-12-12T13:39:57.000Z">
+<meta property="article:modified_time" content="2020-12-13T14:44:05.045Z">
+<meta property="article:author" content="BraveY">
+<meta property="article:tag" content="指针">
+<meta property="article:tag" content="C">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.pexels.com/photos/531602/pexels-photo-531602.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="hDujO4MQUB7U9ir-4VXM5PW4fDFSq0-7G-LBX-Lh86M"/><meta name="baidu-site-verification" content="8XIUcPkbzm"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}
+
+// https://stackoverflow.com/questions/16839698/jquery-getscript-alternative-in-native-javascript
+const getScript = url => new Promise((resolve, reject) => {
+  const script = document.createElement('script')
+  script.src = url
+  script.async = true
+  script.onerror = reject
+  script.onload = script.onreadystatechange = function() {
+    const loadState = this.readyState
+    if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+    script.onload = script.onreadystatechange = null
+    resolve()
+  }
+  document.head.appendChild(script)
+})</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2020-12-13 22:44:05'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://images.pexels.com/photos/531602/pexels-photo-531602.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">BraveY</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">C语言传递指针参数的陷阱</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-12-12T13:39:57.000Z" title="发表于 2020-12-12 21:39:57">2020-12-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2020-12-13T14:44:05.045Z" title="更新于 2020-12-13 22:44:05">2020-12-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AF%AD%E8%A8%80/">语言</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>师兄发来一段代码问代码是否有误。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Malloc1</span><span class="params">(<span class="keyword">char</span> *p, <span class="keyword">int</span> num)</span> </span>&#123;</span><br><span class="line">	p = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(num * <span class="keyword">sizeof</span>(<span class="keyword">char</span>));<span class="comment">// 传进来的地址值没有用到，没有使用解引用。</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MyTest1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">char</span> *s = <span class="literal">NULL</span>;</span><br><span class="line">	Malloc1(s, <span class="number">10</span>);</span><br><span class="line">	<span class="built_in">strcpy</span>(s, <span class="string">&quot;hello&quot;</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><h3 id="二级指针"><a href="#二级指针" class="headerlink" title="二级指针"></a>二级指针</h3><p>指针是一个变量，它的值是一个地址，地址指向为一个对应类型的变量。</p>
+<p>赋值符号<code>=</code>, 左边是一个地址，右边是赋给该地址的值。变量是一个地址的别名。</p>
+<h4 id="amp-符号"><a href="#amp-符号" class="headerlink" title="&amp;符号"></a>&amp;符号</h4><p><code>int &amp;a =b</code> a是b的引用，是b的别名,此时<code>&amp;</code>用来表示引用</p>
+<p>单独使用时，取地址符<code>&amp;</code>,用来获得一个变量的地址。<code>&amp;a</code>为变量<code>a</code>的地址</p>
+<h4 id="符号"><a href="#符号" class="headerlink" title="*符号"></a>*符号</h4><p><code>int *a = &amp;b</code> a是指向b的指针，此时<code>*</code>表示指针变量</p>
+<p>解引用符<code>*</code>，用来得到指针指向的内存地址的值。<code>*a</code>为a这个指针指向的对象的值。</p>
+<p>如下程序：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">printAddr</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line">	<span class="keyword">int</span> *pa = &amp;a;</span><br><span class="line">	<span class="keyword">int</span> **ppa = &amp;pa;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;the address of a is:%p\n&quot;</span>, &amp;a);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;the address of a is:%p, which is also the value of pointer pa\n&quot;</span>, pa);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;the dereferenced value of pointer pa is:%d\n&quot;</span>, *pa);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;the address of pointer pa is:%p\n&quot;</span>, &amp;pa);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;the address of pointer pa is:%p, which is also the value of pointer ppa\n&quot;</span>, ppa);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;the first dereferenced value of pointer ppa is:%p, which is also the address of a\n&quot;</span>, *ppa);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;the second dereferenced value of pointer ppa is:%d, which is also the value of a\n&quot;</span>, **ppa);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对应输出为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">the address of a is:000000000062FDE4</span><br><span class="line">the address of a is:000000000062FDE4, which is also the value of pointer pa</span><br><span class="line">the dereferenced value of pointer pa is:2</span><br><span class="line">the address of pointer pa is:000000000062FDD8</span><br><span class="line">the address of pointer pa is:000000000062FDD8, which is also the value of pointer ppa</span><br><span class="line">the first dereferenced value of pointer ppa is:000000000062FDE4, which is also the address of a</span><br><span class="line">the second dereferenced value of pointer ppa is:2, which is also the value of a</span><br></pre></td></tr></table></figure>
+<p>最后建议每一次指针都加一个p,每解引用一次，也就是加一个<code>*</code>，对应划掉一个p，也就得到对该指针解引用得到的变量值。这样只是方便快速推导，因为实际的理解比较绕。</p>
+<h3 id="传参的几种方式"><a href="#传参的几种方式" class="headerlink" title="传参的几种方式"></a>传参的几种方式</h3><p>函数被调用的时候，用实参的值来初始化形参。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">void func1(int a)&#123;&#x2F;&#x2F;a为形参</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func1(b);&#x2F;&#x2F;b为实参</span><br></pre></td></tr></table></figure>
+<p>在调用的时候可以理解为有个<code>int a = b</code>的过程。</p>
+<h4 id="按值传递"><a href="#按值传递" class="headerlink" title="按值传递"></a>按值传递</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func1</span><span class="params">(<span class="keyword">int</span> a)</span></span>&#123;<span class="comment">//a为形参</span></span><br><span class="line">	...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func1(b);<span class="comment">//b为实参</span></span><br></pre></td></tr></table></figure>
+<p>使用实参的值来进行初始化，形参在被调用函数中值得变化不会影响实参。</p>
+<h5 id="按指针传递"><a href="#按指针传递" class="headerlink" title="按指针传递"></a>按指针传递</h5><p>指针形参也是一种<strong>值的传递</strong>，只是因为传递的是一个对象的地址，因此可以通过解引用符<code>*</code>来对该对象直接进行修改，所以在被调用函数中可以直接根据地址来进行操作，从而使得该地址的变量被修改。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func1</span><span class="params">(<span class="keyword">int</span> *a)</span></span>&#123;<span class="comment">//a为形参</span></span><br><span class="line">	...</span><br><span class="line">	*a = <span class="number">4</span>;<span class="comment">//使用解引用符号，修改函数外面的值。</span></span><br><span class="line">    a = <span class="number">0</span>;<span class="comment">//将a指针保存的地址值从b的地址变成了0，实际参数没有任何改变。</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> *c = &amp;b;</span><br><span class="line">func1(b);<span class="comment">//b为实参</span></span><br></pre></td></tr></table></figure>
+<p>指针形参，如果要修改外面的实参指向的变量值，就必须使用<code>*</code>来进行解引用。</p>
+<h4 id="按引用传递"><a href="#按引用传递" class="headerlink" title="按引用传递"></a>按引用传递</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func1</span><span class="params">(<span class="keyword">int</span> &amp;a)</span></span>&#123;<span class="comment">//a为形参</span></span><br><span class="line">	...</span><br><span class="line">	a = <span class="number">4</span><span class="comment">//对形参的修改会使得实参变化</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">0</span>;</span><br><span class="line">func1(b);<span class="comment">//b为实参</span></span><br></pre></td></tr></table></figure>
+<p>使用引用传参，可以避免值的拷贝。指针形参和引用传递，都能够修改实参的值是因为都是根据地址来进行操作的。</p>
+<h2 id="错误的原因"><a href="#错误的原因" class="headerlink" title="错误的原因"></a>错误的原因</h2><p>所以经过上面的复习，错误的原因就是：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Malloc1</span><span class="params">(<span class="keyword">char</span> *p, <span class="keyword">int</span> num)</span> </span>&#123;</span><br><span class="line">	p = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(num * <span class="keyword">sizeof</span>(<span class="keyword">char</span>));<span class="comment">// 传进来的地址值没有用到，没有使用解引用。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>整个函数的作用只是在形参初始的时候把s指向的地址也就是NULL,即0这个地址赋值给了p指针。之后又把p的值从0,变为了<code>malloc</code>函数分配的一个地址。在这个函数中只有p这个形参的指向地址发生了改变，实参s指针并未发生改变。</p>
+<p>所以经过这个函数的调用后，s指针存放的地址依然是0，导致后面的<code>strcpy(s, &quot;hello&quot;);</code>是对空指针进行操作，所以报错。</p>
+<h2 id="正确的写法"><a href="#正确的写法" class="headerlink" title="正确的写法"></a>正确的写法</h2><p>首先明确这段代码的意图是想让s指针这个变量的值在被调用函数中发生变化，因为需要修改实参变量的值，所以需要传入实参的地址，指向指针的地址也就是一个二级指针。所以形参应该是一个二级指针，在被调用函数中使用<code>*</code>来对地址进行解引用。</p>
+<figure class="highlight cc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Malloc</span><span class="params">(<span class="keyword">char</span> **p, <span class="keyword">int</span> num)</span> </span>&#123;</span><br><span class="line">	*p = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(num * <span class="keyword">sizeof</span>(<span class="keyword">char</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MyTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">char</span> *s = <span class="literal">NULL</span>;</span><br><span class="line">	Malloc(&amp;s, <span class="number">10</span>);</span><br><span class="line">	<span class="built_in">strcpy</span>(s, <span class="string">&quot;hello&quot;</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>不是语法的错误,最开始以为没有错误，是因为错误地以为指针作为形参就修改了外层实参的值。但是实际上不一定，比如不加解引用符号<code>*</code>则不会修改。而就算加了解引用符号，修改的也是外层实参指向的变量的值。所以一级指针无法完成修改外层指针这个变量本身的值的目的，需要使用二级指针。</li>
+<li>修改实参的值，需要传入实参的地址。修改指针的值，需要传入指针变量的地址。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html">https://bravey.github.io/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://bravey.github.io" target="_blank">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%8C%87%E9%92%88/">指针</a><a class="post-meta__tags" href="/tags/C/">C</a></div><div class="post_share"><div class="social-share" data-image="https://images.pexels.com/photos/531602/pexels-photo-531602.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html"><img class="prev-cover" src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">C专家编程读书笔记</div></div></a></div><div class="next-post pull-right"><a href="/2020-07-14-Measuring-and-Benchmarking-Power-Consumption-and-Energy-Efficiency.html"><img class="next-cover" src="https://images.pexels.com/photos/164041/pexels-photo-164041.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Measuring and Benchmarking Power Consumption and Energy Efficiency</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020-02-05-c++拾遗.html" title="C/C++拾遗"><img class="cover" src="https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-02-05</div><div class="title">C/C++拾遗</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">BraveY</div><div class="author-info__description">今日事，今日毕</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">2.</span> <span class="toc-text">基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E7%BA%A7%E6%8C%87%E9%92%88"><span class="toc-number">2.1.</span> <span class="toc-text">二级指针</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#amp-%E7%AC%A6%E5%8F%B7"><span class="toc-number">2.1.1.</span> <span class="toc-text">&amp;符号</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%A6%E5%8F%B7"><span class="toc-number">2.1.2.</span> <span class="toc-text">*符号</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%A0%E5%8F%82%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="toc-number">2.2.</span> <span class="toc-text">传参的几种方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%89%E5%80%BC%E4%BC%A0%E9%80%92"><span class="toc-number">2.2.1.</span> <span class="toc-text">按值传递</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8C%89%E6%8C%87%E9%92%88%E4%BC%A0%E9%80%92"><span class="toc-number">2.2.1.1.</span> <span class="toc-text">按指针传递</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%89%E5%BC%95%E7%94%A8%E4%BC%A0%E9%80%92"><span class="toc-number">2.2.2.</span> <span class="toc-text">按引用传递</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="toc-number">3.</span> <span class="toc-text">错误的原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%86%99%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text">正确的写法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记"><img src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C专家编程读书笔记"/></a><div class="content"><a class="title" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记">C专家编程读书笔记</a><time datetime="2021-03-18T04:59:02.000Z" title="发表于 2021-03-18 12:59:02">2021-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱"><img src="https://images.pexels.com/photos/531602/pexels-photo-531602.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C语言传递指针参数的陷阱"/></a><div class="content"><a class="title" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱">C语言传递指针参数的陷阱</a><time datetime="2020-12-12T13:39:57.000Z" title="发表于 2020-12-12 21:39:57">2020-12-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-07-14-Measuring-and-Benchmarking-Power-Consumption-and-Energy-Efficiency.html" title="Measuring and Benchmarking Power Consumption and Energy Efficiency"><img src="https://images.pexels.com/photos/164041/pexels-photo-164041.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Measuring and Benchmarking Power Consumption and Energy Efficiency"/></a><div class="content"><a class="title" href="/2020-07-14-Measuring-and-Benchmarking-Power-Consumption-and-Energy-Efficiency.html" title="Measuring and Benchmarking Power Consumption and Energy Efficiency">Measuring and Benchmarking Power Consumption and Energy Efficiency</a><time datetime="2020-07-14T08:05:52.000Z" title="发表于 2020-07-14 16:05:52">2020-07-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-05-12-%E4%BD%BF%E7%94%A8LSTM+Pytorch%E5%AF%B9%E7%94%B5%E5%BD%B1%E8%AF%84%E8%AE%BA%E8%BF%9B%E8%A1%8C%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB.html" title="使用LSTM+Pytorch对电影评论进行情感分类"><img src="https://images.pexels.com/photos/452780/pexels-photo-452780.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用LSTM+Pytorch对电影评论进行情感分类"/></a><div class="content"><a class="title" href="/2020-05-12-%E4%BD%BF%E7%94%A8LSTM+Pytorch%E5%AF%B9%E7%94%B5%E5%BD%B1%E8%AF%84%E8%AE%BA%E8%BF%9B%E8%A1%8C%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB.html" title="使用LSTM+Pytorch对电影评论进行情感分类">使用LSTM+Pytorch对电影评论进行情感分类</a><time datetime="2020-05-12T14:48:08.000Z" title="发表于 2020-05-12 22:48:08">2020-05-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-05-05-%E8%8C%83%E9%97%B2%E5%86%99%E8%AF%97%E5%99%A8%E4%B9%8B%E7%94%A8LSTM+Pytorch%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%86%99%E8%AF%97.html" title="范闲写诗器之用LSTM+Pytorch实现自动写诗"><img src="https://images.pexels.com/photos/390051/surfer-wave-sunset-the-indian-ocean-390051.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="范闲写诗器之用LSTM+Pytorch实现自动写诗"/></a><div class="content"><a class="title" href="/2020-05-05-%E8%8C%83%E9%97%B2%E5%86%99%E8%AF%97%E5%99%A8%E4%B9%8B%E7%94%A8LSTM+Pytorch%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%86%99%E8%AF%97.html" title="范闲写诗器之用LSTM+Pytorch实现自动写诗">范闲写诗器之用LSTM+Pytorch实现自动写诗</a><time datetime="2020-05-05T07:15:15.000Z" title="发表于 2020-05-05 15:15:15">2020-05-05</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By BraveY</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

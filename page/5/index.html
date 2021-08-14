@@ -1,141 +1,340 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BraveY</title><meta name="description" content="今日事，今日毕"><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="dns-prefetch" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="crossorigin"/><link rel="dns-prefetch" href="https://fonts.googleapis.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="dns-prefetch" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="hDujO4MQUB7U9ir-4VXM5PW4fDFSq0-7G-LBX-Lh86M"/><meta name="baidu-site-verification" content="8XIUcPkbzm"/><meta name="twitter:card" content="summary"><meta name="twitter:title" content="BraveY"><meta name="twitter:description" content="今日事，今日毕"><meta name="twitter:image" content="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg"><meta property="og:type" content="website"><meta property="og:title" content="BraveY"><meta property="og:url" content="https://bravey.github.io/page/5/"><meta property="og:site_name" content="BraveY"><meta property="og:description" content="今日事，今日毕"><meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg"><meta property="article:published_time" content="2020-09-16T01:19:02.917Z"><meta property="article:modified_time" content="2020-09-16T01:19:02.918Z"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>var autoChangeMode = '1'
-var t = Cookies.get("theme")
-if (autoChangeMode == '1'){
-  var isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
-  var isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
-  var isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
-  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
-
-  if (t === undefined){
-    if (isLightMode) activateLightMode()
-    else if (isDarkMode) activateDarkMode()
-    else if (isNotSpecified || hasNoSupport){
-      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
-      var now = new Date()
-      var hour = now.getHours()
-      var isNight = hour < 6 || hour >= 18
-      isNight ? activateDarkMode() : activateLightMode()
-  }
-  } else if (t == 'light') activateLightMode()
-  else activateDarkMode()
-
-} else if (autoChangeMode == '2'){
-  now = new Date();
-  hour = now.getHours();
-  isNight = hour < 6 || hour >= 18
-  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
-  else if (t === 'light') activateLightMode()
-  else activateDarkMode() 
-} else {
-  if ( t == 'dark' ) activateDarkMode()
-  else if ( t == 'light') activateLightMode()
-}
-
-function activateDarkMode(){
-  document.documentElement.setAttribute('data-theme', 'dark')
-  if (document.querySelector('meta[name="theme-color"]') !== null){
-    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
-  }
-}
-function activateLightMode(){
-  document.documentElement.setAttribute('data-theme', 'light')
-  if (document.querySelector('meta[name="theme-color"]') !== null){
-  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
-  }
-}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="https://bravey.github.io/page/5/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BraveY</title><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="今日事，今日毕">
+<meta property="og:type" content="website">
+<meta property="og:title" content="BraveY">
+<meta property="og:url" content="https://bravey.github.io/page/5/index.html">
+<meta property="og:site_name" content="BraveY">
+<meta property="og:description" content="今日事，今日毕">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg">
+<meta property="article:author" content="BraveY">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg"><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/page/5/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="hDujO4MQUB7U9ir-4VXM5PW4fDFSq0-7G-LBX-Lh86M"/><meta name="baidu-site-verification" content="8XIUcPkbzm"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>var GLOBAL_CONFIG = { 
   root: '/',
   algolia: undefined,
-  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
-  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
   copy: {
     success: '复制成功',
     error: '复制错误',
     noSupport: '浏览器不支持'
   },
-  bookmark: {
-    message_prev: '按',
-    message_next: '键将本页加入书签'
+  relativeDate: {
+    homepage: false,
+    post: false
   },
-  runtime_unit: '天',
-  runtime: true,
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
   copyright: undefined,
-  ClickShowText: {"text":"富强,民主,文明,和谐,自由,平等,公正,法治,爱国,敬业,诚信,友善","fontSize":"15px"},
-  medium_zoom: false,
-  fancybox: true,
+  lightbox: 'fancybox',
   Snackbar: undefined,
-  baiduPush: true,
-  highlightCopy: true,
-  highlightLang: true,
-  highlightShrink: 'false',
-  isFontAwesomeV5: false,
-  isPhotoFigcaption: false
-  
-}</script><script>var GLOBAL_CONFIG_SITE = { 
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}
+
+// https://stackoverflow.com/questions/16839698/jquery-getscript-alternative-in-native-javascript
+const getScript = url => new Promise((resolve, reject) => {
+  const script = document.createElement('script')
+  script.src = url
+  script.async = true
+  script.onerror = reject
+  script.onload = script.onreadystatechange = function() {
+    const loadState = this.readyState
+    if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+    script.onload = script.onreadystatechange = null
+    resolve()
+  }
+  document.head.appendChild(script)
+})</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
   isPost: false,
   isHome: true,
-  isSidebar: false  
-  }</script><noscript><style>
-#page-header {
-  opacity: 1
-}
-.justified-gallery img{
-  opacity: 1
-}
-</style></noscript><meta name="generator" content="Hexo 4.2.0"></head><body><canvas class="fireworks"></canvas><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">88</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">109</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">14</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div id="body-wrap"><div id="web_bg" data-type="photo"></div><div class="full_page" id="nav" style="background-image: url(https://res.cloudinary.com/bravey/image/upload/v1582873485/wallroom-2880x1620-bg-3cad5d2.jpg)"><div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">BraveY</a></span><span class="pull_right menus"><div id="search_button"><a class="site-page social-icon search"><i class="fa fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span></span></div><div id="site-info"><h1 id="site_title">BraveY</h1><div id="site_subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github" aria-hidden="true"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope" aria-hidden="true"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss" aria-hidden="true"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright" aria-hidden="true"></i></a></div></div><div id="scroll_down"><i class="fa fa-angle-down scroll-down-effects"></i></div></div><main class="layout_page" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020-02-08-ICPP-2018-ImageNet-Training-in-Minutes.html" title="ICPP 2018 ImageNet Training in Minutes">     <img class="post_bg lazyload" data-src="https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ICPP 2018 ImageNet Training in Minutes"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-02-08-ICPP-2018-ImageNet-Training-in-Minutes.html" title="ICPP 2018 ImageNet Training in Minutes">ICPP 2018 ImageNet Training in Minutes</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-02-08 09:06:25"><i class="fa fa-calendar" aria-hidden="true"></i>2020-02-08</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/">论文阅读</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">分布式机器学习</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%8A%A0%E9%80%9F/">神经网络加速</a></span></div><div class="content">来源 ICPP2018 best paper
-关键词分布式机器学习，神经网络加速
-摘要文章对大规模计算机的DNN加速能力进行了研究。通过使用LARS算法提供的Large batch来充分利用海量的计算资源，该方法在ImageNet-1k数据集上训练出的AlexNet和ResNet-50这两个网络达到 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020-02-07-leetcode-300-Longest-Increasing-Subsequence.html" title="leetcode 300 Longest Increasing Subsequence">     <img class="post_bg lazyload" data-src="https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 300 Longest Increasing Subsequence"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-02-07-leetcode-300-Longest-Increasing-Subsequence.html" title="leetcode 300 Longest Increasing Subsequence">leetcode 300 Longest Increasing Subsequence</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-02-07 21:19:32"><i class="fa fa-calendar" aria-hidden="true"></i>2020-02-07</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/">二分查找</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></span></div><div class="content">leetcode 300 Longest Increasing Subsequence题目来源，需要求解数组中的升序子数组的最大长度。
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2021-08-14 20:39:07'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
 
-思路动态规划自己的思路输入是数组，求解的也是最优化问题，所以首先考虑动态规划。我自己的思路是使用背包问题的解法，从长度为n的数组A[0…n-1]中，选择数字构成增 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020-02-05-c++%E6%8B%BE%E9%81%97.html" title="c++拾遗">     <img class="post_bg lazyload" data-src="https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="c++拾遗"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-02-05-c++%E6%8B%BE%E9%81%97.html" title="c++拾遗">c++拾遗</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-02-05 08:46:58"><i class="fa fa-calendar" aria-hidden="true"></i>2020-02-05</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/c/">c++</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E6%8C%87%E9%92%88/">指针</a></span></div><div class="content">c++拾遗虚函数和纯虚函数虚函数：virtual void fun (){………..};定义后了可以实现，并且主要是为了子类会对这个函数进行重写，从而实现多态性。声明一个基类指针对象，但指向子类实例对象，这样如果基类是虚函数，则可以根据指向的子类的不同而实现不同的方法。不使用虚函数的话，将无法使用子 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020-01-29-leetcode-53-Maximum-Subarray.html" title="leetcode 53 Maximum Subarray">     <img class="post_bg lazyload" data-src="https://images.pexels.com/photos/629159/pexels-photo-629159.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 53 Maximum Subarray"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-01-29-leetcode-53-Maximum-Subarray.html" title="leetcode 53 Maximum Subarray">leetcode 53 Maximum Subarray</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-01-29 14:33:50"><i class="fa fa-calendar" aria-hidden="true"></i>2020-01-29</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E5%88%86%E6%B2%BB/">分治</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/leetcode/">leetcode</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></span></div><div class="content">leetcode 53 Maximum Subarray题目来源。题意要求给出一个数组中拥有最大和的连续子数组。
-
-思路枚举最简单的思路，连续的数组，只要枚举出所有的头和尾的索引对，然后计算这些所有枚举对中的和，然后输出这些和之中的最大和就可以了。
-复杂度因为总共有$1+2+3…+n=\frac{n ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020-01-06-leetcode-543-Diameter-of-Binary-Tree.html" title="leetcode 543 Diameter of Binary Tree">     <img class="post_bg lazyload" data-src="https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 543 Diameter of Binary Tree"></a></div><div class="recent-post-info"><a class="article-title" href="/2020-01-06-leetcode-543-Diameter-of-Binary-Tree.html" title="leetcode 543 Diameter of Binary Tree">leetcode 543 Diameter of Binary Tree</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-01-06 19:08:33"><i class="fa fa-calendar" aria-hidden="true"></i>2020-01-06</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E5%88%86%E6%B2%BB/">分治</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/leetcode/">leetcode</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/">二叉树</a></span></div><div class="content">leetcode 543 Diameter of Binary Tree题目来源，需要求解一颗二叉树的最大路径的长度，第一次做出来了，第二次没有做对，所以记录下。
-
-思路首先观察到问题的输入是一颗二叉树，其左右子节点仍然是一个二叉树，属于可以分解成子问题的数据结构，不是求解最优解，所以很自然的想到分 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2019-12-28-%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9%E5%92%8C%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96.html" title="特征选择和特征提取">     <img class="post_bg lazyload" data-src="https://images.pexels.com/photos/238622/pexels-photo-238622.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="特征选择和特征提取"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-12-28-%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9%E5%92%8C%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96.html" title="特征选择和特征提取">特征选择和特征提取</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2019-12-28 14:19:43"><i class="fa fa-calendar" aria-hidden="true"></i>2019-12-28</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E9%99%8D%E7%BB%B4/">降维</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/">特征提取</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E8%B7%9D%E7%A6%BB%E7%9F%A9%E9%98%B5/">距离矩阵</a></span></div><div class="content">特征选择和特征提取意义
-降低维度，后续的分类器设计更容易计算，可以加快速度
-消除特征之间可能存在的相关性，减少与分类无关的信息（理解成降噪？），从而更好的分类。
-
-
-类别可分性质的度量距离
-点到点之间的距离
-欧式距离：
-
-D(a, b) = || a – b ||平方形式（向量转置相乘，点积的形式） ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2019-12-27-%E5%A5%87%E6%80%9D%E5%A6%99%E6%83%B3.html" title="奇思妙想">     <img class="post_bg lazyload" data-src="https://images.pexels.com/photos/814499/pexels-photo-814499.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="奇思妙想"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-12-27-%E5%A5%87%E6%80%9D%E5%A6%99%E6%83%B3.html" title="奇思妙想">奇思妙想</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2019-12-27 19:17:47"><i class="fa fa-calendar" aria-hidden="true"></i>2019-12-27</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E6%95%B0%E5%AD%A6/">数学</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E7%82%B9%E5%AD%90/">点子</a></span></div><div class="content">奇思妙想记录一些觉得有用的点子，公式推导等。当成便利贴来使用的。23333
-
-条件联合分布的推导首先搞清楚逗号是与的意思，把逗号去掉，加个括号就好理解了。
-$P(S,A|T)$:事件T发生的条件下，事件S、A均发生的概率。直接把逗号给去掉，就是$P((SA)|T)$竖线的优先级别高。因此有：$P(S ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2019-12-08-%E7%BA%BF%E6%80%A7%E5%88%A4%E5%88%AB%E5%87%BD%E6%95%B0.html" title="线性判别函数">     <img class="post_bg lazyload" data-src="https://images.pexels.com/photos/390051/surfer-wave-sunset-the-indian-ocean-390051.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="线性判别函数"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-12-08-%E7%BA%BF%E6%80%A7%E5%88%A4%E5%88%AB%E5%87%BD%E6%95%B0.html" title="线性判别函数">线性判别函数</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2019-12-08 10:16:31"><i class="fa fa-calendar" aria-hidden="true"></i>2019-12-08</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E8%AF%BE%E7%A8%8B/">课程</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E6%A8%A1%E5%BC%8F%E8%AF%86%E5%88%AB/">模式识别</a></span></div><div class="content">线性判别函数模式识别与机器学习第三章的笔记。
-
-线性判别函数n维线性判别函数的一般形式一个n维线性判别函数的一般形式： 
-
-d(x)=w_1x_1+w_2x_2+\dots+w_nx_n+b=W_0^tx+b其中$W_0=(w_1,w_2,\dots,w_n)^T$称为权向量，如果把b也加入到权向量 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2019-11-29-leetcode-881-Boats-to-Save-People.html" title="leetcode 881 Boats to Save People">     <img class="post_bg lazyload" data-src="https://images.pexels.com/photos/358383/pexels-photo-358383.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode 881 Boats to Save People"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-11-29-leetcode-881-Boats-to-Save-People.html" title="leetcode 881 Boats to Save People">leetcode 881 Boats to Save People</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2019-11-29 15:49:08"><i class="fa fa-calendar" aria-hidden="true"></i>2019-11-29</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/leetcode/">leetcode</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E8%B4%AA%E5%BF%83/">贪心</a></span></div><div class="content">leetcode 881 Boats to Save People题目来源。要求在船有载重量和人数限制为2的情况下，给出将所有人运过河的最小船数。
-
-思路使用贪心算法，进行求解。
-桶排序首先是自己的思路：贪心的考虑每只船都尽可能的装满限重，然后优先让胖的人先上船，之后寻找在剩下载重量限制的情况下，找 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2019-11-22-leetcode153-154-Find-Minimum-in-Rotated-Sorted-Array-III.html" title="leetcode153 154 Find Minimum in Rotated Sorted Array I/II">     <img class="post_bg lazyload" data-src="https://images.pexels.com/photos/611328/pexels-photo-611328.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode153 154 Find Minimum in Rotated Sorted Array I/II"></a></div><div class="recent-post-info"><a class="article-title" href="/2019-11-22-leetcode153-154-Find-Minimum-in-Rotated-Sorted-Array-III.html" title="leetcode153 154 Find Minimum in Rotated Sorted Array I/II">leetcode153 154 Find Minimum in Rotated Sorted Array I/II</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2019-11-22 21:07:54"><i class="fa fa-calendar" aria-hidden="true"></i>2019-11-22</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E9%A2%98%E8%A7%A3/">题解</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E5%88%86%E6%B2%BB/">分治</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/leetcode/">leetcode</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E6%95%B0%E7%BB%84/">数组</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E6%9C%80%E5%B0%8F%E5%80%BC/">最小值</a><span class="article-meta__link">-</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/">二分查找</a></span></div><div class="content">leetcode153 154. Find Minimum in Rotated Sorted Array I/II题目来源leetcode153 和leetcode154 要求在排序的旋转数组中寻找最小值。最小值可以很简单的遍历一次数组得到，时间复杂度为$O(n)$但是没有用到题目给的性质，所以会 ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-fw fa-chevron-left" aria-hidden="true"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-fw fa-chevron-right" aria-hidden="true"></i></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">BraveY</div><div class="author-info__description">今日事，今日毕</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives"><div class="headline">文章</div><div class="length_num">88</div></a></div><div class="card-info-data-item is-center">      <a href="/tags"><div class="headline">标签</div><div class="length_num">109</div></a></div><div class="card-info-data-item is-center">     <a href="/categories"><div class="headline">分类</div><div class="length_num">14</div></a></div></div><div class="card-info-bookmark is-center"><a class="bookmark button--primary button--animated" id="bookmark-it" href="javascript:;" title="加入书签" target="_self"><i class="fa fa-bookmark" aria-hidden="true"></i><span>加入书签</span></a></div><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github" aria-hidden="true"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope" aria-hidden="true"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss" aria-hidden="true"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright" aria-hidden="true"></i></a></div></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fa fa-bullhorn card-announcement-animation" aria-hidden="true"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fa fa-history" aria-hidden="true"></i><span>最新文章</span></div><div class="aside-recent-item"><div class="aside-recent-post"><a href="/2020-09-15-leetcode-128-Longest-Consecutive-Sequence.html"><div class="aside-post-cover"><img class="aside-post-bg lazyload" data-src="https://images.pexels.com/photos/2174656/pexels-photo-2174656.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" title="leetcode 128 Longest Consecutive Sequence" alt="leetcode 128 Longest Consecutive Sequence"/></div><div class="aside-post-title"><div class="aside-post_title" href="/2020-09-15-leetcode-128-Longest-Consecutive-Sequence.html" title="leetcode 128 Longest Consecutive Sequence">leetcode 128 Longest Consecutive Sequence</div><time class="aside-post_meta post-meta__date" title="发表于 2020-09-15 20:43:12">2020-09-15</time></div></a></div><div class="aside-recent-post"><a href="/2020-09-09-leetcode-73-Set-Matrix-Zeroes.html"><div class="aside-post-cover"><img class="aside-post-bg lazyload" data-src="https://images.pexels.com/photos/452780/pexels-photo-452780.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" title="leetcode 73 Set Matrix Zeroes" alt="leetcode 73 Set Matrix Zeroes"/></div><div class="aside-post-title"><div class="aside-post_title" href="/2020-09-09-leetcode-73-Set-Matrix-Zeroes.html" title="leetcode 73 Set Matrix Zeroes">leetcode 73 Set Matrix Zeroes</div><time class="aside-post_meta post-meta__date" title="发表于 2020-09-09 13:06:00">2020-09-09</time></div></a></div><div class="aside-recent-post"><a href="/2020-09-07-leetcode-289-Game-of-Life.html"><div class="aside-post-cover"><img class="aside-post-bg lazyload" data-src="https://images.pexels.com/photos/33109/fall-autumn-red-season.jpg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" title="leetcode 289 Game of Life" alt="leetcode 289 Game of Life"/></div><div class="aside-post-title"><div class="aside-post_title" href="/2020-09-07-leetcode-289-Game-of-Life.html" title="leetcode 289 Game of Life">leetcode 289 Game of Life</div><time class="aside-post_meta post-meta__date" title="发表于 2020-09-07 20:45:39">2020-09-07</time></div></a></div><div class="aside-recent-post"><a href="/2020-09-06-leetcode-48-Rotate-Image.html"><div class="aside-post-cover"><img class="aside-post-bg lazyload" data-src="https://images.pexels.com/photos/452780/pexels-photo-452780.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" title="leetcode 48 Rotate Image" alt="leetcode 48 Rotate Image"/></div><div class="aside-post-title"><div class="aside-post_title" href="/2020-09-06-leetcode-48-Rotate-Image.html" title="leetcode 48 Rotate Image">leetcode 48 Rotate Image</div><time class="aside-post_meta post-meta__date" title="发表于 2020-09-06 16:41:56">2020-09-06</time></div></a></div><div class="aside-recent-post"><a href="/2020-09-03-leetcode-227-Basic-Calculator-II.html"><div class="aside-post-cover"><img class="aside-post-bg lazyload" data-src="https://images.pexels.com/photos/164041/pexels-photo-164041.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" title="leetcode 227 Basic Calculator II" alt="leetcode 227 Basic Calculator II"/></div><div class="aside-post-title"><div class="aside-post_title" href="/2020-09-03-leetcode-227-Basic-Calculator-II.html" title="leetcode 227 Basic Calculator II">leetcode 227 Basic Calculator II</div><time class="aside-post_meta post-meta__date" title="发表于 2020-09-03 12:49:09">2020-09-03</time></div></a></div></div></div></div><div class="card-widget card-categories"><div class="card-content"><div class="item-headline"><i class="fa fa-folder-open" aria-hidden="true"></i><span>分类</span></div><ul class="card-category-list">
-            <li class="card-category-list-item"><a class="card-category-list-link" href="/categories/Hexo/"><span class="card-category-list-name">Hexo</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item"><a class="card-category-list-link" href="/categories/Linux/"><span class="card-category-list-name">Linux</span><span class="card-category-list-count">12</span></a></li><li class="card-category-list-item"><a class="card-category-list-link" href="/categories/algorithm/"><span class="card-category-list-name">algorithm</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item"><a class="card-category-list-link" href="/categories/deploy/"><span class="card-category-list-name">deploy</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item"><a class="card-category-list-link" href="/categories/%E5%85%B6%E4%BB%96/"><span class="card-category-list-name">其他</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item"><a class="card-category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/"><span class="card-category-list-name">数据挖掘</span><span class="card-category-list-count">7</span></a></li><li class="card-category-list-item"><a class="card-category-list-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">机器学习</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item"><a class="card-category-list-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">深度学习</span><span class="card-category-list-count">5</span></a></li>
-            <li class="card-category-list-item more is-center"><a class="card-category-list-link-more" href="/categories">
-                <span>查看更多</span><i class="fa fa-angle-right" aria-hidden="true"></i></a></li>           
-            </ul></div></div><div class="card-widget card-tags"><div class="card-content"><div class="item-headline"><i class="fa fa-tags" aria-hidden="true"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Apriori/" style="font-size: 16px; color: #999">Apriori</a> <a href="/tags/BFS/" style="font-size: 18.4px; color: #999fa8">BFS</a> <a href="/tags/BIOS/" style="font-size: 16px; color: #999">BIOS</a> <a href="/tags/CNN/" style="font-size: 16px; color: #999">CNN</a> <a href="/tags/Clementine/" style="font-size: 16px; color: #999">Clementine</a> <a href="/tags/C%E8%AF%AD%E8%A8%80/" style="font-size: 16px; color: #999">C语言</a> <a href="/tags/DFS/" style="font-size: 20.8px; color: #99a6b7">DFS</a> <a href="/tags/FP-Growth/" style="font-size: 16px; color: #999">FP-Growth</a> <a href="/tags/Hexo/" style="font-size: 16px; color: #999">Hexo</a> <a href="/tags/K-Means/" style="font-size: 16px; color: #999">K-Means</a> <a href="/tags/LSTM/" style="font-size: 18.4px; color: #999fa8">LSTM</a> <a href="/tags/Linux/" style="font-size: 19.6px; color: #99a3b0">Linux</a> <a href="/tags/MNIST/" style="font-size: 16px; color: #999">MNIST</a> <a href="/tags/Makefile/" style="font-size: 16px; color: #999">Makefile</a> <a href="/tags/OJ/" style="font-size: 16px; color: #999">OJ</a> <a href="/tags/OLAPS/" style="font-size: 16px; color: #999">OLAPS</a> <a href="/tags/Prophet/" style="font-size: 16px; color: #999">Prophet</a> <a href="/tags/Pytorch/" style="font-size: 18.4px; color: #999fa8">Pytorch</a> <a href="/tags/SPEC-SERT/" style="font-size: 16px; color: #999">SPEC SERT</a> <a href="/tags/SVM/" style="font-size: 16px; color: #999">SVM</a> <a href="/tags/String/" style="font-size: 16px; color: #999">String</a> <a href="/tags/TRIE/" style="font-size: 16px; color: #999">TRIE</a> <a href="/tags/Travis-CI/" style="font-size: 16px; color: #999">Travis-CI</a> <a href="/tags/benchmark/" style="font-size: 16px; color: #999">benchmark</a> <a href="/tags/bigdatabench/" style="font-size: 16px; color: #999">bigdatabench</a> <a href="/tags/c/" style="font-size: 17.2px; color: #999ca1">c++</a> <a href="/tags/ceph/" style="font-size: 16px; color: #999">ceph</a> <a href="/tags/coding/" style="font-size: 16px; color: #999">coding</a> <a href="/tags/command/" style="font-size: 17.2px; color: #999ca1">command</a> <a href="/tags/dict/" style="font-size: 16px; color: #999">dict</a> <a href="/tags/docker/" style="font-size: 17.2px; color: #999ca1">docker</a> <a href="/tags/gcc/" style="font-size: 16px; color: #999">gcc</a> <a href="/tags/gdb/" style="font-size: 16px; color: #999">gdb</a> <a href="/tags/graph/" style="font-size: 16px; color: #999">graph</a> <a href="/tags/hash-table/" style="font-size: 16px; color: #999">hash table</a> <a href="/tags/hexo/" style="font-size: 16px; color: #999">hexo</a> <a href="/tags/ipv6/" style="font-size: 16px; color: #999">ipv6</a> <a href="/tags/leetcode/" style="font-size: 22px; color: #99a9bf">leetcode</a> <a href="/tags/make/" style="font-size: 17.2px; color: #999ca1">make</a> <a href="/tags/next/" style="font-size: 16px; color: #999">next</a></div></div></div><div class="card-widget card-archives"><div class="card-content"><div class="item-headline"><i class="fa fa-archive" aria-hidden="true"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/09/"><span class="card-archive-list-date">九月 2020</span><span class="card-archive-list-count">5</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/08/"><span class="card-archive-list-date">八月 2020</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/07/"><span class="card-archive-list-date">七月 2020</span><span class="card-archive-list-count">4</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/06/"><span class="card-archive-list-date">六月 2020</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/05/"><span class="card-archive-list-date">五月 2020</span><span class="card-archive-list-count">9</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/04/"><span class="card-archive-list-date">四月 2020</span><span class="card-archive-list-count">9</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/03/"><span class="card-archive-list-date">三月 2020</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/02/"><span class="card-archive-list-date">二月 2020</span><span class="card-archive-list-count">7</span></a></li><li class="card-archive-list-item more is-center"><a class="card-archive-list-link-more" href="/archives">
-              <span>查看更多</span><i class="fa fa-angle-right" aria-hidden="true"></i></a></li></ul></div></div><div class="card-widget card-webinfo"><div class="card-content"><div class="item-headline"><i class="fa fa-line-chart" aria-hidden="true"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="webinfo-article-name">文章数目 :</div><div class="webinfo-article-count">88</div></div><div class="webinfo-item"><div class="webinfo-runtime-name">已运行时间 :</div><div class="webinfo-runtime-count" id="webinfo-runtime-count" start_date="6/23/2018 15:55:00">     </div></div><div class="webinfo-item"><div class="webinfo-site-wordcount-name">本站总字数 :</div><div class="webinfo-site-wordcount">128.4k</div></div><div class="webinfo-item">      <div class="webinfo-site-uv-name">本站访客数 :</div><div class="webinfo-site-uv-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="webinfo-site-name">本站总访问量 :</div><div class="webinfo-site-pv-count" id="busuanzi_value_site_pv"></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://res.cloudinary.com/bravey/image/upload/v1582873485/wallroom-2880x1620-bg-3cad5d2.jpg)" data-type="photo"><div id="footer-wrap"><div class="copyright">&copy;2018 - 2020 By BraveY</div><div class="framework-info"><span>驱动 </span><a href="https://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="简繁转换" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="夜间模式"></i></div><div id="rightside-config-show"><div id="rightside_config" title="设置"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-arrow-up" id="go-up" title="回到顶部" aria-hidden="true"></i></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a>
- <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="/js/third-party/fireworks.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script><script src="/js/third-party/ClickShowText.js"></script><script src="/js/search/local-search.js"></script><script src="https://cdn.jsdelivr.net/npm/typed.js"></script><script>var subtitleType = function () {
-  loadScript('https://sdk.jinrishici.com/v2/browser/jinrishici.js',function () {
-      var subtitleEffect = true
-      jinrishici.load(function (result) {
-        if (subtitleEffect) {
-          var sub = '给时光以生命，而不是给生命以时光,To the time to life&#44;rather than to life in time'.length == 0 ? new Array() : '给时光以生命，而不是给生命以时光,To the time to life&#44;rather than to life in time'.split(',')
-          var content = result.data.content
-          var both = sub.unshift(content)
-          var typed = new Typed('#subtitle', {
-            strings: sub,
-            startDelay: 300,
-            typeSpeed: 150,
-            loop: true,
-            backSpeed: 50,
-          })
-        } else {
-          document.getElementById('subtitle').innerHTML = result.data.content
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
         }
       })
-    }
-  )
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(https://res.cloudinary.com/bravey/image/upload/v1582873485/wallroom-2880x1620-bg-3cad5d2.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">BraveY</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">BraveY</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left_radius"><a href="/ping%20%E9%97%AE%E9%A2%98.html" title="ping 无法连接外网">     <img class="post_bg" src="https://images.pexels.com/photos/6758/wildernessculture-rei1440project-welltravelled-awesomeearth.jpg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ping 无法连接外网"></a></div><div class="recent-post-info"><a class="article-title" href="/ping%20%E9%97%AE%E9%A2%98.html" title="ping 无法连接外网">ping 无法连接外网</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-03-15T05:51:47.000Z" title="发表于 2019-03-15 13:51:47">2019-03-15</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/Linux/">Linux</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/Linux/">Linux</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E8%BF%90%E7%BB%B4/">运维</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98/">网络问题</a></span></div><div class="content">ping 无法连接外网
+问题ping外网ping不通
+1234yky@hw076:~&#x2F;tmux&gt; ping www.baidu.comping: unknown host www.baidu.comyky@hw076:~&#x2F;tmux&gt; ping 8.8.8.8connect: Network is unreachable
+ping内网可以ping通
+1234567891011hw076:~ # ping 172.18.11.114PING 172.18.11.114 (172.18.11.114) 56(84) bytes of data.64 bytes from 172.18.11.114: icmp_seq&#x3D;1 ttl&#x3D;64 time&#x3D;0.193 ms64 bytes from 172.18.11.114: icmp_seq&#x3D;2 ttl&#x3D;64 time&#x3D;0.216 ms64 bytes from 172.18.11.114: icmp_seq&#x3D;3 ttl&#x3D;64 time& ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/%E4%BD%BF%E7%94%A8shell%E8%84%9A%E6%9C%AC%E9%81%8D%E5%8E%86redis%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89kv%E5%AF%B9.html" title="shell 脚本遍历redis数据库">     <img class="post_bg" src="https://images.pexels.com/photos/640809/pexels-photo-640809.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="shell 脚本遍历redis数据库"></a></div><div class="recent-post-info"><a class="article-title" href="/%E4%BD%BF%E7%94%A8shell%E8%84%9A%E6%9C%AC%E9%81%8D%E5%8E%86redis%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89kv%E5%AF%B9.html" title="shell 脚本遍历redis数据库">shell 脚本遍历redis数据库</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-03-14T12:00:46.000Z" title="发表于 2019-03-14 20:00:46">2019-03-14</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/Linux/">Linux</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/redis/">redis</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/shell/">shell</a></span></div><div class="content">使用shell脚本遍历redis数据库中的所有kv对记录下如何使用shell通过redis-cli 命令来操作redis数据库，因为直接在命令行中输入
+redis-cli command 的话command必须是单个单词，不能像是KEYS * 这种.
+
+123456789101112#!&#x2F;bin&#x2F;bashfilename&#x3D;&#39;redis&#39;&#96;date +%Y-%m-%d_%H:%M&#96;work_path&#x3D;$(dirname &quot;$0&quot;) echo &quot;实例化redis数据文件为:$work_path&#x2F;$filename&quot;echo &quot;keys *&quot; | redis-cli &gt; key_db.txtecho &quot;将所有key保存到:$work_path&#x2F;key_db.txt&quot;for line in &#96;cat key_db.txt&#96;do        echo &quot;key:$line &quot; &gt ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/%E4%BD%BF%E7%94%A8YCSB%20%E8%AF%84%E6%B5%8Bredis%E6%80%A7%E8%83%BD.html" title="使用YCSB 评测redis性能">     <img class="post_bg" src="https://images.pexels.com/photos/417222/pexels-photo-417222.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用YCSB 评测redis性能"></a></div><div class="recent-post-info"><a class="article-title" href="/%E4%BD%BF%E7%94%A8YCSB%20%E8%AF%84%E6%B5%8Bredis%E6%80%A7%E8%83%BD.html" title="使用YCSB 评测redis性能">使用YCSB 评测redis性能</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-03-12T09:11:44.000Z" title="发表于 2019-03-12 17:11:44">2019-03-12</time></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/redis/">redis</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/benchmark/">benchmark</a></span></div><div class="content">使用YCSB 评测redis性能YCSB是雅虎推出的可以评测许多主流数据库性能的基准测试，其中包括Redis。
+
+安装YCSB
+安装java和maven
+
+机子已经有了java，所以只用安装maven Ubuntu安装命令为：
+sudo apt-get install maven
+
+
+
+安装YCSB 
+123git clone http:&#x2F;&#x2F;github.com&#x2F;brianfrankcooper&#x2F;YCSB.gitcd YCSBmvn -pl com.yahoo.ycsb:redis-binding -am clean package
+必须是gitclone的源码包才能执行mvn 命令。wget或者curl下来包是已经编译好了的无需执行mvn命令。
+
+mvn -pl com.yahoo.ycsb:redis-binding -am clean package 报错：
+123456789[INFO] Scanning for projects...[ERROR] [ERROR] Could not find the selected project  ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/apt-get%20install%20%E5%A4%B1%E8%B4%A5.html" title="apt-get install失败">     <img class="post_bg" src="/img/post.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="apt-get install失败"></a></div><div class="recent-post-info"><a class="article-title" href="/apt-get%20install%20%E5%A4%B1%E8%B4%A5.html" title="apt-get install失败">apt-get install失败</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-03-10T08:23:20.000Z" title="发表于 2019-03-10 16:23:20">2019-03-10</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/Linux/">Linux</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/Linux/">Linux</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E8%BF%90%E7%BB%B4/">运维</a></span></div><div class="content">apt-get install失败
+第一阶段
+使用perf 报错 内核无法找到perf
+12345678910root@hw103:&#x2F;home&#x2F;yky&#x2F;redis-5.0.3# perf WARNING: perf not found for kernel 4.15.0-45  You may need to install the following packages for this specific kernel:    linux-tools-4.15.0-45-generic    linux-cloud-tools-4.15.0-45-generic  You may also want to install one of the following packages to keep up to date:    linux-tools-generic    linux-cloud-tools-generic
+
+
+
+安装此内核的通用工具时错误
+1234567891011root@hw103:&#x2F;home&#x2F;yky&#x2F;re ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/make%E5%AD%A6%E4%B9%A0.html" title="Make学习">     <img class="post_bg" src="https://images.pexels.com/photos/531602/pexels-photo-531602.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Make学习"></a></div><div class="recent-post-info"><a class="article-title" href="/make%E5%AD%A6%E4%B9%A0.html" title="Make学习">Make学习</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2018-10-09T14:51:57.000Z" title="发表于 2018-10-09 22:51:57">2018-10-09</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/make/">make</a></span></div><div class="content">make学习开始阅读redis源码，都说redis很简单，源码不多。但是源码包下载下来后却发现不知道从何处入手，有那么多文件和源码。后面查找资料才发现阅读源码的第一步就是阅读Makefile，项目如何构建和源码间的关联都写在了Makefile文件中。之前没有接触过Makefile，记录下Make的学习。
+
+makefile的格式
+概述
+makefile 文件由一系列rules组成 rules的格式为：
+
+
+12&lt;target&gt; : &lt;prerequisites&gt; [tab]  &lt;commands&gt;
+​    “目标”是必需的，不可省略；”前置条件”和”命令”都是可选的，但是两者之中必须至少存在一个。 
+​    每条规则就明确两件事：构建目标的前置条件是什么，以及如何构建。 
+
+target
+一个目标（target）就构成一条规则。目标通常是文件名，指明Make命令所要构建的对象，比如上文的 a.txt 目标可以是一个文件名，也可以是多个文件名，之间用空格分隔。（make的时候指定文件名从而对该文件进行构建build）
+除了文件名，目标还可以是某个操 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/Linux%20%E5%91%BD%E4%BB%A4%20%E5%AD%A6%E4%B9%A0.html" title="Linux命令学习之wc">     <img class="post_bg" src="https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux命令学习之wc"></a></div><div class="recent-post-info"><a class="article-title" href="/Linux%20%E5%91%BD%E4%BB%A4%20%E5%AD%A6%E4%B9%A0.html" title="Linux命令学习之wc">Linux命令学习之wc</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2018-07-09T13:12:11.000Z" title="发表于 2018-07-09 21:12:11">2018-07-09</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/Linux/">Linux</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/Linux/">Linux</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/command/">command</a></span></div><div class="content">Linux 命令学习wc命令wc命令
+
+作用：Word Count 功能为统计指定文件中的字节数、字数、行数，并将统计结果显示输出。 
+格式：
+wc [option] filepath
+
+
+参数
+-c 统计字节数
+-l 统计行数
+-m 统计字符数 标志不能与 -c 标志一起使用。 
+-w 统计字（单词word）数。一个字被定义为由空白、跳格或换行字符分隔的字符串 
+-L  打印最长行的长度。 
+-help 显示帮助信息 
+--version 显示版本信息 
+
+
+参考网址：http://www.cnblogs.com/peida/archive/2012/12/18/2822758.html
+
+</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/tee%E5%91%BD%E4%BB%A4%E8%A7%A3%E6%9E%90.html" title="tee命令解析">     <img class="post_bg" src="https://images.pexels.com/photos/165505/pexels-photo-165505.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="tee命令解析"></a></div><div class="recent-post-info"><a class="article-title" href="/tee%E5%91%BD%E4%BB%A4%E8%A7%A3%E6%9E%90.html" title="tee命令解析">tee命令解析</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2018-06-23T09:21:19.000Z" title="发表于 2018-06-23 17:21:19">2018-06-23</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/Linux/">Linux</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/Linux/">Linux</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/command/">command</a></span></div><div class="content">make 2&gt;&amp;1 | tee log.txt 命令解析在安装mpich 的时候遇到了很多这个命令，此处学习下这个命令：2&gt;&amp;1 | tee log.txt 
+
+这个命令共有三个部分： 2&gt;&amp;1 |  tee log.txt
+2&gt;&amp;1shell中：最常使用的 FD (file descriptor) 大概有三个 
+0表示标准输入Standard Input (STDIN)  
+1表示标准输出Standard Output (STDOUT)  
+ 2表示标准错误输出 Standard Error Output (STDERR)  
+‘&gt;’ 默认为标准输出重定向 （类似于c++ 中的 &gt;&gt;？）
+在标准情况下, 这些FD分别跟如下设备关联 
+stdin(0): keyboard  键盘输入,并返回在前端   
+stdout(1): monitor  正确返回值 输出到前端   
+stderr(2): monitor 错误返回值 输出到前端  
+1&gt;&amp;2  正确返回值传递给2输出通道 &amp;2表示2输出 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/BigdataBench-deploy.html" title="BigdataBench deploy">     <img class="post_bg" src="https://images.pexels.com/photos/46253/mt-fuji-sea-of-clouds-sunrise-46253.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="BigdataBench deploy"></a></div><div class="recent-post-info"><a class="article-title" href="/BigdataBench-deploy.html" title="BigdataBench deploy">BigdataBench deploy</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2018-06-23T08:55:45.000Z" title="发表于 2018-06-23 16:55:45">2018-06-23</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/deploy/">deploy</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/bigdatabench/">bigdatabench</a></span></div><div class="content">Bigdatabench 4.0 MPI版本 安装
+官网上面的指南BigDataBench User Manual有一些错误。
+本机环境：
+​    Centos 6.9
+​    gcc (GCC) 4.8.2 20140120 (Red Hat 4.8.2-15)
+​    g++ (GCC) 4.8.2 20140120 (Red Hat 4.8.2-15)
+mpi的安装这部分网上资料很多，而Manual中有一点错误
+
+需要保证c 编译器 如gcc c++ 编译器 如：g++
+
+基础安装
+
+从官网下载安装包解压
+
+
+wget http://www.mpich.org/static/downloads/3.2.1/mpich-3.2.1.tar.gz  从官网下载安装包
+tar -zxvf mpich-3.2.1.tar.gz  解压
+cd mpich-3.2.1
+
+
+配置安装目录   本机安装在mpich-install目录下
+
+
+./configure –prefix=/home/mpich-install 2&gt;&amp;1 | tee c.txt 手册中&amp;被错写 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/%E5%9B%BE%E8%AE%A1%E7%AE%97%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95.html" title="图计算常用算法">     <img class="post_bg" src="https://images.pexels.com/photos/2174656/pexels-photo-2174656.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="图计算常用算法"></a></div><div class="recent-post-info"><a class="article-title" href="/%E5%9B%BE%E8%AE%A1%E7%AE%97%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95.html" title="图计算常用算法">图计算常用算法</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2018-04-24T03:20:17.000Z" title="发表于 2018-04-24 11:20:17">2018-04-24</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/algorithm/">algorithm</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/graph/">graph</a></span></div><div class="content">图算法的典型操作关于一些常见图算法的调研与学习。
+
+常用图算法PageRank
+背景    
+
+既考虑入链数量，又考虑了网页质量因素，二者相结合 数量与权重的结合
+算法与主题无关，因为PR值是根据图计算出来的
+
+
+算法原理
+
+基本思想
+A有链接指向B，表明A认为B比A重要。A将自身权重分配一部分给B。
+$W(B)=W(A)/N$   W(A) 是A的PR值，W(B)是A 分配的权重，N是A的出链数
+
+PageRank公式修正
+存在出链为0的孤立网页，增加阻力系数q ，一般取q=0.85，其意义是用户有1-q的概率不点击此页面上面的所有链接。同时还有随机直接跳转的概率，如直接输入网址，点击书签等。完整公式如下：
+
+
+
+
+
+Connected component
+定义
+连通分支：图中，某个子图的任意两点有边连接，而子图之间无边连接
+问题：cc是寻找连通分支的算法？？
+
+
+通过BFS、DFS算法的便利就可以找到连通分支，每个白色节点开始的就是一个连通分支。
+常见算法
+DFS
+原理：访问某个顶点后只有当某个节点是叶结点后才会访问其余相邻节点。
+步骤：
+选择一个结点作为起始结点，标记为灰色
+从该 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/ceph%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3.html" title="ceph 部署文档">     <img class="post_bg" src="https://images.pexels.com/photos/390051/surfer-wave-sunset-the-indian-ocean-390051.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ceph 部署文档"></a></div><div class="recent-post-info"><a class="article-title" href="/ceph%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3.html" title="ceph 部署文档">ceph 部署文档</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2018-04-17T09:36:03.000Z" title="发表于 2018-04-17 17:36:03">2018-04-17</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/deploy/">deploy</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/ceph/">ceph</a></span></div><div class="content">ceph 部署文档
+
+1.配置所有节点创建ceph用户安装配置NTP
+systemctl enable ntp  ubuntu 14.04不可用，感觉已经安装过了，因此跳过。
+
+配置hosts文件172.16.1.93 object1172.16.1.94 object2172.16.1.95 object3172.16.1.66 object4172.16.1.92 controller
+
+2. 配置ssh服务器修改ssh的配置文件
+Host controller        Hostname gd92        User cephuserHost object1        Hostname gd93        User cephuserHost object2        Hostname hw101        User cephuserHost object3        Hostname gd95        User cephuserHost object4        Hostname gd66        User cephuser
+生成密钥并 ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/4/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">BraveY</div><div class="author-info__description">今日事，今日毕</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记"><img src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C专家编程读书笔记"/></a><div class="content"><a class="title" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记">C专家编程读书笔记</a><time datetime="2021-03-18T04:59:02.000Z" title="发表于 2021-03-18 12:59:02">2021-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱"><img src="https://images.pexels.com/photos/531602/pexels-photo-531602.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C语言传递指针参数的陷阱"/></a><div class="content"><a class="title" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱">C语言传递指针参数的陷阱</a><time datetime="2020-12-12T13:39:57.000Z" title="发表于 2020-12-12 21:39:57">2020-12-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-07-14-Measuring-and-Benchmarking-Power-Consumption-and-Energy-Efficiency.html" title="Measuring and Benchmarking Power Consumption and Energy Efficiency"><img src="https://images.pexels.com/photos/164041/pexels-photo-164041.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Measuring and Benchmarking Power Consumption and Energy Efficiency"/></a><div class="content"><a class="title" href="/2020-07-14-Measuring-and-Benchmarking-Power-Consumption-and-Energy-Efficiency.html" title="Measuring and Benchmarking Power Consumption and Energy Efficiency">Measuring and Benchmarking Power Consumption and Energy Efficiency</a><time datetime="2020-07-14T08:05:52.000Z" title="发表于 2020-07-14 16:05:52">2020-07-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-05-12-%E4%BD%BF%E7%94%A8LSTM+Pytorch%E5%AF%B9%E7%94%B5%E5%BD%B1%E8%AF%84%E8%AE%BA%E8%BF%9B%E8%A1%8C%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB.html" title="使用LSTM+Pytorch对电影评论进行情感分类"><img src="https://images.pexels.com/photos/452780/pexels-photo-452780.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用LSTM+Pytorch对电影评论进行情感分类"/></a><div class="content"><a class="title" href="/2020-05-12-%E4%BD%BF%E7%94%A8LSTM+Pytorch%E5%AF%B9%E7%94%B5%E5%BD%B1%E8%AF%84%E8%AE%BA%E8%BF%9B%E8%A1%8C%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB.html" title="使用LSTM+Pytorch对电影评论进行情感分类">使用LSTM+Pytorch对电影评论进行情感分类</a><time datetime="2020-05-12T14:48:08.000Z" title="发表于 2020-05-12 22:48:08">2020-05-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-05-05-%E8%8C%83%E9%97%B2%E5%86%99%E8%AF%97%E5%99%A8%E4%B9%8B%E7%94%A8LSTM+Pytorch%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%86%99%E8%AF%97.html" title="范闲写诗器之用LSTM+Pytorch实现自动写诗"><img src="https://images.pexels.com/photos/390051/surfer-wave-sunset-the-indian-ocean-390051.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="范闲写诗器之用LSTM+Pytorch实现自动写诗"/></a><div class="content"><a class="title" href="/2020-05-05-%E8%8C%83%E9%97%B2%E5%86%99%E8%AF%97%E5%99%A8%E4%B9%8B%E7%94%A8LSTM+Pytorch%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%86%99%E8%AF%97.html" title="范闲写诗器之用LSTM+Pytorch实现自动写诗">范闲写诗器之用LSTM+Pytorch实现自动写诗</a><time datetime="2020-05-05T07:15:15.000Z" title="发表于 2020-05-05 15:15:15">2020-05-05</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline"><i class="fas fa-folder-open"></i><span>分类</span></div><ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Hexo/"><span class="card-category-list-name">Hexo</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Linux/"><span class="card-category-list-name">Linux</span><span class="card-category-list-count">12</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/algorithm/"><span class="card-category-list-name">algorithm</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/deploy/"><span class="card-category-list-name">deploy</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%85%B6%E4%BB%96/"><span class="card-category-list-name">其他</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/"><span class="card-category-list-name">数据挖掘</span><span class="card-category-list-count">7</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">机器学习</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">深度学习</span><span class="card-category-list-count">5</span></a></li>
+            <li class="card-category-list-item more is-center"><a class="card-category-list-link-more" href="/categories/">
+                <span>查看更多</span><i class="fas fa-angle-right"></i></a></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Apriori/" style="font-size: 1.1em; color: #999">Apriori</a> <a href="/tags/BIOS/" style="font-size: 1.1em; color: #999">BIOS</a> <a href="/tags/C/" style="font-size: 1.1em; color: #999">C</a> <a href="/tags/CNN/" style="font-size: 1.1em; color: #999">CNN</a> <a href="/tags/Clementine/" style="font-size: 1.1em; color: #999">Clementine</a> <a href="/tags/C%E8%AF%AD%E8%A8%80/" style="font-size: 1.2em; color: #999da3">C语言</a> <a href="/tags/FP-Growth/" style="font-size: 1.1em; color: #999">FP-Growth</a> <a href="/tags/Hexo/" style="font-size: 1.1em; color: #999">Hexo</a> <a href="/tags/K-Means/" style="font-size: 1.1em; color: #999">K-Means</a> <a href="/tags/LSTM/" style="font-size: 1.3em; color: #99a1ac">LSTM</a> <a href="/tags/Linux/" style="font-size: 1.4em; color: #99a5b6">Linux</a> <a href="/tags/MNIST/" style="font-size: 1.1em; color: #999">MNIST</a> <a href="/tags/Makefile/" style="font-size: 1.1em; color: #999">Makefile</a> <a href="/tags/OJ/" style="font-size: 1.1em; color: #999">OJ</a> <a href="/tags/OLAPS/" style="font-size: 1.1em; color: #999">OLAPS</a> <a href="/tags/Prophet/" style="font-size: 1.1em; color: #999">Prophet</a> <a href="/tags/Pytorch/" style="font-size: 1.3em; color: #99a1ac">Pytorch</a> <a href="/tags/SPEC-SERT/" style="font-size: 1.1em; color: #999">SPEC SERT</a> <a href="/tags/SVM/" style="font-size: 1.1em; color: #999">SVM</a> <a href="/tags/Travis-CI/" style="font-size: 1.1em; color: #999">Travis-CI</a> <a href="/tags/benchmark/" style="font-size: 1.1em; color: #999">benchmark</a> <a href="/tags/bigdatabench/" style="font-size: 1.1em; color: #999">bigdatabench</a> <a href="/tags/c/" style="font-size: 1.1em; color: #999">c++</a> <a href="/tags/ceph/" style="font-size: 1.1em; color: #999">ceph</a> <a href="/tags/command/" style="font-size: 1.2em; color: #999da3">command</a> <a href="/tags/dict/" style="font-size: 1.1em; color: #999">dict</a> <a href="/tags/docker/" style="font-size: 1.2em; color: #999da3">docker</a> <a href="/tags/gcc/" style="font-size: 1.1em; color: #999">gcc</a> <a href="/tags/gdb/" style="font-size: 1.1em; color: #999">gdb</a> <a href="/tags/graph/" style="font-size: 1.1em; color: #999">graph</a> <a href="/tags/hexo/" style="font-size: 1.1em; color: #999">hexo</a> <a href="/tags/ipv6/" style="font-size: 1.1em; color: #999">ipv6</a> <a href="/tags/make/" style="font-size: 1.2em; color: #999da3">make</a> <a href="/tags/next/" style="font-size: 1.1em; color: #999">next</a> <a href="/tags/nlp/" style="font-size: 1.1em; color: #999">nlp</a> <a href="/tags/object/" style="font-size: 1.1em; color: #999">object</a> <a href="/tags/redis/" style="font-size: 1.5em; color: #99a9bf">redis</a> <a href="/tags/shadowsocks/" style="font-size: 1.1em; color: #999">shadowsocks</a> <a href="/tags/shell/" style="font-size: 1.3em; color: #99a1ac">shell</a> <a href="/tags/%E4%BD%99%E5%BC%A6%E7%9B%B8%E4%BC%BC%E5%BA%A6/" style="font-size: 1.1em; color: #999">余弦相似度</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/03/"><span class="card-archive-list-date">三月 2021</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/12/"><span class="card-archive-list-date">十二月 2020</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/07/"><span class="card-archive-list-date">七月 2020</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/05/"><span class="card-archive-list-date">五月 2020</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/04/"><span class="card-archive-list-date">四月 2020</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/03/"><span class="card-archive-list-date">三月 2020</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/02/"><span class="card-archive-list-date">二月 2020</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2019/12/"><span class="card-archive-list-date">十二月 2019</span><span class="card-archive-list-count">4</span></a></li><li class="card-archive-list-item more is-center"><a class="card-archive-list-link-more" href="/archives/">
+              <span>查看更多</span><i class="fas fa-angle-right"  ></i></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">50</div></div><div class="webinfo-item"><div class="item-name">已运行时间 :</div><div class="item-count" id="runtimeshow" data-publishDate="2021-08-14T12:39:07.133Z"></div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">92.6k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2021-08-14T12:39:07.188Z"></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By BraveY</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>function subtitleType () {
+  getScript('https://sdk.jinrishici.com/v2/browser/jinrishici.js').then(() => {
+    jinrishici.load(function (result) {
+      if (true) {
+        var sub = "给时光以生命，而不是给生命以时光,To the time to life&#44;rather than to life in time".length == 0 ? new Array() : "给时光以生命，而不是给生命以时光,To the time to life&#44;rather than to life in time".split(',')
+        var content = result.data.content
+        var both = sub.unshift(content)
+        var typed = new Typed('#subtitle', {
+          strings: sub,
+          startDelay: 300,
+          typeSpeed: 150,
+          loop: true,
+          backSpeed: 50,
+        })
+      } else {
+        document.getElementById('subtitle').innerHTML = result.data.content
+      }
+    })
+  })
 }
-window.addEventListener('load', subtitleType)
-</script></body></html>
+
+if (true) {
+  if (typeof Typed === 'function') {
+    subtitleType()
+  } else {
+    getScript('https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js').then(subtitleType)
+  }
+} else {
+  subtitleType()
+}
+</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

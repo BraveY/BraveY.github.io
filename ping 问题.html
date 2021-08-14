@@ -1,91 +1,177 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ping 无法连接外网 | BraveY</title><meta name="description" content="ping 无法连接外网 问题ping外网ping不通 1234yky@hw076:~&#x2F;tmux&gt; ping www.baidu.comping: unknown host www.baidu.comyky@hw076:~&#x2F;tmux&gt; ping 8.8.8.8connect: Network is unreachable ping内网可以ping通 123456789"><meta name="keywords" content="Linux,运维,网络问题"><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="dns-prefetch" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="crossorigin"/><link rel="dns-prefetch" href="https://fonts.googleapis.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="dns-prefetch" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="hDujO4MQUB7U9ir-4VXM5PW4fDFSq0-7G-LBX-Lh86M"/><meta name="baidu-site-verification" content="8XIUcPkbzm"/><meta name="twitter:card" content="summary"><meta name="twitter:title" content="ping 无法连接外网"><meta name="twitter:description" content="ping 无法连接外网 问题ping外网ping不通 1234yky@hw076:~&#x2F;tmux&gt; ping www.baidu.comping: unknown host www.baidu.comyky@hw076:~&#x2F;tmux&gt; ping 8.8.8.8connect: Network is unreachable ping内网可以ping通 123456789"><meta name="twitter:image" content="https://images.pexels.com/photos/358383/pexels-photo-358383.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500"><meta property="og:type" content="article"><meta property="og:title" content="ping 无法连接外网"><meta property="og:url" content="https://bravey.github.io/ping%20%E9%97%AE%E9%A2%98.html"><meta property="og:site_name" content="BraveY"><meta property="og:description" content="ping 无法连接外网 问题ping外网ping不通 1234yky@hw076:~&#x2F;tmux&gt; ping www.baidu.comping: unknown host www.baidu.comyky@hw076:~&#x2F;tmux&gt; ping 8.8.8.8connect: Network is unreachable ping内网可以ping通 123456789"><meta property="og:image" content="https://images.pexels.com/photos/358383/pexels-photo-358383.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500"><meta property="article:published_time" content="2019-03-15T05:51:47.000Z"><meta property="article:modified_time" content="2020-03-04T07:17:12.111Z"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>var autoChangeMode = '1'
-var t = Cookies.get("theme")
-if (autoChangeMode == '1'){
-  var isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
-  var isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
-  var isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
-  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
-
-  if (t === undefined){
-    if (isLightMode) activateLightMode()
-    else if (isDarkMode) activateDarkMode()
-    else if (isNotSpecified || hasNoSupport){
-      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
-      var now = new Date()
-      var hour = now.getHours()
-      var isNight = hour < 6 || hour >= 18
-      isNight ? activateDarkMode() : activateLightMode()
-  }
-  } else if (t == 'light') activateLightMode()
-  else activateDarkMode()
-
-} else if (autoChangeMode == '2'){
-  now = new Date();
-  hour = now.getHours();
-  isNight = hour < 6 || hour >= 18
-  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
-  else if (t === 'light') activateLightMode()
-  else activateDarkMode() 
-} else {
-  if ( t == 'dark' ) activateDarkMode()
-  else if ( t == 'light') activateLightMode()
-}
-
-function activateDarkMode(){
-  document.documentElement.setAttribute('data-theme', 'dark')
-  if (document.querySelector('meta[name="theme-color"]') !== null){
-    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
-  }
-}
-function activateLightMode(){
-  document.documentElement.setAttribute('data-theme', 'light')
-  if (document.querySelector('meta[name="theme-color"]') !== null){
-  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
-  }
-}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="https://bravey.github.io/ping%20%E9%97%AE%E9%A2%98.html"><link rel="prev" title="Redis设计与实现读书笔记——第二章SDS" href="https://bravey.github.io/2019-03-20-Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html"><link rel="next" title="shell 脚本遍历redis数据库" href="https://bravey.github.io/%E4%BD%BF%E7%94%A8shell%E8%84%9A%E6%9C%AC%E9%81%8D%E5%8E%86redis%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89kv%E5%AF%B9.html"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ping 无法连接外网 | BraveY</title><meta name="keywords" content="Linux,运维,网络问题"><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="ping 无法连接外网">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ping 无法连接外网">
+<meta property="og:url" content="https://bravey.github.io/ping%20%E9%97%AE%E9%A2%98.html">
+<meta property="og:site_name" content="BraveY">
+<meta property="og:description" content="ping 无法连接外网">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images.pexels.com/photos/6758/wildernessculture-rei1440project-welltravelled-awesomeearth.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500">
+<meta property="article:published_time" content="2019-03-15T05:51:47.000Z">
+<meta property="article:modified_time" content="2020-03-04T07:17:12.111Z">
+<meta property="article:author" content="BraveY">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="运维">
+<meta property="article:tag" content="网络问题">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.pexels.com/photos/6758/wildernessculture-rei1440project-welltravelled-awesomeearth.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500"><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/ping%20%E9%97%AE%E9%A2%98"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="hDujO4MQUB7U9ir-4VXM5PW4fDFSq0-7G-LBX-Lh86M"/><meta name="baidu-site-verification" content="8XIUcPkbzm"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>var GLOBAL_CONFIG = { 
   root: '/',
   algolia: undefined,
-  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
-  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
   copy: {
     success: '复制成功',
     error: '复制错误',
     noSupport: '浏览器不支持'
   },
-  bookmark: {
-    message_prev: '按',
-    message_next: '键将本页加入书签'
+  relativeDate: {
+    homepage: false,
+    post: false
   },
-  runtime_unit: '天',
-  runtime: true,
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
   copyright: undefined,
-  ClickShowText: {"text":"富强,民主,文明,和谐,自由,平等,公正,法治,爱国,敬业,诚信,友善","fontSize":"15px"},
-  medium_zoom: false,
-  fancybox: true,
+  lightbox: 'fancybox',
   Snackbar: undefined,
-  baiduPush: true,
-  highlightCopy: true,
-  highlightLang: true,
-  highlightShrink: 'false',
-  isFontAwesomeV5: false,
-  isPhotoFigcaption: false
-  
-}</script><script>var GLOBAL_CONFIG_SITE = { 
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}
+
+// https://stackoverflow.com/questions/16839698/jquery-getscript-alternative-in-native-javascript
+const getScript = url => new Promise((resolve, reject) => {
+  const script = document.createElement('script')
+  script.src = url
+  script.async = true
+  script.onerror = reject
+  script.onload = script.onreadystatechange = function() {
+    const loadState = this.readyState
+    if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+    script.onload = script.onreadystatechange = null
+    resolve()
+  }
+  document.head.appendChild(script)
+})</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
   isPost: true,
   isHome: false,
-  isSidebar: true  
-  }</script><noscript><style>
-#page-header {
-  opacity: 1
-}
-.justified-gallery img{
-  opacity: 1
-}
-</style></noscript><meta name="generator" content="Hexo 4.2.0"></head><body><canvas class="fireworks"></canvas><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">88</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">109</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">14</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><i class="fa fa-arrow-right on" id="toggle-sidebar" aria-hidden="true">     </i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ping-无法连接外网"><span class="toc-number">1.</span> <span class="toc-text">ping 无法连接外网</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#问题"><span class="toc-number">1.1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解决方法"><span class="toc-number">1.2.</span> <span class="toc-text">解决方法</span></a></li></ol></li></ol></div></div></div><div id="body-wrap"><div id="web_bg" data-type="photo"></div><div class="post-bg" id="nav" style="background-image: url(https://images.pexels.com/photos/358383/pexels-photo-358383.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500)"><div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">BraveY</a></span><span class="pull_right menus"><div id="search_button"><a class="site-page social-icon search"><i class="fa fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span></span></div><div id="post-info"><div id="post-title"><div class="posttitle">ping 无法连接外网</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date"><span class="post-meta__date-created" title="发表于 2019-03-15 13:51:47"><i class="fa fa-calendar" aria-hidden="true"></i> 发表于 2019-03-15</span><span class="post-meta__separator">|</span><span class="post-meta__date-updated" title="更新于 2020-03-04 15:17:12"><i class="fa fa-history" aria-hidden="true"></i> 更新于 2020-03-04</span></time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/Linux/">Linux</a></span></div><div class="meta-secondline"> <span class="post-meta-wordcount"><i class="post-meta__icon fa fa-file-word-o" aria-hidden="true"></i><span>字数总计:</span><span class="word-count">550</span><span class="post-meta__separator">|</span><i class="post-meta__icon fa fa-clock-o" aria-hidden="true"></i><span>阅读时长: 3 分钟</span></span></div><div class="meta-thirdline"><span class="post-meta-pv-cv"><span class="post-meta__separator">|</span><i class="fa fa-eye post-meta__icon" aria-hidden="true"> </i><span>阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-commentcount"><span class="post-meta__separator">|</span><i class="post-meta__icon fa fa-comment-o" aria-hidden="true"></i><span>评论数:</span><span class="disqus-comment-count comment-count"><a href="https://bravey.github.io/ping%20%E9%97%AE%E9%A2%98.html#disqus_thread"></a></span></span></div></div></div></div><main class="layout_post" id="content-inner"><article id="post"><div id="article-container"><h2 id="ping-无法连接外网"><a href="#ping-无法连接外网" class="headerlink" title="ping 无法连接外网"></a>ping 无法连接外网</h2><a id="more"></a>
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2020-03-04 15:17:12'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://images.pexels.com/photos/6758/wildernessculture-rei1440project-welltravelled-awesomeearth.jpg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">BraveY</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">ping 无法连接外网</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-03-15T05:51:47.000Z" title="发表于 2019-03-15 13:51:47">2019-03-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2020-03-04T07:17:12.111Z" title="更新于 2020-03-04 15:17:12">2020-03-04</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Linux/">Linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">550</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>3分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="ping-无法连接外网"><a href="#ping-无法连接外网" class="headerlink" title="ping 无法连接外网"></a>ping 无法连接外网</h2><a id="more"></a>
 <h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>ping外网ping不通</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yky@hw076:~&#x2F;tmux&gt; ping www.baidu.com</span><br><span class="line">ping: unknown host www.baidu.com</span><br><span class="line">yky@hw076:~&#x2F;tmux&gt; ping 8.8.8.8</span><br><span class="line">connect: Network is unreachable</span><br></pre></td></tr></table></figure>
 <p>ping内网可以ping通</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">hw076:~ # ping 172.18.11.114</span><br><span class="line">PING 172.18.11.114 (172.18.11.114) 56(84) bytes of data.</span><br><span class="line">64 bytes from 172.18.11.114: icmp_seq&#x3D;1 ttl&#x3D;64 time&#x3D;0.193 ms</span><br><span class="line">64 bytes from 172.18.11.114: icmp_seq&#x3D;2 ttl&#x3D;64 time&#x3D;0.216 ms</span><br><span class="line">64 bytes from 172.18.11.114: icmp_seq&#x3D;3 ttl&#x3D;64 time&#x3D;0.207 ms</span><br><span class="line">64 bytes from 172.18.11.114: icmp_seq&#x3D;4 ttl&#x3D;64 time&#x3D;0.200 ms</span><br><span class="line">^C</span><br><span class="line">--- 172.18.11.114 ping statistics ---</span><br><span class="line">4 packets transmitted, 4 received, 0% packet loss, time 2999ms</span><br><span class="line">rtt min&#x2F;avg&#x2F;max&#x2F;mdev &#x3D; 0.193&#x2F;0.204&#x2F;0.216&#x2F;0.008 ms</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">hw076:~ # ping 172.18.11.114</span><br><span class="line">PING 172.18.11.114 (172.18.11.114) 56(84) bytes of data.</span><br><span class="line">64 bytes from 172.18.11.114: icmp_seq&#x3D;1 ttl&#x3D;64 time&#x3D;0.193 ms</span><br><span class="line">64 bytes from 172.18.11.114: icmp_seq&#x3D;2 ttl&#x3D;64 time&#x3D;0.216 ms</span><br><span class="line">64 bytes from 172.18.11.114: icmp_seq&#x3D;3 ttl&#x3D;64 time&#x3D;0.207 ms</span><br><span class="line">64 bytes from 172.18.11.114: icmp_seq&#x3D;4 ttl&#x3D;64 time&#x3D;0.200 ms</span><br><span class="line">^C</span><br><span class="line">--- 172.18.11.114 ping statistics ---</span><br><span class="line">4 packets transmitted, 4 received, 0% packet loss, time 2999ms</span><br><span class="line">rtt min&#x2F;avg&#x2F;max&#x2F;mdev &#x3D; 0.193&#x2F;0.204&#x2F;0.216&#x2F;0.008 ms</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>ifconfig信息为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">hw076:~ # ifconfig </span><br><span class="line">eth0      Link encap:Ethernet  HWaddr 90:E2:BA:15:C9:C4  </span><br><span class="line">          inet addr:172.18.11.76  Bcast:192.168.1.255  Mask:255.255.0.0</span><br><span class="line">          inet6 addr: fe80::92e2:baff:fe15:c9c4&#x2F;64 Scope:Link</span><br><span class="line">          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1</span><br><span class="line">          RX packets:9725797 errors:0 dropped:506 overruns:0 frame:0</span><br><span class="line">          TX packets:21023 errors:0 dropped:0 overruns:0 carrier:0</span><br><span class="line">          collisions:0 txqueuelen:1000 </span><br><span class="line">          RX bytes:598731249 (570.9 Mb)  TX bytes:2767270 (2.6 Mb)</span><br><span class="line">          Memory:fb480000-fb500000 </span><br><span class="line"></span><br><span class="line">lo        Link encap:Local Loopback  </span><br><span class="line">          inet addr:127.0.0.1  Mask:255.0.0.0</span><br><span class="line">          inet6 addr: ::1&#x2F;128 Scope:Host</span><br><span class="line">          UP LOOPBACK RUNNING  MTU:65536  Metric:1</span><br><span class="line">          RX packets:276 errors:0 dropped:0 overruns:0 frame:0</span><br><span class="line">          TX packets:276 errors:0 dropped:0 overruns:0 carrier:0</span><br><span class="line">          collisions:0 txqueuelen:0 </span><br><span class="line">          RX bytes:25088 (24.5 Kb)  TX bytes:25088 (24.5 Kb)</span><br></pre></td></tr></table></figure>
 <p>route显示路由信息如下：</p>
@@ -97,45 +183,49 @@ function activateLightMode(){
 <p>再次查看路由信息：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">hw076:~ # route</span><br><span class="line">Kernel IP routing table</span><br><span class="line">Destination     Gateway         Genmask         Flags Metric Ref    Use Iface</span><br><span class="line">default         172.18.0.254    0.0.0.0         UG    0      0        0 eth0</span><br><span class="line">loopback        *               255.0.0.0       U     0      0        0 lo</span><br><span class="line">link-local      *               255.255.0.0     U     0      0        0 eth0</span><br><span class="line">172.18.0.0      *               255.255.0.0     U     0      0        0 eth0</span><br></pre></td></tr></table></figure>
 <p>再次ping8.8.8.8显示正常，问题解决。</p>
-</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/ping%20%E9%97%AE%E9%A2%98.html">https://bravey.github.io/ping%20%E9%97%AE%E9%A2%98.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://bravey.github.io" target="_blank">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a><a class="post-meta__tags" href="/tags/%E8%BF%90%E7%BB%B4/">运维</a><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98/">网络问题</a></div><div class="post_share"><div class="social-share" data-image="https://images.pexels.com/photos/2174656/pexels-photo-2174656.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"/><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><nav class="pagination_post" id="pagination"><div class="prev-post pull_left"><a href="/2019-03-20-Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html"><img class="prev_cover lazyload" data-src="https://images.pexels.com/photos/640809/pexels-photo-640809.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Redis设计与实现读书笔记——第二章SDS</div></div></a></div><div class="next-post pull_right"><a href="/%E4%BD%BF%E7%94%A8shell%E8%84%9A%E6%9C%AC%E9%81%8D%E5%8E%86redis%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89kv%E5%AF%B9.html"><img class="next_cover lazyload" data-src="https://images.pexels.com/photos/452780/pexels-photo-452780.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">shell 脚本遍历redis数据库</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> 相关推荐</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/apt-get install 失败.html" title="apt-get install失败"><img class="relatedPosts_cover lazyload"data-src="https://images.pexels.com/photos/71104/utah-mountain-biking-bike-biking-71104.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2019-03-10</div><div class="relatedPosts_title">apt-get install失败</div></div></a></div><div class="relatedPosts_item"><a href="/2019-03-31-计算Linux系统的CPU利用率.html" title="计算Linux系统的CPU利用率"><img class="relatedPosts_cover lazyload"data-src="https://images.pexels.com/photos/33109/fall-autumn-red-season.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2019-03-31</div><div class="relatedPosts_title">计算Linux系统的CPU利用率</div></div></a></div><div class="relatedPosts_item"><a href="/Linux 命令 学习.html" title="Linux命令学习之wc"><img class="relatedPosts_cover lazyload"data-src="https://images.pexels.com/photos/933843/pexels-photo-933843.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2018-07-09</div><div class="relatedPosts_title">Linux命令学习之wc</div></div></a></div><div class="relatedPosts_item"><a href="/tee命令解析.html" title="tee命令解析"><img class="relatedPosts_cover lazyload"data-src="https://images.pexels.com/photos/238622/pexels-photo-238622.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2018-06-23</div><div class="relatedPosts_title">tee命令解析</div></div></a></div><div class="relatedPosts_item"><a href="/2020-04-10-Linux运维.html" title="Linux运维"><img class="relatedPosts_cover lazyload"data-src="https://images.pexels.com/photos/165505/pexels-photo-165505.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-04-10</div><div class="relatedPosts_title">Linux运维</div></div></a></div></div><div class="clear_both"></div></div><hr><div id="post-comment"><div class="comment_headling"><i class="fa fa-comments fa-fw" aria-hidden="true"></i><span> 评论</span></div><div id="disqus_thread"></div><script>var disqus_config = function () {
-  this.page.url = 'https://bravey.github.io/ping%20%E9%97%AE%E9%A2%98.html';
-  this.page.identifier = 'ping 问题.html';
-  this.page.title = 'ping 无法连接外网';
-};
-(function() { 
-  var d = document, s = d.createElement('script');
-  s.src = 'https://bravey.disqus.com/embed.js';
-  s.setAttribute('data-timestamp', +new Date());
-  (d.head || d.body).appendChild(s);
-})();
-</script><script>function getDisqusCount() {
-  var d = document, s = d.createElement('script');
-  s.src = 'https://bravey.disqus.com/count.js';
-  s.id = 'dsq-count-scr';
-  (d.head || d.body).appendChild(s);
-}
-
-window.addEventListener('load', getDisqusCount, false);</script></div></article></main><footer id="footer" style="background-image: url(https://images.pexels.com/photos/358383/pexels-photo-358383.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500)" data-type="photo"><div id="footer-wrap"><div class="copyright">&copy;2018 - 2020 By BraveY</div><div class="framework-info"><span>驱动 </span><a href="https://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="阅读模式"></i><i class="fa fa-plus" id="font_plus" title="放大字体"></i><i class="fa fa-minus" id="font_minus" title="缩小字体"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="简繁转换" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="夜间模式"></i></div><div id="rightside-config-show"><div id="rightside_config" title="设置"><i class="fa fa-cog" aria-hidden="true"></i></div><a id="to_comment" href="#post-comment" title="直达评论"><i class="scroll_to_comment fa fa-comments">  </i></a><i class="fa fa-list-ul close" id="mobile-toc-button" title="目录" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="回到顶部" aria-hidden="true"></i></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a>
- <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
-  tex2jax: {
-    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-    processEscapes: true,
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-  },
-  CommonHTML: {
-    linebreaks: { automatic: true, width: "90% container" }
-  },
-  "HTML-CSS": { 
-    linebreaks: { automatic: true, width: "90% container" }
-  },
-  "SVG": { 
-    linebreaks: { automatic: true, width: "90% container" }
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/ping%20%E9%97%AE%E9%A2%98.html">https://bravey.github.io/ping%20%E9%97%AE%E9%A2%98.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://bravey.github.io" target="_blank">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a><a class="post-meta__tags" href="/tags/%E8%BF%90%E7%BB%B4/">运维</a><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98/">网络问题</a></div><div class="post_share"><div class="social-share" data-image="https://images.pexels.com/photos/6758/wildernessculture-rei1440project-welltravelled-awesomeearth.jpg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2019-03-20-Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html"><img class="prev-cover" src="https://images.pexels.com/photos/640809/pexels-photo-640809.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Redis设计与实现读书笔记——第二章SDS</div></div></a></div><div class="next-post pull-right"><a href="/%E4%BD%BF%E7%94%A8shell%E8%84%9A%E6%9C%AC%E9%81%8D%E5%8E%86redis%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89kv%E5%AF%B9.html"><img class="next-cover" src="https://images.pexels.com/photos/640809/pexels-photo-640809.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">shell 脚本遍历redis数据库</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/apt-get install 失败.html" title="apt-get install失败"><img class="cover" src="/img/post.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-03-10</div><div class="title">apt-get install失败</div></div></a></div><div><a href="/2019-03-31-计算Linux系统的CPU利用率.html" title="计算Linux系统的CPU利用率"><img class="cover" src="https://images.pexels.com/photos/351448/pexels-photo-351448.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-03-31</div><div class="title">计算Linux系统的CPU利用率</div></div></a></div><div><a href="/Linux 命令 学习.html" title="Linux命令学习之wc"><img class="cover" src="https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2018-07-09</div><div class="title">Linux命令学习之wc</div></div></a></div><div><a href="/tee命令解析.html" title="tee命令解析"><img class="cover" src="https://images.pexels.com/photos/165505/pexels-photo-165505.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2018-06-23</div><div class="title">tee命令解析</div></div></a></div><div><a href="/2020-04-10-Linux运维.html" title="Linux运维"><img class="cover" src="https://images.pexels.com/photos/33545/sunrise-phu-quoc-island-ocean.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-04-10</div><div class="title">Linux运维</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">BraveY</div><div class="author-info__description">今日事，今日毕</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ping-%E6%97%A0%E6%B3%95%E8%BF%9E%E6%8E%A5%E5%A4%96%E7%BD%91"><span class="toc-number">1.</span> <span class="toc-text">ping 无法连接外网</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">1.1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">解决方法</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记"><img src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C专家编程读书笔记"/></a><div class="content"><a class="title" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记">C专家编程读书笔记</a><time datetime="2021-03-18T04:59:02.000Z" title="发表于 2021-03-18 12:59:02">2021-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱"><img src="https://images.pexels.com/photos/531602/pexels-photo-531602.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C语言传递指针参数的陷阱"/></a><div class="content"><a class="title" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱">C语言传递指针参数的陷阱</a><time datetime="2020-12-12T13:39:57.000Z" title="发表于 2020-12-12 21:39:57">2020-12-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-07-14-Measuring-and-Benchmarking-Power-Consumption-and-Energy-Efficiency.html" title="Measuring and Benchmarking Power Consumption and Energy Efficiency"><img src="https://images.pexels.com/photos/164041/pexels-photo-164041.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Measuring and Benchmarking Power Consumption and Energy Efficiency"/></a><div class="content"><a class="title" href="/2020-07-14-Measuring-and-Benchmarking-Power-Consumption-and-Energy-Efficiency.html" title="Measuring and Benchmarking Power Consumption and Energy Efficiency">Measuring and Benchmarking Power Consumption and Energy Efficiency</a><time datetime="2020-07-14T08:05:52.000Z" title="发表于 2020-07-14 16:05:52">2020-07-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-05-12-%E4%BD%BF%E7%94%A8LSTM+Pytorch%E5%AF%B9%E7%94%B5%E5%BD%B1%E8%AF%84%E8%AE%BA%E8%BF%9B%E8%A1%8C%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB.html" title="使用LSTM+Pytorch对电影评论进行情感分类"><img src="https://images.pexels.com/photos/452780/pexels-photo-452780.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用LSTM+Pytorch对电影评论进行情感分类"/></a><div class="content"><a class="title" href="/2020-05-12-%E4%BD%BF%E7%94%A8LSTM+Pytorch%E5%AF%B9%E7%94%B5%E5%BD%B1%E8%AF%84%E8%AE%BA%E8%BF%9B%E8%A1%8C%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB.html" title="使用LSTM+Pytorch对电影评论进行情感分类">使用LSTM+Pytorch对电影评论进行情感分类</a><time datetime="2020-05-12T14:48:08.000Z" title="发表于 2020-05-12 22:48:08">2020-05-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-05-05-%E8%8C%83%E9%97%B2%E5%86%99%E8%AF%97%E5%99%A8%E4%B9%8B%E7%94%A8LSTM+Pytorch%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%86%99%E8%AF%97.html" title="范闲写诗器之用LSTM+Pytorch实现自动写诗"><img src="https://images.pexels.com/photos/390051/surfer-wave-sunset-the-indian-ocean-390051.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="范闲写诗器之用LSTM+Pytorch实现自动写诗"/></a><div class="content"><a class="title" href="/2020-05-05-%E8%8C%83%E9%97%B2%E5%86%99%E8%AF%97%E5%99%A8%E4%B9%8B%E7%94%A8LSTM+Pytorch%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%86%99%E8%AF%97.html" title="范闲写诗器之用LSTM+Pytorch实现自动写诗">范闲写诗器之用LSTM+Pytorch实现自动写诗</a><time datetime="2020-05-05T07:15:15.000Z" title="发表于 2020-05-05 15:15:15">2020-05-05</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By BraveY</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
   }
-});
-</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
-  var all = MathJax.Hub.getAllJax(), i;
-  for (i=0; i < all.length; i += 1) {
-    all[i].SourceElement().parentNode.className += ' has-jax';
-  }
-});
-</script><script src="https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="/js/third-party/fireworks.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script><script src="/js/third-party/ClickShowText.js"></script><script src="/js/search/local-search.js"></script></body></html>
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
