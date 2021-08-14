@@ -119,3 +119,6 @@ leancloud_counter_security:
   app_key: 0M7O0e3b6oEuphDr3yhQLx3E
   username: # Will be asked while deploying if is left blank
   password: # Recommmended to be left blank. Will be asked while deploying if is left blank  
+
+encrypt:
+	enable: true
