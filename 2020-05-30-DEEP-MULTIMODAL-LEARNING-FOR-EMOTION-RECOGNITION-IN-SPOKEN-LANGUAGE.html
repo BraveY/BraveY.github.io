@@ -1,0 +1,250 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DEEP MULTIMODAL LEARNING FOR EMOTION RECOGNITION IN SPOKEN LANGUAGE | BraveY</title><meta name="keywords" content="情感识别"><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="关键词情感识别，口语，多模态学习 摘要提出了一种新颖的深度多模态框架，用于基于句子级的口头语言来预测人类情感。本文的架构具有两个鲜明的特点。首先，它通过混合的深度多模态结构从文本和音频中提取高级特征，该结构考虑了文本的空间信息，音频的时间信息以及低层次的人工特征的高级关联。其次，本文使用三层深度神经网络融合所有特征，以学习各种模态之间的相关性，并将特征提取和融合模块一起训练，从而实现整个结构的最佳">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DEEP MULTIMODAL LEARNING FOR EMOTION RECOGNITION IN SPOKEN LANGUAGE">
+<meta property="og:url" content="https://bravey.github.io/2020-05-30-DEEP-MULTIMODAL-LEARNING-FOR-EMOTION-RECOGNITION-IN-SPOKEN-LANGUAGE.html">
+<meta property="og:site_name" content="BraveY">
+<meta property="og:description" content="关键词情感识别，口语，多模态学习 摘要提出了一种新颖的深度多模态框架，用于基于句子级的口头语言来预测人类情感。本文的架构具有两个鲜明的特点。首先，它通过混合的深度多模态结构从文本和音频中提取高级特征，该结构考虑了文本的空间信息，音频的时间信息以及低层次的人工特征的高级关联。其次，本文使用三层深度神经网络融合所有特征，以学习各种模态之间的相关性，并将特征提取和融合模块一起训练，从而实现整个结构的最佳">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images.pexels.com/photos/933843/pexels-photo-933843.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500">
+<meta property="article:published_time" content="2020-05-30T06:51:30.000Z">
+<meta property="article:modified_time" content="2020-05-31T08:47:39.390Z">
+<meta property="article:author" content="BraveY">
+<meta property="article:tag" content="情感识别">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.pexels.com/photos/933843/pexels-photo-933843.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/2020-05-30-DEEP-MULTIMODAL-LEARNING-FOR-EMOTION-RECOGNITION-IN-SPOKEN-LANGUAGE"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="hDujO4MQUB7U9ir-4VXM5PW4fDFSq0-7G-LBX-Lh86M"/><meta name="baidu-site-verification" content="8XIUcPkbzm"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}
+
+// https://stackoverflow.com/questions/16839698/jquery-getscript-alternative-in-native-javascript
+const getScript = url => new Promise((resolve, reject) => {
+  const script = document.createElement('script')
+  script.src = url
+  script.async = true
+  script.onerror = reject
+  script.onload = script.onreadystatechange = function() {
+    const loadState = this.readyState
+    if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+    script.onload = script.onreadystatechange = null
+    resolve()
+  }
+  document.head.appendChild(script)
+})</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2020-05-31 16:47:39'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">61</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">86</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">17</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://images.pexels.com/photos/933843/pexels-photo-933843.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">BraveY</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">DEEP MULTIMODAL LEARNING FOR EMOTION RECOGNITION IN SPOKEN LANGUAGE</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-05-30T06:51:30.000Z" title="发表于 2020-05-30 14:51:30">2020-05-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2020-05-31T08:47:39.390Z" title="更新于 2020-05-31 16:47:39">2020-05-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/">论文阅读</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h2><p>情感识别，口语，多模态学习</p>
+<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>提出了一种新颖的深度多模态框架，用于基于句子级的口头语言来预测人类情感。本文的架构具有两个鲜明的特点。<strong>首先</strong>，它通过混合的深度多模态结构<strong>从文本和音频中提取高级特征</strong>，该结构考虑了文本的空间信息，音频的时间信息以及低层次的人工特征的高级关联。<br>其次，本文使用三层深度神经网络融合所有特征，以学习各种模态之间的相关性，并将特征提取和融合模块一起训练，从而实现整个结构的最佳全局微调。<br>在IEMOCAP数据集上评估了提出的框架。五个情感类别的加权准确率达到60.4％。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>混合的深度框架，包括卷积网络，CNN-LSTM和DNN来从文本和音频中提取空间和时间信息以及升学特征。</p>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>人类的言语表达了内容和态度。通过语音交流时，人们自然会同时吸收内容和情感，以理解说话者的实际意图。情感识别被定义为从人类中提取一组情感状态，对于在人机交互中自动检测人类的意义是必需的。语音情感识别是情感计算领域中的一种，它从<strong>语音中提取情感状态</strong>，并揭示口头语言下的态度。</p>
+<p>和计算机视觉领域的情感识别相比，结合文本和音频形式的<strong>工作相对较少</strong>。为了检测话语中的情绪，人们经常同时考虑文字含义和韵律。因此使用<strong>多模态架构</strong>来考虑文本和音频输入是有必要的。</p>
+<h3 id="挑战与相关工作"><a href="#挑战与相关工作" class="headerlink" title="挑战与相关工作"></a><strong>挑战与相关工作</strong></h3><p>情感识别<strong>挑战1</strong>是从语音数据中提取有效特征。可以通过OpenSmile软件提取数千个具有功能统计信息的低级声学描述符和派生词（LLD），提取出来的低层次特征很难代表高级关联，被认为不足以区分情感。可以使用CNN从Word embedding中提取高级文本特征以表示文本特征,但是没有考虑时序关联。</p>
+<p><strong>挑战2</strong>多模态的融合，有两种融合策略：特征层融合以及决策层融合。特征层融合在决策之前合并单个特征表示，从而显着提高了性能。然而，直接将连接的特征馈送到分类器中或使用浅层融合模型，这些模型难以学习不同模态之间的复杂相互关系。由三个受限玻尔兹曼机器层组成的深度置信网络通过融合高级视听功能，比浅层融合模型具有更好的性能，但是这种方法分离了特征提取和特征融合的训练阶段。这种方法的最大问题是它不能保证参数的全局调整，即不能通过预测的损失来调整特征提取模块的参数。</p>
+<h3 id="本文工作"><a href="#本文工作" class="headerlink" title="本文工作"></a>本文工作</h3><p>本文建立了一个混合的深度模型结构。使用了CNN来从单词和词类标签中提取文本特征，CNN-LSTM架构从Mel频谱系数（MFSC）能量图捕获声学的时空特征，而三层深度神经网络可从低级手工特征中学习高级声学关联。然后，本文使用三层深度神经网络<strong>将所有提取的特征连接</strong>起来，以学习跨模态的相互关系，并通过softmax分类器对情绪进行分类。<br>本文直接将特征提取模块和融合模型一起训练，以便最终损失可以适当地用于调整所有参数。<br>所提出的结构在IEMOCAP多模态数据集上针对五种情绪达到了60.4％的加权准确度。</p>
+<hr>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>网络的的整体架构：</p>
+<p><img src="/2020-05-30-DEEP-MULTIMODAL-LEARNING-FOR-EMOTION-RECOGNITION-IN-SPOKEN-LANGUAGE.htm/Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-05-30 162811.jpg" alt=""></p>
+<p>框架由三个模块组成：数据预处理，特征提取和特征融合。</p>
+<p>数据预处理模块处理输入的语音流，并输出相应的文本语句，词性标签，音频信号和提取的低级手工声学特征。</p>
+<p>特征提取层从单词，词类标签，语言型号，低层次人工特征四个分支中各自提取特征。</p>
+<p>特征融合模块：将输出特征串联起来作为一个联合特征表示，并通过一个深度神经网络学习相互关系。</p>
+<h3 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h3><p>将输入语音流分为句子级文本和相应的音频片段，使用NLTK来提取每一句的词类标签POS，删除了标点符号，对语言信号同时使用OpenSmile提取低水平的音调和人声相关特征。基本频率，与音调/能量相关的特征，零交叉率（ZCR），抖动，微光，梅尔频率倒谱系数（MFCC），一些统计学特征：平坦度，偏度，四分位数，标准差，均方根,总共6382维的特征。</p>
+<h3 id="特征提取"><a href="#特征提取" class="headerlink" title="特征提取"></a>特征提取</h3><p><strong>Word embedding</strong>：使用Word2vec（从谷歌新闻预训练），zero padding填充，一个卷积层后一个最大池化层，使用多种尺寸的卷积核（2,3,4,5的尺寸），每种尺寸都有256个卷积核，最终的特征向量1024维。</p>
+<p><strong>POS embedding</strong>：使用自己的POS标签数据进行训练。将POS编码为10维，然后卷积架构同Word embedding，最终也是1024维</p>
+<p><strong>语言信号</strong>：</p>
+<p><img src="/2020-05-30-DEEP-MULTIMODAL-LEARNING-FOR-EMOTION-RECOGNITION-IN-SPOKEN-LANGUAGE.htm/Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-05-31 101851.jpg" alt=""></p>
+<p>首先提取MFSC系数，使用64个滤波器组来提取MFSC，并提取了增量系数和双增量系数。选择64作为上下文窗口大小，选择15帧作为移动窗口以分割整个MFSC图。4维度的MFSC图$n×64×64×3$ n是窗口数量。8层的ConvNet，来提取MFSC图中的<strong>空间关联</strong>，4个卷积层，4个最大池化层。卷积层的卷积核尺寸$3<em>3$，池化层的尺寸$2</em>2$,之后使用全连接层与Dense 层来将特征关联，最后在使用LSTM来提取<strong>时序关联</strong>，选择最后一层LSTM的隐藏层状态作为特征向量，1024维。</p>
+<p><strong>韵律和声音质量的低级特征</strong></p>
+<p>使用三层的神经网络来提取低级特征的关联，使用了Max-min normalization，输入层6382维，隐藏层2048和1024.</p>
+<h3 id="特征融合"><a href="#特征融合" class="headerlink" title="特征融合"></a>特征融合</h3><p>3层神经网络，一个softmax层，进行融合并分类。2个隐藏层维度2048和1024.使用线性SVM来替换Softmax没有明显的提升。</p>
+<h3 id="网络训练"><a href="#网络训练" class="headerlink" title="网络训练"></a>网络训练</h3><p>直接将特征提取和融合模块一起训练。使用ReLU激活函数，以及Dropout来防止过拟合。lr初始为0.01，Adam优化函数，分类交叉熵损失函数。</p>
+<p>另一个问题是<strong>内部协变量偏移</strong>，内部协变量偏移定义为由于训练期间网络参数的变化而导致的网络激活分布的变化，在每层中使用batch normalization来更好地学习分布，提高训练效率。</p>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><h3 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h3><p>在Interactive Emotional Dyadic Motion Capture Database (IEMOCAP)实验，只考虑音频和文本数据。3个注释者对句子情感打标签，包括快乐，悲伤，中立，愤怒，惊讶，激动，沮丧，厌恶，恐惧和其他。仅使用带有至少两个同意的情感标签的句子。最终合并为<strong>4个</strong>：1213 Hap, 1032 Sad (sad), 1084 Ang (anger), 774 Neu (neutral), and 1136 Fru (frustration). 5折交叉验证。</p>
+<p>文章各种方法单独使用的精确度比较：</p>
+<p><img src="/2020-05-30-DEEP-MULTIMODAL-LEARNING-FOR-EMOTION-RECOGNITION-IN-SPOKEN-LANGUAGE.htm/Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-05-31 105359.jpg" alt=""></p>
+<p>本文方法与其他人的工作比较：</p>
+<p><img src="/2020-05-30-DEEP-MULTIMODAL-LEARNING-FOR-EMOTION-RECOGNITION-IN-SPOKEN-LANGUAGE.htm/Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-05-31 105551.jpg" alt=""></p>
+<hr>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ol>
+<li>特征那么多是否需要特征降维。</li>
+<li>Dense Layer 和FNN 的区别？</li>
+<li>只有3个注释者来打标签，标签是否一定合理？</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/2020-05-30-DEEP-MULTIMODAL-LEARNING-FOR-EMOTION-RECOGNITION-IN-SPOKEN-LANGUAGE.html">https://bravey.github.io/2020-05-30-DEEP-MULTIMODAL-LEARNING-FOR-EMOTION-RECOGNITION-IN-SPOKEN-LANGUAGE.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://bravey.github.io" target="_blank">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%83%85%E6%84%9F%E8%AF%86%E5%88%AB/">情感识别</a></div><div class="post_share"><div class="social-share" data-image="https://images.pexels.com/photos/933843/pexels-photo-933843.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020-06-02-Convolutional-Neural-Networks-for-Sentence-Classification.html"><img class="prev-cover" src="https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Convolutional Neural Networks for Sentence Classification</div></div></a></div><div class="next-post pull-right"><a href="/2020-05-28-Neural-Architectures-for-Named-Entity-Recognition.html"><img class="next-cover" src="https://images.pexels.com/photos/164041/pexels-photo-164041.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Neural Architectures for Named Entity Recognition</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">BraveY</div><div class="author-info__description">今日事，今日毕</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">61</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">86</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">17</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E8%AF%8D"><span class="toc-number">1.</span> <span class="toc-text">关键词</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">2.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">3.</span> <span class="toc-text">结论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-number">4.</span> <span class="toc-text">引言</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%91%E6%88%98%E4%B8%8E%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-number">4.1.</span> <span class="toc-text">挑战与相关工作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E6%96%87%E5%B7%A5%E4%BD%9C"><span class="toc-number">4.2.</span> <span class="toc-text">本文工作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">5.</span> <span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">5.1.</span> <span class="toc-text">数据预处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96"><span class="toc-number">5.2.</span> <span class="toc-text">特征提取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E5%BE%81%E8%9E%8D%E5%90%88"><span class="toc-number">5.3.</span> <span class="toc-text">特征融合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E8%AE%AD%E7%BB%83"><span class="toc-number">5.4.</span> <span class="toc-text">网络训练</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C"><span class="toc-number">6.</span> <span class="toc-text">结果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">6.1.</span> <span class="toc-text">数据集</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%9D%E8%80%83"><span class="toc-number">7.</span> <span class="toc-text">思考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="无题"><img src="https://images.pexels.com/photos/2174656/pexels-photo-2174656.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="无题">无题</a><time datetime="2023-02-05T11:11:16.392Z" title="发表于 2023-02-05 19:11:16">2023-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记"><img src="https://images.pexels.com/photos/629159/pexels-photo-629159.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C专家编程读书笔记"/></a><div class="content"><a class="title" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记">C专家编程读书笔记</a><time datetime="2021-03-18T04:59:02.000Z" title="发表于 2021-03-18 12:59:02">2021-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱"><img src="https://images.pexels.com/photos/165505/pexels-photo-165505.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C语言传递指针参数的陷阱"/></a><div class="content"><a class="title" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱">C语言传递指针参数的陷阱</a><time datetime="2020-12-12T13:39:57.000Z" title="发表于 2020-12-12 21:39:57">2020-12-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-07-14-Measuring-and-Benchmarking-Power-Consumption-and-Energy-Efficiency.html" title="Measuring and Benchmarking Power Consumption and Energy Efficiency"><img src="https://images.pexels.com/photos/417222/pexels-photo-417222.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Measuring and Benchmarking Power Consumption and Energy Efficiency"/></a><div class="content"><a class="title" href="/2020-07-14-Measuring-and-Benchmarking-Power-Consumption-and-Energy-Efficiency.html" title="Measuring and Benchmarking Power Consumption and Energy Efficiency">Measuring and Benchmarking Power Consumption and Energy Efficiency</a><time datetime="2020-07-14T08:05:52.000Z" title="发表于 2020-07-14 16:05:52">2020-07-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-06-02-Extremely-Large-Minibatch-SGDTraining-ResNet-50-on-ImageNet-in-15-Minutes.html" title="Extremely Large Minibatch SGD:Training ResNet-50 on ImageNet in 15 Minutes"><img src="https://images.pexels.com/photos/164041/pexels-photo-164041.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Extremely Large Minibatch SGD:Training ResNet-50 on ImageNet in 15 Minutes"/></a><div class="content"><a class="title" href="/2020-06-02-Extremely-Large-Minibatch-SGDTraining-ResNet-50-on-ImageNet-in-15-Minutes.html" title="Extremely Large Minibatch SGD:Training ResNet-50 on ImageNet in 15 Minutes">Extremely Large Minibatch SGD:Training ResNet-50 on ImageNet in 15 Minutes</a><time datetime="2020-06-02T08:00:28.000Z" title="发表于 2020-06-02 16:00:28">2020-06-02</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By BraveY</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
