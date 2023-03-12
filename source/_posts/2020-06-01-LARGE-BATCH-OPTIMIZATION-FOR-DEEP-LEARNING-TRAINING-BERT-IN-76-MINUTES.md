@@ -1,11 +1,10 @@
 ---
-title: LARGE BATCH OPTIMIZATION FOR DEEP LEARNING: TRAINING BERT IN 76 MINUTES
+title: LARGE BATCH OPTIMIZATION FOR DEEP LEARNING TRAINING BERT IN 76 MINUTES
 date: 2020-06-01 09:55:32
 categories: 论文阅读
 tags:
 copyright: true
 ---
-
 ## 来源
 
 ICLR 2020
@@ -16,7 +15,7 @@ ICLR 2020
 
 Large Batch加速训练的方法LARS，在注意力机制模型比如BERT上表现不好，性能提升在各个任务中表现不一致。本文首先研究一种有原则的分层自适应策略，以使用Large mini-batches来加快深度神经网络的训练。使用这种策略，本文开发了一种称为**LAMB**的新的分层自适应大批量优化技术。本文提供LAMB以及LARS的**收敛分析**，表明算法可以在一般非凸设置下的收敛到固定点。
 
-LAMB在各种任务（例如BERT和RESNET-50训练）中的表现出色，而**超参数调整却非常少**。在BERT训练中，本文的优化程序可以使用非常大的32868批量，而不会降低性能。通过batch size增加到TPUv3 Pod的内存限制，BERT训练时间可以从3天减少到仅76分钟。 LAMB实现公布在[网上](<https://github.com/tensorflow/addons/blob/master/tensorflow_addons/optimizers/lamb.py> )
+LAMB在各种任务（例如BERT和RESNET-50训练）中的表现出色，而**超参数调整却非常少**。在BERT训练中，本文的优化程序可以使用非常大的32868批量，而不会降低性能。通过batch size增加到TPUv3 Pod的内存限制，BERT训练时间可以从3天减少到仅76分钟。 LAMB实现公布在[网上]([https://github.com/tensorflow/addons/blob/master/tensorflow_addons/optimizers/lamb.py](https://github.com/tensorflow/addons/blob/master/tensorflow_addons/optimizers/lamb.py) )
 
 ## 引言
 
@@ -36,7 +35,7 @@ Large mini-batch上的同步SGD受益于SGD中使用的随机梯度变化的减�
 3. 本文展示了LAMB在多个挑战性任务中的强大性能。使用LAMB，本文将训练BERT的批量大小扩展到32k以上，而不会降低性能。时间从3天减少到76分钟。本文的工作是将BERT训练时间减少到几个小时以内的第一项工作。
 4. 本文还展示了LAMB训练像RESNET这样的最新图像分类模型的效率。本文是第一个可以为RESNET-50达到SOTA的自适应求解器，因为像Adam这样的自适应求解器无法获得这些任务的SGD精度。
 
-------
+---
 
 ## 方法
 
@@ -45,17 +44,23 @@ Large mini-batch上的同步SGD受益于SGD中使用的随机梯度变化的减�
 完整的推导见论文，
 
 本文首先将优化问题定义为：非凸随机优化问题
+
 $$
 \min _{x \in \mathbb{R}^{d}} f(x):=\mathbb{E}_{s \sim \mathbb{P}}[\ell(x, s)]+\frac{\lambda}{2}\|x\|^{2}
 $$
+
 SGD方法是解决上述问题最简单一阶算法：
+
 $$
 x_{t+1}=x_{t}-\eta_{t} \frac{1}{\left|\mathcal{S}_{t}\right|} \sum_{s_{t} \in \mathcal{S}_{t}} \nabla \ell\left(x_{t}, s_{t}\right)+\lambda x_{t}
 $$
+
 对于large batch b = T并使用适当的学习率，对于SGD的迭代，有：
+
 $$
 \mathbb{E}\left[\left\|\nabla f\left(x_{a}\right)\right\|^{2}\right] \leq O\left(\frac{\left(f\left(x_{1}\right)-f\left(x^{*}\right)\right) L_{\infty}}{T}+\frac{\|\sigma\|^{2}}{T}\right)
 $$
+
 在实践中很难调整SGD中的学习速率，尤其是在大批量设置中。此外，对$ L_{\infty}$的依赖（尺寸上最大的平滑度）可能会导致收敛速度显着降低。
 
 ### 算法
@@ -63,15 +68,18 @@ $$
 #### 常规算法
 
 一个基础的优化算法(SGD,ADAM)的迭代策略是：
+
 $$
 x_{t+1}=x_{t}+\eta_{t} u_{t}
 $$
+
 $ u_{t}$是t时间步的更新量，文章建议对Large batch进行两项更改。
 
 1. 更新量使用l2正则，即使用$u_t/\|u_t\|$,逐层完成的。
 2. 学习率使用函数$\phi\left(\left\|x_{t}\right\|\right)$ 进行调整。也是逐层完成。
 
 修改后的SGD更新策略：
+
 $$
 x_{t+1}^{(i)}=x_{t}^{(i)}-\eta_{t} \frac{\phi\left(\left\|x_{t}^{(i)}\right\|\right)}{\left\|g_{t}^{(i)}\right\|} g_{t}^{(i)}
 $$
@@ -83,8 +91,6 @@ $$
 文章对LARS算法提供了收敛分析
 
 ![](C:\Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-06-01 152422.jpg)
-
-
 
 #### LAMB 算法
 
@@ -138,11 +144,8 @@ BERT训练的第一阶段：batch size限制到65536，因为进一步加大并�
 
 ## 讨论
 
-------
+---
 
 ## 思考
 
 1. 本文是第一项对BERT的优化工作，以往的工作主要针对ResNet等视觉模型，对于新推出的GPT-3有没有相关工作？
-
-
-
