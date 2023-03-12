@@ -229,8 +229,8 @@
       </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html</url>
+    <title>NSQ学习笔记1——简介</title>
+    <url>/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html</url>
     <content><![CDATA[<p><a href="https://nsq.io/">NSQ</a>是一个使用Go开发的分布式消息队列，对于学习Go语言和消息队列而言都是一个非常不错的开源项目，因此记录下学习NSQ的一些笔记。</p>
 <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>官网上NSQ宣传的特点包括</p>
 <ol>
@@ -247,14 +247,14 @@
 <li>消费者最终一定会发现所有生产者。</li>
 </ol>
 <h1 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h1><h2 id="Topic"><a href="#Topic" class="headerlink" title="Topic"></a>Topic</h2><p>与Kafka的Topic设计做一个简单的对比，方便更好的学习。<br>NSQ中和Kafka一样使用Topic来组织消息也主要是发布定于模式，但使用推模型发送消息，而Kafka是基于拉模型的。因此实时性上NSQ会更好一些。<br>NSQ中Topic也会实际的存储消息，并且与Channels中的消息是单独队列来存储。而Kafka中的Topic主要是逻辑概念，实际的数据存储是由分区来存储消息的。<br>NSQ中每个Topic有一到多个的Channel来存储消息，每个Channel都会复制Topic中的消息。而Kafka中同一个Topic下的不同分区的消息是不同的。<br>NSQ中每个Channel 也会由多个消费者相连接。</p>
-<p>下图展示了消息的轨迹。可以看到消息先是存储在topic中，然后广播到其对应的每个Channel中，最后被每个Channel中的消费者竞争消费。<br><img src="https://lh6.googleusercontent.com/TYmXeG3t2yP5r_jogQ4x0iwpfjrAMiDynZXVnS0oLdM6H5xQFFknDjFlRyvKgJ4VUPFoVgJCkklRZHlMLZdqlmf-g_hMR3W6go88j-4Qzy3aJM9gDiRXv8gb1W-2JM6zP0IoPr5YleJoapjpEyTsoope=s2048" alt=""></p>
+<p>下图展示了消息的轨迹。可以看到消息先是存储在topic中，然后广播到其对应的每个Channel中，最后被每个Channel中的消费者竞争消费。<br><img src="https://https://res.cloudinary.com/bravey/image/upload/v1678520435/blog/nsq/topic_channels.gif" alt=""></p>
 <h2 id="节点发现"><a href="#节点发现" class="headerlink" title="节点发现"></a>节点发现</h2><p><code>nsqd</code>是消息处理节点，每个 <code>nsqd</code>节点都可以发送Topic相关的消息。但在分布式部署的模式下，发送消息之前需要先与 <code>nsqlookupd</code>建立TCP长连接周期性心跳更新状态，这样其他 <code>nsqd</code>节点才可以发现当前节点以及当前节点上的Topic对应的消息。</p>
-<p>此外 <code>nsqlookupd</code>节点也作为中间件来实现生产者和消费者的解耦，生产者与消费者通过 <code>nsqlookupd</code>来发现彼此。<br><img src="https://lh4.googleusercontent.com/H8QIzJBGl9_UF0DzYHVLY_SXKh-9HdJd4q5L0m09lttRMPqGPrtAOszrUv9ZJCOlj3rvH9Pd99yDu7Fom6n4r4eOZ6rp9ciZxFrrfpJLLWyJ8YjEivjY2VSnPA5h6_7bNUFmv2nh8yr8Sr0KdGT2EYUi=s2048" alt=""><br>官方建议 <code>nsqlookupd</code>最少部署两个来提供服务的可用性。<br>消费者通过向 <code>nsqlookupd</code>发送HTTP请求来获得可用的nsqd节点和节点上的Topic，Channels中的消息。<br><img src="https://lh4.googleusercontent.com/VFxHQOjPPfRDagMHdDu6C-4pf7p18h3BldsqmRCsZ7eE6MnkGHHQ19hE_7OX3OVEWENSvnQpGNNWR38zUYYUHZNc1iSXL0129YFMSrEVp8eedCdrPzvxbXUUlGsWuhtzv9UMGkCELrF212436mMEwiB5=s2048" alt=""></p>
-<h2 id="单点故障消除"><a href="#单点故障消除" class="headerlink" title="单点故障消除"></a>单点故障消除</h2><p>因为每个消费者与所有提供相应Topic的 <code>nsqd</code>节点连接，所以不会出现单点故障。某个 <code>nsqd</code>节点出现故障也不会影响服务。（这里自己有个疑问，消息是会在所有节点上保存副本吗？不然单点故障了消息岂不就丢失了？）<br><img src="https://media.tumblr.com/tumblr_mat85kr5td1qj3yp2.png" alt=""></p>
+<p>此外 <code>nsqlookupd</code>节点也作为中间件来实现生产者和消费者的解耦，生产者与消费者通过 <code>nsqlookupd</code>来发现彼此。<br><img src="https://res.cloudinary.com/bravey/image/upload/v1678520435/blog/nsq/lookupd1.jpg" alt=""><br>官方建议 <code>nsqlookupd</code>最少部署两个来提供服务的可用性。<br>消费者通过向 <code>nsqlookupd</code>发送HTTP请求来获得可用的nsqd节点和节点上的Topic，Channels中的消息。<br><img src="https://res.cloudinary.com/bravey/image/upload/v1678520435/blog/nsq/lookupd2.jpg" alt=""></p>
+<h2 id="单点故障消除"><a href="#单点故障消除" class="headerlink" title="单点故障消除"></a>单点故障消除</h2><p>因为每个消费者与所有提供相应Topic的 <code>nsqd</code>节点连接，所以不会出现单点故障。某个 <code>nsqd</code>节点出现故障也不会影响服务。（这里自己有个疑问，消息是会在所有节点上保存副本吗？不然单点故障了消息岂不就丢失了？）<br><img src="https://res.cloudinary.com/bravey/image/upload/v1678520462/blog/nsq/nospof.jpg" alt=""></p>
 <h2 id="消息内存存储"><a href="#消息内存存储" class="headerlink" title="消息内存存储"></a>消息内存存储</h2><p>消息默认使用内存存储，只有当超过水位的时候，会将消息存储到磁盘中。<br>这里有一个深度的概念就是指队列中消息的积压深度。当深度超过阈值的时候，消息就转存到磁盘中。</p>
-<p>当将深度设置的很低的时候，比如1或者0，那么每个消息都会落盘，可以通过这种方式确保预期外重启的时候的消息不会丢失。<br><img src="https://media.tumblr.com/tumblr_mavte17V3t1qj3yp2.png" alt=""></p>
-<h2 id="效率"><a href="#效率" class="headerlink" title="效率"></a>效率</h2><p>为了大幅提升性能和消息吞吐率，NSQ设计的数据协议使用推模型来发送消息。<br><img src="https://media.tumblr.com/tumblr_mataigNDn61qj3yp2.png" alt=""><br>消费者在与 <code>nsqd</code>建立连接并订阅Topic后，通过将自己设置为RDY状态来接受消息，同时设置对应RDY状态的值来接受指定的数量的消息。比如图中RDY 2则只会收到两条消息。通过这个方式来灵活的调节消费者的消费能力。这也提供了指定客户端进行调度的方式。</p>
-<h2 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h2><p><code>nsqd</code>向 <code>nsqlookupd</code>注册服务，而消费者通过 <code>nsqlookupd</code>来发现服务。之后消费者和所有 <code>nsqd</code>建立连接。<br><img src="https://lh3.googleusercontent.com/2g3cuQekUnRvzxFPTaa-KPdvB9KyIV3ygljm4ZPJ_4cW0m-j2jEPYutKzP9DO_KFutHfsl2Os1D6lJpBJFVO81SXe4NbPqiDYOwXPGPRTL_oW5Uhhi3enEkN2KX0dniIIIMisxsO16LKMWNQy928C_hL=s2048" alt=""></p>
+<p>当将深度设置的很低的时候，比如1或者0，那么每个消息都会落盘，可以通过这种方式确保预期外重启的时候的消息不会丢失。<br><img src="https://res.cloudinary.com/bravey/image/upload/v1678520434/blog/nsq/disk.jpg" alt=""></p>
+<h2 id="效率"><a href="#效率" class="headerlink" title="效率"></a>效率</h2><p>为了大幅提升性能和消息吞吐率，NSQ设计的数据协议使用推模型来发送消息。<br><img src="https://res.cloudinary.com/bravey/image/upload/v1678520435/blog/nsq/rdy.jpg" alt=""><br>消费者在与 <code>nsqd</code>建立连接并订阅Topic后，通过将自己设置为RDY状态来接受消息，同时设置对应RDY状态的值来接受指定的数量的消息。比如图中RDY 2则只会收到两条消息。通过这个方式来灵活的调节消费者的消费能力。这也提供了指定客户端进行调度的方式。</p>
+<h2 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h2><p><code>nsqd</code>向 <code>nsqlookupd</code>注册服务，而消费者通过 <code>nsqlookupd</code>来发现服务。之后消费者和所有 <code>nsqd</code>建立连接。<br><img src="https://https://res.cloudinary.com/bravey/image/upload/v1678520435/blog/nsq/overview.jpg" alt=""></p>
 <h1 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h1><p>启动demo的方式参见官方的<a href="https://nsq.io/overview/quick_start.html">教程</a> 不需要额外设置相应的配置就能快速启动了，同时使用 <code>nsqadmin</code>来提供前端管理服务。本文不赘述。</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>使用《数据密集型应用系统设计》一书中对 发布/订阅模式的流处理系统的分类方法对NSQ进行总结，可以比较好的了解NSQ的设计逻辑。书中的方法为提出如下两个问题进行分类。</p>
 <ol>
@@ -269,6 +269,13 @@
 </ol>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://nsq.io/overview/design.html">https://nsq.io/overview/design.html</a><br><a href="https://docs.google.com/presentation/d/1e9yIm-0aNba_H1gX_u7D1Qe5VWeU26FCjg7EEzoUztE/edit#slide=id.g3c47333ca6_0_0">https://docs.google.com/presentation/d/1e9yIm-0aNba_H1gX_u7D1Qe5VWeU26FCjg7EEzoUztE/edit#slide=id.g3c47333ca6_0_0</a><br><a href="https://blog.lpflpf.cn/passages/nsqd-study-1/">https://blog.lpflpf.cn/passages/nsqd-study-1/</a></p>
 ]]></content>
+      <categories>
+        <category>NSQ</category>
+      </categories>
+      <tags>
+        <tag>Go</tag>
+        <tag>消息队列</tag>
+      </tags>
   </entry>
   <entry>
     <title>C专家编程读书笔记</title>
@@ -593,6 +600,73 @@ m_{t} &=\mu_{2} m_{t-1}+\left(1-\mu_{2}\right) g_{t}^{2} \\
       </categories>
   </entry>
   <entry>
+    <title>LARGE BATCH OPTIMIZATION FOR DEEP LEARNING TRAINING BERT IN 76 MINUTES</title>
+    <url>/2020-06-01-LARGE-BATCH-OPTIMIZATION-FOR-DEEP-LEARNING-TRAINING-BERT-IN-76-MINUTES.html</url>
+    <content><![CDATA[<h2 id="来源"><a href="#来源" class="headerlink" title="来源"></a>来源</h2><p>ICLR 2020</p>
+<h2 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h2><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>Large Batch加速训练的方法LARS，在注意力机制模型比如BERT上表现不好，性能提升在各个任务中表现不一致。本文首先研究一种有原则的分层自适应策略，以使用Large mini-batches来加快深度神经网络的训练。使用这种策略，本文开发了一种称为<strong>LAMB</strong>的新的分层自适应大批量优化技术。本文提供LAMB以及LARS的<strong>收敛分析</strong>，表明算法可以在一般非凸设置下的收敛到固定点。</p>
+<p>LAMB在各种任务（例如BERT和RESNET-50训练）中的表现出色，而<strong>超参数调整却非常少</strong>。在BERT训练中，本文的优化程序可以使用非常大的32868批量，而不会降低性能。通过batch size增加到TPUv3 Pod的内存限制，BERT训练时间可以从3天减少到仅76分钟。 LAMB实现公布在<a href="[https://github.com/tensorflow/addons/blob/master/tensorflow_addons/optimizers/lamb.py](https://github.com/tensorflow/addons/blob/master/tensorflow_addons/optimizers/lamb.py">网上</a> )</p>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>随着大规模数据集的出现，即使使用诸如梯度梯度下降（SGD）等计算有效的优化方法来训练大型深度神经网络也变得特别具有挑战性。即训练大型模型的时间变得非常长。</p>
+<p>本文的<strong>目标</strong>是研究和开发优化技术，以加速训练大型深度神经网络，其中主要集中在基于SGD变体的方法上。SGD的可扩展性受到其固有顺序性的限制。由于存在这种局限性，在深度学习背景下改善SGD培训时间的传统方法主要采用<strong>分布式异步</strong>设置，但是，由于异步引入的隐式过时（stalenes）限制了方法的并行化，通常会导致性能下降。简单地增加batch size 虽然可以增加速度，但是会降低泛化性能并降低计算收益。</p>
+<p>Large mini-batch上的同步SGD受益于SGD中使用的随机梯度变化的减少，从而可以在SGD中使用更大的学习率，根据batch size的具体大小<strong>线性调整学习率</strong>可以进一步加快训练。但是线性缩放调整学习率的<strong>缺点</strong>：（i）在初始阶段，学习率的线性缩放是有害的；因此，最初需要使用手动调整的缓慢增加学习速度的预热策略，并且（ii）学习速度的线性缩放在超过一定的batch size之后也是有害的。</p>
+<p>最近提出了使用<strong>分层自适应学习率</strong>的SGD变体来解决此问题，比如非常出名的LARS算法。但该算法的性能在跨任务上不一致，比如BERT上表现糟糕。此外LARS的适应方法，还缺少很多理论分析。</p>
+<p><strong>本文贡献</strong></p>
+<ol>
+<li>在LARS的启发下，本文研究了专门针对大批量学习的通用适应策略，并为该策略提供了直觉</li>
+<li>基于适应策略，本文开发了一种新的优化算法（LAMB），以实现SGD中学习率的适应性。此外，本文为LARS和LAMB都提供了收敛分析，以在非凸设置中达到固定点。<br>本文重点介绍了将这些方法用于大批量设置的好处。</li>
+<li>本文展示了LAMB在多个挑战性任务中的强大性能。使用LAMB，本文将训练BERT的批量大小扩展到32k以上，而不会降低性能。时间从3天减少到76分钟。本文的工作是将BERT训练时间减少到几个小时以内的第一项工作。</li>
+<li>本文还展示了LAMB训练像RESNET这样的最新图像分类模型的效率。本文是第一个可以为RESNET-50达到SOTA的自适应求解器，因为像Adam这样的自适应求解器无法获得这些任务的SGD精度。</li>
+</ol>
+<hr>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><h3 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h3><p>完整的推导见论文，</p>
+<p>本文首先将优化问题定义为：非凸随机优化问题</p>
+<script type="math/tex; mode=display">
+\min _{x \in \mathbb{R}^{d}} f(x):=\mathbb{E}_{s \sim \mathbb{P}}[\ell(x, s)]+\frac{\lambda}{2}\|x\|^{2}</script><p>SGD方法是解决上述问题最简单一阶算法：</p>
+<script type="math/tex; mode=display">
+x_{t+1}=x_{t}-\eta_{t} \frac{1}{\left|\mathcal{S}_{t}\right|} \sum_{s_{t} \in \mathcal{S}_{t}} \nabla \ell\left(x_{t}, s_{t}\right)+\lambda x_{t}</script><p>对于large batch b = T并使用适当的学习率，对于SGD的迭代，有：</p>
+<script type="math/tex; mode=display">
+\mathbb{E}\left[\left\|\nabla f\left(x_{a}\right)\right\|^{2}\right] \leq O\left(\frac{\left(f\left(x_{1}\right)-f\left(x^{*}\right)\right) L_{\infty}}{T}+\frac{\|\sigma\|^{2}}{T}\right)</script><p>在实践中很难调整SGD中的学习速率，尤其是在大批量设置中。此外，对$ L_{\infty}$的依赖（尺寸上最大的平滑度）可能会导致收敛速度显着降低。</p>
+<h3 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h3><h4 id="常规算法"><a href="#常规算法" class="headerlink" title="常规算法"></a>常规算法</h4><p>一个基础的优化算法(SGD,ADAM)的迭代策略是：</p>
+<script type="math/tex; mode=display">
+x_{t+1}=x_{t}+\eta_{t} u_{t}</script><p>$ u_{t}$是t时间步的更新量，文章建议对Large batch进行两项更改。</p>
+<ol>
+<li>更新量使用l2正则，即使用$u_t/|u_t|$,逐层完成的。</li>
+<li>学习率使用函数$\phi\left(\left|x_{t}\right|\right)$ 进行调整。也是逐层完成。</li>
+</ol>
+<p>修改后的SGD更新策略：</p>
+<script type="math/tex; mode=display">
+x_{t+1}^{(i)}=x_{t}^{(i)}-\eta_{t} \frac{\phi\left(\left\|x_{t}^{(i)}\right\|\right)}{\left\|g_{t}^{(i)}\right\|} g_{t}^{(i)}</script><h4 id="LARS-算法"><a href="#LARS-算法" class="headerlink" title="LARS 算法"></a>LARS 算法</h4><p><img src="/2020-06-01-LARGE-BATCH-OPTIMIZATION-FOR-DEEP-LEARNING-TRAINING-BERT-IN-76-MINUTES.htm/Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-06-01 151610.jpg" alt=""></p>
+<p>文章对LARS算法提供了收敛分析</p>
+<p><img src="/2020-06-01-LARGE-BATCH-OPTIMIZATION-FOR-DEEP-LEARNING-TRAINING-BERT-IN-76-MINUTES.htm/Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-06-01 152422.jpg" alt=""></p>
+<h4 id="LAMB-算法"><a href="#LAMB-算法" class="headerlink" title="LAMB 算法"></a>LAMB 算法</h4><p>伪代码：</p>
+<p><img src="/2020-06-01-LARGE-BATCH-OPTIMIZATION-FOR-DEEP-LEARNING-TRAINING-BERT-IN-76-MINUTES.htm/Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-06-01 152156.jpg" alt=""></p>
+<p>与LARS算法不同：LAMB的适应性有两个方面：（i）关于ADAM中使用的第二个时刻的平方根的每维归一化；以及（ii）由于分层适应性而获得的分层归一化。</p>
+<p>收敛性证明：</p>
+<p><img src="/2020-06-01-LARGE-BATCH-OPTIMIZATION-FOR-DEEP-LEARNING-TRAINING-BERT-IN-76-MINUTES.htm/Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-06-01 152507.jpg" alt=""></p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>模型：BERT和RESNET-50</p>
+<p>参数设置 $\beta_1 = 0.9,\beta_2=0.999$，只微调了学习率。多项式衰减的学习率：$\eta_{t}=\eta_{0} \times(1-t / T)$,在batch size增大的时候没有再次微调超参数。使用LR缩放规则的平方根来自动调整学习率和线性epoch的warm up。</p>
+<p>实验平台：TPUv3 Pod。</p>
+<p>使用了grid search 来调整学习方法ADAM，ADAGRAD，LARS等的超参数。</p>
+<h3 id="BERT训练"><a href="#BERT训练" class="headerlink" title="BERT训练"></a>BERT训练</h3><p>数据集：与BERT原文的一致，主要关注SQuAD任务。使用F1分数作为指标，对比的模型是BERT 论文中的baseline。</p>
+<p>训练过程：除了修改优化函数LAMB为，其余均一致。</p>
+<p><img src="/2020-06-01-LARGE-BATCH-OPTIMIZATION-FOR-DEEP-LEARNING-TRAINING-BERT-IN-76-MINUTES.htm/Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-06-01 162220.jpg" alt=""></p>
+<p>对LAMB使用了Mixed-Batch 训练</p>
+<p>BERT训练的第一阶段：batch size限制到65536，因为进一步加大并没有更好的加速效果。第二阶段重新对学习率进行warm up。</p>
+<p><strong>与ADAMW 和LARS的比较</strong></p>
+<p><img src="/2020-06-01-LARGE-BATCH-OPTIMIZATION-FOR-DEEP-LEARNING-TRAINING-BERT-IN-76-MINUTES.htm/Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-06-01 163643.jpg" alt=""></p>
+<h3 id="IMAGENET上的RESNET-50训练"><a href="#IMAGENET上的RESNET-50训练" class="headerlink" title="IMAGENET上的RESNET-50训练"></a>IMAGENET上的RESNET-50训练</h3><p>各种优化函数的对比</p>
+<p><img src="/2020-06-01-LARGE-BATCH-OPTIMIZATION-FOR-DEEP-LEARNING-TRAINING-BERT-IN-76-MINUTES.htm/Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-06-01 171012.jpg" alt=""></p>
+<h3 id="超参数调整"><a href="#超参数调整" class="headerlink" title="超参数调整"></a>超参数调整</h3><p>自动调整的学习率：</p>
+<p><img src="/2020-06-01-LARGE-BATCH-OPTIMIZATION-FOR-DEEP-LEARNING-TRAINING-BERT-IN-76-MINUTES.htm/Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-06-01 171256.jpg" alt=""></p>
+<h2 id="讨论"><a href="#讨论" class="headerlink" title="讨论"></a>讨论</h2><hr>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ol>
+<li>本文是第一项对BERT的优化工作，以往的工作主要针对ResNet等视觉模型，对于新推出的GPT-3有没有相关工作？</li>
+</ol>
+]]></content>
+      <categories>
+        <category>论文阅读</category>
+      </categories>
+  </entry>
+  <entry>
     <title>DEEP MULTIMODAL LEARNING FOR EMOTION RECOGNITION IN SPOKEN LANGUAGE</title>
     <url>/2020-05-30-DEEP-MULTIMODAL-LEARNING-FOR-EMOTION-RECOGNITION-IN-SPOKEN-LANGUAGE.html</url>
     <content><![CDATA[<h2 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h2><p>情感识别，口语，多模态学习</p>
@@ -909,6 +983,76 @@ p(\mathbf{y} | \mathbf{X})=\frac{e^{s(\mathbf{X}, \mathbf{y})}}{\sum_{\widetilde
       <tags>
         <tag>LSTM</tag>
         <tag>Pytorch</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Extreme Weather A large-scale climate dataset for semi-supervised detection, localization, and understanding of extreme weather events</title>
+    <url>/2020-04-27-Extreme-Weather-A-large-scale-climate-dataset-for-semi-supervised-detection,-localization,-and-understanding.html</url>
+    <content><![CDATA[<h2 id="来源"><a href="#来源" class="headerlink" title="来源"></a>来源</h2><p>2017NIPS</p>
+<h2 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h2><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>当有大量标记数据可用时，完全监督的卷积神经网络（CNN）可以为分类众所周知的极端天气事件提供可接受的准确性。但是，许多不同类型的空间局部气候模式引起人们的兴趣，包括飓风，温带气旋，天气前沿和阻塞事件等。<br>这些模式的<strong>现有标记数据可能以各种方式不完整</strong>，例如仅覆盖某些年份或地理区域并具有假阴性。<br>因此，这种类型的气候数据带来了许多有趣的机器学习挑战。<br>本文提出了一种多通道时空CNN体系结构，用于<strong>半监督边界框预测和探索性数据分析</strong>。<br>本文证明了本文的方法能够利用时间信息和未标记的数据来改善极端天气事件的定位。<br>此外，本文探索了模型学习到的表示形式，以便更好地理解这一重要数据。<br>本文<strong>提供了一个极端天气数据集</strong>，以鼓励该领域的机器学习研究，并帮助促进进一步的工作，以了解和缓解气候变化的影响。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><hr>
+<h2 id="图表"><a href="#图表" class="headerlink" title="图表"></a>图表</h2><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在气候数据中查找极端天气事件的任务类似于检测视频中的物体和活动的任务-深度学习技术的流行应用。</p>
+<p>一个重要的区别是，就气候数据而言，“视频”具有16个或更多的“渠道”信息（例如水蒸气，压力和温度），而常规视频只有3个（RGB）。<br>此外，气候模拟与自然图像的统计数据不同。</p>
+<p>实现了3D（高度，宽度，时间）卷积编码器解码器，并在瓶颈处应用了新颖的单遍边界框回归损失。这是深度自动编码体系结构首次用于边界框回归。</p>
+<p>本文的主要贡献是（1）基线Bounding Box损失公式；<br>（2）本文的架构是从针对极端天气事件的工程启发式技术迈向半监督学习型功能的第一步；<br>（3）ExtremeWeather数据集，本文将其分为三个基准测试组：一个用于模型探索的小型模型，一个用于中等模型的模型，以及一个包含整整27年气候模拟输出的模型。</p>
+<hr>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><h3 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h3><p>气候科学界使用三种全球数据集：观测数据（卫星，网格气象站）；以及再分析数据（通过将不同的观测产品同化为气候模型获得）和模拟数据。</p>
+<p>本文使用的是模拟数据，尽管此数据集包含了过去的信息，但在此数据集上进行深度学习的性能仍然可以告知这些方法在未来模拟中的有效性。</p>
+<p>使用CAM5（Community Atmospheric Model v5）模拟，当空间分辨率为25km时，模型输出的快照图像尺寸为768*1152，16个通道（地表温度，地表压力，降水等），时间分辨率为3小时，每一天给出8张快照。</p>
+<p>1979年到2005年的模拟，总共78840张16通道768*1152尺寸的图片。</p>
+<h3 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h3><p>使用TECA标记的热带低压（TD）热带气旋（TC），热带气旋（ETC）和大气河流（AR）。</p>
+<p>使用TECA 标记可能有错误，本身一些类别的定义就有争议。</p>
+<h3 id="划分"><a href="#划分" class="headerlink" title="划分"></a>划分</h3><p>训练集测试集的划分</p>
+<p><img src="/2020-04-27-Extreme-Weather-A-large-scale-climate-dataset-for-semi-supervised-detection,-localization,-and-understanding.htm/Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-06-03 154658.jpg" alt=""></p>
+<p>小规模数据集中的标签分布：</p>
+<p><img src="/2020-04-27-Extreme-Weather-A-large-scale-climate-dataset-for-semi-supervised-detection,-localization,-and-understanding.htm/Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-06-03 154744.jpg" alt=""></p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p><strong>baseline模型：</strong></p>
+<p>encoder-decoder架构，使用CNN编码，解码器也是CNN使用绑定权重和反卷积层，leaky RELU激活函数</p>
+<p>采用半监督的方法，自动编码器的代码（瓶颈）层用作损失层的输入，从而预测：</p>
+<ul>
+<li>Bbox 的位置和尺寸</li>
+<li>Bbox的类别</li>
+<li>Bbox的置信度</li>
+</ul>
+<p><img src="/2020-04-27-Extreme-Weather-A-large-scale-climate-dataset-for-semi-supervised-detection,-localization,-and-understanding.htm/Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-04-27 193119.jpg" alt=""></p>
+<p>损失函数：有监督的边框回归损失+无监督的重构损失</p>
+<script type="math/tex; mode=display">
+L=L_{s u p}+\lambda L_{r e c}</script><p>重构损失：输入与重构的均方差，M是图片中的总的像素数</p>
+<script type="math/tex; mode=display">
+L_{r e c}=\frac{1}{M}\left\|X-X^{*}\right\|_{2}^{2}</script><p>将$798<em>1152$的图片用$64</em>64$的锚点框划分为$12*18$的网格，对每个预测框计算3种分数（1）预测框与锚框的大小和位置有多少不同；</p>
+<p>（2）感兴趣的对象在预测框中的置信度（“对象”）；</p>
+<p>（3）该对象的类别概率分布。</p>
+<p>每一个部分使用$3<em>3$的卷积核，相当于$192</em>192$像素尺寸的感受野。</p>
+<p>边界框回归损失：与YOLO的定义相似</p>
+<script type="math/tex; mode=display">
+L_{s u p}=\frac{1}{N}\left(L_{b o x}+L_{c o n f}+L_{c l s}\right)</script><p>N是时间步，$L_{box}$的损失：</p>
+<script type="math/tex; mode=display">
+L_{b o x}=\alpha \sum_{i} \mathbb{1}_{i}^{o b j} R\left(u_{i}-u_{i}^{*}\right)+\beta \sum_{i} \mathbb{1}_{i}^{o b j} R\left(v_{i}-v_{i}^{*}\right)</script><p>u和v是类似SSD的box坐标转移。R是平滑L1损失</p>
+<p>置信度损失：</p>
+<script type="math/tex; mode=display">
+L_{c o n f}=\sum_{i} \mathbb{1}_{i}^{o b j}\left[-\log \left(p(o b j)_{i}\right)\right]+\gamma * \sum_{i} \mathbb{1}_{i}^{n o o b j}\left[-\log \left(p\left(\overline{o b j}_{i}\right)\right)\right]</script><p>交叉熵损失</p>
+<script type="math/tex; mode=display">
+L_{c l s}=\sum_{i} \mathbb{1}_{i}^{o b j} \sum_{c \in \text {classes}}-p^{*}(c) \log (p(c))</script><h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>使用2维的卷积编码器提取的特征图：</p>
+<p><img src="/2020-04-27-Extreme-Weather-A-large-scale-climate-dataset-for-semi-supervised-detection,-localization,-and-understanding.htm/Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-06-03 161939.jpg" alt=""></p>
+<p>使用2维和3维卷积，以及监督与半监督模型的实验结果。</p>
+<p><img src="/2020-04-27-Extreme-Weather-A-large-scale-climate-dataset-for-semi-supervised-detection,-localization,-and-understanding.htm/Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-06-03 162312.jpg" alt=""></p>
+<p>使用t-SNE可视化监督与半监督学习到的特征</p>
+<p><img src="/2020-04-27-Extreme-Weather-A-large-scale-climate-dataset-for-semi-supervised-detection,-localization,-and-understanding.htm/Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-06-03 162952.jpg" alt=""></p>
+<h2 id="讨论"><a href="#讨论" class="headerlink" title="讨论"></a>讨论</h2><hr>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ol>
+<li>主要贡献数据集的提供。</li>
+<li>TECA已经可以标记了，模型的作用呢？</li>
+<li>数据集的创新点：1. 对人类更有意义 2.挑战更高 ，多维度。多通道就可以了？</li>
+<li>卷积编码器？</li>
+<li>模型输入16维的数据，然后再图像上标记出极端天气的边框，半监督体现在哪儿？</li>
+</ol>
+]]></content>
+      <categories>
+        <category>论文阅读</category>
+      </categories>
+      <tags>
+        <tag>深度学习</tag>
+        <tag>半监督</tag>
       </tags>
   </entry>
   <entry>
