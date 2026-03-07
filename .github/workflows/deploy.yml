@@ -1,0 +1,56 @@
+name: Deploy Hexo Blog
+
+on:
+  push:
+    branches:
+      - hexo  # 只在 hexo 分支推送时触发
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          ref: hexo
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Set timezone
+        run: |
+          sudo timedatectl set-timezone Asia/Shanghai
+
+      - name: Install Hexo CLI
+        run: npm install -g hexo-cli
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Clone Butterfly theme
+        run: |
+          git clone -b master https://github.com/jerryc127/hexo-theme-butterfly.git themes/butterfly
+          cd themes/butterfly
+          git checkout 3.5.1
+
+      - name: Build
+        run: |
+          hexo clean
+          hexo g
+
+      - name: Deploy to GitHub Pages
+        run: |
+          cd public
+          git init
+          git config user.name "BraveY"
+          git config user.email "lsz_yky@163.com"
+          git add .
+          git commit -m "GitHub Actions Auto Builder at $(date +'%Y-%m-%d %H:%M')"
+          git push --force "https://${{ secrets.GITHUB_TOKEN }}@github.com/BraveY/BraveY.github.io.git" HEAD:master
