@@ -1,0 +1,282 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Linux运维 | BraveY</title><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Linux运维记录在使用Linux过程中遇到的一些问题的解决方式 jupyter lab无权限创建文件 chmod 777 file_path 解决 jupyter lab 服务器地址访问被拒绝 启动时加上 —ip=0.0.0.0 jupyter lab --port=8889 --ip=0...."><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Linux运维",
+  "url": "https://bravey.github.io/2020-04-10-Linux%E8%BF%90%E7%BB%B4.html",
+  "image": "https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+  "datePublished": "2020-04-10T02:24:39.000Z",
+  "dateModified": "2026-03-07T01:06:28.371Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "BraveY",
+      "url": "https://bravey.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/2020-04-10-Linux%E8%BF%90%E7%BB%B4.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Linux运维',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 5.3.0"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/url(https:/res.cloudinary.com/bravey/image/upload/v1587809177/air-atmosphere-blue-blue-sky-314726.jpg));"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">BraveY</span></a><a class="nav-page-title" href="/"><span class="site-name">Linux运维</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Linux运维</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-04-10T02:24:39.000Z" title="发表于 2020-04-10 10:24:39">2020-04-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-07T01:06:28.371Z" title="更新于 2026-03-07 09:06:28">2026-03-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Linux/">Linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">944</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>3分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Linux运维"><a href="#Linux运维" class="headerlink" title="Linux运维"></a>Linux运维</h1><p>记录在使用Linux过程中遇到的一些问题的解决方式</p>
+<p><strong>jupyter lab无权限创建文件</strong></p>
+<p><code>chmod 777 file_path</code> 解决</p>
+<p><strong>jupyter lab 服务器地址访问被拒绝</strong></p>
+<p>启动时加上 —ip=0.0.0.0</p>
+<p><code>jupyter lab --port=8889 --ip=0.0.0.0</code></p>
+<p><strong>jupyter lab tqdm 进度条不显示</strong></p>
+<p>出现</p>
+<p><code>HBox(children=(FloatProgress……</code></p>
+<p>解决：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 首先需要打开ipywidgets的插件</span></span><br><span class="line">jupyter nbextension enable --py widgetsnbextension</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"> 然后还需要安装 Jupyter Lab的相关插件</span></span><br><span class="line">jupyter labextension install @jupyter-widgets/jupyterlab-manager</span><br></pre></td></tr></table></figure>
+<p><strong>zip文件解压</strong></p>
+<p><code>unzip file -d outputdir</code></p>
+<p><strong>数据文件软链接</strong></p>
+<p><code>ln -s real_path ./data</code> 从real_path 映射到data目录。</p>
+<p><strong>Python本地导入模块</strong></p>
+<p>注意导入的是模块的所在目录，对于包来说就是包这个文件夹所在的目录，而不是包中文件所在目录。</p>
+<p><code>export PYTHONPATH=$PYTHONPATH:/model/path</code></p>
+<p><strong>查看cuda版本</strong></p>
+<p><code>cat /usr/local/cuda/version.txt</code></p>
+<p><strong>tensorflow查看GPU是否可用</strong></p>
+<p><code>print(&#39;GPU&#39;,tf.test.is_gpu_available())</code></p>
+<p><strong>文件排序查看</strong></p>
+<p>按大小查看</p>
+<p>-s表示按文件大小排序，-l表示以长格式显示，即列出文件详细信息如上面的格式。 S是大写</p>
+<p><code>ls -lSh</code>  降序查看</p>
+<p><code>ls -lrSh</code> 升序查看</p>
+<p>按时间查看， -t表示按时间排序，-r表示逆序</p>
+<p><code>ls -lt</code> 降序查看</p>
+<p><code>ls -lrt</code>升序查看</p>
+<h2 id="查看文件夹大小"><a href="#查看文件夹大小" class="headerlink" title="查看文件夹大小"></a>查看文件夹大小</h2><p><code>du -h --max-depth=1</code></p>
+<h2 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h2><p><strong>vim批量注释</strong></p>
+<p><code>Ctrl + v</code> 列编辑，然后<code>Shift + i</code> 插入<code>#</code>之后连续两下Esc</p>
+<p><strong>vim批量删除</strong></p>
+<p><code>Ctrl + v</code> 列编辑，然后<code>d</code> 删除之后连续两下Esc</p>
+<p><strong>vim批量粘贴</strong></p>
+<p><code>v</code> 行视图，然后选中对应的行,<code>y</code> 复制，之后到需要粘贴的地方<code>p</code> 进行粘贴</p>
+<p><strong>vim粘贴格式混乱</strong></p>
+<p><code>:set paste</code>后<code>i</code>在粘贴</p>
+<h2 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h2><h3 id="免密登录"><a href="#免密登录" class="headerlink" title="免密登录"></a>免密登录</h3><h4 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h4><ol>
+<li>本机创建公钥和私钥文件 已有的话不用创建<code>ssh-keygen -t rsa -P &#39;&#39; -f ~/.ssh/id_rsa -C &quot;xx-email&quot;</code></li>
+<li>将本机的公钥拷贝到服务器上<ol>
+<li><code>cat ~/.ssh/id_rsa.pub | ssh user@serverip &quot;cat - &gt;&gt; ~/.ssh/authorized_keys&quot;</code></li>
+</ol>
+</li>
+<li>权限相关（chmod）<ol>
+<li>.ssh目录的权限必须是700</li>
+<li>.ssh/authorized_keys文件权限必须是600</li>
+</ol>
+</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://juejin.im/post/6844903734233792519">参考</a></p>
+<h3 id="scp"><a href="#scp" class="headerlink" title="scp"></a>scp</h3><h3 id="复制文件"><a href="#复制文件" class="headerlink" title="复制文件"></a>复制文件</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r local_folder remote_username@remote_ip:remote_folder </span><br></pre></td></tr></table></figure>
+<h2 id="进程相关"><a href="#进程相关" class="headerlink" title="进程相关"></a>进程相关</h2><p>查看进程是否有子进程，或者是否开启了多个线程。ps 只能显示进程的pid，线程的pid无法获取，但是htop可以显示线程的pid。</p>
+<p><code>cd /proc/pid/task</code>里面的目录数便是这个pid管理的子进程，子线程。</p>
+<p><strong>查看进程之间的关系</strong></p>
+<p><code>pstree -Aup</code> 显示所有进程之间的关系，也会显示生成的子线程。</p>
+<h3 id="批量杀死"><a href="#批量杀死" class="headerlink" title="批量杀死"></a>批量杀死</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep test | grep -v grep | awk &#x27;&#123;print $2&#125;&#x27; | xargs kill -9</span><br></pre></td></tr></table></figure>
+<h2 id="shell脚本"><a href="#shell脚本" class="headerlink" title="shell脚本"></a>shell脚本</h2><h3 id="xargs"><a href="#xargs" class="headerlink" title="xargs"></a>xargs</h3><p>xargs 可以将管道或标准输入（stdin）数据转换成命令行参数，也能够从文件的输出中读取数据。</p>
+<p>格式：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">somecommand |xargs -item  <span class="built_in">command</span></span><br></pre></td></tr></table></figure>
+<h3 id="判断文件夹是否存在"><a href="#判断文件夹是否存在" class="headerlink" title="判断文件夹是否存在"></a>判断文件夹是否存在</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ ! -d <span class="string">&quot;/data/&quot;</span> ];<span class="keyword">then</span></span><br><span class="line">  mkdir /data</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;文件夹已经存在&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<p>判断文件是否存在修改<code>-d</code> 为<code>-e</code></p>
+<h2 id="用户相关"><a href="#用户相关" class="headerlink" title="用户相关"></a>用户相关</h2><h3 id="创建用户授予sudo"><a href="#创建用户授予sudo" class="headerlink" title="创建用户授予sudo"></a>创建用户授予sudo</h3><p>Ubuntu下</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo adduser user</span><br><span class="line">usermod -aG sudo username</span><br></pre></td></tr></table></figure>
+<p>还可以修改<code>/etc/sudoers</code>但是需要root用户<code>wq!</code>来强制写入。</p>
+<h3 id="查看登录用户的进程"><a href="#查看登录用户的进程" class="headerlink" title="查看登录用户的进程"></a>查看登录用户的进程</h3><p><code>w</code></p>
+<h2 id="内存信息查看"><a href="#内存信息查看" class="headerlink" title="内存信息查看"></a>内存信息查看</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dmidecode -t memory</span><br></pre></td></tr></table></figure>
+<h2 id="内存通道数查看"><a href="#内存通道数查看" class="headerlink" title="内存通道数查看"></a>内存通道数查看</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dmidecode -t memory | grep Bank</span><br></pre></td></tr></table></figure>
+<p><strong>dmidecode命令</strong>可以让你在Linux系统下获取有关硬件方面的信息<a target="_blank" rel="noopener" href="https://man.linuxde.net/dmidecode#:~:text=dmidecode%E5%91%BD%E4%BB%A4%E5%8F%AF%E4%BB%A5%E8%AE%A9%E4%BD%A0,%E6%98%AF%E7%B3%BB%E7%BB%9F%E5%87%86%E7%A1%AE%E7%9A%84%E4%BF%A1%E6%81%AF%E3%80%82">参考</a></p>
+<p>grep 加上参数 -A5表示多显示5行<code>grep -A5 Bank</code></p>
+<h2 id="Linux发行版查看"><a href="#Linux发行版查看" class="headerlink" title="Linux发行版查看"></a>Linux发行版查看</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat &#x2F;etc&#x2F;os-release</span><br></pre></td></tr></table></figure>
+<h2 id="个性化"><a href="#个性化" class="headerlink" title="个性化"></a>个性化</h2><p>分别去github上找对应的配置。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/ohmyzsh/ohmyzsh">zsh</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/gpakosz/.tmux">tmux</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/amix/vimrc">vimrc</a></p>
+<h3 id="切换zsh"><a href="#切换zsh" class="headerlink" title="切换zsh"></a>切换zsh</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chsh -s /bin/zsh user</span><br></pre></td></tr></table></figure>
+<p>在tmux 则是修改.tmux.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;github.com&#x2F;ohmyzsh&#x2F;ohmyzsh</span><br></pre></td></tr></table></figure>
+<h2 id="程序链接"><a href="#程序链接" class="headerlink" title="程序链接"></a>程序链接</h2><p><code>ldd</code>来查看可执行文件依赖的动态链接库路径</p>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/16710047/usr-bin-ld-cannot-find-lnameofthelibrary">usr/bin/ld: cannot find -l</a></p>
+<h2 id="网络相关"><a href="#网络相关" class="headerlink" title="网络相关"></a>网络相关</h2><h3 id="端口查看"><a href="#端口查看" class="headerlink" title="端口查看"></a>端口查看</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">netstat -atn           # For tcp</span><br><span class="line">netstat -aun           # For udp</span><br><span class="line">netstat -atun          # For both</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://bravey.github.io">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/2020-04-10-Linux%E8%BF%90%E7%BB%B4.html">https://bravey.github.io/2020-04-10-Linux%E8%BF%90%E7%BB%B4.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://bravey.github.io" target="_blank">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%BF%90%E7%BB%B4/">运维</a></div><div class="post-share"><div class="social-share" data-image="https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2020-04-19-C++-return%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%89%A7%E8%A1%8C%E7%BB%86%E8%8A%82.html" title="C++ return一个对象的执行细节"><img class="cover" src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">C++ return一个对象的执行细节</div></div><div class="info-2"><div class="info-item-1">C++ return一个对象的执行细节同学发过来一道考试题，要求解释输出。好久没有用过这些知识了，所以顺便复习下。  代码为了搞清楚里面知识，所以把代码增加了地址的输出来进行实验： 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667#include &lt;limits.h&gt;#include &lt;stdio.h&gt;#include &lt;algorithm&gt;#include &lt;iostream&gt;#include &lt;map&gt;#include &lt;string&gt;#include &lt;utility&gt;#include &lt;vector&gt;using namespace std;class Solution &#123;  public:	Solution(): id_(0) &#123;		cout &lt;&lt;...</div></div></div></a><a class="pagination-related" href="/2020-03-24-%E5%A4%A9%E6%B1%A0Docker%E7%BB%83%E4%B9%A0%E5%9C%BA%E5%AE%9E%E8%B7%B5.html" title="天池Docker练习场实践"><img class="cover" src="https://images.pexels.com/photos/747016/pexels-photo-747016.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">天池Docker练习场实践</div></div><div class="info-2"><div class="info-item-1">天池Docker练习场实践基本的操作框架详细参考官方的手把手教程即可，主要记录下自己实践过程中遇到的问题。 任务描述参与者可分阶段提交容器镜像完成以下3个任务（分数依次占 30/30/40），根据评分系统的分数返回验证任务的完成情况。  输出Hello world 计算 /tcdata/num_list.csv中一列数字的总和。 在/tcdata/num_list.csv文件中寻找最大的10个数，从大到小生成一个ListList.  num_list.csv文件中只有一列不为负的整数，其中存在重复值，示例如下：  10261111  生成入口脚本run.sh，放置于镜像工作目录。运行后生成结果result.json放置于工作目录（与run.sh同目录），评分系统将根据result.json进行打分。json文件如下所示： 12345&#123;      &quot;Q1&quot;:&quot;Hello world&quot;,     &quot;Q2&quot;:sum值,     &quot;Q3&quot;:[top10_list] &#125; 数据生成生成测试文件...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/ping%20%E9%97%AE%E9%A2%98.html" title="ping 无法连接外网"><img class="cover" src="https://images.pexels.com/photos/1656687/pexels-photo-1656687.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-03-15</div><div class="info-item-2">ping 无法连接外网</div></div><div class="info-2"><div class="info-item-1">ping 无法连接外网 问题ping外网ping不通 1234yky@hw076:~&#x2F;tmux&gt; ping www.baidu.comping: unknown host www.baidu.comyky@hw076:~&#x2F;tmux&gt; ping 8.8.8.8connect: Network is unreachable ping内网可以ping通 1234567891011hw076:~ # ping 172.18.11.114PING 172.18.11.114 (172.18.11.114) 56(84) bytes of data.64 bytes from 172.18.11.114: icmp_seq&#x3D;1 ttl&#x3D;64 time&#x3D;0.193 ms64 bytes from 172.18.11.114: icmp_seq&#x3D;2 ttl&#x3D;64 time&#x3D;0.216 ms64 bytes from 172.18.11.114: icmp_seq&#x3D;3 ttl&#x3D;64 ti...</div></div></div></a><a class="pagination-related" href="/apt-get%20install%20%E5%A4%B1%E8%B4%A5.html" title="apt-get install失败"><img class="cover" src="https://images.pexels.com/photos/531602/pexels-photo-531602.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-03-10</div><div class="info-item-2">apt-get install失败</div></div><div class="info-2"><div class="info-item-1">apt-get install失败 第一阶段 使用perf 报错 内核无法找到perf 12345678910root@hw103:&#x2F;home&#x2F;yky&#x2F;redis-5.0.3# perf WARNING: perf not found for kernel 4.15.0-45  You may need to install the following packages for this specific kernel:    linux-tools-4.15.0-45-generic    linux-cloud-tools-4.15.0-45-generic  You may also want to install one of the following packages to keep up to date:    linux-tools-generic    linux-cloud-tools-generic    安装此内核的通用工具时错误 1234567891011root@hw103:&#x2F;home&#x2F;yky&#x2F...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">BraveY</div><div class="author-info-description">今日事，今日毕</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux%E8%BF%90%E7%BB%B4"><span class="toc-number">1.</span> <span class="toc-text">Linux运维</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%A4%B9%E5%A4%A7%E5%B0%8F"><span class="toc-number">1.1.</span> <span class="toc-text">查看文件夹大小</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vim"><span class="toc-number">1.2.</span> <span class="toc-text">vim</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ssh"><span class="toc-number">1.3.</span> <span class="toc-text">ssh</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95"><span class="toc-number">1.3.1.</span> <span class="toc-text">免密登录</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">流程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#scp"><span class="toc-number">1.3.2.</span> <span class="toc-text">scp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6"><span class="toc-number">1.3.3.</span> <span class="toc-text">复制文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E7%9B%B8%E5%85%B3"><span class="toc-number">1.4.</span> <span class="toc-text">进程相关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%B9%E9%87%8F%E6%9D%80%E6%AD%BB"><span class="toc-number">1.4.1.</span> <span class="toc-text">批量杀死</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#shell%E8%84%9A%E6%9C%AC"><span class="toc-number">1.5.</span> <span class="toc-text">shell脚本</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#xargs"><span class="toc-number">1.5.1.</span> <span class="toc-text">xargs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A4%E6%96%AD%E6%96%87%E4%BB%B6%E5%A4%B9%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8"><span class="toc-number">1.5.2.</span> <span class="toc-text">判断文件夹是否存在</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%9B%B8%E5%85%B3"><span class="toc-number">1.6.</span> <span class="toc-text">用户相关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7%E6%8E%88%E4%BA%88sudo"><span class="toc-number">1.6.1.</span> <span class="toc-text">创建用户授予sudo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E7%99%BB%E5%BD%95%E7%94%A8%E6%88%B7%E7%9A%84%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.6.2.</span> <span class="toc-text">查看登录用户的进程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E4%BF%A1%E6%81%AF%E6%9F%A5%E7%9C%8B"><span class="toc-number">1.7.</span> <span class="toc-text">内存信息查看</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E9%80%9A%E9%81%93%E6%95%B0%E6%9F%A5%E7%9C%8B"><span class="toc-number">1.8.</span> <span class="toc-text">内存通道数查看</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux%E5%8F%91%E8%A1%8C%E7%89%88%E6%9F%A5%E7%9C%8B"><span class="toc-number">1.9.</span> <span class="toc-text">Linux发行版查看</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AA%E6%80%A7%E5%8C%96"><span class="toc-number">1.10.</span> <span class="toc-text">个性化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%87%E6%8D%A2zsh"><span class="toc-number">1.10.1.</span> <span class="toc-text">切换zsh</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E9%93%BE%E6%8E%A5"><span class="toc-number">1.11.</span> <span class="toc-text">程序链接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3"><span class="toc-number">1.12.</span> <span class="toc-text">网络相关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E6%9F%A5%E7%9C%8B"><span class="toc-number">1.12.1.</span> <span class="toc-text">端口查看</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"><img src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"/></a><div class="content"><a class="title" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略">闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略</a><time datetime="2026-03-07T02:00:00.000Z" title="发表于 2026-03-07 10:00:00">2026-03-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd"><img src="https://images.pexels.com/photos/417222/pexels-photo-417222.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记2——lookupd"/></a><div class="content"><a class="title" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd">NSQ学习笔记2——lookupd</a><time datetime="2023-03-12T02:14:41.000Z" title="发表于 2023-03-12 10:14:41">2023-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介"><img src="https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记1——简介"/></a><div class="content"><a class="title" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介">NSQ学习笔记1——简介</a><time datetime="2023-02-05T07:18:23.000Z" title="发表于 2023-02-05 15:18:23">2023-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记"><img src="https://images.pexels.com/photos/71104/utah-mountain-biking-bike-biking-71104.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C专家编程读书笔记"/></a><div class="content"><a class="title" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记">C专家编程读书笔记</a><time datetime="2021-03-18T04:59:02.000Z" title="发表于 2021-03-18 12:59:02">2021-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱"><img src="https://images.pexels.com/photos/1656687/pexels-photo-1656687.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C语言传递指针参数的陷阱"/></a><div class="content"><a class="title" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱">C语言传递指针参数的陷阱</a><time datetime="2020-12-12T13:39:57.000Z" title="发表于 2020-12-12 21:39:57">2020-12-12</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2020 - 2026 By BraveY</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const initValine = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyValine = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const valineConfig = {
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      visitor: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || window.location.pathname
+    }
+
+    new Valine(valineConfig)
+  }
+
+  const loadValine = async (el, path) => {
+    if (typeof Valine === 'function') {
+      initValine(el, path)
+    } else {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js')
+      initValine(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Valine' === 'Valine'
+      ? window.shuoshuoComment = { loadComment: loadValine }
+      : window.loadOtherComment = loadValine
+    return
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script></div><script async data-pjax src="/js/busuanzi.js"></script></div></body></html>

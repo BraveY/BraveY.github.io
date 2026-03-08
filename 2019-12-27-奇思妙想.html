@@ -1,0 +1,249 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>奇思妙想 | BraveY</title><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="奇思妙想记录一些觉得有用的点子，公式推导等。当成便利贴来使用的。23333  条件联合分布的推导首先搞清楚逗号是与的意思，把逗号去掉，加个括号就好理解了。 $P(S,A|T)$:事件T发生的条件下，事件S、A均发生的概率。直接把逗号给去掉，就是$P((SA)|T)$竖线的优先级别高。因此有：$..."><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "奇思妙想",
+  "url": "https://bravey.github.io/2019-12-27-%E5%A5%87%E6%80%9D%E5%A6%99%E6%83%B3.html",
+  "image": "https://images.pexels.com/photos/238622/pexels-photo-238622.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+  "datePublished": "2019-12-27T11:17:47.000Z",
+  "dateModified": "2026-03-07T01:06:28.371Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "BraveY",
+      "url": "https://bravey.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/2019-12-27-%E5%A5%87%E6%80%9D%E5%A6%99%E6%83%B3.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '奇思妙想',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 5.3.0"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/url(https:/res.cloudinary.com/bravey/image/upload/v1587809177/air-atmosphere-blue-blue-sky-314726.jpg));"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://images.pexels.com/photos/238622/pexels-photo-238622.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">BraveY</span></a><a class="nav-page-title" href="/"><span class="site-name">奇思妙想</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">奇思妙想</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-12-27T11:17:47.000Z" title="发表于 2019-12-27 19:17:47">2019-12-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-07T01:06:28.371Z" title="更新于 2026-03-07 09:06:28">2026-03-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">804</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>3分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="奇思妙想"><a href="#奇思妙想" class="headerlink" title="奇思妙想"></a>奇思妙想</h1><p>记录一些觉得有用的点子，公式推导等。当成便利贴来使用的。23333</p>
+<a id="more"></a>
+<h2 id="条件联合分布的推导"><a href="#条件联合分布的推导" class="headerlink" title="条件联合分布的推导"></a>条件联合分布的推导</h2><p>首先搞清楚逗号是与的意思，把逗号去掉，加个括号就好理解了。</p>
+<p>$P(S,A|T)$:事件T发生的条件下，事件S、A均发生的概率。直接把逗号给去掉，就是$P((SA)|T)$竖线的优先级别高。因此有：$P(S,A|T)=\frac{P(SAT)}{P(T)}$</p>
+<p>$P(S|A,T)$ ：事件A、T均发生的条件下，事件S发生的概率 。</p>
+<script type="math/tex; mode=display">
+P(X=a,Y=b|Z=c)=P(X=a|Y=b,Z=c)P(Y=b|Z=c)</script><p>上式的证明如下：</p>
+<script type="math/tex; mode=display">
+\begin{equation}\nonumber
+\begin{split}
+P(X=a,Y=b|Z=c)&=\frac{P(X=a,Y=b,Z=c)}{P(Z=c)}\\
+&=\frac{P(X=a|Y=b,Z=c)P(Y=b,Z=c)}{P(Z=c)}\\
+&=\frac{P(X=a|Y=b,Z=c)P(Y=b|Z=c)P(Z=c)}{P(Z=c)}\\
+&=P(X=a|Y=b,Z=c)P(Y=b|Z=c)
+\end{split} 
+\end{equation}</script><h2 id="贝叶斯估计"><a href="#贝叶斯估计" class="headerlink" title="贝叶斯估计"></a>贝叶斯估计</h2><p>根据现有的数据样本集D估计一个新的样本的分布$x$即$P(x|D)$.通过D引入$\theta$,然后通过$\theta$来估计x的分布$p(x|\theta)$</p>
+<script type="math/tex; mode=display">
+\begin{equation}\nonumber
+\begin{split}
+P(x|D)&=\int P(x,\theta|D)d\theta\\
+&=\int \frac{P(x,\theta,D)}{P(D)}d\theta\\
+&=\int \frac{P(x|\theta,D)P(\theta,D)}{P(D)}d\theta\\
+&=\int \frac{P(x|\theta,D)P(\theta|D)P(D)}{P(D)}d\theta\\
+&=\int P(x|\theta,D)P(\theta|D)P(D)d\theta\\
+\end{split} 
+\end{equation}</script><p>关于第一步$P(x|D)=\int P(x,\theta|D)d\theta$ 的理解在D条件下的联合分布对另一个变量求积分，就得到了一个边缘分布，不过这个边缘分布是在D条件下的。</p>
+<h2 id="点子"><a href="#点子" class="headerlink" title="点子"></a>点子</h2><ol>
+<li>目标函数不可导的情况下优化：遗传算法</li>
+<li>中文OCR：github上的开源项目：chinese_ocr</li>
+<li>科研：深度学习前沿领域的bench ，NLP中：中文的Bench？ GLUE：的冗余分析？</li>
+<li>从指令的角度去研究能耗的情况？微观上的指令比例与宏观应用上的差别？去判断负载是否合理？<ol>
+<li>不同指令集上的常用指令的能效？</li>
+<li>微观的负载与宏观上的应用的能效是否有差别？从二者的指令比例去分析。</li>
+<li>量化之后通过分析指令比例就能推导出负载的能耗情况。</li>
+</ol>
+</li>
+<li>C语言局部变量的数组（位于栈）在声明时就需要指定具体的大小值，用常量指定，而不能用变量指定。如果需要用变量指定，则只能使用malloc来分配在堆上。</li>
+</ol>
+<h2 id="待解决的问题"><a href="#待解决的问题" class="headerlink" title="待解决的问题"></a>待解决的问题</h2><ol>
+<li>矩阵的特征值的个数怎么判断的？重根的情况。</li>
+<li>算出来特征向量任意取的情况，KL变换的变换矩阵还有什么作用呢？</li>
+<li>Adaboost为什么要求迭代后的更新的权重使得上一轮的学习器在这轮的性能为随机猜测呢？</li>
+<li>什么是浮点运算？加减乘除都各自算一次浮点运算吗？<ol>
+<li>都各自只算做一次浮点运算。</li>
+</ol>
+</li>
+</ol>
+<h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><p>sublime text 激活：</p>
+<p><a target="_blank" rel="noopener" href="http://wordjian.com/2019/10/03/sublime/#%E6%90%9E%E8%B5%B7%EF%BC%8C%E6%90%9E%E8%B5%B7">http://wordjian.com/2019/10/03/sublime/#%E6%90%9E%E8%B5%B7%EF%BC%8C%E6%90%9E%E8%B5%B7</a>  </p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://bravey.github.io">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/2019-12-27-%E5%A5%87%E6%80%9D%E5%A6%99%E6%83%B3.html">https://bravey.github.io/2019-12-27-%E5%A5%87%E6%80%9D%E5%A6%99%E6%83%B3.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://bravey.github.io" target="_blank">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%B0%E5%AD%A6/">数学</a><a class="post-meta__tags" href="/tags/%E7%82%B9%E5%AD%90/">点子</a></div><div class="post-share"><div class="social-share" data-image="https://images.pexels.com/photos/238622/pexels-photo-238622.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2019-12-28-%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9%E5%92%8C%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96.html" title="特征选择和特征提取"><img class="cover" src="https://images.pexels.com/photos/46253/mt-fuji-sea-of-clouds-sunrise-46253.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">特征选择和特征提取</div></div><div class="info-2"><div class="info-item-1">特征选择和特征提取意义 降低维度，后续的分类器设计更容易计算，可以加快速度 消除特征之间可能存在的相关性，减少与分类无关的信息（理解成降噪？），从而更好的分类。   类别可分性质的度量距离 点到点之间的距离 欧式距离：  D(a, b) = || a – b ||平方形式（向量转置相乘，点积的形式）：  D^{2}(a,b) = (a - b)^{T}(a - b) = \sum_{k = 1}^{n}{(a_{k} - b_{k})^{2}}其中a和b为n维向量，其第k个特征分别是$a_k$和$b_k$。 各自对应的特征维度差的平方之和。  点到点集之间的距离 在n维空间中，点x到点$a^{(i)}$之间的距离平方为：  D^{2}(x,a^{(i)}) = \sum_{k = 1}^{n}{(x_{k} - a_{k}^{(i)})^{2}}因此x到有K个点组合的均方距离，就是到每个点均方距离相加之后取均值。  \overline{D^{2}(x,\{ a^{(i)}\})} = \frac{1}{K}\sum_{i = 1}^{K}{D^{2}(x,a^{(i)}) =}\...</div></div></div></a><a class="pagination-related" href="/2019-12-26-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%9E%8B%E6%80%BB%E7%BB%93.html" title="机器学习模型总结"><img class="cover" src="https://images.pexels.com/photos/164041/pexels-photo-164041.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">机器学习模型总结</div></div><div class="info-2"><div class="info-item-1">根据课程做出的总结       模型 损失函数 正则/先验 目标函数 参数 超参数 优化算法 备注     贝叶斯判别 y $ p(\hat y\neq y x)=\left\{ \begin{aligned} p(\hat y=1 x) &amp; , &amp; y=0\ p(\hat y=0 x)&amp;,&amp;y=1\ \end{aligned} \right.$         K-L变换 $y=\Phi^Tx$ $\overline{\varepsilon^{2}} = \sum_{j = m + 1}^{n}{\varphi_{j}^{T}C_{x}}\varphi_{j} = \sum_{j = m + 1}^{n}\lambda_{j}$      $R = E\{xx^{T}\}\\R\varphi_j=λ_j\varphi_j$               </div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">BraveY</div><div class="author-info-description">今日事，今日毕</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A5%87%E6%80%9D%E5%A6%99%E6%83%B3"><span class="toc-number">1.</span> <span class="toc-text">奇思妙想</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E8%81%94%E5%90%88%E5%88%86%E5%B8%83%E7%9A%84%E6%8E%A8%E5%AF%BC"><span class="toc-number">1.1.</span> <span class="toc-text">条件联合分布的推导</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%BC%B0%E8%AE%A1"><span class="toc-number">1.2.</span> <span class="toc-text">贝叶斯估计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%82%B9%E5%AD%90"><span class="toc-number">1.3.</span> <span class="toc-text">点子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%85%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.4.</span> <span class="toc-text">待解决的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7"><span class="toc-number">1.5.</span> <span class="toc-text">工具</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"><img src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"/></a><div class="content"><a class="title" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略">闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略</a><time datetime="2026-03-07T02:00:00.000Z" title="发表于 2026-03-07 10:00:00">2026-03-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd"><img src="https://images.pexels.com/photos/417222/pexels-photo-417222.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记2——lookupd"/></a><div class="content"><a class="title" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd">NSQ学习笔记2——lookupd</a><time datetime="2023-03-12T02:14:41.000Z" title="发表于 2023-03-12 10:14:41">2023-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介"><img src="https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记1——简介"/></a><div class="content"><a class="title" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介">NSQ学习笔记1——简介</a><time datetime="2023-02-05T07:18:23.000Z" title="发表于 2023-02-05 15:18:23">2023-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记"><img src="https://images.pexels.com/photos/71104/utah-mountain-biking-bike-biking-71104.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C专家编程读书笔记"/></a><div class="content"><a class="title" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记">C专家编程读书笔记</a><time datetime="2021-03-18T04:59:02.000Z" title="发表于 2021-03-18 12:59:02">2021-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱"><img src="https://images.pexels.com/photos/1656687/pexels-photo-1656687.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C语言传递指针参数的陷阱"/></a><div class="content"><a class="title" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱">C语言传递指针参数的陷阱</a><time datetime="2020-12-12T13:39:57.000Z" title="发表于 2020-12-12 21:39:57">2020-12-12</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2020 - 2026 By BraveY</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const initValine = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyValine = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const valineConfig = {
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      visitor: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || window.location.pathname
+    }
+
+    new Valine(valineConfig)
+  }
+
+  const loadValine = async (el, path) => {
+    if (typeof Valine === 'function') {
+      initValine(el, path)
+    } else {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js')
+      initValine(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Valine' === 'Valine'
+      ? window.shuoshuoComment = { loadComment: loadValine }
+      : window.loadOtherComment = loadValine
+    return
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script></div><script async data-pjax src="/js/busuanzi.js"></script></div></body></html>

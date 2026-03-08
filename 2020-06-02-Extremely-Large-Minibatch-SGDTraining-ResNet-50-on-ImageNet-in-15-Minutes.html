@@ -1,0 +1,237 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Extremely Large Minibatch SGD:Training ResNet-50 on ImageNet in 15 Minutes | BraveY</title><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="摘要本文通过将minibatch size提高到32k实现了在ImageNET上用15分钟训练完ResNet50。为了保证精读使用了RMSprop warm-up,batch normalization，以及slow-start learning rate schedule. 引言训练深度神经..."><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Extremely Large Minibatch SGD:Training ResNet-50 on ImageNet in 15 Minutes",
+  "url": "https://bravey.github.io/2020-06-02-Extremely-Large-Minibatch-SGDTraining-ResNet-50-on-ImageNet-in-15-Minutes.html",
+  "image": "https://images.pexels.com/photos/390051/surfer-wave-sunset-the-indian-ocean-390051.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+  "datePublished": "2020-06-02T08:00:28.000Z",
+  "dateModified": "2026-03-07T01:06:28.371Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "BraveY",
+      "url": "https://bravey.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/2020-06-02-Extremely-Large-Minibatch-SGDTraining-ResNet-50-on-ImageNet-in-15-Minutes.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Extremely Large Minibatch SGD:Training ResNet-50 on ImageNet in 15 Minutes',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 5.3.0"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/url(https:/res.cloudinary.com/bravey/image/upload/v1587809177/air-atmosphere-blue-blue-sky-314726.jpg));"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://images.pexels.com/photos/390051/surfer-wave-sunset-the-indian-ocean-390051.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">BraveY</span></a><a class="nav-page-title" href="/"><span class="site-name">Extremely Large Minibatch SGD:Training ResNet-50 on ImageNet in 15 Minutes</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Extremely Large Minibatch SGD:Training ResNet-50 on ImageNet in 15 Minutes</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-06-02T08:00:28.000Z" title="发表于 2020-06-02 16:00:28">2020-06-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-07T01:06:28.371Z" title="更新于 2026-03-07 09:06:28">2026-03-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/">论文阅读</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">354</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>1分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>本文通过将minibatch size提高到32k实现了在ImageNET上用15分钟训练完ResNet50。为了保证精读使用了RMSprop warm-up,batch normalization，以及slow-start learning rate schedule.</p>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>训练深度神经网络在计算上是昂贵的。更高的可扩展性（更大的数据集和更复杂的模型）和更高的生产率（更短的培训时间以及更快的试验和错误）要求通过<strong>分布式计算</strong>来加速。<br>本文证明，在不影响准确性经过精心设计的软件和硬件系统的情况下，使用large batch可以进行高度并行的训练。</p>
+<hr>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>主要使用了《Accurate, large minibatch SGD: training ImageNet in 1 hour》文章的方法。</p>
+<h3 id="RMSprop-Warm-up"><a href="#RMSprop-Warm-up" class="headerlink" title="RMSprop Warm-up"></a>RMSprop Warm-up</h3><p>本文发现主要的挑战是训练开始时的优化难度。为了解决这个问题，本文从RMSprop [7]开始训练，然后逐步过渡到SGD。</p>
+<p>momentum SGD 和RMSprop 的结合</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+m_{t} &=\mu_{2} m_{t-1}+\left(1-\mu_{2}\right) g_{t}^{2} \\
+\Delta_{t} &=\mu_{1} \Delta_{t-1}-\left(\alpha_{\mathrm{SGD}}+\frac{\alpha_{\mathrm{RMSprop}}}{\sqrt{m_{t}}+\varepsilon}\right) g_{t}, \text { and } \\
+\theta_{t} &=\theta_{t-1}+\eta \Delta_{t}
+\end{aligned}</script><p>从RMSprop 开始，然后切换到SGD(需要平滑切换，突然切换有副作用)</p>
+<p>对$\alpha_{SGD}$的调度，类似与ELU激活函数：</p>
+<script type="math/tex; mode=display">
+\alpha_{\mathrm{SGD}}=\left\{\begin{array}{ll}
+\frac{1}{2} \exp \left(2\left(\mathrm{epoch}-\beta_{\mathrm{center}}\right) / \beta_{\mathrm{period}}\right) & \left(\mathrm{epoch}<\beta_{\mathrm{center}}\right) \\
+\frac{1}{2}+2\left(\mathrm{epoch}-\beta_{\mathrm{center}}\right) / \beta_{\mathrm{period}} & \left(\mathrm{epoch}<\beta_{\mathrm{center}}+\frac{1}{2} \beta_{\mathrm{period}}\right) \\
+1 & (\text { otherwise })
+\end{array}\right.</script><p>$\alpha_{SGD}$先指数增长，之后到达$\beta_{center}$epoch后达到1/2,之后线性增长到$\beta_{center} + \frac{1}{2}\beta_{period}$ epoch, 超参数$\beta_{center}=10,\beta_{period}=5$</p>
+<h3 id="Slow-Start-Learning-Rate-Schedule"><a href="#Slow-Start-Learning-Rate-Schedule" class="headerlink" title="Slow-Start Learning Rate Schedule"></a>Slow-Start Learning Rate Schedule</h3><p>为了进一步克服最初的优化困难，本文使用略微修改的学习率时间表，以延长初始阶段并降低初始学习率</p>
+<p>初始学习率</p>
+<script type="math/tex; mode=display">
+\eta_{base} =0.1 \cdot \frac{b_{\text {botal }}}{256}=0.1 \cdot \frac{n b_{\text {local }}}{256}</script><p>$b_{local}$ 是一个worker的batch size。</p>
+<p>SGD前40个epoch用$0.5\cdot\eta_{base}$,随后的30个epoch为$0.075\cdot\eta_{base}$,接下来的15个epoch $0.01\cdot\eta_{base}$,最后5个为$0.001\cdot\eta_{base}$</p>
+<h3 id="Batch-Normalization-without-Moving-Averages"><a href="#Batch-Normalization-without-Moving-Averages" class="headerlink" title="Batch Normalization without Moving Averages"></a>Batch Normalization without Moving Averages</h3><p>随着batch size的增加，均值和方差的batch normalization会移动平均值导致实际均值和方差的不准确估计。为了解决这个问题，本文只考虑了最后的minibatch，而不是移动平均数，并且对这些统计数据使用全归约通信来获得验证之前所有Workers的平均数。</p>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p><strong>软件</strong>：使用Chainer和ChanierMN Chainer是一个开源的深度学习框架，具有“按运行定义”方法。 ChainerMN是Chainer的附加软件包，可实现具有同步数据并行性的多节点分布式深度学习。作为底层的通信库，本文使用了NCCL 2.0.5版和Open MPI 1.10.2版。</p>
+<p>使用半精度浮点数来减少通信开销，对模型准确的影响较小。</p>
+<p><strong>硬件</strong>： 使用MN-1内部集群。包含128个节点。</p>
+<p><strong>训练时间</strong></p>
+<p>通信和迭代时间</p>
+<p><img src="/2020-06-02-Extremely-Large-Minibatch-SGDTraining-ResNet-50-on-ImageNet-in-15-Minutes.htm/Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-06-02 175529.jpg" alt=""></p>
+<p><img src="/2020-06-02-Extremely-Large-Minibatch-SGDTraining-ResNet-50-on-ImageNet-in-15-Minutes.htm/Users\BraveY\Documents\BraveY\blog\images\论文阅读\批注 2020-06-02 175659.jpg" alt=""></p>
+<h2 id="讨论"><a href="#讨论" class="headerlink" title="讨论"></a>讨论</h2><hr>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ol>
+<li>使用的软件不常用可以替换为Pytorch？</li>
+<li>比较的软件框架，硬件都不一致，是否有说服力？有没有统一平台的benchmark？</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://bravey.github.io">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/2020-06-02-Extremely-Large-Minibatch-SGDTraining-ResNet-50-on-ImageNet-in-15-Minutes.html">https://bravey.github.io/2020-06-02-Extremely-Large-Minibatch-SGDTraining-ResNet-50-on-ImageNet-in-15-Minutes.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://bravey.github.io" target="_blank">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Large-Batch/">Large Batch</a></div><div class="post-share"><div class="social-share" data-image="https://images.pexels.com/photos/390051/surfer-wave-sunset-the-indian-ocean-390051.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2020-07-14-Measuring-and-Benchmarking-Power-Consumption-and-Energy-Efficiency.html" title="Measuring and Benchmarking Power Consumption and Energy Efficiency"><img class="cover" src="https://images.pexels.com/photos/531602/pexels-photo-531602.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Measuring and Benchmarking Power Consumption and Energy Efficiency</div></div><div class="info-2"><div class="info-item-1">来源ICPE 18 关键词功率，能效，性能，基准，测量，负载水平，SPEC 摘要 显存能耗测量方法不考虑多个负载级别和工作负载组合。 介绍了PTDaemon 能耗测量工具和Chauffeur 能耗评测框架 SPEC SERT 包含的工作负载，并介绍行业标准的计算效率基准  引言 如何精确测量能耗？ 数据中心的冗余机制（灾难备份）导致的额外负载需要被考虑 SPEC 能耗方法学多重负载级别下进行能耗效率测评 功率测量是在SPEC PTDaemon中实现的，它与功率分析仪和温度传感器进行通信。工作负载分派，结果收集和测试执行由Chauffeur框架处理。   方法遵守的原则 可重现 公平 可验证 可使用  评测电力要求 均方根电力测量 每秒通过通讯接口将测量值记录到外部设备上 不确定性少于1% 定期校准至国家标准 设备配置控制和程序界面记录 能够处理安培数峰值（波峰因数），以在恶劣的功率条件下实现正确的读数  考虑环境温度 PTDaemon基于TCP-IP的公共接口集成到基准线束中，对评测软件隐藏不同硬件接口的协议和行为  通过PTDaemon与传感器进行交互（TCP/IP），设备类型...</div></div></div></a><a class="pagination-related" href="/2020-06-02-Convolutional-Neural-Networks-for-Sentence-Classification.html" title="Convolutional Neural Networks for Sentence Classification"><img class="cover" src="https://images.pexels.com/photos/1832328/pexels-photo-1832328.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Convolutional Neural Networks for Sentence Classification</div></div><div class="info-2"><div class="info-item-1">来源2014 EMNLP 关键词摘要本文报告了一系列在卷积神经网络（CNN）上进行的一系列实验，这些卷积神经网络在针对句子级别分类任务的预训练词向量之上进行了训练。本文表明，几乎没有超参数调整和静态矢量的简单CNN在多个基准上均能获得出色的结果。通过微调学习特定于任务的向量可进一步提高性能。本文另外建议对体系结构进行简单的修改，以允许使用特定于任务的向量和静态向量。本文讨论的CNN模型在7个任务中的4个改进了现有技术，其中包括情感分析和问题分类。 结论 图表引言在自然语言处理中，深度学习方法的许多工作都涉及通过神经语言模型学习单词向量表示并对学习的词向量进行合成以进行分类。Word Vector：本质上是特征提取器，可在其维度上编码单词的语义特征。在这种密集表示中，语义上接近的词在较低维向量空间中同样接近（以欧几里得或余弦距离）。 CNN模型在语义解析，搜索查询，句子建模以及其他的一些NLP任务中取得了出色的结果。 本文从无监督的神经语言模型获得的单词向量之上训练一个具有卷积层的简单CNN。单词向量为Mikolov等从1000亿单词的谷歌新闻中预训练得到。使单词向量保持静态，仅学...</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">BraveY</div><div class="author-info-description">今日事，今日毕</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">1.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-number">2.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RMSprop-Warm-up"><span class="toc-number">3.1.</span> <span class="toc-text">RMSprop Warm-up</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Slow-Start-Learning-Rate-Schedule"><span class="toc-number">3.2.</span> <span class="toc-text">Slow-Start Learning Rate Schedule</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Batch-Normalization-without-Moving-Averages"><span class="toc-number">3.3.</span> <span class="toc-text">Batch Normalization without Moving Averages</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C"><span class="toc-number">4.</span> <span class="toc-text">结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A8%E8%AE%BA"><span class="toc-number">5.</span> <span class="toc-text">讨论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%9D%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">思考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"><img src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"/></a><div class="content"><a class="title" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略">闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略</a><time datetime="2026-03-07T02:00:00.000Z" title="发表于 2026-03-07 10:00:00">2026-03-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd"><img src="https://images.pexels.com/photos/417222/pexels-photo-417222.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记2——lookupd"/></a><div class="content"><a class="title" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd">NSQ学习笔记2——lookupd</a><time datetime="2023-03-12T02:14:41.000Z" title="发表于 2023-03-12 10:14:41">2023-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介"><img src="https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记1——简介"/></a><div class="content"><a class="title" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介">NSQ学习笔记1——简介</a><time datetime="2023-02-05T07:18:23.000Z" title="发表于 2023-02-05 15:18:23">2023-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记"><img src="https://images.pexels.com/photos/71104/utah-mountain-biking-bike-biking-71104.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C专家编程读书笔记"/></a><div class="content"><a class="title" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记">C专家编程读书笔记</a><time datetime="2021-03-18T04:59:02.000Z" title="发表于 2021-03-18 12:59:02">2021-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱"><img src="https://images.pexels.com/photos/1656687/pexels-photo-1656687.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C语言传递指针参数的陷阱"/></a><div class="content"><a class="title" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱">C语言传递指针参数的陷阱</a><time datetime="2020-12-12T13:39:57.000Z" title="发表于 2020-12-12 21:39:57">2020-12-12</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2020 - 2026 By BraveY</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const initValine = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyValine = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const valineConfig = {
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      visitor: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || window.location.pathname
+    }
+
+    new Valine(valineConfig)
+  }
+
+  const loadValine = async (el, path) => {
+    if (typeof Valine === 'function') {
+      initValine(el, path)
+    } else {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js')
+      initValine(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Valine' === 'Valine'
+      ? window.shuoshuoComment = { loadComment: loadValine }
+      : window.loadOtherComment = loadValine
+    return
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script></div><script async data-pjax src="/js/busuanzi.js"></script></div></body></html>

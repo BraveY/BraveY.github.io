@@ -1,0 +1,240 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ceph 部署文档 | BraveY</title><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="ceph 部署文档  1.配置所有节点创建ceph用户安装配置NTP systemctl enable ntp  ubuntu 14.04不可用，感觉已经安装过了，因此跳过。  配置hosts文件172.16.1.93 object1172.16.1.94 object2172.16.1.95..."><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ceph 部署文档",
+  "url": "https://bravey.github.io/ceph%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3.html",
+  "image": "https://images.pexels.com/photos/33545/sunrise-phu-quoc-island-ocean.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+  "datePublished": "2018-04-17T09:36:03.000Z",
+  "dateModified": "2026-03-07T01:06:28.375Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "BraveY",
+      "url": "https://bravey.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/ceph%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ceph 部署文档',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 5.3.0"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/url(https:/res.cloudinary.com/bravey/image/upload/v1587809177/air-atmosphere-blue-blue-sky-314726.jpg));"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://images.pexels.com/photos/33545/sunrise-phu-quoc-island-ocean.jpg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">BraveY</span></a><a class="nav-page-title" href="/"><span class="site-name">ceph 部署文档</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">ceph 部署文档</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2018-04-17T09:36:03.000Z" title="发表于 2018-04-17 17:36:03">2018-04-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-07T01:06:28.375Z" title="更新于 2026-03-07 09:06:28">2026-03-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/deploy/">deploy</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">644</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>2分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="ceph-部署文档"><a href="#ceph-部署文档" class="headerlink" title="ceph 部署文档"></a>ceph 部署文档</h1><a id="more"></a>
+<hr>
+<h1 id="1-配置所有节点"><a href="#1-配置所有节点" class="headerlink" title="1.配置所有节点"></a>1.配置所有节点</h1><h2 id="创建ceph用户"><a href="#创建ceph用户" class="headerlink" title="创建ceph用户"></a>创建ceph用户</h2><h2 id="安装配置NTP"><a href="#安装配置NTP" class="headerlink" title="安装配置NTP"></a>安装配置NTP</h2><ol>
+<li><code>systemctl enable ntp</code>  ubuntu 14.04不可用，感觉已经安装过了，因此跳过。</li>
+</ol>
+<h2 id="配置hosts文件"><a href="#配置hosts文件" class="headerlink" title="配置hosts文件"></a>配置hosts文件</h2><p><code>172.16.1.93 object1</code><br><code>172.16.1.94 object2</code><br><code>172.16.1.95 object3</code><br><code>172.16.1.66 object4</code><br><code>172.16.1.92 controller</code></p>
+<hr>
+<h1 id="2-配置ssh服务器"><a href="#2-配置ssh服务器" class="headerlink" title="2. 配置ssh服务器"></a>2. 配置ssh服务器</h1><p>修改ssh的配置文件</p>
+<p>Host controller<br>        Hostname gd92<br>        User cephuser<br>Host object1<br>        Hostname gd93<br>        User cephuser<br>Host object2<br>        Hostname hw101<br>        User cephuser<br>Host object3<br>        Hostname gd95<br>        User cephuser<br>Host object4<br>        Hostname gd66<br>        User cephuser</p>
+<p>生成密钥并拷贝到4个osd节点上，无需拷贝到controller节点</p>
+<hr>
+<h1 id="3-安装ceph"><a href="#3-安装ceph" class="headerlink" title="3.安装ceph"></a>3.安装ceph</h1><p>主要参考链接：这些链接的操作大都一致，部分的顺序会有变化。</p>
+<p><a target="_blank" rel="noopener" href="https://linux.cn/article-8182-1.html#4_10238">https://linux.cn/article-8182-1.html#4_10238</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/styshoo/article/details/55471132">https://blog.csdn.net/styshoo/article/details/55471132</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/styshoo/article/details/58572816">https://blog.csdn.net/styshoo/article/details/58572816</a></p>
+<h2 id="部署监控节点出现的问题"><a href="#部署监控节点出现的问题" class="headerlink" title="部署监控节点出现的问题"></a>部署监控节点出现的问题</h2><p><code>ceph-deploy mon create-initial</code></p>
+<ol>
+<li><p><code>ceph-mon --cluster ceph --mkfs -i gd92 --keyring /var/lib/ceph/tmp/ceph-gd92.mon.keyring</code></p>
+<p>问题：ceph.conf的配置文件中的<code>public network=172.16.1.92/24</code> 掩码前面多打了空格</p>
+<p>修改后重新执行命令，并加上<code>--overwrite-conf</code> </p>
+</li>
+<li><p>[info]Running command: ceph —cluster=ceph —admin-daemon /var/run/ceph/ceph-mon.controller.asok mon_status</p>
+<p><code>admin_socket: exception getting command descriptions: [Errno 2] No such file or directory</code></p>
+<p>似乎是ceph -deploy 的问题，或者是ubuntu14.04的问题。教程是ubuntu16.04的</p>
+<p>此问题非hostname 不对应</p>
+<p>非conf 不同步导致。—overwrtie-conf  无作用。</p>
+<p>解决办法：按照14.04方法重新安装ceph-deploy</p>
+</li>
+</ol>
+<h2 id="部署osd节点出现的问题"><a href="#部署osd节点出现的问题" class="headerlink" title="部署osd节点出现的问题"></a>部署osd节点出现的问题</h2><ol>
+<li>使用<code>ceph-deploy disk list ceph-osd1 ceph-osd2 ceph-osd3</code>检查磁盘可用性时报错，使用<code>ceph-deploy osd prepare ceph-osd1:/dev/sdb ceph-osd2:/dev/sdb ceph-osd3:/dev/sdb</code> 在数据盘上面准备时也报错<br>Running command: fdisk -l  File “/usr/lib/python2.7/distpackages/ceph_deploy/util/decorators.py”, line 69, in newfunc<br>问题：未知<br>解决办法：将osd节点的数据目录放在指定目录，不用整个数据盘</li>
+<li>最后部署后集群状况是health -ok，但是4osds，有3个osd up，一个osd down<br>问题：down掉的节点磁盘有问题。<br>解决办法：先卸载磁盘，重新格式化，挂载，重新激活osd节点</li>
+</ol>
+<h2 id="部署rgw节点出现的问题"><a href="#部署rgw节点出现的问题" class="headerlink" title="部署rgw节点出现的问题"></a>部署rgw节点出现的问题</h2><ol>
+<li><p>显示rgw进程在工作，但是使用：<a target="_blank" rel="noopener" href="http://controller:7480">http://controller:7480</a> 显示拒绝连接。并且新建S3账号，测试时未返回正确结果。</p>
+<p>问题：未知</p>
+<p>尝试方法：重新部署</p>
+<p>解决办法：重新部署后最开始将端口设置为80，发现可以创建s3账号，但是无法正确测试，显示创建bucket出错，查看rgw的log，发现端口被占用，无法打开，后面重新设置端口为7480问题解决，测试均正确。</p>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://bravey.github.io">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/ceph%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3.html">https://bravey.github.io/ceph%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://bravey.github.io" target="_blank">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ceph/">ceph</a></div><div class="post-share"><div class="social-share" data-image="https://images.pexels.com/photos/33545/sunrise-phu-quoc-island-ocean.jpg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/%E5%9B%BE%E8%AE%A1%E7%AE%97%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95.html" title="图计算常用算法"><img class="cover" src="https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">图计算常用算法</div></div><div class="info-2"><div class="info-item-1">图算法的典型操作关于一些常见图算法的调研与学习。  常用图算法PageRank 背景      既考虑入链数量，又考虑了网页质量因素，二者相结合 数量与权重的结合 算法与主题无关，因为PR值是根据图计算出来的   算法原理  基本思想 A有链接指向B，表明A认为B比A重要。A将自身权重分配一部分给B。 $W(B)=W(A)/N$   W(A) 是A的PR值，W(B)是A 分配的权重，N是A的出链数  PageRank公式修正 存在出链为0的孤立网页，增加阻力系数q ，一般取q=0.85，其意义是用户有1-q的概率不点击此页面上面的所有链接。同时还有随机直接跳转的概率，如直接输入网址，点击书签等。完整公式如下：      Connected component 定义 连通分支：图中，某个子图的任意两点有边连接，而子图之间无边连接 问题：cc是寻找连通分支的算法？？   通过BFS、DFS算法的便利就可以找到连通分支，每个白色节点开始的就是一个连通分支。 常见算法 DFS 原理：访问某个顶点后只有当某个节点是叶结点后才会访问其余相邻节点。 步骤： 选择一个结点作为起始结点，标记为灰色...</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">BraveY</div><div class="author-info-description">今日事，今日毕</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ceph-%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3"><span class="toc-number">1.</span> <span class="toc-text">ceph 部署文档</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E9%85%8D%E7%BD%AE%E6%89%80%E6%9C%89%E8%8A%82%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">1.配置所有节点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BAceph%E7%94%A8%E6%88%B7"><span class="toc-number">2.1.</span> <span class="toc-text">创建ceph用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AENTP"><span class="toc-number">2.2.</span> <span class="toc-text">安装配置NTP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEhosts%E6%96%87%E4%BB%B6"><span class="toc-number">2.3.</span> <span class="toc-text">配置hosts文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E9%85%8D%E7%BD%AEssh%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">3.</span> <span class="toc-text">2. 配置ssh服务器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E5%AE%89%E8%A3%85ceph"><span class="toc-number">4.</span> <span class="toc-text">3.安装ceph</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E7%9B%91%E6%8E%A7%E8%8A%82%E7%82%B9%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">4.1.</span> <span class="toc-text">部署监控节点出现的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2osd%E8%8A%82%E7%82%B9%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">4.2.</span> <span class="toc-text">部署osd节点出现的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2rgw%E8%8A%82%E7%82%B9%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">4.3.</span> <span class="toc-text">部署rgw节点出现的问题</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"><img src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"/></a><div class="content"><a class="title" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略">闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略</a><time datetime="2026-03-07T02:00:00.000Z" title="发表于 2026-03-07 10:00:00">2026-03-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd"><img src="https://images.pexels.com/photos/417222/pexels-photo-417222.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记2——lookupd"/></a><div class="content"><a class="title" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd">NSQ学习笔记2——lookupd</a><time datetime="2023-03-12T02:14:41.000Z" title="发表于 2023-03-12 10:14:41">2023-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介"><img src="https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记1——简介"/></a><div class="content"><a class="title" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介">NSQ学习笔记1——简介</a><time datetime="2023-02-05T07:18:23.000Z" title="发表于 2023-02-05 15:18:23">2023-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记"><img src="https://images.pexels.com/photos/71104/utah-mountain-biking-bike-biking-71104.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C专家编程读书笔记"/></a><div class="content"><a class="title" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记">C专家编程读书笔记</a><time datetime="2021-03-18T04:59:02.000Z" title="发表于 2021-03-18 12:59:02">2021-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱"><img src="https://images.pexels.com/photos/1656687/pexels-photo-1656687.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C语言传递指针参数的陷阱"/></a><div class="content"><a class="title" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱">C语言传递指针参数的陷阱</a><time datetime="2020-12-12T13:39:57.000Z" title="发表于 2020-12-12 21:39:57">2020-12-12</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2020 - 2026 By BraveY</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const initValine = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyValine = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const valineConfig = {
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      visitor: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || window.location.pathname
+    }
+
+    new Valine(valineConfig)
+  }
+
+  const loadValine = async (el, path) => {
+    if (typeof Valine === 'function') {
+      initValine(el, path)
+    } else {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js')
+      initValine(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Valine' === 'Valine'
+      ? window.shuoshuoComment = { loadComment: loadValine }
+      : window.loadOtherComment = loadValine
+    return
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script></div><script async data-pjax src="/js/busuanzi.js"></script></div></body></html>

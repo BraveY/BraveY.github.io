@@ -1,0 +1,274 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>C/C++拾遗 | BraveY</title><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="C/C++拾遗虚函数和纯虚函数虚函数：virtual void fun (){………..};定义后了可以实现，并且主要是为了子类会对这个函数进行重写，从而实现多态性。声明一个基类指针对象，但指向子类实例对象，这样如果基类是虚函数，则可以根据指向的子类的不同而实现不同的方法。不使用虚函数的话，将..."><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "C/C++拾遗",
+  "url": "https://bravey.github.io/2020-02-05-c++%E6%8B%BE%E9%81%97.html",
+  "image": "https://images.pexels.com/photos/452780/pexels-photo-452780.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+  "datePublished": "2020-02-05T00:46:58.000Z",
+  "dateModified": "2026-03-07T01:06:28.371Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "BraveY",
+      "url": "https://bravey.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/2020-02-05-c++%E6%8B%BE%E9%81%97.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'C/C++拾遗',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 5.3.0"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/url(https:/res.cloudinary.com/bravey/image/upload/v1587809177/air-atmosphere-blue-blue-sky-314726.jpg));"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://images.pexels.com/photos/452780/pexels-photo-452780.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">BraveY</span></a><a class="nav-page-title" href="/"><span class="site-name">C/C++拾遗</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">C/C++拾遗</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-02-05T00:46:58.000Z" title="发表于 2020-02-05 08:46:58">2020-02-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-07T01:06:28.371Z" title="更新于 2026-03-07 09:06:28">2026-03-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="C-C-拾遗"><a href="#C-C-拾遗" class="headerlink" title="C/C++拾遗"></a>C/C++拾遗</h1><h2 id="虚函数和纯虚函数"><a href="#虚函数和纯虚函数" class="headerlink" title="虚函数和纯虚函数"></a>虚函数和纯虚函数</h2><p>虚函数：virtual void fun (){………..};定义后了可以实现，并且主要是为了子类会对这个函数进行重写，从而实现多态性。声明一个基类指针对象，但指向子类实例对象，这样如果基类是虚函数，则可以根据指向的子类的不同而实现不同的方法。不使用虚函数的话，将无法使用子类重写过的函数。</p>
+<p>纯虚函数：virtual +函数+ =0 。只声明，不会在基类完成定义，需要在子类中定义实现的方法。</p>
+<a id="more"></a>
+<hr>
+<h2 id="重写和重载"><a href="#重写和重载" class="headerlink" title="重写和重载"></a>重写和重载</h2><p><strong>重载</strong>：</p>
+<ul>
+<li>相同的范围（同一个作用域中）比如同一个类中</li>
+<li>函数的名字相同</li>
+<li>函数的参数不同</li>
+<li>virtual可有可无</li>
+<li>返回值可以不同（不能仅只有返回值不同，否则编译器无法分辨调用的是哪一个函数）</li>
+</ul>
+<p><strong>重写覆盖</strong>：</p>
+<ul>
+<li>不同范围 （基类与子类）</li>
+<li>名字相同</li>
+<li>参数相同</li>
+<li>基类函数必须有virtual</li>
+</ul>
+<p><strong>重写隐藏</strong>：</p>
+<ul>
+<li>不同范围</li>
+<li>名字相同</li>
+<li>参数不同</li>
+<li>virtual可有可无</li>
+</ul>
+<h2 id="结构体和类的区别"><a href="#结构体和类的区别" class="headerlink" title="结构体和类的区别"></a>结构体和类的区别</h2><p><strong>结构体</strong> ：使用struct声明，可以包含构造函数，常数，字段，方法，属性，索引器，运算符和嵌套类型等，不过，结构是值类型。</p>
+<p>区别：类的成员默认是私有的，而结构体的成员则是公有的。</p>
+<h2 id="继承类的构造顺序"><a href="#继承类的构造顺序" class="headerlink" title="继承类的构造顺序"></a>继承类的构造顺序</h2><figure class="highlight cc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span>  <span class="title">Base</span>&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        Base()</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;Constructing Base\n&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    ~Base()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;Destructing Base\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span>:</span> <span class="keyword">public</span> Base&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Derived()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;Constructing Derived\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ~Derived()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;Destructing Derived\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Derived* d = <span class="keyword">new</span> Derived();</span><br><span class="line">    Base* b = d;</span><br><span class="line">    <span class="keyword">delete</span> b;</span><br><span class="line">    <span class="keyword">delete</span> d;</span><br><span class="line">    <span class="comment">//std::cout &lt;&lt; &quot;Hello, World!&quot; &lt;&lt; std::endl;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Constructing Base   </span><br><span class="line">Constructing Derived</span><br><span class="line">Destructing Base    </span><br><span class="line">Destructing Derived </span><br><span class="line">Destructing Base</span><br></pre></td></tr></table></figure>
+<p>需要先调用基类的构造函数，然后是派生类的构造函数，析构顺序则类似于出栈，刚好相反</p>
+<h2 id="explicit关键字"><a href="#explicit关键字" class="headerlink" title="explicit关键字"></a>explicit关键字</h2><p><code>explicit</code>的作用是用来声明类构造函数是显式调用的，禁止隐式调用。所以只用于修饰单参构造函数。因为无参构造函数和多参构造函数本身就是显式调用的。</p>
+<p>隐式转换：<code>A a=True</code> ; (原来的的构造函数是<code>A(bool para)&#123;&#125;</code>)  这样的隐式转换使代码的可读性变差。使用<code>explicit</code> 后调用构造函数则必须使用 <code>A a(True)</code>这种显式方式来调用。</p>
+<h2 id="构造函数初始化列表"><a href="#构造函数初始化列表" class="headerlink" title="构造函数初始化列表"></a>构造函数初始化列表</h2><p><code>compressed_sparse_row_graph(const ProcessGroup&amp; pg = ProcessGroup())</code><br>    <code>: m_process_group(pg), m_distribution(parallel::block(pg, 0)) &#123;&#125; //fun():使用初始化列表进行初始</code></p>
+<p>构造函数为<code>compressed_sparse_row_graph()</code>在（）里面申明pg，然后在：后面使用pg来对<code>m_process_group</code>和<code>m_distribution()</code>进行初始化。</p>
+<h2 id="const-引用形参"><a href="#const-引用形参" class="headerlink" title="const 引用形参"></a>const 引用形参</h2><p>使用const来修饰引用参数，无法通过修改形参来改变实参。</p>
+<p><code>const int &amp;r = a</code>  无法通过r这个引用去修改a的值。 </p>
+<h2 id="STL容器"><a href="#STL容器" class="headerlink" title="STL容器"></a>STL容器</h2><h3 id="容器："><a href="#容器：" class="headerlink" title="容器："></a>容器：</h3><p>即是数据结构，类似于Python的pandas的DataFrame等。Python自带的dict，list、tuple等。数据结构不止是简单的array。</p>
+<h3 id="顺序容器"><a href="#顺序容器" class="headerlink" title="顺序容器"></a>顺序容器</h3><ul>
+<li>vector   后部插入/删除，直接访问 </li>
+<li>deque  前/后部插入/删除，直接访问 </li>
+<li>list：双向链表，任意位置插入/删除 </li>
+</ul>
+<h3 id="关联容器"><a href="#关联容器" class="headerlink" title="关联容器"></a>关联容器</h3><ul>
+<li>set：快速查找，无重复元素</li>
+<li>multiset：快速查找，可有重复元素</li>
+<li>map : 一对一映射，无重复元素，基于关键字查找 类似python的dict </li>
+<li>multmap:一对一映射，可有重复元素，基于关键字查找</li>
+</ul>
+<h2 id="文件流"><a href="#文件流" class="headerlink" title="文件流"></a>文件流</h2><p>头文件：<code>&lt;fstream&gt;</code> 包含三个类：</p>
+<ul>
+<li><code>ofstream</code> :文件写操作，从内存写入存储设备 output</li>
+<li><code>ifstream</code> ： 文件读操作，从存储设备读的内存中 input</li>
+<li><code>fstream</code>   :读写操作  </li>
+</ul>
+<h2 id="memset"><a href="#memset" class="headerlink" title="memset()"></a>memset()</h2><p>需要包含的头文件是<string.h></string.h></p>
+<p>作用是在一段内存块中填充某个给定的值，它对较大的结构体或数组进行清零操作的一种最快方法。</p>
+<p><code>memset(struct/array,value,size)</code> 最后一个参数是填充对象的前size个元素</p>
+<h2 id="str-的find-first-of-和substr"><a href="#str-的find-first-of-和substr" class="headerlink" title="str 的find_first_of() 和substr"></a>str 的find_first_of() 和substr</h2><p><code>find_first_of(char,begin_pos)</code> 从begin_pos开始寻找第一个char</p>
+<p><code>string_obj.substr(int begin_pos, int len)</code> 截取begin_pos开始长度为len的子字符串。</p>
+<h2 id="指针常量和常量指针"><a href="#指针常量和常量指针" class="headerlink" title="指针常量和常量指针"></a>指针常量和常量指针</h2><p>常量指针(const pointer)：</p>
+<p>​    指针是一个常量指向的地址是常量不能变，而地址存储的值可以改变。 </p>
+<p>​    申明<code>int *const p</code> </p>
+<p>​    从右往左读，const 限定p对象是一个常量，而常量的具体类型则是是一个指向int类型的指针</p>
+<p>​    从右往左读，遇到p就替换成“p is a ”遇到*就替换成“point to”   读作p is a const pointer point to int </p>
+<p>指向常量的指针 (pointer to const )</p>
+<p>​    指针是一个变量，指向的类型是常量.（通常用在形参中，使得形参指针指向的数据不会被修改）</p>
+<p>​    申明<code>int const *p</code> 或者<code>const int *p</code>分别读作：p is a point to int const. 与 p is a point to const int. </p>
+<h2 id="成员变量的初始化顺序"><a href="#成员变量的初始化顺序" class="headerlink" title="成员变量的初始化顺序"></a>成员变量的初始化顺序</h2><p>成员变量的初始化顺序，只与在类中声明的顺序有关，与在初始化列表中的顺序无关。 先声明，先初始化。</p>
+<figure class="highlight cc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> &#123;</span></span><br><span class="line">    <span class="keyword">private</span>: </span><br><span class="line">    	<span class="keyword">int</span> n1;</span><br><span class="line">    	<span class="keyword">int</span> n2;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    	A():n2(<span class="number">0</span>),n1(n2+<span class="number">2</span>)&#123;&#125;</span><br><span class="line">    	<span class="function"><span class="keyword">void</span> <span class="title">Print</span><span class="params">()</span></span>&#123;</span><br><span class="line">            <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;n1:&quot;</span>&lt;&lt;n1&lt;&lt;<span class="string">&quot;,n2:&quot;</span>&lt;&lt;n2&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span>&#123;</span><br><span class="line">    A a;</span><br><span class="line">    a.Print();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>先初始化n1，因为n2是随机值，所以n1也是随机值+2，之后初始化n2为0。</p>
+<h2 id="容器中的end"><a href="#容器中的end" class="headerlink" title="容器中的end()"></a>容器中的end()</h2><p><code>begin()</code>迭代器指向第一个元素，<code>end()</code>迭代器指向尾元素的下一个位置,并不是末尾元素。对迭代器理解为指针，所以获得迭代器的使用*来获得指向的值。</p>
+<p><code>max_element(first, last)</code> 比较的区间为[first, last）</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://bravey.github.io">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/2020-02-05-c++%E6%8B%BE%E9%81%97.html">https://bravey.github.io/2020-02-05-c++%E6%8B%BE%E9%81%97.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://bravey.github.io" target="_blank">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/c/">c++</a><a class="post-meta__tags" href="/tags/%E6%8C%87%E9%92%88/">指针</a></div><div class="post-share"><div class="social-share" data-image="https://images.pexels.com/photos/452780/pexels-photo-452780.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2020-02-08-ICPP-2018-ImageNet-Training-in-Minutes.html" title="ICPP 2018 ImageNet Training in Minutes"><img class="cover" src="https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">ICPP 2018 ImageNet Training in Minutes</div></div><div class="info-2"><div class="info-item-1">来源 ICPP2018 best paper 关键词分布式机器学习，神经网络加速 摘要文章对大规模计算机的DNN加速能力进行了研究。通过使用LARS算法提供的Large batch来充分利用海量的计算资源，该方法在ImageNet-1k数据集上训练出的AlexNet和ResNet-50这两个网络达到了SOTA的精读。和Facebook以往提出的Baseline相比，该方法在batch size超过16k上有着更高的精度。使用2,048 Intel Xeon Platinum 8160处理器将100 epoch的AlexNext的训练时间从几小时下降到了11分钟，使用2,048 Intel Xeon Phi 7250处理器将90 epoch的训练时间从几小时下降到了20分钟。  结论大意同摘要，文中讨论了大规模计算机来加速的优点与困难。  引言问题1：对于深度学习应用，更大的数据集和更复杂的模型带来了准确率的显著提高，随之而来的是更长的训练时间。 思路1：如果把神经网络的训练使用超级计算机来实现，短时间完成。 同步SGD算法在目前取得了最好的效果，将batch size提高可以更好...</div></div></div></a><a class="pagination-related" href="/2019-12-28-%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9%E5%92%8C%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96.html" title="特征选择和特征提取"><img class="cover" src="https://images.pexels.com/photos/46253/mt-fuji-sea-of-clouds-sunrise-46253.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">特征选择和特征提取</div></div><div class="info-2"><div class="info-item-1">特征选择和特征提取意义 降低维度，后续的分类器设计更容易计算，可以加快速度 消除特征之间可能存在的相关性，减少与分类无关的信息（理解成降噪？），从而更好的分类。   类别可分性质的度量距离 点到点之间的距离 欧式距离：  D(a, b) = || a – b ||平方形式（向量转置相乘，点积的形式）：  D^{2}(a,b) = (a - b)^{T}(a - b) = \sum_{k = 1}^{n}{(a_{k} - b_{k})^{2}}其中a和b为n维向量，其第k个特征分别是$a_k$和$b_k$。 各自对应的特征维度差的平方之和。  点到点集之间的距离 在n维空间中，点x到点$a^{(i)}$之间的距离平方为：  D^{2}(x,a^{(i)}) = \sum_{k = 1}^{n}{(x_{k} - a_{k}^{(i)})^{2}}因此x到有K个点组合的均方距离，就是到每个点均方距离相加之后取均值。  \overline{D^{2}(x,\{ a^{(i)}\})} = \frac{1}{K}\sum_{i = 1}^{K}{D^{2}(x,a^{(i)}) =}\...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱"><img class="cover" src="https://images.pexels.com/photos/1656687/pexels-photo-1656687.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2020-12-12</div><div class="info-item-2">C语言传递指针参数的陷阱</div></div><div class="info-2"><div class="info-item-1">简介师兄发来一段代码问代码是否有误。 12345678910void Malloc1(char *p, int num) &#123;	p = (char*)malloc(num * sizeof(char));// 传进来的地址值没有用到，没有使用解引用。&#125;void MyTest1() &#123;	char *s = NULL;	Malloc1(s, 10);	strcpy(s, &quot;hello&quot;);	printf(&quot;%s\n&quot;, s);&#125; 基础知识二级指针指针是一个变量，它的值是一个地址，地址指向为一个对应类型的变量。 赋值符号=, 左边是一个地址，右边是赋给该地址的值。变量是一个地址的别名。 &amp;符号int &amp;a =b a是b的引用，是b的别名,此时&amp;用来表示引用 单独使用时，取地址符&amp;,用来获得一个变量的地址。&amp;a为变量a的地址 *符号int *a = &amp;b a是指向b的指针，此时*表示指针变量 解引用符*，用来得到指针指向的内存地址的值。*a为a这个指针指向的对象的...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">BraveY</div><div class="author-info-description">今日事，今日毕</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#C-C-%E6%8B%BE%E9%81%97"><span class="toc-number">1.</span> <span class="toc-text">C&#x2F;C++拾遗</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%9A%E5%87%BD%E6%95%B0%E5%92%8C%E7%BA%AF%E8%99%9A%E5%87%BD%E6%95%B0"><span class="toc-number">1.1.</span> <span class="toc-text">虚函数和纯虚函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E5%86%99%E5%92%8C%E9%87%8D%E8%BD%BD"><span class="toc-number">1.2.</span> <span class="toc-text">重写和重载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93%E5%92%8C%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.3.</span> <span class="toc-text">结构体和类的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF%E7%B1%BB%E7%9A%84%E6%9E%84%E9%80%A0%E9%A1%BA%E5%BA%8F"><span class="toc-number">1.4.</span> <span class="toc-text">继承类的构造顺序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#explicit%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">1.5.</span> <span class="toc-text">explicit关键字</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%88%9D%E5%A7%8B%E5%8C%96%E5%88%97%E8%A1%A8"><span class="toc-number">1.6.</span> <span class="toc-text">构造函数初始化列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#const-%E5%BC%95%E7%94%A8%E5%BD%A2%E5%8F%82"><span class="toc-number">1.7.</span> <span class="toc-text">const 引用形参</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#STL%E5%AE%B9%E5%99%A8"><span class="toc-number">1.8.</span> <span class="toc-text">STL容器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%EF%BC%9A"><span class="toc-number">1.8.1.</span> <span class="toc-text">容器：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%BA%E5%BA%8F%E5%AE%B9%E5%99%A8"><span class="toc-number">1.8.2.</span> <span class="toc-text">顺序容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E8%81%94%E5%AE%B9%E5%99%A8"><span class="toc-number">1.8.3.</span> <span class="toc-text">关联容器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E6%B5%81"><span class="toc-number">1.9.</span> <span class="toc-text">文件流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#memset"><span class="toc-number">1.10.</span> <span class="toc-text">memset()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#str-%E7%9A%84find-first-of-%E5%92%8Csubstr"><span class="toc-number">1.11.</span> <span class="toc-text">str 的find_first_of() 和substr</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E9%92%88%E5%B8%B8%E9%87%8F%E5%92%8C%E5%B8%B8%E9%87%8F%E6%8C%87%E9%92%88"><span class="toc-number">1.12.</span> <span class="toc-text">指针常量和常量指针</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F"><span class="toc-number">1.13.</span> <span class="toc-text">成员变量的初始化顺序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%E4%B8%AD%E7%9A%84end"><span class="toc-number">1.14.</span> <span class="toc-text">容器中的end()</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"><img src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"/></a><div class="content"><a class="title" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略">闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略</a><time datetime="2026-03-07T02:00:00.000Z" title="发表于 2026-03-07 10:00:00">2026-03-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd"><img src="https://images.pexels.com/photos/417222/pexels-photo-417222.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记2——lookupd"/></a><div class="content"><a class="title" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd">NSQ学习笔记2——lookupd</a><time datetime="2023-03-12T02:14:41.000Z" title="发表于 2023-03-12 10:14:41">2023-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介"><img src="https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记1——简介"/></a><div class="content"><a class="title" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介">NSQ学习笔记1——简介</a><time datetime="2023-02-05T07:18:23.000Z" title="发表于 2023-02-05 15:18:23">2023-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记"><img src="https://images.pexels.com/photos/71104/utah-mountain-biking-bike-biking-71104.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C专家编程读书笔记"/></a><div class="content"><a class="title" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记">C专家编程读书笔记</a><time datetime="2021-03-18T04:59:02.000Z" title="发表于 2021-03-18 12:59:02">2021-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱"><img src="https://images.pexels.com/photos/1656687/pexels-photo-1656687.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C语言传递指针参数的陷阱"/></a><div class="content"><a class="title" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱">C语言传递指针参数的陷阱</a><time datetime="2020-12-12T13:39:57.000Z" title="发表于 2020-12-12 21:39:57">2020-12-12</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2020 - 2026 By BraveY</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const initValine = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyValine = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const valineConfig = {
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      visitor: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || window.location.pathname
+    }
+
+    new Valine(valineConfig)
+  }
+
+  const loadValine = async (el, path) => {
+    if (typeof Valine === 'function') {
+      initValine(el, path)
+    } else {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js')
+      initValine(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Valine' === 'Valine'
+      ? window.shuoshuoComment = { loadComment: loadValine }
+      : window.loadOtherComment = loadValine
+    return
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script></div><script async data-pjax src="/js/busuanzi.js"></script></div></body></html>

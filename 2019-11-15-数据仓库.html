@@ -1,0 +1,264 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>数据仓库 | BraveY</title><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="数据仓库什么是数据仓库有多种定义，按照一位数据仓库系统构造方面的领衔设计师William H. Inmon的说法：数据仓库是一个面向主题的、集成的、时变的、非易失的数据集合，支持管理者的决策过程。 一句话总结：通过数据仓库来完成对一个项目的相关需求的快速分析，是一个联机分析处理（Online ..."><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "数据仓库",
+  "url": "https://bravey.github.io/2019-11-15-%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93.html",
+  "image": "https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+  "datePublished": "2019-11-15T12:13:46.000Z",
+  "dateModified": "2026-03-07T01:06:28.371Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "BraveY",
+      "url": "https://bravey.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/2019-11-15-%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '数据仓库',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 5.3.0"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/url(https:/res.cloudinary.com/bravey/image/upload/v1587809177/air-atmosphere-blue-blue-sky-314726.jpg));"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">BraveY</span></a><a class="nav-page-title" href="/"><span class="site-name">数据仓库</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">数据仓库</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-11-15T12:13:46.000Z" title="发表于 2019-11-15 20:13:46">2019-11-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-07T01:06:28.371Z" title="更新于 2026-03-07 09:06:28">2026-03-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/">数据挖掘</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="数据仓库"><a href="#数据仓库" class="headerlink" title="数据仓库"></a>数据仓库</h1><h2 id="什么是数据仓库"><a href="#什么是数据仓库" class="headerlink" title="什么是数据仓库"></a>什么是数据仓库</h2><p>有多种定义，按照一位数据仓库系统构造方面的领衔设计师William H. Inmon的说法：数据仓库是一个面向主题的、集成的、时变的、非易失的数据集合，支持管理者的决策过程。</p>
+<p>一句话总结：通过数据仓库来完成对一个项目的相关需求的快速分析，是一个联机分析处理（Online Analytical Processing System）系统，具体的定义见<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93">百度百科</a>。</p>
+<a id="more"></a>
+<h3 id="特征"><a href="#特征" class="headerlink" title="特征"></a>特征</h3><ul>
+<li><strong>面向主题的</strong>：数据仓库围绕一些主题，如顾客、供应商、产品和销售组织。数据仓库关注决策者的数据建模与分析，而不是构造组织机构的日常操作和事务处理。</li>
+<li><strong>集成的：</strong>通常，构造数据仓库是将多个异种数据源，如关系数据库、一般文件和联机事务处理记录，集成在一起。</li>
+<li><strong>时变的</strong>：数据存储从历史的角度（例如，过去5-10 年）提供信息。</li>
+<li><strong>非易失的：</strong>数据仓库总是。物理地分离存放数据；这些数据源于操作环境下的应用数据</li>
+</ul>
+<h3 id="操作数据库系统与数据仓库的区别"><a href="#操作数据库系统与数据仓库的区别" class="headerlink" title="操作数据库系统与数据仓库的区别"></a>操作数据库系统与数据仓库的区别</h3><p>我们常见的关系数据库就是联机操作数据库，联机操作数据库系统的主要任务是执行联机事务和查询处理。这种系统称为联机事务处理（OLTP）系统。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875850/blog/OLTP_OLAP.jpg" alt=""></p>
+<h2 id="数据立方体"><a href="#数据立方体" class="headerlink" title="数据立方体"></a>数据立方体</h2><p>数据仓库基于<strong>多维数据模型</strong>，这种模型将数据看做数据立方体形式。</p>
+<p>数据立方体的定义：在一个多维的平台上面对数据建模和观察，由<strong>维和事实</strong>定义。</p>
+<p>每个维都可以有一个与之相关联的表，称作维表，在表中进一步的描述维更具体的属性（比如名字、类型等）。</p>
+<p>多维数据模型围绕一个具体的主题（比如销售）这样的中心主题来组织。主题用事实表表示。事实是数值度量的，事实表包括事实的<strong>名称或度量</strong>。</p>
+<p>一个具体的例子如下所示，表示的是关于销售这个事实的数据立方体。其中左边是一个二维的数据立方体，右边是一个三维的数据立方体。可以扩展到n维。以3d这个数据立方体，讲解下682这个值的含义，表示Toronto市，security项目在Q2季度的销售量。<img src="https://res.cloudinary.com/bravey/image/upload/v1573875852/blog/data_cube.jpg" alt=""></p>
+<h2 id="数据仓库建模"><a href="#数据仓库建模" class="headerlink" title="数据仓库建模"></a>数据仓库建模</h2><p>数据仓库最流行的数据模型是多维数据模型，这种模型有三种形式：星形模式（Star schema）、雪花模式（snowflake schema）、事实星座（fact constellation）</p>
+<h3 id="星形模式"><a href="#星形模式" class="headerlink" title="星形模式"></a>星形模式</h3><p>最常见的模式，在这种模式下，数据仓库包括：</p>
+<ul>
+<li>一个大的事实表，里面又包含<ul>
+<li>事实的维度</li>
+<li>事实的度量</li>
+</ul>
+</li>
+<li>多组小的维表，详细记录一个维度的属性</li>
+</ul>
+<p>例子如下，展开了很像星光四射，因而得名。<img src="https://res.cloudinary.com/bravey/image/upload/v1573875853/blog/start_schema.jpg" alt=""></p>
+<p>最中间的是销售事实表，总共有4个维度：时间、商品、部门（branch）、地点，3个度量：销售数量、销售金额、平均销售量。</p>
+<h3 id="雪花模式"><a href="#雪花模式" class="headerlink" title="雪花模式"></a>雪花模式</h3><p>雪花模式是星形模式的变种，其中某些维表被规范化，因而把数据进一步分解到附加的表中。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875852/blog/snowfake_schema.jpg" alt=""></p>
+<p>星形模式是只有一层的，而雪花模式可以延伸。图中在item维度又延伸出了供应商这个维度，在地点维度又延伸出了城市这个维度。</p>
+<h3 id="事实星座"><a href="#事实星座" class="headerlink" title="事实星座"></a>事实星座</h3><p>对于一些复杂的应用可能需要多个事实表共享维表，这种模式可以看成星形模式的汇集，所以称做事实星座。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875852/blog/fact_schema.jpg" alt=""></p>
+<p>上面总共有两个事实表：销售与运输(Shipping)。因为两个事实表有些维度是共享的，所以同时指向相同的维度就可以了。</p>
+<h3 id="概念分层"><a href="#概念分层" class="headerlink" title="概念分层"></a>概念分层</h3><p>概念分层(Concept Hierarchy)，对一个维度在概念上进行分层。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875852/blog/location_hierarchy.jpg" alt=""></p>
+<p>比如在地点上可以从办公室上升到城市上升到国家一直到最后的最高层所有。每个维度的最高层都是all所有这个级别。上图地点的分层是基于全序的层次结构，也可以组织成基于偏序的格结构，如下对时间的分层。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875851/blog/time_hierarchy.jpg" alt=""></p>
+<p>对于连续的属性值或或者维度，通过将其离散化来定义概念分层。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875851/blog/numeric_hierarchy.jpg" alt=""></p>
+<h3 id="OLAP操作"><a href="#OLAP操作" class="headerlink" title="OLAP操作"></a>OLAP操作</h3><p>进行实际分析的时候需要执行OLAP操作，典型的有下面四种。</p>
+<h4 id="上卷（roll-up）"><a href="#上卷（roll-up）" class="headerlink" title="上卷（roll-up）"></a>上卷（roll-up）</h4><p>上卷操作沿着一个维度的概念分层向上攀升。如下图所示的第1个操作，对location维度从城市上卷到国家，则原来的立方体的location维度从原来有4个城市变成只有两个国家。</p>
+<h4 id="下钻（drill-down）"><a href="#下钻（drill-down）" class="headerlink" title="下钻（drill-down）"></a>下钻（drill-down）</h4><p>下钻是上卷的逆操作，它由不太详细的数据到更详细的数据。</p>
+<p>比如从第1个上卷的操作得到的数据立方体做从国家到城市的逆操作就回到了原来的数据立方体。第二个操作就是下钻操作，在time维度上从季度下钻到了月。</p>
+<h4 id="切片（slice）和切块（dice）"><a href="#切片（slice）和切块（dice）" class="headerlink" title="切片（slice）和切块（dice）"></a>切片（slice）和切块（dice）</h4><p>切片操作在给定的立方体上一个维度上面进行选择，形成一个新的子立方体。比如第3个操作，切边选择了time=Q1，因而得到的子立方体都是在Q1季度上的数据。</p>
+<p>切块操作则是在多个维度上进行选择。比如第4个操作就是在location维度选择多伦多与温哥华，而在time维度上选择Q1与Q2季度，而在item维度上选择家庭娱乐与计算机。</p>
+<h4 id="转轴（pivot）"><a href="#转轴（pivot）" class="headerlink" title="转轴（pivot）"></a>转轴（pivot）</h4><p>转轴又称作旋转(rotate)，是一种目视操作，移动了数据的视角。比如第5个操作，将原来的item维度在下，location维度在上。旋转后变成了item维度在上，而location维度在下。类似于矩阵的转置。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875851/blog/olap_operation.jpg" alt=""></p>
+<h4 id="操作实例"><a href="#操作实例" class="headerlink" title="操作实例"></a>操作实例</h4><p> Starting with the base cuboid [day, doctor, patient],what OLAP operations should be performed in order<br>to list the total fee collected by each doctor in 1999?</p>
+<p>首先要求所有的费用，因此对patient维度做上卷操作，上卷到all所有这个层次。然后时间限定在了1999年，因此对day维度做上卷操作，上卷到年这个层次。最后进行切边操作，选择1999年这个年份。</p>
+<h2 id="数据仓库实现"><a href="#数据仓库实现" class="headerlink" title="数据仓库实现"></a>数据仓库实现</h2><h3 id="数据立方体的有效计算"><a href="#数据立方体的有效计算" class="headerlink" title="数据立方体的有效计算"></a>数据立方体的有效计算</h3><p>前述的OLAP操作依赖于对数据立方体的计算操作，既是针对不同维度上面的聚合，SQL的术语是分组（group-by）。对于n个维度的数据立方体，不考虑每个维度的概念分层，则总共可以构成的分组（不同维度组合的集合）有$2^n$种。如下所示，一个（city，item，year）的三维数据立方体可以有8种分组方式。</p>
+<p>其实不考虑概念分层意味着每个维度可以有最高层all和最低层两个分层。因此如果考虑概念分层，假设有n个维度</p>
+<p>，每个维度都有m个分层，则这样来说可有$m^n$个方体。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875850/blog/cube_group_by.jpg" alt=""></p>
+<p>为了实现快速返回OLAP的操作，需要提前将这些分组的结果存储下来，这样当指定OLAP操作，直接去访问这些分组就可以了。这种提前计算方体结果的方法，称作<strong>物化（materialization）</strong>但是考虑到概念分层，存储所有的分组结果是不现实的。采用<strong>部分物化（partial materaialiaztion）</strong>预先计算一部分适当的常用的子集。</p>
+<h3 id="OLAP索引"><a href="#OLAP索引" class="headerlink" title="OLAP索引"></a>OLAP索引</h3><h4 id="位图索引（bitmap-indexing）"><a href="#位图索引（bitmap-indexing）" class="headerlink" title="位图索引（bitmap indexing）"></a>位图索引（bitmap indexing）</h4><p>在给定属性的位图索引中，属性域中的每个值v，有一个不同的位向量bit vector(即一列值)Bv。如果给定的属性域包含n 个值，则位图索引中每项需要n 位（即，n 位向量）。如果数据表中给定行的属性值为v，则在位图索引的对应行，表示该值的位为1，该行的其它位均为0。可以理解成one hot 编码。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875851/blog/index_map.jpg" alt=""></p>
+<p>Region有3种取值，所以3个位向量，也就是对应3列值；Type有2种取值，所以对应2列值。</p>
+<h5 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h5><p>优点：与散列和树索引相比，位图索引有优势。对于基数较小的域它特别有用，因为比较、连接、和聚集操作都变成了位算术运算，大大减少了运行时间。由于字符串可以用单个位表示，位图索引大大降低了空间和I/O 开销。对于基数较高的域，使用压缩技术，这种方法可以接受。但是不是很适合。</p>
+<p>缺点：因为值域中的每一个可能的值都需要一个位向量来记录，所以当基数较大时，会需要开辟很大的存储空间，因为每一个记录其实只使用到了一位，因此造成了很大的浪费。同时当可取的值连续时无法使用位图来记录。</p>
+<h4 id="连接索引"><a href="#连接索引" class="headerlink" title="连接索引"></a>连接索引</h4><p>如果两个关系R(RID,A)和S(B,SID)在属性A和B 上连接，则连接索引记录包含(RID,SID)对，其中RID 和SID 分别为来自R 和S 的记录标识符。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573875850/blog/join_index.jpg" alt=""></p>
+<p>在左边的销售事实表中有同location和item两个维度的链接，那么就可以有右边3中连接索引。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《数据挖掘概念与技术》第3版 第四章数据仓库与联机分析处理</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://bravey.github.io">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/2019-11-15-%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93.html">https://bravey.github.io/2019-11-15-%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://bravey.github.io" target="_blank">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/">数据仓库</a><a class="post-meta__tags" href="/tags/OLAPS/">OLAPS</a><a class="post-meta__tags" href="/tags/%E8%AF%BE%E7%A8%8B/">课程</a><a class="post-meta__tags" href="/tags/%E5%9B%BD%E7%A7%91%E5%A4%A7/">国科大</a></div><div class="post-share"><div class="social-share" data-image="https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2019-11-16-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86.html" title="数据预处理"><img class="cover" src="https://images.pexels.com/photos/164041/pexels-photo-164041.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">数据预处理</div></div><div class="info-2"><div class="info-item-1">数据预处理为什么数据预处理原始数据可能掺杂着噪音、空值或者不正确、不一致、充满冗余值等。没有高质量的数据，很难挖掘出高质量的规则，因此需要数据预处理。数据预处理主要有：数据清洗、数据集成、数据归约、数据离散等几个任务。  数据描述得到一份数据后，需要先对数据进行一个大概的认识，主要从中心趋势和发散特征两方面统计进行描述。 中心趋势度量平均值 mean均值又分为：  算术均值  $\bar x=\frac{1}{n}\sum_{i=1}^{n}x_i$  加权均值 $\bar x= \frac{\sum_{i=1}^{n}w_ix_i}{\sum_{i=1}^{n}w_i}$  截尾均值 Trimmed mean 均值对极端数据比如离群点很敏感。因此截取高低两端的一部分数据后再计算均值，但是截去的部分不能太多不超过$20\%$   中位数 median对于倾斜（非对称）数据，数据中心的更好度量是中位数。 假定数据有序，则当n为奇数时中位数是中间的值，当n为偶数的时候，中位数不唯一，可以是中间两个值和之间的任意值。如果属性是数值属性，那么一般约定取中间两个值的平均值。 众数 mode...</div></div></div></a><a class="pagination-related" href="/2019-11-08-Hexo%E5%8D%9A%E5%AE%A2Next%E4%B8%BB%E9%A2%98%E4%BC%98%E5%8C%96.html" title="Hexo博客Next主题优化"><img class="cover" src="https://images.pexels.com/photos/351448/pexels-photo-351448.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Hexo博客Next主题优化</div></div><div class="info-2"><div class="info-item-1">Hexo博客Next主题优化博客设置中的一些参考链接  汇总https://tding.top/archives/aad98408.html  latex支持直接设置 https://jdhao.github.io/2017/10/06/hexo-markdown-latex-equation/  Disquse评论支持http://www.cylong.com/blog/2017/03/26/hexo-next-disqus/  https://chenlifei.tech/posts/8838407/  动态主题在config文件中设置，有个 git pull 更新的过程 建站时间https://xian6ge.cn/posts/82ce1911/  网站头像https://www.jianshu.com/p/82c1d33420ba  https://tool.lu/favicon/  社交链接在config文件直接设置 阅读统计https://hexo-guide.readthedocs.io/zh_CN/latest/third-service/[%E4%B8%8D%E...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2019-11-16-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86.html" title="数据预处理"><img class="cover" src="https://images.pexels.com/photos/164041/pexels-photo-164041.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-16</div><div class="info-item-2">数据预处理</div></div><div class="info-2"><div class="info-item-1">数据预处理为什么数据预处理原始数据可能掺杂着噪音、空值或者不正确、不一致、充满冗余值等。没有高质量的数据，很难挖掘出高质量的规则，因此需要数据预处理。数据预处理主要有：数据清洗、数据集成、数据归约、数据离散等几个任务。  数据描述得到一份数据后，需要先对数据进行一个大概的认识，主要从中心趋势和发散特征两方面统计进行描述。 中心趋势度量平均值 mean均值又分为：  算术均值  $\bar x=\frac{1}{n}\sum_{i=1}^{n}x_i$  加权均值 $\bar x= \frac{\sum_{i=1}^{n}w_ix_i}{\sum_{i=1}^{n}w_i}$  截尾均值 Trimmed mean 均值对极端数据比如离群点很敏感。因此截取高低两端的一部分数据后再计算均值，但是截去的部分不能太多不超过$20\%$   中位数 median对于倾斜（非对称）数据，数据中心的更好度量是中位数。 假定数据有序，则当n为奇数时中位数是中间的值，当n为偶数的时候，中位数不唯一，可以是中间两个值和之间的任意值。如果属性是数值属性，那么一般约定取中间两个值的平均值。 众数 mode...</div></div></div></a><a class="pagination-related" href="/2019-11-19-%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F.html" title="推荐系统"><img class="cover" src="https://images.pexels.com/photos/629159/pexels-photo-629159.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-19</div><div class="info-item-2">推荐系统</div></div><div class="info-2"><div class="info-item-1">推荐系统定义推荐的基本思路是根据历史数据比如用户以往的喜好或者相似用户的喜好来预测用户未来的喜好。基本假设是：（1）用户的喜好是会保持的并且随着时间而缓慢改变。（2）拥有相同品味的用户对与一个项目的打分也是相似的。因此可以根据以往的历史数据来进行推荐。 与搜索的不同：搜索的数据不是根据用户的资料而定制的，给出的答案是与搜素查询语句相关联的结果。  推荐算法基于内容的方法基于内容的方法基于这样一个事实：一个用户的兴趣应该和被推荐物品的描述想匹配。核心思路是找到用户资料与物品之间的相似度，推荐相似度高的物品。 步骤为：  描述将被推荐的物品I 建立用户个人资料U来描述用户喜欢的物品 比较物品和用户个人资料来决定推荐的物品  用户个人资料与物品的描述可以根据关键词进行向量化。使用例如TF-IDF的方法将物品与个人资料向量话后，就可以计算两者的相似度了。 余弦相似度使用预先相似度计算这两个向量的相似度。对与两个n维向量X和Y其余弦相似度为：  sim(X,Y)=\dfrac{X\cdot Y}{||X||\times ||Y||}分子是点乘，$||X||=\sqrt {x_1^2+x_2...</div></div></div></a><a class="pagination-related" href="/2019-11-17-%E5%88%86%E7%B1%BB%E4%B8%8E%E9%A2%84%E6%B5%8B.html" title="分类与预测"><img class="cover" src="https://images.pexels.com/photos/238622/pexels-photo-238622.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-17</div><div class="info-item-2">分类与预测</div></div><div class="info-2"><div class="info-item-1">分类与预测分类与预测的差别分类对给定的数据集一般是离散的，确定这些数据对应类别。而预测是对连续的数据，根据历史数据来预测未知的数据或者缺失值等。 分类的过程分为两步：  模型构建 使用训练数据集对模型进行训练，模型可以被表示为一些分类的规则集合，决策树或者是数学公式。  模型使用 先使用模型来对测试数据进行分类，如果准确率能够接受则使用模型去对没有标注过的数据进行分类。   分类属于有监督学习，训练的数据是经过标注的。聚类属于无监督学习训练数据未经过标注不知道样本的标签。  在进行分类和预测之前需要对数据进行预处理包括数据清洗来处理噪声和缺失值，相关性分析来进行特征提取，数据转换比如归一化等。 对于分类方法的评测指标有：准确性，速度，鲁棒性，可规模性（硬盘数据），可解释性等 决策树决策树是一个类似于流程图的树结构；其中，每个内部结点表示在一个属性上的测试，每个分枝代表一个测试输出，而每个树叶结点代表类或类分布。树的最顶层结点是根结点。给定数据经过决策树不同节点的决策最终走到叶子节点，从而完成了对数据的分类。决策树不需要任何领域知识也不需要参数，适合探测式知识发现。 决策数的构建分...</div></div></div></a><a class="pagination-related" href="/2019-11-19-%E8%81%9A%E7%B1%BB%E6%96%B9%E6%B3%95.html" title="聚类方法"><img class="cover" src="https://images.pexels.com/photos/452780/pexels-photo-452780.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-19</div><div class="info-item-2">聚类方法</div></div><div class="info-2"><div class="info-item-1">聚类方法聚类属于无监督学习，因为输入的数据是没有标签的，通过算法每个样本自动的划分到相应的簇中。 K-meansk均值是一种基于形心的技术。给定一个包含n 个数据对象的数据库，以及要生成的簇的数目k，一个划分类的算法将数据对象组织为k 个划分（k≤n），其中每个划分代表一个簇。通常会采用一个划分准则（经常称为相似度函数，similarity function），例如距离dist(i,j)，以便在同一个簇中的对象是“相似的”，而不同簇中的对象是“相异的”。 K-means把簇的形心定义为簇内点的均值，通过贪心的方法不断迭代形心的坐标，直到形心的坐标不再改变而结束迭代。  步骤算法的步骤为：  首先在数据集D中选择k个对象，每个对象代表一个簇的初试均值即形心。 对剩下的对象，根据其与这个k个形心的欧式距离将其分配到距离最近的形心的簇。 完成了分配后重新计算每个簇的均值中心点并更新。 使用更新后的均值中心点，重新分配每一个对象。 不断迭代，直到本轮的中心点与上一轮的相同，即本轮形成的簇与上一轮相同。  伪代码伪代码为：  K-means对离群点敏感，因为当一个离群点被分配到一个簇的时候...</div></div></div></a><a class="pagination-related" href="/2019-11-18-%E5%85%B3%E8%81%94%E8%A7%84%E5%88%99.html" title="关联规则"><img class="cover" src="https://images.pexels.com/photos/6758/wildernessculture-rei1440project-welltravelled-awesomeearth.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-18</div><div class="info-item-2">关联规则</div></div><div class="info-2"><div class="info-item-1">关联规则基本概念关联规则挖掘Association rules mining 挖掘出数据库中的频繁模式，频繁项之间的关联规则。  关联规则的形式为  A\Rightarrow B[support=?, confident=?]规则的支持度support和置信度confident分别反映出规则的有用性和确定性。定义为：  \begin{split} support(A\Rightarrow B)&=P(A\bigcap B)=\dfrac{count(A\bigcap B)}{count(total)}\\ confident(A\Rightarrow B)&=P(B|A)=\dfrac{count(A\bigcap B)}{count(A)} \end{split}$A\bigcap B$ 表示A事件和B事件一起发生。使用比例的支持度称为相对支持度，使用直接的次数称为绝对支持度。当规则满足设定的最小支持度和最小置信度的时候，规则是强关联规则。强关联规则并不一定是有趣的，使用提升度lift来衡量两个事件之间的相关性  lift=\dfrac{P(A\bigcap B)}{P(A)P...</div></div></div></a><a class="pagination-related" href="/2019-12-08-%E7%BA%BF%E6%80%A7%E5%88%A4%E5%88%AB%E5%87%BD%E6%95%B0.html" title="线性判别函数"><img class="cover" src="https://images.pexels.com/photos/33109/fall-autumn-red-season.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-08</div><div class="info-item-2">线性判别函数</div></div><div class="info-2"><div class="info-item-1">线性判别函数模式识别与机器学习第三章的笔记。  线性判别函数n维线性判别函数的一般形式一个n维线性判别函数的一般形式：   d(x)=w_1x_1+w_2x_2+\dots+w_nx_n+b=W_0^tx+b其中$W_0=(w_1,w_2,\dots,w_n)^T$称为权向量，如果把b也加入到权向量则$d(x)=W^Tx$ 其中$x=(x_1,x_2,\dots,x_n,1)$ 称为增广模式向量 (b对应的特征维度取值为1),而权向量也对应的加入b$W=((w_1,w_2,\dots,w_n,b)^T)$ 称为增广权向量 。 两类情况样本如果只有两类$\omega_1,\omega_2$则可以只用一个线性判别函数进行判别：  d(x)=W^Tx=\left\{   \begin{array}{**lr**}                >0 &  if\;x\in \omega_1\\\\                \le0& if\;x\in\omega_2              \end{array}   \right.多类情况多类情况1用线性判别函数将属于$ω_i...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">BraveY</div><div class="author-info-description">今日事，今日毕</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93"><span class="toc-number">1.</span> <span class="toc-text">数据仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93"><span class="toc-number">1.1.</span> <span class="toc-text">什么是数据仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E5%BE%81"><span class="toc-number">1.1.1.</span> <span class="toc-text">特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E4%B8%8E%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.1.2.</span> <span class="toc-text">操作数据库系统与数据仓库的区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%AB%8B%E6%96%B9%E4%BD%93"><span class="toc-number">1.2.</span> <span class="toc-text">数据立方体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E5%BB%BA%E6%A8%A1"><span class="toc-number">1.3.</span> <span class="toc-text">数据仓库建模</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%9F%E5%BD%A2%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.3.1.</span> <span class="toc-text">星形模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%AA%E8%8A%B1%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.3.2.</span> <span class="toc-text">雪花模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E5%AE%9E%E6%98%9F%E5%BA%A7"><span class="toc-number">1.3.3.</span> <span class="toc-text">事实星座</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5%E5%88%86%E5%B1%82"><span class="toc-number">1.3.4.</span> <span class="toc-text">概念分层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OLAP%E6%93%8D%E4%BD%9C"><span class="toc-number">1.3.5.</span> <span class="toc-text">OLAP操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8A%E5%8D%B7%EF%BC%88roll-up%EF%BC%89"><span class="toc-number">1.3.5.1.</span> <span class="toc-text">上卷（roll-up）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8B%E9%92%BB%EF%BC%88drill-down%EF%BC%89"><span class="toc-number">1.3.5.2.</span> <span class="toc-text">下钻（drill-down）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%87%E7%89%87%EF%BC%88slice%EF%BC%89%E5%92%8C%E5%88%87%E5%9D%97%EF%BC%88dice%EF%BC%89"><span class="toc-number">1.3.5.3.</span> <span class="toc-text">切片（slice）和切块（dice）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BD%AC%E8%BD%B4%EF%BC%88pivot%EF%BC%89"><span class="toc-number">1.3.5.4.</span> <span class="toc-text">转轴（pivot）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E5%AE%9E%E4%BE%8B"><span class="toc-number">1.3.5.5.</span> <span class="toc-text">操作实例</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.4.</span> <span class="toc-text">数据仓库实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%AB%8B%E6%96%B9%E4%BD%93%E7%9A%84%E6%9C%89%E6%95%88%E8%AE%A1%E7%AE%97"><span class="toc-number">1.4.1.</span> <span class="toc-text">数据立方体的有效计算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OLAP%E7%B4%A2%E5%BC%95"><span class="toc-number">1.4.2.</span> <span class="toc-text">OLAP索引</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%8D%E5%9B%BE%E7%B4%A2%E5%BC%95%EF%BC%88bitmap-indexing%EF%BC%89"><span class="toc-number">1.4.2.1.</span> <span class="toc-text">位图索引（bitmap indexing）</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.4.2.1.1.</span> <span class="toc-text">优缺点</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E7%B4%A2%E5%BC%95"><span class="toc-number">1.4.2.2.</span> <span class="toc-text">连接索引</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.5.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"><img src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"/></a><div class="content"><a class="title" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略">闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略</a><time datetime="2026-03-07T02:00:00.000Z" title="发表于 2026-03-07 10:00:00">2026-03-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd"><img src="https://images.pexels.com/photos/417222/pexels-photo-417222.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记2——lookupd"/></a><div class="content"><a class="title" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd">NSQ学习笔记2——lookupd</a><time datetime="2023-03-12T02:14:41.000Z" title="发表于 2023-03-12 10:14:41">2023-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介"><img src="https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记1——简介"/></a><div class="content"><a class="title" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介">NSQ学习笔记1——简介</a><time datetime="2023-02-05T07:18:23.000Z" title="发表于 2023-02-05 15:18:23">2023-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记"><img src="https://images.pexels.com/photos/71104/utah-mountain-biking-bike-biking-71104.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C专家编程读书笔记"/></a><div class="content"><a class="title" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记">C专家编程读书笔记</a><time datetime="2021-03-18T04:59:02.000Z" title="发表于 2021-03-18 12:59:02">2021-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱"><img src="https://images.pexels.com/photos/1656687/pexels-photo-1656687.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C语言传递指针参数的陷阱"/></a><div class="content"><a class="title" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱">C语言传递指针参数的陷阱</a><time datetime="2020-12-12T13:39:57.000Z" title="发表于 2020-12-12 21:39:57">2020-12-12</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2020 - 2026 By BraveY</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const initValine = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyValine = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const valineConfig = {
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      visitor: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || window.location.pathname
+    }
+
+    new Valine(valineConfig)
+  }
+
+  const loadValine = async (el, path) => {
+    if (typeof Valine === 'function') {
+      initValine(el, path)
+    } else {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js')
+      initValine(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Valine' === 'Valine'
+      ? window.shuoshuoComment = { loadComment: loadValine }
+      : window.loadOtherComment = loadValine
+    return
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script></div><script async data-pjax src="/js/busuanzi.js"></script></div></body></html>

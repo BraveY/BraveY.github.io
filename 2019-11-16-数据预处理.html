@@ -1,0 +1,345 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>数据预处理 | BraveY</title><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="数据预处理为什么数据预处理原始数据可能掺杂着噪音、空值或者不正确、不一致、充满冗余值等。没有高质量的数据，很难挖掘出高质量的规则，因此需要数据预处理。数据预处理主要有：数据清洗、数据集成、数据归约、数据离散等几个任务。  数据描述得到一份数据后，需要先对数据进行一个大概的认识，主要从中心趋势和..."><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "数据预处理",
+  "url": "https://bravey.github.io/2019-11-16-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86.html",
+  "image": "https://images.pexels.com/photos/164041/pexels-photo-164041.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+  "datePublished": "2019-11-16T07:30:46.000Z",
+  "dateModified": "2026-03-07T01:06:28.371Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "BraveY",
+      "url": "https://bravey.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/2019-11-16-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '数据预处理',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 5.3.0"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/url(https:/res.cloudinary.com/bravey/image/upload/v1587809177/air-atmosphere-blue-blue-sky-314726.jpg));"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://images.pexels.com/photos/164041/pexels-photo-164041.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">BraveY</span></a><a class="nav-page-title" href="/"><span class="site-name">数据预处理</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">数据预处理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-11-16T07:30:46.000Z" title="发表于 2019-11-16 15:30:46">2019-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-07T01:06:28.371Z" title="更新于 2026-03-07 09:06:28">2026-03-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/">数据挖掘</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">4.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>13分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h1><h2 id="为什么数据预处理"><a href="#为什么数据预处理" class="headerlink" title="为什么数据预处理"></a>为什么数据预处理</h2><p>原始数据可能掺杂着噪音、空值或者不正确、不一致、充满冗余值等。没有高质量的数据，很难挖掘出高质量的规则，因此需要数据预处理。数据预处理主要有：数据清洗、数据集成、数据归约、数据离散等几个任务。</p>
+<a id="more"></a>
+<h2 id="数据描述"><a href="#数据描述" class="headerlink" title="数据描述"></a>数据描述</h2><p>得到一份数据后，需要先对数据进行一个大概的认识，主要从中心趋势和发散特征两方面统计进行描述。</p>
+<h3 id="中心趋势度量"><a href="#中心趋势度量" class="headerlink" title="中心趋势度量"></a>中心趋势度量</h3><h4 id="平均值-mean"><a href="#平均值-mean" class="headerlink" title="平均值 mean"></a>平均值 mean</h4><p>均值又分为：</p>
+<ul>
+<li><p>算术均值</p>
+<p> $\bar x=\frac{1}{n}\sum_{i=1}^{n}x_i$</p>
+</li>
+<li><p>加权均值</p>
+<p>$\bar x= \frac{\sum_{i=1}^{n}w_ix_i}{\sum_{i=1}^{n}w_i}$</p>
+</li>
+<li><p>截尾均值 Trimmed mean</p>
+<p>均值对极端数据比如离群点很敏感。因此截取高低两端的一部分数据后再计算均值，但是截去的部分不能太多不超过$20\%$</p>
+</li>
+</ul>
+<h4 id="中位数-median"><a href="#中位数-median" class="headerlink" title="中位数 median"></a>中位数 median</h4><p>对于倾斜（非对称）数据，数据中心的更好度量是中位数。</p>
+<p>假定数据有序，则当n为奇数时中位数是中间的值，当n为偶数的时候，中位数不唯一，可以是中间两个值和之间的任意值。如果属性是数值属性，那么一般约定取中间两个值的平均值。</p>
+<h4 id="众数-mode"><a href="#众数-mode" class="headerlink" title="众数 mode"></a>众数 mode</h4><p>另一种中心趋势的度量方法，众数是集合中出现最频繁的值。数据可能会有多个众数，如果最高频的值有多个的时候。如果每个数据值近出现一次，是没有众数的。</p>
+<p>有一个、两个、三个众数的分别称为：单峰的(unimodal)、双峰的（bimodal）和三峰的（trimodal）</p>
+<h4 id="中列数-midrange"><a href="#中列数-midrange" class="headerlink" title="中列数 midrange"></a>中列数 midrange</h4><p>中列数是数据集的最大和最小值的平均值。</p>
+<h4 id="对称与倾斜"><a href="#对称与倾斜" class="headerlink" title="对称与倾斜"></a>对称与倾斜</h4><p>完全对称的数据分布的单峰频率曲线中，均值、中位数和众数三者是相同的中心值。</p>
+<p>不对称的情况分为：</p>
+<ul>
+<li>正倾斜：众数小于中位数</li>
+<li>负倾斜：众数大于中位数</li>
+</ul>
+<p>如下所示,最上方是对称的，左下是正倾斜的，右下是负倾斜的。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573992640/blog/Data%20Mining/symmetric_skewed.jpg" alt=""></p>
+<h3 id="数据散布度量"><a href="#数据散布度量" class="headerlink" title="数据散布度量"></a>数据散布度量</h3><h4 id="极差、四分位数和四分位数极差"><a href="#极差、四分位数和四分位数极差" class="headerlink" title="极差、四分位数和四分位数极差"></a>极差、四分位数和四分位数极差</h4><p><strong>极差（range）</strong>：最大值与最小值之差。</p>
+<p>有序数据值下的数据集合的第k 个百分位数是具有如下性质的值x：数据项的百分之k 在x 上或低于x。在中位数M上或低于M 的值对应于第50 个百分位数。</p>
+<p><strong>四分位数</strong>将数据分为4段总共有3个四分位数，Q1是第25个百分位数，Q2即是Median是第50个百分位数，Q3是第75个百分位数。</p>
+<p>100-分位数通常称为百分位数，它们把数据分成100个大小相等的连贯集。中位数、四分位数和百分位数是使用最广泛的分位数。</p>
+<p>第一个和第三个四分位数之间的距离是分布的一种简单度量，它给出被数据的中间一半<br>所覆盖的范围。该距离称为中间<strong>四分位数极差（IQR）</strong>：$IQR=Q_3-Q_1$</p>
+<h4 id="五数概括、盒图与离群点"><a href="#五数概括、盒图与离群点" class="headerlink" title="五数概括、盒图与离群点"></a>五数概括、盒图与离群点</h4><p><strong>离群点(Outlier)</strong>：与$Q_1$或者$Q_3$这两个分位数的值超过$1.5IQR$</p>
+<p>五数概括使用最小值、$Q_1$ 、中位数、$Q_3$、最大值来概述数据的中心与散布。</p>
+<p>可以使用盒图来体现五数概括 。</p>
+<ul>
+<li>盒的端点在四分位数上，使得盒的长度是中间四分位数区间IQR</li>
+<li>中位数用盒内的线标记</li>
+<li>盒外的两条线（称作胡须）延伸到最小（Minimum）和最大（Maximum）观测值。如果最大最小值超过$1.5IQR$，那么只延伸到这个部分。</li>
+</ul>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573992640/blog/Data%20Mining/box_plot.jpg" alt=""></p>
+<p>如上图所示，最大值超过了$1.5IQR$所以只延伸到了$1.5IQR$，而超过$1.5IQR$部分的被标记为离群点。</p>
+<h4 id="方差、标准差"><a href="#方差、标准差" class="headerlink" title="方差、标准差"></a>方差、标准差</h4><p>方差Variance与标准差Standard deviation指出数据分布的散布程度。</p>
+<p>总体方差的计算：$\sigma^2=\frac{1}{n}\sum_{i=1}^{n}(x_i-\mu)^2={\frac{1}{n}\sum_{i=1}^{n}x_i^2}-{\mu}^2$</p>
+<p>样本方差的计算：$s^2=\frac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar x)^2={\frac{1}{n-1}（\sum_{i=1}^{n}x_i^2}-\frac{1}{n}\sum_{i=1}^{n}x_i^2）$</p>
+<p>$\mu$是总体数据的平均值，而$\bar x$是总体数据中的一部分样本的均值，可以用样本的均值来估计总体的均值。样本方差是无偏估计的，<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/20099757">样本方差与总体方差的差别</a></p>
+<p>标准差是方差的平方根，就是$\sigma$或者s。它的性质是：</p>
+<ul>
+<li>$\sigma$<strong>度量关于平均值的发散</strong>，仅当选择平均值作为中心度量时使用。</li>
+<li>仅当不存在发散时，即当所有的观测值都相同时，$\sigma=0$。否则，$\sigma&gt;0$。</li>
+</ul>
+<h3 id="数据描述的图形表示"><a href="#数据描述的图形表示" class="headerlink" title="数据描述的图形表示"></a>数据描述的图形表示</h3><h4 id="直方图"><a href="#直方图" class="headerlink" title="直方图"></a>直方图</h4><p>直方图Histogram 或者频率直方图Frequency histograms 针对单变量，对于比较单变量观测组，它可能不如分位数图、q-q 图和盒图方法有效。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573992639/blog/Data%20Mining/histogram.jpg" alt=""></p>
+<h4 id="分位数图"><a href="#分位数图" class="headerlink" title="分位数图"></a>分位数图</h4><p>分位数图Quantile Plot每个观测值$x_i$与一个百分数$f_i$配对，指出大约$f_i \times 100\%$的数据小于值$x_i$，“大约”是因为可能没有一个精确的小数值$f_i$，使得数据的$f_i\%$小于或等于$x_i$。0.25 分位数对应于Q1，0.50 分位数对应于中位数，而0.75 分位数对应于Q3。</p>
+<p>$f_i$的定义：$f_i=\frac{i-0.5}{N}$这些数由$\frac{1}{2N}$（稍大于0）到$1-\frac{1}{2N}$（稍小于1），以相同的步长1/n 递增。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573992640/blog/Data%20Mining/Quantile_Plot.jpg" alt=""></p>
+<h4 id="分位数-分位数图"><a href="#分位数-分位数图" class="headerlink" title="分位数-分位数图"></a>分位数-分位数图</h4><p>分位数-分位数图Quantile-Quantile Plot，或q-q 图对着另一个的对应分位数，绘制一个单变量分布的分位数。它是一种强有力的直观表示工具，使得用户可以观察从一个分布到另一个是否有漂移。![]<a target="_blank" rel="noopener" href="https://res.cloudinary.com/bravey/image/upload/v1573992640/blog/Data%20Mining/qq_plot.jpg">https://res.cloudinary.com/bravey/image/upload/v1573992640/blog/Data%20Mining/qq_plot.jpg</a>)</p>
+<p>部门1的分布相对于部门2有一个漂移，更趋向于部门2，说明部门2的单价趋向于比部门1高。</p>
+<h4 id="散点图"><a href="#散点图" class="headerlink" title="散点图"></a>散点图</h4><p>散点图(scatter plot)是确定两个量化变量之间看上去是否有联系、模式或趋势的最有效的图形方法之一。</p>
+<p>它观察的是<strong>双变量</strong>，可以观察点簇和离群点，或者考察相关性。正相关x随着y的增加而增加，负相关x随着y的增长而减少。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573992640/blog/Data%20Mining/scatter_plot.jpg" alt=""></p>
+<h2 id="数据清洗"><a href="#数据清洗" class="headerlink" title="数据清洗"></a>数据清洗</h2><h4 id="缺失值"><a href="#缺失值" class="headerlink" title="缺失值"></a>缺失值</h4><ul>
+<li>忽略元组</li>
+<li>人工填写缺值</li>
+<li>使用全局常量填充 ：比如Unknown </li>
+<li>所有样本的中心值填充：均值或者中位数 均值要求数据对称分布，倾斜分布用中位数</li>
+<li>给定元组的分类相同的样本的均值或者中位数</li>
+<li>最可能的值：使用贝叶斯推理、回归、决策数等进行预测。 前面几种是有偏的，这种方法最常用。</li>
+</ul>
+<h4 id="噪声数据"><a href="#噪声数据" class="headerlink" title="噪声数据"></a>噪声数据</h4><h5 id="分箱"><a href="#分箱" class="headerlink" title="分箱"></a>分箱</h5><p>分箱方法通过考察“邻居”（即，周围的值）来平滑存储数据的值。存储的值被分布到一些“桶”或箱中。由于分箱方法导致值相邻，因此它进行局部平滑。</p>
+<p>要求数据有序因此需要<strong>先进行排序</strong>，有三种方法：</p>
+<ul>
+<li><strong>箱均值光滑</strong>：箱中的每一个值被替换为箱中的均值</li>
+<li><strong>箱中位数光滑：</strong>箱中的每一个值被替换为箱中的中位数</li>
+<li><strong>箱边界光滑：</strong>边界为箱中的最大与最小值，每个值被替换为距离其最近的边界值。</li>
+</ul>
+<p>而箱子的分法有<strong>等频（等深）</strong>：每个箱子中的样本数目一样。<strong>等宽</strong>：按照取值范围将样本划分，每个箱子中的取值范围一致，比如样本数据取值为[0,10]那么可以按照等宽为2，把[0,2),[2,4)这样的取值范围来把样本划分到对应区间所在的范围中。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573992639/blog/Data%20Mining/bin.jpg" alt=""></p>
+<h5 id="回归"><a href="#回归" class="headerlink" title="回归"></a>回归</h5><p>用函数拟合数据来光滑数据，将离拟合曲线远的数据标记为噪声数据。</p>
+<h5 id="聚类"><a href="#聚类" class="headerlink" title="聚类"></a>聚类</h5><p>使用聚类分析后，检测出离群点，然后把离群点标记为噪声数据。</p>
+<h2 id="数据转换"><a href="#数据转换" class="headerlink" title="数据转换"></a>数据转换</h2><h3 id="归一化-规范化"><a href="#归一化-规范化" class="headerlink" title="归一化/规范化"></a>归一化/规范化</h3><h4 id="最大-最小归一化"><a href="#最大-最小归一化" class="headerlink" title="最大-最小归一化"></a>最大-最小归一化</h4><p>对原始数据进行线性变换，映射到新的区间[new_min, new_max]中去。这种方法保持了原始数据之间的联系。</p>
+<script type="math/tex; mode=display">
+v_i'=\frac{v_i-min_A}{max_A-min_A}(new\_max_A-new\_min_A)</script><h4 id="z-score归一化"><a href="#z-score归一化" class="headerlink" title="z-score归一化"></a>z-score归一化</h4><p>新的值使用均值和标准差进行映射。$\bar A$和$\sigma_A$ 分别是样本的均值和他的标准差。</p>
+<script type="math/tex; mode=display">
+v_i'=\frac{v_i-\bar A}{\sigma_A}</script><h4 id="小数定标归一化"><a href="#小数定标归一化" class="headerlink" title="小数定标归一化"></a>小数定标归一化</h4><p>小数定标归一化 Normalization by decimal scaling。移动原来的小数点的位置来进行归一化。</p>
+<script type="math/tex; mode=display">
+v_i'=\dfrac{v_i}{10^j}</script><p>j是让$Max(|v_i’|&lt;1)$的最小整数，比如如果是254，那么j取3就可以让其为0.254小于1。</p>
+<h2 id="冗余与相关性分析"><a href="#冗余与相关性分析" class="headerlink" title="冗余与相关性分析"></a>冗余与相关性分析</h2><p>一个属性可以由另外的属性导出，那么另外的属性就是冗余的。有些冗余可以通过<strong>相关性分析</strong>来检测</p>
+<h3 id="数值数据的相关系数"><a href="#数值数据的相关系数" class="headerlink" title="数值数据的相关系数"></a>数值数据的相关系数</h3><p>相关系数Correlation coefficient也称作皮尔森积矩系数Pearson’s product moment coefficient估计两个属性A,B的相关度。</p>
+<script type="math/tex; mode=display">
+r_{A.B}=\dfrac{\sum_{i=1}^{n}(a_i-\bar A)(b_i-\bar B)}{(n-1)\sigma_A\sigma_B}=\dfrac{\sum_{i=1}^{n}(a_ib_i)-n\bar A\bar B}{(n-1)\sigma_A\sigma_b}</script><p>$-1\le r_{A,B}\le 1$ ,$r_{A,B}&gt;0$ A和B两个属性正相关，A的值随着B的值增长而增长。$r_{A,B}&lt;0$为负相关，A的值随着B的值增长而减少。该值越大，一个属性蕴涵另一个的可能性越大。因此，一个很大的值表明A（或B）可以作为冗余而被去掉。如果结果值等于0，则A 和B 是独立的，它们之间不相关。可以参见前述的散点图。</p>
+<h3 id="分类数据的-chi-2-相关检验"><a href="#分类数据的-chi-2-相关检验" class="headerlink" title="分类数据的$\chi^2$相关检验"></a>分类数据的$\chi^2$相关检验</h3><p>分类数据Categorical Data中，两类数据可以通过$\chi^2$卡方检验来发现它们的相关性。计算公式为：</p>
+<script type="math/tex; mode=display">
+\begin{split}
+&\chi^2=\sum_{i=1}^{c}\sum_{j=1}^{r}\dfrac{o_{ij}-e_{ij}}{e_{ij}}\\\\
+&e_{ij}=\dfrac{count(A=a_i)\times count(B=b_j)}{n}
+\end{split}</script><p>$o_{ij}$ 是联合事件$(A_i,B_j)$的观测频度也就是实际频数，而$e_{ij}$ 是$(A_i,B_j)$的期望值。n是总的数据样本数。使用相依表来表示数据。</p>
+<p><img src="https://res.cloudinary.com/bravey/image/upload/v1573992639/blog/Data%20Mining/rely_table.jpg" alt=""></p>
+<p>图中括号中的是每个单元的预测值。总共抽取1500个样本，因此n=1500。A类是否喜欢看小说有两类取值，B类性别也有两类取值，因此c=2，r=2。计算单元（男，小说）的预测值有：</p>
+<script type="math/tex; mode=display">
+e_{11}=\dfrac{count(男)\times count(小说)}{n}=\dfrac{300\times450}{1500}=90</script><p>其他几个单元的预测值都在括号中。因此可以计算出：</p>
+<script type="math/tex; mode=display">
+\chi^2=\dfrac{(250-90)^2}{90}+\dfrac{(50-210)^2}{210}+\dfrac{(200-360)^2}{360}+\dfrac{(1000-840)^2}{840}=507.93</script><p>对于这个2*2的表，自由度为（2-1)(2-1)=1。对于自由度1，在0.001的置信水平下，查表得到拒绝假设的值是10.828。算出来的值大与它，因此认为性别和爱看小说不是独立的，是强相关的。</p>
+<h2 id="数据归约"><a href="#数据归约" class="headerlink" title="数据归约"></a>数据归约</h2><p>数据归约技术 Data Reduction可以用来得到数据集的归约表示，它小得多，但仍接近地保持原数据的完整性。</p>
+<p>分为：</p>
+<ul>
+<li>维规约：降维</li>
+<li>数量规约：用替代的、较小的的数据形式替换原始数据。比如只存放数据的模型参数</li>
+<li>数据压缩：通过变换将原始数据压缩，不损失原来的信息叫做无损，否则是有损</li>
+</ul>
+<h3 id="维规约"><a href="#维规约" class="headerlink" title="维规约"></a>维规约</h3><h4 id="小波变换"><a href="#小波变换" class="headerlink" title="小波变换"></a>小波变换</h4><p>DWT）是一种线性信号处理技术，当用于数据向量D 时，将它转换成不同的数值向量小波系数D’。两个向量具有相同的长度。虽然变换后向量维度一样，但是可以仅存放一小部分最强的小波系数，就能保留近似的压缩数据。DWT提供比离散傅利叶DFT更好的有损压缩，DWT 将提供原数据更精确的近似。因此，对于等价的近似，DWT 比DFT 需要的空间小。不像DFT，小波空间局部性相当好，有助于保留局部细节。</p>
+<p>该方法如下：</p>
+<ol>
+<li>输入数据向量的长度L 必须是2 的整数幂。必要时，通过在数据向量后添加0，这一条件可以满足。</li>
+<li>每个变换涉及应用两个函数。第一个使用某种数据平滑，如求和或加权平均。第二个进行加权差分，产生数据的细节特征。</li>
+<li>两个函数作用于输入数据对，产生两个长度为L/2 的数据集。一般地，它们分别代表输入数据的平滑后或低频的版本和它的高频内容。</li>
+<li>两个函数递归地作用于前面循环得到的数据集，直到结果数据集的长度为2。</li>
+<li>由以上迭代得到的数据集中选择值，指定其为数据变换的小波系数。</li>
+</ol>
+<h4 id="主成分分析"><a href="#主成分分析" class="headerlink" title="主成分分析"></a>主成分分析</h4><p>主成分分析PCA 又称Karhunen-Loeve 或K-L 方法）搜索c 个最能代表数据的k-维正交向量；这里c ≤ k。这样，原来的数据投影到一个较小的空间，导致数据压缩。PCA 可以作为一种维归约形式使用。然而，不象属性子集选择通过保留原属性集的一个子集来减少属性集的大小。PCA 通过创建一个替换的、较小的变量集“组合”属性的本质。原数据可以投影到该较小的集合中。</p>
+<p>详解的过程暂时不记录，查看模式识别的教材。<strong>只适用数值数据</strong></p>
+<h4 id="属性-特征子集选择"><a href="#属性-特征子集选择" class="headerlink" title="属性/特征子集选择"></a>属性/特征子集选择</h4><p>也就是降维。使用压缩搜索空间的启发式的算法，典型的是贪心算法。每次找到一个局部的好的属性，剔除掉差的属性。</p>
+<p>属性子集选择的基本启发式方法包括以下技术：</p>
+<ul>
+<li>逐步向前选择：该过程由空属性集开始，选择原属性集中最好的属性，并将它添加到该集合中。</li>
+<li>逐步向后删除：该过程由整个属性集开始。在每一步，删除掉尚在属性集中的最坏属性。</li>
+<li>向前选择和向后删除的结合：向前选择和向后删除方法可以结合在一起，每一步选择一个最好的属性，并在剩余属性中删除一个最坏的属性。</li>
+<li>判定树归纳：判定树算法，如ID3 和C4.5 。</li>
+</ul>
+<h3 id="数量规约"><a href="#数量规约" class="headerlink" title="数量规约"></a>数量规约</h3><h4 id="数据立方体集成"><a href="#数据立方体集成" class="headerlink" title="数据立方体集成"></a>数据立方体集成</h4><p>将数据整理成之前介绍过的数据立方体，把感兴趣的数据整理到基本立方体base cuboid上面。比如如果只关注每个季度的销售数据，那么可以将原来的每天的数据整理成每个季度的销售数据。这样就可以大大减少原来的数据量了。</p>
+<h4 id="回归-1"><a href="#回归-1" class="headerlink" title="回归"></a>回归</h4><p>因为展开内容很多，只记录下有这些方法。当把数据拟合为某一种模型后只用记录这些模型的参数就可以了</p>
+<ul>
+<li>线性回归</li>
+<li>多元线性回归</li>
+<li>对数线性模型</li>
+</ul>
+<h4 id="直方图-1"><a href="#直方图-1" class="headerlink" title="直方图"></a>直方图</h4><p>就是前面叙述的分箱的方法，使用一个桶来记录一个属性的频次。或者等宽的方法，用区间来记录每个区间中的频次。</p>
+<h4 id="聚类-1"><a href="#聚类-1" class="headerlink" title="聚类"></a>聚类</h4><p>聚类后，用数据的簇代表替换实际的数据。即只记录簇的中心点。</p>
+<h4 id="抽样"><a href="#抽样" class="headerlink" title="抽样"></a>抽样</h4><p>假定大的数据集D 包含N 个元组。我们看看对D 的可能选样。</p>
+<p>简单选择n 个样本，不回放(<strong>SRSWOR</strong>)：由D 的N 个元组中抽取n 个样本（n &lt; N）；其中， D中任何元组被抽取的概率均为1/N。即，所有元组是等可能的。</p>
+<p>简单选择n 个样本，回放(<strong>SRSWR</strong>)：该方法类似于SRSWOR，不同在于当一个元组被抽取后，记录它，然后放回去。这样，一个元组被抽取后，它又被放回D，以便它可以再次被抽取。</p>
+<h3 id="数据压缩"><a href="#数据压缩" class="headerlink" title="数据压缩"></a>数据压缩</h3><p>主要使用编码机制来进行压缩。包括字符串、音频、视频的压缩。</p>
+<h3 id="数据离散和概念分层"><a href="#数据离散和概念分层" class="headerlink" title="数据离散和概念分层"></a>数据离散和概念分层</h3><p>可以使用分箱来、聚类、决策树和相关分析来进行离散化。而对于标称数据可以进行概念分层，前面的数据立方体就是用的这个思路。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《数据挖掘概念与技术》第3版 第三章数据预处理</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://bravey.github.io">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/2019-11-16-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86.html">https://bravey.github.io/2019-11-16-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://bravey.github.io" target="_blank">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AF%BE%E7%A8%8B/">课程</a><a class="post-meta__tags" href="/tags/%E5%9B%BD%E7%A7%91%E5%A4%A7/">国科大</a><a class="post-meta__tags" href="/tags/%E9%99%8D%E7%BB%B4/">降维</a><a class="post-meta__tags" href="/tags/%E7%9B%B8%E5%85%B3%E6%80%A7%E5%88%86%E6%9E%90/">相关性分析</a></div><div class="post-share"><div class="social-share" data-image="https://images.pexels.com/photos/164041/pexels-photo-164041.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2019-11-17-%E5%88%86%E7%B1%BB%E4%B8%8E%E9%A2%84%E6%B5%8B.html" title="分类与预测"><img class="cover" src="https://images.pexels.com/photos/238622/pexels-photo-238622.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">分类与预测</div></div><div class="info-2"><div class="info-item-1">分类与预测分类与预测的差别分类对给定的数据集一般是离散的，确定这些数据对应类别。而预测是对连续的数据，根据历史数据来预测未知的数据或者缺失值等。 分类的过程分为两步：  模型构建 使用训练数据集对模型进行训练，模型可以被表示为一些分类的规则集合，决策树或者是数学公式。  模型使用 先使用模型来对测试数据进行分类，如果准确率能够接受则使用模型去对没有标注过的数据进行分类。   分类属于有监督学习，训练的数据是经过标注的。聚类属于无监督学习训练数据未经过标注不知道样本的标签。  在进行分类和预测之前需要对数据进行预处理包括数据清洗来处理噪声和缺失值，相关性分析来进行特征提取，数据转换比如归一化等。 对于分类方法的评测指标有：准确性，速度，鲁棒性，可规模性（硬盘数据），可解释性等 决策树决策树是一个类似于流程图的树结构；其中，每个内部结点表示在一个属性上的测试，每个分枝代表一个测试输出，而每个树叶结点代表类或类分布。树的最顶层结点是根结点。给定数据经过决策树不同节点的决策最终走到叶子节点，从而完成了对数据的分类。决策树不需要任何领域知识也不需要参数，适合探测式知识发现。 决策数的构建分...</div></div></div></a><a class="pagination-related" href="/2019-11-15-%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93.html" title="数据仓库"><img class="cover" src="https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">数据仓库</div></div><div class="info-2"><div class="info-item-1">数据仓库什么是数据仓库有多种定义，按照一位数据仓库系统构造方面的领衔设计师William H. Inmon的说法：数据仓库是一个面向主题的、集成的、时变的、非易失的数据集合，支持管理者的决策过程。 一句话总结：通过数据仓库来完成对一个项目的相关需求的快速分析，是一个联机分析处理（Online Analytical Processing System）系统，具体的定义见百度百科。  特征 面向主题的：数据仓库围绕一些主题，如顾客、供应商、产品和销售组织。数据仓库关注决策者的数据建模与分析，而不是构造组织机构的日常操作和事务处理。 集成的：通常，构造数据仓库是将多个异种数据源，如关系数据库、一般文件和联机事务处理记录，集成在一起。 时变的：数据存储从历史的角度（例如，过去5-10 年）提供信息。 非易失的：数据仓库总是。物理地分离存放数据；这些数据源于操作环境下的应用数据  操作数据库系统与数据仓库的区别我们常见的关系数据库就是联机操作数据库，联机操作数据库系统的主要任务是执行联机事务和查询处理。这种系统称为联机事务处理（OLTP）系统。  数据立方体数据仓库基于多维数据模型，这种模...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2019-11-15-%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93.html" title="数据仓库"><img class="cover" src="https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-15</div><div class="info-item-2">数据仓库</div></div><div class="info-2"><div class="info-item-1">数据仓库什么是数据仓库有多种定义，按照一位数据仓库系统构造方面的领衔设计师William H. Inmon的说法：数据仓库是一个面向主题的、集成的、时变的、非易失的数据集合，支持管理者的决策过程。 一句话总结：通过数据仓库来完成对一个项目的相关需求的快速分析，是一个联机分析处理（Online Analytical Processing System）系统，具体的定义见百度百科。  特征 面向主题的：数据仓库围绕一些主题，如顾客、供应商、产品和销售组织。数据仓库关注决策者的数据建模与分析，而不是构造组织机构的日常操作和事务处理。 集成的：通常，构造数据仓库是将多个异种数据源，如关系数据库、一般文件和联机事务处理记录，集成在一起。 时变的：数据存储从历史的角度（例如，过去5-10 年）提供信息。 非易失的：数据仓库总是。物理地分离存放数据；这些数据源于操作环境下的应用数据  操作数据库系统与数据仓库的区别我们常见的关系数据库就是联机操作数据库，联机操作数据库系统的主要任务是执行联机事务和查询处理。这种系统称为联机事务处理（OLTP）系统。  数据立方体数据仓库基于多维数据模型，这种模...</div></div></div></a><a class="pagination-related" href="/2019-11-17-%E5%88%86%E7%B1%BB%E4%B8%8E%E9%A2%84%E6%B5%8B.html" title="分类与预测"><img class="cover" src="https://images.pexels.com/photos/238622/pexels-photo-238622.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-17</div><div class="info-item-2">分类与预测</div></div><div class="info-2"><div class="info-item-1">分类与预测分类与预测的差别分类对给定的数据集一般是离散的，确定这些数据对应类别。而预测是对连续的数据，根据历史数据来预测未知的数据或者缺失值等。 分类的过程分为两步：  模型构建 使用训练数据集对模型进行训练，模型可以被表示为一些分类的规则集合，决策树或者是数学公式。  模型使用 先使用模型来对测试数据进行分类，如果准确率能够接受则使用模型去对没有标注过的数据进行分类。   分类属于有监督学习，训练的数据是经过标注的。聚类属于无监督学习训练数据未经过标注不知道样本的标签。  在进行分类和预测之前需要对数据进行预处理包括数据清洗来处理噪声和缺失值，相关性分析来进行特征提取，数据转换比如归一化等。 对于分类方法的评测指标有：准确性，速度，鲁棒性，可规模性（硬盘数据），可解释性等 决策树决策树是一个类似于流程图的树结构；其中，每个内部结点表示在一个属性上的测试，每个分枝代表一个测试输出，而每个树叶结点代表类或类分布。树的最顶层结点是根结点。给定数据经过决策树不同节点的决策最终走到叶子节点，从而完成了对数据的分类。决策树不需要任何领域知识也不需要参数，适合探测式知识发现。 决策数的构建分...</div></div></div></a><a class="pagination-related" href="/2019-11-19-%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F.html" title="推荐系统"><img class="cover" src="https://images.pexels.com/photos/629159/pexels-photo-629159.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-19</div><div class="info-item-2">推荐系统</div></div><div class="info-2"><div class="info-item-1">推荐系统定义推荐的基本思路是根据历史数据比如用户以往的喜好或者相似用户的喜好来预测用户未来的喜好。基本假设是：（1）用户的喜好是会保持的并且随着时间而缓慢改变。（2）拥有相同品味的用户对与一个项目的打分也是相似的。因此可以根据以往的历史数据来进行推荐。 与搜索的不同：搜索的数据不是根据用户的资料而定制的，给出的答案是与搜素查询语句相关联的结果。  推荐算法基于内容的方法基于内容的方法基于这样一个事实：一个用户的兴趣应该和被推荐物品的描述想匹配。核心思路是找到用户资料与物品之间的相似度，推荐相似度高的物品。 步骤为：  描述将被推荐的物品I 建立用户个人资料U来描述用户喜欢的物品 比较物品和用户个人资料来决定推荐的物品  用户个人资料与物品的描述可以根据关键词进行向量化。使用例如TF-IDF的方法将物品与个人资料向量话后，就可以计算两者的相似度了。 余弦相似度使用预先相似度计算这两个向量的相似度。对与两个n维向量X和Y其余弦相似度为：  sim(X,Y)=\dfrac{X\cdot Y}{||X||\times ||Y||}分子是点乘，$||X||=\sqrt {x_1^2+x_2...</div></div></div></a><a class="pagination-related" href="/2019-11-19-%E8%81%9A%E7%B1%BB%E6%96%B9%E6%B3%95.html" title="聚类方法"><img class="cover" src="https://images.pexels.com/photos/452780/pexels-photo-452780.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-19</div><div class="info-item-2">聚类方法</div></div><div class="info-2"><div class="info-item-1">聚类方法聚类属于无监督学习，因为输入的数据是没有标签的，通过算法每个样本自动的划分到相应的簇中。 K-meansk均值是一种基于形心的技术。给定一个包含n 个数据对象的数据库，以及要生成的簇的数目k，一个划分类的算法将数据对象组织为k 个划分（k≤n），其中每个划分代表一个簇。通常会采用一个划分准则（经常称为相似度函数，similarity function），例如距离dist(i,j)，以便在同一个簇中的对象是“相似的”，而不同簇中的对象是“相异的”。 K-means把簇的形心定义为簇内点的均值，通过贪心的方法不断迭代形心的坐标，直到形心的坐标不再改变而结束迭代。  步骤算法的步骤为：  首先在数据集D中选择k个对象，每个对象代表一个簇的初试均值即形心。 对剩下的对象，根据其与这个k个形心的欧式距离将其分配到距离最近的形心的簇。 完成了分配后重新计算每个簇的均值中心点并更新。 使用更新后的均值中心点，重新分配每一个对象。 不断迭代，直到本轮的中心点与上一轮的相同，即本轮形成的簇与上一轮相同。  伪代码伪代码为：  K-means对离群点敏感，因为当一个离群点被分配到一个簇的时候...</div></div></div></a><a class="pagination-related" href="/2019-11-18-%E5%85%B3%E8%81%94%E8%A7%84%E5%88%99.html" title="关联规则"><img class="cover" src="https://images.pexels.com/photos/6758/wildernessculture-rei1440project-welltravelled-awesomeearth.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-18</div><div class="info-item-2">关联规则</div></div><div class="info-2"><div class="info-item-1">关联规则基本概念关联规则挖掘Association rules mining 挖掘出数据库中的频繁模式，频繁项之间的关联规则。  关联规则的形式为  A\Rightarrow B[support=?, confident=?]规则的支持度support和置信度confident分别反映出规则的有用性和确定性。定义为：  \begin{split} support(A\Rightarrow B)&=P(A\bigcap B)=\dfrac{count(A\bigcap B)}{count(total)}\\ confident(A\Rightarrow B)&=P(B|A)=\dfrac{count(A\bigcap B)}{count(A)} \end{split}$A\bigcap B$ 表示A事件和B事件一起发生。使用比例的支持度称为相对支持度，使用直接的次数称为绝对支持度。当规则满足设定的最小支持度和最小置信度的时候，规则是强关联规则。强关联规则并不一定是有趣的，使用提升度lift来衡量两个事件之间的相关性  lift=\dfrac{P(A\bigcap B)}{P(A)P...</div></div></div></a><a class="pagination-related" href="/2019-12-28-%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9%E5%92%8C%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96.html" title="特征选择和特征提取"><img class="cover" src="https://images.pexels.com/photos/46253/mt-fuji-sea-of-clouds-sunrise-46253.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-28</div><div class="info-item-2">特征选择和特征提取</div></div><div class="info-2"><div class="info-item-1">特征选择和特征提取意义 降低维度，后续的分类器设计更容易计算，可以加快速度 消除特征之间可能存在的相关性，减少与分类无关的信息（理解成降噪？），从而更好的分类。   类别可分性质的度量距离 点到点之间的距离 欧式距离：  D(a, b) = || a – b ||平方形式（向量转置相乘，点积的形式）：  D^{2}(a,b) = (a - b)^{T}(a - b) = \sum_{k = 1}^{n}{(a_{k} - b_{k})^{2}}其中a和b为n维向量，其第k个特征分别是$a_k$和$b_k$。 各自对应的特征维度差的平方之和。  点到点集之间的距离 在n维空间中，点x到点$a^{(i)}$之间的距离平方为：  D^{2}(x,a^{(i)}) = \sum_{k = 1}^{n}{(x_{k} - a_{k}^{(i)})^{2}}因此x到有K个点组合的均方距离，就是到每个点均方距离相加之后取均值。  \overline{D^{2}(x,\{ a^{(i)}\})} = \frac{1}{K}\sum_{i = 1}^{K}{D^{2}(x,a^{(i)}) =}\...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">BraveY</div><div class="author-info-description">今日事，今日毕</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">数据预处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">1.1.</span> <span class="toc-text">为什么数据预处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.2.</span> <span class="toc-text">数据描述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E5%BF%83%E8%B6%8B%E5%8A%BF%E5%BA%A6%E9%87%8F"><span class="toc-number">1.2.1.</span> <span class="toc-text">中心趋势度量</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%B3%E5%9D%87%E5%80%BC-mean"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">平均值 mean</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%AD%E4%BD%8D%E6%95%B0-median"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">中位数 median</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%97%E6%95%B0-mode"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">众数 mode</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%AD%E5%88%97%E6%95%B0-midrange"><span class="toc-number">1.2.1.4.</span> <span class="toc-text">中列数 midrange</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E7%A7%B0%E4%B8%8E%E5%80%BE%E6%96%9C"><span class="toc-number">1.2.1.5.</span> <span class="toc-text">对称与倾斜</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%95%A3%E5%B8%83%E5%BA%A6%E9%87%8F"><span class="toc-number">1.2.2.</span> <span class="toc-text">数据散布度量</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9E%81%E5%B7%AE%E3%80%81%E5%9B%9B%E5%88%86%E4%BD%8D%E6%95%B0%E5%92%8C%E5%9B%9B%E5%88%86%E4%BD%8D%E6%95%B0%E6%9E%81%E5%B7%AE"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">极差、四分位数和四分位数极差</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%94%E6%95%B0%E6%A6%82%E6%8B%AC%E3%80%81%E7%9B%92%E5%9B%BE%E4%B8%8E%E7%A6%BB%E7%BE%A4%E7%82%B9"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">五数概括、盒图与离群点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E5%B7%AE%E3%80%81%E6%A0%87%E5%87%86%E5%B7%AE"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">方差、标准差</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%8F%8F%E8%BF%B0%E7%9A%84%E5%9B%BE%E5%BD%A2%E8%A1%A8%E7%A4%BA"><span class="toc-number">1.2.3.</span> <span class="toc-text">数据描述的图形表示</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B4%E6%96%B9%E5%9B%BE"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">直方图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%86%E4%BD%8D%E6%95%B0%E5%9B%BE"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">分位数图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%86%E4%BD%8D%E6%95%B0-%E5%88%86%E4%BD%8D%E6%95%B0%E5%9B%BE"><span class="toc-number">1.2.3.3.</span> <span class="toc-text">分位数-分位数图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%A3%E7%82%B9%E5%9B%BE"><span class="toc-number">1.2.3.4.</span> <span class="toc-text">散点图</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97"><span class="toc-number">1.3.</span> <span class="toc-text">数据清洗</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%BA%E5%A4%B1%E5%80%BC"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">缺失值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%99%AA%E5%A3%B0%E6%95%B0%E6%8D%AE"><span class="toc-number">1.3.0.2.</span> <span class="toc-text">噪声数据</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%86%E7%AE%B1"><span class="toc-number">1.3.0.2.1.</span> <span class="toc-text">分箱</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9B%9E%E5%BD%92"><span class="toc-number">1.3.0.2.2.</span> <span class="toc-text">回归</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%81%9A%E7%B1%BB"><span class="toc-number">1.3.0.2.3.</span> <span class="toc-text">聚类</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.4.</span> <span class="toc-text">数据转换</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%92%E4%B8%80%E5%8C%96-%E8%A7%84%E8%8C%83%E5%8C%96"><span class="toc-number">1.4.1.</span> <span class="toc-text">归一化&#x2F;规范化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%80%E5%A4%A7-%E6%9C%80%E5%B0%8F%E5%BD%92%E4%B8%80%E5%8C%96"><span class="toc-number">1.4.1.1.</span> <span class="toc-text">最大-最小归一化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#z-score%E5%BD%92%E4%B8%80%E5%8C%96"><span class="toc-number">1.4.1.2.</span> <span class="toc-text">z-score归一化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%8F%E6%95%B0%E5%AE%9A%E6%A0%87%E5%BD%92%E4%B8%80%E5%8C%96"><span class="toc-number">1.4.1.3.</span> <span class="toc-text">小数定标归一化</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%97%E4%BD%99%E4%B8%8E%E7%9B%B8%E5%85%B3%E6%80%A7%E5%88%86%E6%9E%90"><span class="toc-number">1.5.</span> <span class="toc-text">冗余与相关性分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E5%80%BC%E6%95%B0%E6%8D%AE%E7%9A%84%E7%9B%B8%E5%85%B3%E7%B3%BB%E6%95%B0"><span class="toc-number">1.5.1.</span> <span class="toc-text">数值数据的相关系数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E7%B1%BB%E6%95%B0%E6%8D%AE%E7%9A%84-chi-2-%E7%9B%B8%E5%85%B3%E6%A3%80%E9%AA%8C"><span class="toc-number">1.5.2.</span> <span class="toc-text">分类数据的$\chi^2$相关检验</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BD%92%E7%BA%A6"><span class="toc-number">1.6.</span> <span class="toc-text">数据归约</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%B4%E8%A7%84%E7%BA%A6"><span class="toc-number">1.6.1.</span> <span class="toc-text">维规约</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%8F%E6%B3%A2%E5%8F%98%E6%8D%A2"><span class="toc-number">1.6.1.1.</span> <span class="toc-text">小波变换</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90"><span class="toc-number">1.6.1.2.</span> <span class="toc-text">主成分分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7-%E7%89%B9%E5%BE%81%E5%AD%90%E9%9B%86%E9%80%89%E6%8B%A9"><span class="toc-number">1.6.1.3.</span> <span class="toc-text">属性&#x2F;特征子集选择</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E9%87%8F%E8%A7%84%E7%BA%A6"><span class="toc-number">1.6.2.</span> <span class="toc-text">数量规约</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%AB%8B%E6%96%B9%E4%BD%93%E9%9B%86%E6%88%90"><span class="toc-number">1.6.2.1.</span> <span class="toc-text">数据立方体集成</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%9E%E5%BD%92-1"><span class="toc-number">1.6.2.2.</span> <span class="toc-text">回归</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B4%E6%96%B9%E5%9B%BE-1"><span class="toc-number">1.6.2.3.</span> <span class="toc-text">直方图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%81%9A%E7%B1%BB-1"><span class="toc-number">1.6.2.4.</span> <span class="toc-text">聚类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8A%BD%E6%A0%B7"><span class="toc-number">1.6.2.5.</span> <span class="toc-text">抽样</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%8E%8B%E7%BC%A9"><span class="toc-number">1.6.3.</span> <span class="toc-text">数据压缩</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%A6%BB%E6%95%A3%E5%92%8C%E6%A6%82%E5%BF%B5%E5%88%86%E5%B1%82"><span class="toc-number">1.6.4.</span> <span class="toc-text">数据离散和概念分层</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.7.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"><img src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"/></a><div class="content"><a class="title" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略">闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略</a><time datetime="2026-03-07T02:00:00.000Z" title="发表于 2026-03-07 10:00:00">2026-03-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd"><img src="https://images.pexels.com/photos/417222/pexels-photo-417222.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记2——lookupd"/></a><div class="content"><a class="title" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd">NSQ学习笔记2——lookupd</a><time datetime="2023-03-12T02:14:41.000Z" title="发表于 2023-03-12 10:14:41">2023-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介"><img src="https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记1——简介"/></a><div class="content"><a class="title" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介">NSQ学习笔记1——简介</a><time datetime="2023-02-05T07:18:23.000Z" title="发表于 2023-02-05 15:18:23">2023-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记"><img src="https://images.pexels.com/photos/71104/utah-mountain-biking-bike-biking-71104.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C专家编程读书笔记"/></a><div class="content"><a class="title" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记">C专家编程读书笔记</a><time datetime="2021-03-18T04:59:02.000Z" title="发表于 2021-03-18 12:59:02">2021-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱"><img src="https://images.pexels.com/photos/1656687/pexels-photo-1656687.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C语言传递指针参数的陷阱"/></a><div class="content"><a class="title" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱">C语言传递指针参数的陷阱</a><time datetime="2020-12-12T13:39:57.000Z" title="发表于 2020-12-12 21:39:57">2020-12-12</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2020 - 2026 By BraveY</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const initValine = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyValine = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const valineConfig = {
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      visitor: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || window.location.pathname
+    }
+
+    new Valine(valineConfig)
+  }
+
+  const loadValine = async (el, path) => {
+    if (typeof Valine === 'function') {
+      initValine(el, path)
+    } else {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js')
+      initValine(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Valine' === 'Valine'
+      ? window.shuoshuoComment = { loadComment: loadValine }
+      : window.loadOtherComment = loadValine
+    return
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script></div><script async data-pjax src="/js/busuanzi.js"></script></div></body></html>

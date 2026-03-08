@@ -1,0 +1,331 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>内嵌汇编 | BraveY</title><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="内嵌汇编操作系统高级教程上面需要阅读Linux内核0.11的源码，其中在书《Linux内核设计的一书》第2.5节异常处理类中段服务程序挂接的部分，遇到了嵌入在C语言中的汇编代码，之前从来没有学习过汇编，因此记录下。  AT&amp;amp;T基础知识内嵌汇编使用的是AT&amp;amp;T汇编，所以首先稍微讲..."><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "内嵌汇编",
+  "url": "https://bravey.github.io/2019-10-31-%E5%86%85%E5%B5%8C%E6%B1%87%E7%BC%96.html",
+  "image": "https://bravey.github.io/img/post.jpg",
+  "datePublished": "2019-10-31T08:39:47.000Z",
+  "dateModified": "2026-03-07T01:06:28.367Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "BraveY",
+      "url": "https://bravey.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/2019-10-31-%E5%86%85%E5%B5%8C%E6%B1%87%E7%BC%96.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '内嵌汇编',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 5.3.0"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/url(https:/res.cloudinary.com/bravey/image/upload/v1587809177/air-atmosphere-blue-blue-sky-314726.jpg));"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/post.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">BraveY</span></a><a class="nav-page-title" href="/"><span class="site-name">内嵌汇编</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">内嵌汇编</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-10-31T08:39:47.000Z" title="发表于 2019-10-31 16:39:47">2019-10-31</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-07T01:06:28.367Z" title="更新于 2026-03-07 09:06:28">2026-03-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="内嵌汇编"><a href="#内嵌汇编" class="headerlink" title="内嵌汇编"></a>内嵌汇编</h1><p>操作系统高级教程上面需要阅读Linux内核0.11的源码，其中在书《Linux内核设计的一书》第2.5节异常处理类中段服务程序挂接的部分，遇到了嵌入在C语言中的汇编代码，之前从来没有学习过汇编，因此记录下。</p>
+<a id="more"></a>
+<h2 id="AT-amp-T基础知识"><a href="#AT-amp-T基础知识" class="headerlink" title="AT&amp;T基础知识"></a>AT&amp;T基础知识</h2><p>内嵌汇编使用的是AT&amp;T汇编，所以首先稍微讲解下AT&amp;T的汇编指令的基础知识。</p>
+<h3 id="操作数前缀"><a href="#操作数前缀" class="headerlink" title="操作数前缀"></a>操作数前缀</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">movl   $8,%eax </span><br><span class="line">movl   $0xffff,%ebx </span><br><span class="line">int     $0x80 </span><br></pre></td></tr></table></figure>
+<p>看到在AT%T汇编中诸如”%eax”、”%ebx”之类的寄存器名字前都要加上”%”；”$8”、”$0xffff”这样的立即数之前都要加上”$”。  </p>
+<h3 id="源-目的操作数顺序"><a href="#源-目的操作数顺序" class="headerlink" title="源/目的操作数顺序"></a>源/目的操作数顺序</h3><p>   在Intel语法中，第一个操作数是目的操作数，第二个操作数源操作数。而在AT&amp;T中，第一个数是源操作数，第二个数是目的操作数。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; INTEL语法</span><br><span class="line">MOV EAX,8 &#x2F;&#x2F;EAX是目的操作数， 8是源操作数</span><br><span class="line">&#x2F;&#x2F; AT&amp;T语法</span><br><span class="line">movl   $8,%eax &#x2F;&#x2F;8是源操作数 EAX是目的操作数</span><br></pre></td></tr></table></figure>
+<h3 id="标识长度的操作码后缀"><a href="#标识长度的操作码后缀" class="headerlink" title="标识长度的操作码后缀"></a>标识长度的操作码后缀</h3><p>在AT&amp;T的操作码后面有时还会有一个后缀，其含义就是指出操作码的大小。“l”表示长整数（32位），“w”表示字（16位），“b”表示字节（8位）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">movb    %bl,%al</span><br><span class="line">movw   %bx,%ax</span><br><span class="line">movl     %ebx,%eax</span><br><span class="line">movl     (%ebx),%eax</span><br></pre></td></tr></table></figure>
+<h2 id="GCC内嵌汇编"><a href="#GCC内嵌汇编" class="headerlink" title="GCC内嵌汇编"></a>GCC内嵌汇编</h2><p>Linux操作系统内核代码绝大部分使用C语言编写，只有一小部分使用汇编语言编写，例如与特定体系结构相关的代码和对性能影响很大的代码。GCC提供了内嵌汇编的功能，可以在C代码中直接内嵌汇编语言语句，大大方便了程序设计。 </p>
+<h3 id="基本行内汇编"><a href="#基本行内汇编" class="headerlink" title="基本行内汇编"></a>基本行内汇编</h3><p>基本行内汇编很容易理解，一般是按照下面的格式：</p>
+<p>  <code>asm(“statements”);</code></p>
+<p>在“asm”后面有时也会加上“<strong>volatile</strong>”表示编译器不要优化代码，后面的指令保留原样 </p>
+<p> <code>__asm__  __volatile__(&quot;hlt&quot;);</code> </p>
+<p>如果有很多行汇编，则每一行后要加上“\n\t” ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> asm( &quot;pushl %eax\n\t&quot;</span><br><span class="line"> &quot;movl $0,%eax\n\t&quot;</span><br><span class="line">&quot;popl %eax&quot;); </span><br></pre></td></tr></table></figure>
+<p>或者我们也可以分成几行来写，如： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">asm(&quot;movl %eax,%ebx&quot;);</span><br><span class="line">asm(&quot;xorl %ebx,%edx&quot;);</span><br><span class="line">asm(&quot;movl $0,_booga); </span><br></pre></td></tr></table></figure>
+<p>通常使用汇编语句最方便的方式是把它们放在一个宏内，而宏语句需要在一行上定义，因此使用反斜杠<code>\</code>将这些语句连成一行，所以上述语句如果在宏中定义的话就是：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">asm</span>( <span class="string">&quot;pushl %eax; \</span></span><br><span class="line"><span class="string"> movl $0,%eax; \</span></span><br><span class="line"><span class="string">popl %eax&quot;</span>); </span><br></pre></td></tr></table></figure>
+<h3 id="扩展的行内汇编"><a href="#扩展的行内汇编" class="headerlink" title="扩展的行内汇编"></a>扩展的行内汇编</h3><p>在扩展的行内汇编中，可以将C语言表达式（比如C语言中的变量）指定为汇编指令的操作数，而且不用去管如何将C语言表达式的值读入寄存器，以及如何将计算结果写回C变量，你只要告诉程序中C语言表达式与汇编指令操作数之间的对应关系即可， GCC会自动插入代码完成必要的操作。 </p>
+<p>使用内嵌汇编，要先编写汇编指令模板，然后将C语言表达式与指令的操作数相关联，并告诉GCC对这些操作有哪些限制条件。例如下面的内嵌汇编语句： </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> input = <span class="number">8</span>;</span><br><span class="line">	<span class="keyword">int</span> result = <span class="number">0</span>;</span><br><span class="line">    __asm__ __violate__  (<span class="string">&quot;movl %1,%0&quot;</span> : <span class="string">&quot;=r&quot;</span> (result) : <span class="string">&quot;r&quot;</span> (input));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>,result);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+<p><code>“movl %1,%0”</code>是指令模板；“%0”和“%1”代表指令的操作数，称为占位符，“=r”代表它之后是输入变量且需用到寄存器，指令模板后面用小括号括起来的是C语言表达式 ，其中input是输入变量，该指令会完成把input的值复制到result中的操作 。</p>
+<h3 id="扩展的行内汇编的语法"><a href="#扩展的行内汇编的语法" class="headerlink" title="扩展的行内汇编的语法"></a>扩展的行内汇编的语法</h3><p>内嵌汇编语法如下：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">asm(&quot;汇编语句模块&quot;</span><br><span class="line"></span><br><span class="line">     :输出寄存器 </span><br><span class="line"></span><br><span class="line">     :输入寄存器 </span><br><span class="line"></span><br><span class="line">     :会被修改的寄存器);</span><br></pre></td></tr></table></figure>
+<p>即格式为<code>asm ( &quot;statements&quot; : output_regs : input_regs : clobbered_regs)</code></p>
+<p>汇编语句模块必不可少，其他三部分可选，如果使用了后面的部分，而前面部分为空，也需要用“:”格开，相应部分内容为空。 </p>
+<h4 id="汇编语句模块"><a href="#汇编语句模块" class="headerlink" title="汇编语句模块"></a>汇编语句模块</h4><p>汇编语句模块由汇编语句序列组成，语句之间使用“;”、“\n”或“\n\t”分开。指令中的操作数可以使用占位符引用C语言变量，<strong>操作数占位符</strong>最多10个，名称如下：%0，%1…，%9。指令中使用占位符表示的操作数，总被视为long型（4，个字节），但对其施加的操作根据指令可以是字或者字节，当把操作数当作字或者字节使用时，默认为低字或者低字节。对字节操作可以显式的指明是低字节还是次字节。方法是在%和序号之间插入一个字母，“b”代表低字节，“h”代表高字节，例如：%h1。 </p>
+<p>占位符的理解：将汇编输出寄存器与输入寄存器从输出寄存器行开始左到右从上到下进行编号分别为：%0，%1…，%9。比如有代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#define get_seg_byte(seg,addr) \</span><br><span class="line">(&#123; \</span><br><span class="line">register char __res; \</span><br><span class="line">__asm__(&quot;push %%fs; \</span><br><span class="line">mov %%ax,%%fs; \</span><br><span class="line">movb %%fs:%2,%%al; \</span><br><span class="line">pop %%fs&quot; \</span><br><span class="line">:&quot;&#x3D;a&quot; (__res) \</span><br><span class="line">:&quot;&quot; (seg),&quot;m&quot; (*(addr))); \</span><br><span class="line">__res;&#125;)</span><br></pre></td></tr></table></figure>
+<p>输出寄存器”=a”eax记为%0,输入寄存器””(依然是eax)记为%1,输入寄存器”m”为%2。</p>
+<h4 id="输出寄存器"><a href="#输出寄存器" class="headerlink" title="输出寄存器"></a>输出寄存器</h4><p>描述输出操作数，不同的操作数描述符之间用逗号格开，每个操作数描述符由<strong>限定字符串和C语言变量</strong>组成。每个<strong>输出操作数的限定字符串必须包含“=”</strong>，表示它是一个输出操作数。例如：</p>
+<p><code>__asm__   __volatile__ (&quot;pushfl ; popl %0 ; cli&quot;:&quot;=g&quot; (x) )</code></p>
+<p>在这里“x”便是最终存放输出结果的C程序变量，而“=g”则是限定字符串，限定字符串表示了对它之后的变量的限制条件 。</p>
+<h4 id="输入寄存器"><a href="#输入寄存器" class="headerlink" title="输入寄存器"></a>输入寄存器</h4><p>描述输入操作数，不同的操作数描述符之间使用逗号格开，每个操作数描述符同样也由限定字符串和C语言表达式或者C语言变量组成。例：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__asm__ <span class="title">volatile__</span> <span class="params">(<span class="string">&quot;lidt %0&quot;</span> : : <span class="string">&quot;m&quot;</span> (real_mode_idt))</span></span>;</span><br></pre></td></tr></table></figure>
+<p>其中%0是占位操作符，而输出寄存器为空，输入寄存器的值为C语言表达式real_mode_idt。</p>
+<h4 id="限定字符串"><a href="#限定字符串" class="headerlink" title="限定字符串"></a>限定字符串</h4><p>又叫做寄存器加载代码</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>限定字符</th>
+<th>描述</th>
+<th>限定字符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a</td>
+<td>使用寄存器eax</td>
+<td>m</td>
+<td>使用内存地址</td>
+</tr>
+<tr>
+<td>b</td>
+<td>使用寄存器ebx</td>
+<td>o</td>
+<td>使用内存地址并可以加偏移值</td>
+</tr>
+<tr>
+<td>m、o、V、p</td>
+<td>使用寄存器ecx</td>
+<td>I</td>
+<td>使用常数0~31 立即数</td>
+</tr>
+<tr>
+<td>g、X</td>
+<td>寄存器或内存</td>
+<td>J</td>
+<td>使用常数0~63 立即数</td>
+</tr>
+<tr>
+<td>I、J、N、i、n</td>
+<td>立即数</td>
+<td>K</td>
+<td>使用常数0~255立即数</td>
+</tr>
+<tr>
+<td>D</td>
+<td>使用edi</td>
+<td>L</td>
+<td>使用常数0~65535 立即数</td>
+</tr>
+<tr>
+<td>q</td>
+<td>使用动态分配字节可寻址寄存器（eax、ebx、ecx或edx）</td>
+<td>M</td>
+<td>使用常数0~3  立即数</td>
+</tr>
+<tr>
+<td>r</td>
+<td>使用任意动态分配的寄存器</td>
+<td>N</td>
+<td>使用1字节常数（0~255）立即数</td>
+</tr>
+<tr>
+<td>g</td>
+<td>使用通用有效的地址即可（eax、ebx、ecx、edx或内存变量）</td>
+<td>O</td>
+<td>使用常数0~31 立即数</td>
+</tr>
+<tr>
+<td>A</td>
+<td>使用eax与edx联合（64位）</td>
+<td>i</td>
+<td>立即数</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>直接摘抄自《Linux内核完全注释》第5.2.2 traps.c程序的第82页</p>
+<ul>
+<li>例子1：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">01 #define get_seg_byte(seg,addr) \</span><br><span class="line">02 (&#123; \</span><br><span class="line">03 register char __res; \</span><br><span class="line">04 __asm__(&quot;push %%fs; \</span><br><span class="line">05 mov %%ax,%%fs; \</span><br><span class="line">06 movb %%fs:%2,%%al; \</span><br><span class="line">07 pop %%fs&quot; \</span><br><span class="line">08 :&quot;&#x3D;a&quot; (__res) \</span><br><span class="line">09 :&quot;&quot; (seg),&quot;m&quot; (*(addr))); \</span><br><span class="line">10 __res;&#125;)</span><br></pre></td></tr></table></figure>
+<p> 第1 行定义了宏的名称，也即是宏函数名称 <code>get_seg_byte(seg,addr)</code> 。第 3 行定义了一个寄存器变量 res 。第 4 行上的 <code>__asm__</code>表示嵌入汇编语句的开始。从第 4 行到第 7 行的 4 条语句是 AT&amp;T 格式的汇编语句。</p>
+<p>第 8 行即是输出寄存器，这句的含义是在这段代码运行结束后将 eax 所代表的寄存器的值放入<code>__res</code>变量中，作为本函数的输出值， “=a” 中的 “a” 称为加载代码， “=” 表示这是输出寄存器。第 9 行表示在这段代码开始运行时将 seg 放到 eax 寄存器中， “” 表示使用与上面同个位置的输出相同的寄存器。而 (<em>(addr))表示一个内存偏移地址值。为了在上面汇编语句中使用该地址值，嵌入汇编程序规定把输出和输入寄存器统一按顺序编号，顺序是从输出寄存器序列从左到右从上到下以 “%0” 开始，分别记为 %0 、 %1 、 …%9 。因此，输出寄存器的编号是 %0 （这里只有一个输出寄存器），输入寄存器前一部分 (“” (seg)) 的编号是 %1 ，而后部分的编号是 %2 。上面第 6 行上的 %2 即代表 (</em>(addr)) 这个内存偏移量。现在我们来研究 4—7 行上的代码的作用。第一句将 fs 段寄存器的内容入栈；第二句将 eax 中的段值赋给 fs 段寄存器；第三句是把 fs:(*(addr)) 所指定的字节放入 al 寄存器中。当执行完汇编语句后，输出寄存器 eax 的值将被放入 <code>__res</code> ，作为该宏函数（块结构表达式）的返回值。</p>
+<p>通过上面分析，我们知道，宏名称中的 seg 代表一指定的内存段值，而 addr 表示一内存偏移地址量。到现在为止，我们应该很清楚这段程序的功能了吧！该宏函数的功能是从指定段和偏移值的内存地址处取一个字节。</p>
+<p>通过上面的例子说明，阅读这段代码时应该像CPU处理指令时的逻辑一样，先从输出输入寄存器语句开始知道输入输出是什么，然后再阅读汇编语句，处理完后再看最后的返回是什么。</p>
+<ul>
+<li>例子2</li>
+</ul>
+<p>再来看下Linux 内核中main()中对中断异常挂接的trap_init()中的设计到的一个GCC内嵌汇编。代码路径为；include\asm\system.h</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1 #define _set_gate(gate_addr,type,dpl,addr) \</span><br><span class="line">2 __asm__ (&quot;movw %%dx,%%ax\n\t&quot; \</span><br><span class="line">3	&quot;movw %0,%%dx\n\t&quot; \</span><br><span class="line">4	&quot;movl %%eax,%1\n\t&quot; \</span><br><span class="line">5	&quot;movl %%edx,%2&quot; \</span><br><span class="line">6	: \</span><br><span class="line">7	: &quot;i&quot; ((short) (0x8000+(dpl&lt;&lt;13)+(type&lt;&lt;8))), \</span><br><span class="line">8	&quot;o&quot; (*((char *) (gate_addr))), \</span><br><span class="line">9	&quot;o&quot; (*(4+(char *) (gate_addr))), \</span><br><span class="line">10	&quot;d&quot; ((char *) (addr)),&quot;a&quot; (0x00080000)) </span><br></pre></td></tr></table></figure>
+<p>首先从第6行输出寄存器开始阅读：输出寄存器为空。然后是第7至10行的输入寄存器。第%0个输入寄存器使用“i”表示输入立即数，第%1个输入寄存器使用“o”表示使用内存地址并可以加偏移值，第%2个输入寄存器依然使用“o”代码，第%3个寄存器使用“d”表示使用寄存器edx，第%4个寄存器使用“a”表示使用寄存器eax。</p>
+<p>之后再看下汇编语句：依次进行值的传递。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《Linux内核设计的艺术》新设计团队 著</p>
+<p>《Linux内核完全注释》赵炯 编著</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://bravey.github.io">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/2019-10-31-%E5%86%85%E5%B5%8C%E6%B1%87%E7%BC%96.html">https://bravey.github.io/2019-10-31-%E5%86%85%E5%B5%8C%E6%B1%87%E7%BC%96.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://bravey.github.io" target="_blank">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B1%87%E7%BC%96/">汇编</a><a class="post-meta__tags" href="/tags/C%E8%AF%AD%E8%A8%80/">C语言</a></div><div class="post-share"><div class="social-share" data-image="/img/post.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2019-11-07-Clementine%E6%95%99%E7%A8%8B.html" title="Clementine教程"><img class="cover" src="https://images.pexels.com/photos/33545/sunrise-phu-quoc-island-ocean.jpg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Clementine教程</div></div><div class="info-2"><div class="info-item-1">Clementine教程数据挖掘课程要求使用这个软件Clementine来进行实验，之前完全没听说过这个软件。网上搜到的资料也比较少，特别是CSDN上面有个博客名字叫做Clementine完整教程，然后内容也是Clementine教程这几个字，把我给惊呆了，这也能写博客？现在实验都已经做完了因此记录下使用方法，希望对其他人能有帮助。  简介页面在Clementine软件中只需要简单的像画图一样，把整个数据挖掘的操作流程对应的节点给连接起来就可以使用了。先对页面简单的介绍下，页面如下。  在最下面的一栏是相对应的各个节点：Favorites中是常用的节点，Sources中是输入的数据节点，Field中是数据的属性设置节点，Modeling中是一些数据挖掘模型节点比如决策树神经网络等模型，Output中是输出节点用来查看数据。 在右上角中的Streams显示整个工作台中的所有Stream，Outputs中是每次运行后得到输出结果，Models中是流程所用到的模型。 数据挖掘的过程可以简单的分为两步：第一步对模型进行训练 第二步对训练好的模型进行使用。而一个完整的数据挖掘流程Strea...</div></div></div></a><a class="pagination-related" href="/2019-09-08-OJ%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA.html" title="OJ输入输出"><img class="cover" src="https://images.pexels.com/photos/46253/mt-fuji-sea-of-clouds-sunrise-46253.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">OJ输入输出</div></div><div class="info-2"><div class="info-item-1">OJ输入输出算法课要求打UOJ，实际操作后发现与leetcode，牛客这些只用写解决类不一样，OJ要求自己编写输入输出。所以对于输入输出还是很头痛，在此总结下。  C++输入输出输入输出不是对文件进行操作的，可以理解成是在命令行中进行输入与输出。所以主要使用标准输入流cin进行数据的输入，标准输出流cout进行输出。因为有多组测试样例，所以一般需要放在while循环中来读取数据并进行操作。总思路是输入一组输入对应的输出一组输出，边输入边输出。 需要注意的是cin 会自动跳过空格、tab、换行符等不可见的符号，所以可以在同一行中输入a,b两个值，而不用自己去分割空格。 只有一组输入输出直接从键盘获取一组输入，随后输出，以计算a+b为例。 123456789#include &lt; iostream &gt;   using namespace std; int main() &#123;     int a,b;      cin &gt;&gt; a &gt;&gt; b;     cout &lt;&lt; a+b &lt;&lt; endl;      return 0; ...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记"><img class="cover" src="https://images.pexels.com/photos/71104/utah-mountain-biking-bike-biking-71104.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-18</div><div class="info-item-2">C专家编程读书笔记</div></div><div class="info-2"><div class="info-item-1">第一章 C 穿越时空的迷雾 每次编写新函数时，都应该使用函数原型。（可以放在头文件中）  const关键字限定的变量，表示该变量只读。最有用的地方是用来限定函数的形参，防止函数内部修改实参指针所指的数据。const并不表示该变量是常量。  尽量不使用unsigned 无符号类型，只在使用位段和二进制掩码时使用无符号类型。  进行比较的时候，使操作数均为有符号数或者无符号数。 下面的代码int 在比较的时候会升级为unsigned int， 从-1转换后得到的结果是非常大的正整数，从而if语句不会进入。 123456789101112int solution() &#123;        int array[] = &#123; 23, 34,12,17,204,99,16&#125;;        int d = -1, x;        if (d &lt;= (int) (sizeof(array) / sizeof(array[0])) - 2)&#123; // 不加int 不会进入if语句            cout &lt;&lt; d &lt;&lt; e...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">BraveY</div><div class="author-info-description">今日事，今日毕</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%85%E5%B5%8C%E6%B1%87%E7%BC%96"><span class="toc-number">1.</span> <span class="toc-text">内嵌汇编</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#AT-amp-T%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">1.1.</span> <span class="toc-text">AT&amp;T基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E6%95%B0%E5%89%8D%E7%BC%80"><span class="toc-number">1.1.1.</span> <span class="toc-text">操作数前缀</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BA%90-%E7%9B%AE%E7%9A%84%E6%93%8D%E4%BD%9C%E6%95%B0%E9%A1%BA%E5%BA%8F"><span class="toc-number">1.1.2.</span> <span class="toc-text">源&#x2F;目的操作数顺序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E8%AF%86%E9%95%BF%E5%BA%A6%E7%9A%84%E6%93%8D%E4%BD%9C%E7%A0%81%E5%90%8E%E7%BC%80"><span class="toc-number">1.1.3.</span> <span class="toc-text">标识长度的操作码后缀</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GCC%E5%86%85%E5%B5%8C%E6%B1%87%E7%BC%96"><span class="toc-number">1.2.</span> <span class="toc-text">GCC内嵌汇编</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%A1%8C%E5%86%85%E6%B1%87%E7%BC%96"><span class="toc-number">1.2.1.</span> <span class="toc-text">基本行内汇编</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E7%9A%84%E8%A1%8C%E5%86%85%E6%B1%87%E7%BC%96"><span class="toc-number">1.2.2.</span> <span class="toc-text">扩展的行内汇编</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E7%9A%84%E8%A1%8C%E5%86%85%E6%B1%87%E7%BC%96%E7%9A%84%E8%AF%AD%E6%B3%95"><span class="toc-number">1.2.3.</span> <span class="toc-text">扩展的行内汇编的语法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B1%87%E7%BC%96%E8%AF%AD%E5%8F%A5%E6%A8%A1%E5%9D%97"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">汇编语句模块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">输出寄存器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">1.2.3.3.</span> <span class="toc-text">输入寄存器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%99%90%E5%AE%9A%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">1.2.3.4.</span> <span class="toc-text">限定字符串</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%8B%E5%AD%90"><span class="toc-number">1.3.</span> <span class="toc-text">例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.4.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"><img src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"/></a><div class="content"><a class="title" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略">闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略</a><time datetime="2026-03-07T02:00:00.000Z" title="发表于 2026-03-07 10:00:00">2026-03-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd"><img src="https://images.pexels.com/photos/417222/pexels-photo-417222.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记2——lookupd"/></a><div class="content"><a class="title" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd">NSQ学习笔记2——lookupd</a><time datetime="2023-03-12T02:14:41.000Z" title="发表于 2023-03-12 10:14:41">2023-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介"><img src="https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记1——简介"/></a><div class="content"><a class="title" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介">NSQ学习笔记1——简介</a><time datetime="2023-02-05T07:18:23.000Z" title="发表于 2023-02-05 15:18:23">2023-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记"><img src="https://images.pexels.com/photos/71104/utah-mountain-biking-bike-biking-71104.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C专家编程读书笔记"/></a><div class="content"><a class="title" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记">C专家编程读书笔记</a><time datetime="2021-03-18T04:59:02.000Z" title="发表于 2021-03-18 12:59:02">2021-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱"><img src="https://images.pexels.com/photos/1656687/pexels-photo-1656687.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C语言传递指针参数的陷阱"/></a><div class="content"><a class="title" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱">C语言传递指针参数的陷阱</a><time datetime="2020-12-12T13:39:57.000Z" title="发表于 2020-12-12 21:39:57">2020-12-12</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2020 - 2026 By BraveY</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const initValine = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyValine = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const valineConfig = {
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      visitor: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || window.location.pathname
+    }
+
+    new Valine(valineConfig)
+  }
+
+  const loadValine = async (el, path) => {
+    if (typeof Valine === 'function') {
+      initValine(el, path)
+    } else {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js')
+      initValine(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Valine' === 'Valine'
+      ? window.shuoshuoComment = { loadComment: loadValine }
+      : window.loadOtherComment = loadValine
+    return
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script></div><script async data-pjax src="/js/busuanzi.js"></script></div></body></html>

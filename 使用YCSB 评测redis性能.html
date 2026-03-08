@@ -1,0 +1,246 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>使用YCSB 评测redis性能 | BraveY</title><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="使用YCSB 评测redis性能YCSB是雅虎推出的可以评测许多主流数据库性能的基准测试，其中包括Redis。  安装YCSB 安装java和maven  机子已经有了java，所以只用安装maven Ubuntu安装命令为： sudo apt-get install maven    安装Y..."><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "使用YCSB 评测redis性能",
+  "url": "https://bravey.github.io/%E4%BD%BF%E7%94%A8YCSB%20%E8%AF%84%E6%B5%8Bredis%E6%80%A7%E8%83%BD.html",
+  "image": "https://bravey.github.io/img/post.jpg",
+  "datePublished": "2019-03-12T09:11:44.000Z",
+  "dateModified": "2026-03-07T01:06:28.375Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "BraveY",
+      "url": "https://bravey.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/%E4%BD%BF%E7%94%A8YCSB%20%E8%AF%84%E6%B5%8Bredis%E6%80%A7%E8%83%BD.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '使用YCSB 评测redis性能',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 5.3.0"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/url(https:/res.cloudinary.com/bravey/image/upload/v1587809177/air-atmosphere-blue-blue-sky-314726.jpg));"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/post.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">BraveY</span></a><a class="nav-page-title" href="/"><span class="site-name">使用YCSB 评测redis性能</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">使用YCSB 评测redis性能</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-03-12T09:11:44.000Z" title="发表于 2019-03-12 17:11:44">2019-03-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-07T01:06:28.375Z" title="更新于 2026-03-07 09:06:28">2026-03-07</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">792</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>3分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="使用YCSB-评测redis性能"><a href="#使用YCSB-评测redis性能" class="headerlink" title="使用YCSB 评测redis性能"></a>使用YCSB 评测redis性能</h1><p>YCSB是雅虎推出的可以评测许多主流数据库性能的基准测试，其中包括Redis。</p>
+<a id="more"></a>
+<h2 id="安装YCSB"><a href="#安装YCSB" class="headerlink" title="安装YCSB"></a>安装YCSB</h2><ol>
+<li><p>安装java和maven</p>
+<ol>
+<li><p>机子已经有了java，所以只用安装maven Ubuntu安装命令为：</p>
+<p><code>sudo apt-get install maven</code></p>
+</li>
+</ol>
+</li>
+<li><p>安装YCSB </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git clone http:&#x2F;&#x2F;github.com&#x2F;brianfrankcooper&#x2F;YCSB.git</span><br><span class="line">cd YCSB</span><br><span class="line">mvn -pl com.yahoo.ycsb:redis-binding -am clean package</span><br></pre></td></tr></table></figure>
+<p>必须是gitclone的源码包才能执行mvn 命令。wget或者curl下来包是已经编译好了的无需执行mvn命令。</p>
+</li>
+<li><p><code>mvn -pl com.yahoo.ycsb:redis-binding -am clean package</code> 报错：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[INFO] Scanning for projects...</span><br><span class="line">[ERROR] [ERROR] Could not find the selected project in the reactor: com.yahoo.ycsb:redis-binding @ </span><br><span class="line">[ERROR] Could not find the selected project in the reactor: com.yahoo.ycsb:redis-binding -&gt; [Help 1]</span><br><span class="line">[ERROR] </span><br><span class="line">[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.</span><br><span class="line">[ERROR] Re-run Maven using the -X switch to enable full debug logging.</span><br><span class="line">[ERROR] </span><br><span class="line">[ERROR] For more information about the errors and possible solutions, please read the following articles:</span><br><span class="line">[ERROR] [Help 1] http:&#x2F;&#x2F;cwiki.apache.org&#x2F;confluence&#x2F;display&#x2F;MAVEN&#x2F;MavenExecutionException</span><br></pre></td></tr></table></figure>
+<p>原因：此命令是在gitclone后未编译的时候使用的。而我之前是下载的编译好的tar.gz包，解压后是已经编译好了的。所以再次执行编译的命令时会报错。</p>
+</li>
+</ol>
+<h2 id="使用YCSB"><a href="#使用YCSB" class="headerlink" title="使用YCSB"></a>使用YCSB</h2><p>将redis-server启动后开始使用YCSB</p>
+<h3 id="设置数据库"><a href="#设置数据库" class="headerlink" title="设置数据库"></a>设置数据库</h3><p>需要先创建<code>usertable</code>的表，因为YCSB客户端默认是对<code>usertable</code> 进行操作。Redis将数据存储在内存中，不需要相关操作。</p>
+<h3 id="选择合适的DB-interface"><a href="#选择合适的DB-interface" class="headerlink" title="选择合适的DB interface"></a>选择合适的DB interface</h3><p>YCSB的操作是通过DB interface来实现的。最基本的DB interface是<code>com.yahoo.ycsb.BasicDB</code>，会将输出输出到<code>System.out</code>里。可以通过继承DB interface来自定义DB interface，也可以使用原有的DB interface。Redis不需要此步操作。</p>
+<h3 id="选择合适的负载"><a href="#选择合适的负载" class="headerlink" title="选择合适的负载"></a>选择合适的负载</h3><p>YCSB提供了6种负载，负载在worloads目录下。详情见<a target="_blank" rel="noopener" href="https://github.com/brianfrankcooper/YCSB/wiki/Core-Workloads">https://github.com/brianfrankcooper/YCSB/wiki/Core-Workloads</a></p>
+<ol>
+<li><strong>Workload A: Update heavy workload</strong> 读写比例为： 50/50 混合负载 </li>
+<li><strong>Workload A: Update heavy workload</strong> 读写比例为：95/5  读为主的负载</li>
+<li><strong>Workload C: Read only</strong>  100% 的读  只读负载</li>
+<li><strong>Workload D: Read latest workload</strong>  读取最近的数据负载</li>
+<li><strong>Workload E: Short ranges</strong>  小范围的查询负载</li>
+<li><strong>Workload F: Read-modify-write</strong> 读修改写负载</li>
+</ol>
+<p>自定义负载：参考<a target="_blank" rel="noopener" href="https://github.com/brianfrankcooper/YCSB/wiki/Implementing-New-Workloads">https://github.com/brianfrankcooper/YCSB/wiki/Implementing-New-Workloads</a></p>
+<p>可以通过修改参数文件或者新建java类来实现</p>
+<p>需要注意的是YCSB的读写负载是针对哈希类型的数据而不是简单的字符串</p>
+<h3 id="指定需要的运行参数"><a href="#指定需要的运行参数" class="headerlink" title="指定需要的运行参数"></a>指定需要的运行参数</h3><p>主要是指定redis的ip ，端口，密码等。</p>
+<p>命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;bin&#x2F;ycsb load redis -s -P workloads&#x2F;workloada -p &quot;redis.host&#x3D;127.0.0.1&quot; -p &quot;redis.port&#x3D;6379&quot; &gt; outputLoad.txt</span><br></pre></td></tr></table></figure>
+<p><code>-s</code> : <strong>status</strong>.十秒打印一次状态</p>
+<h3 id="加载负载"><a href="#加载负载" class="headerlink" title="加载负载"></a>加载负载</h3><p>命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;bin&#x2F;ycsb load redis -s -P workloads&#x2F;workloada &gt; outputLoad.txt</span><br></pre></td></tr></table></figure>
+<h3 id="运行负载"><a href="#运行负载" class="headerlink" title="运行负载"></a>运行负载</h3><p>命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;bin&#x2F;ycsb run redis -s -P workloads&#x2F;workloada &gt; outputRun.txt</span><br></pre></td></tr></table></figure>
+<p>可以使用basic数据库来打印YCSB向数据库中写入的具体数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bin&#x2F;ycsb.sh load basic -P workloads&#x2F;workloada</span><br><span class="line">bin&#x2F;ycsb.sh run basic -P workloads&#x2F;workloada</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://datawine.github.io/2018/12/11/YCSB%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0/">https://datawine.github.io/2018/12/11/YCSB%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0/</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/brianfrankcooper/YCSB/tree/master/redis">https://github.com/brianfrankcooper/YCSB/tree/master/redis</a>  </p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://bravey.github.io">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/%E4%BD%BF%E7%94%A8YCSB%20%E8%AF%84%E6%B5%8Bredis%E6%80%A7%E8%83%BD.html">https://bravey.github.io/%E4%BD%BF%E7%94%A8YCSB%20%E8%AF%84%E6%B5%8Bredis%E6%80%A7%E8%83%BD.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://bravey.github.io" target="_blank">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/redis/">redis</a><a class="post-meta__tags" href="/tags/benchmark/">benchmark</a></div><div class="post-share"><div class="social-share" data-image="/img/post.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E4%BD%BF%E7%94%A8shell%E8%84%9A%E6%9C%AC%E9%81%8D%E5%8E%86redis%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89kv%E5%AF%B9.html" title="shell 脚本遍历redis数据库"><img class="cover" src="https://images.pexels.com/photos/164041/pexels-photo-164041.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">shell 脚本遍历redis数据库</div></div><div class="info-2"><div class="info-item-1">使用shell脚本遍历redis数据库中的所有kv对记录下如何使用shell通过redis-cli 命令来操作redis数据库，因为直接在命令行中输入 redis-cli command 的话command必须是单个单词，不能像是KEYS * 这种.  123456789101112#!&#x2F;bin&#x2F;bashfilename&#x3D;&#39;redis&#39;&#96;date +%Y-%m-%d_%H:%M&#96;work_path&#x3D;$(dirname &quot;$0&quot;) echo &quot;实例化redis数据文件为:$work_path&#x2F;$filename&quot;echo &quot;keys *&quot; | redis-cli &gt; key_db.txtecho &quot;将所有key保存到:$work_path&#x2F;key_db.txt&quot;for line in &#96;cat key_db.txt&#96;do        echo &quot;key:$line &quot; ...</div></div></div></a><a class="pagination-related" href="/apt-get%20install%20%E5%A4%B1%E8%B4%A5.html" title="apt-get install失败"><img class="cover" src="https://images.pexels.com/photos/531602/pexels-photo-531602.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">apt-get install失败</div></div><div class="info-2"><div class="info-item-1">apt-get install失败 第一阶段 使用perf 报错 内核无法找到perf 12345678910root@hw103:&#x2F;home&#x2F;yky&#x2F;redis-5.0.3# perf WARNING: perf not found for kernel 4.15.0-45  You may need to install the following packages for this specific kernel:    linux-tools-4.15.0-45-generic    linux-cloud-tools-4.15.0-45-generic  You may also want to install one of the following packages to keep up to date:    linux-tools-generic    linux-cloud-tools-generic    安装此内核的通用工具时错误 1234567891011root@hw103:&#x2F;home&#x2F;yky&#x2F...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2019-03-20-Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="Redis设计与实现读书笔记——第二章SDS"><img class="cover" src="https://images.pexels.com/photos/417222/pexels-photo-417222.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-03-20</div><div class="info-item-2">Redis设计与实现读书笔记——第二章SDS</div></div><div class="info-2"><div class="info-item-1">Redis设计与实现读书笔记——第二章为了做Redis相关实验，在网上粗略看了Redis设计与实现的电子版，感觉收获很多，但是因为是旧版，所以买了第二版，重读第二次。  第二章 简单动态字符串简介 字符串值的键值对在底层都是由SDS实现的。 sds的功能： 存储字符串值 用作缓冲区 AOF模块缓冲区 客户端状态的输入缓冲区      2.1 SDS的定义文件：sds.h/sdshdr 结构体  书中的为3.0版本，4.0版本有较大改动。 version: redis-4.02  参考：https://www.cnblogs.com/chenpingzhao/p/7292182.html https://www.codesheep.cn/2018/08/09/Redis%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%B1%BB%E5%9E%8B%E5%86%85%E9%83%A8%E7%BC%96%E7%A0%81%E5%89%96%E6%9E%90/ 123456789101112131415161718192021222324252627282930313233t...</div></div></div></a><a class="pagination-related" href="/2019-04-10-Redis%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E2%80%94%E2%80%94%E5%AD%97%E5%85%B8.html" title="Redis源码阅读——字典"><img class="cover" src="https://images.pexels.com/photos/933843/pexels-photo-933843.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-04-10</div><div class="info-item-2">Redis源码阅读——字典</div></div><div class="info-2"><div class="info-item-1">Redis源码阅读——字典字典是整个Redis实现的基础,之前把《Redis设计与实现》书上的理论知识看完了，开始阅读源码。  Rehash参考https://tech.meituan.com/2018/07/27/redis-rehash-practice-optimization.html https://luoming1224.github.io/2018/11/12/[redis%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0]redis%E6%B8%90%E8%BF%9B%E5%BC%8Frehash%E6%9C%BA%E5%88%B6/ </div></div></div></a><a class="pagination-related" href="/2019-04-03-Redis%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E2%80%94%E2%80%94dict.html" title="Redis源码阅读——dict"><img class="cover" src="/img/post.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-04-03</div><div class="info-item-2">Redis源码阅读——dict</div></div><div class="info-2"><div class="info-item-1">Redis源码阅读——dict继续Redis 的源码阅读，进入dict这一章节。知识点讲解，见redis设计与实现的读书笔记dict这一章。  dict的创建还是和sds一样单独将dict模块给提取出来，参考博客是直接将server的main函数给修改了的。再阅读Makefile的时候发现了dict-benchmark 这个选项，make dict-benchmark 这个命令，可以编译出一个可执行文件dict-benchmark。  所以想着应该可以单独再把dict-benchmark给提取出来。 需要拷贝的文件 1dict.c ditc.h fmacros.h redisassert.h sdsaclloc.h sds.c sds.h siphash.c  需要做的修改 zmalloc zfree zcalloc 需要修改成使用malloc ，free, calloc 其中zcalloc在修改成calloc的时候需要在调用的时候多传入一个参数1,作为第一个参数，因为zcalloc 和calloc 的接口不一样。 还需要在redisassert.h 中对_serverAsser...</div></div></div></a><a class="pagination-related" href="/2019-03-29-Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%AC%AC%E4%B9%9D%E7%AB%A0-%E6%95%B0%E6%8D%AE%E5%BA%93.html" title="Redis设计与实现读书笔记——第九章 数据库"><img class="cover" src="https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-03-29</div><div class="info-item-2">Redis设计与实现读书笔记——第九章 数据库</div></div><div class="info-2"><div class="info-item-1">Redis设计与实现读书笔记——第九章 数据库终于看到了服务器部分了，主要是想搞懂数据库的整个流程与架构。 9.1 服务器中的数据库将所有数据库都保存在redis.h/redisServer结构的db数组中（哇，不可思议用数组来保存的），db数组每个项都是一个redis.h/redisDb结构指针，而一个redisDb代表了一个数据库。 </div></div></div></a><a class="pagination-related" href="/2019-04-26-Redis-Makefile%E6%B3%A8%E8%A7%A3.html" title="Redis Makefile注解"><img class="cover" src="https://images.pexels.com/photos/629159/pexels-photo-629159.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-04-26</div><div class="info-item-2">Redis Makefile注解</div></div><div class="info-2"><div class="info-item-1">Redis Makefile注解Redis的makefile是阅读源码的第一步，总共有292行，读起来也是头大，记录之。  4.02版本源码为： 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969798991001011021031041051061071081091101111121131141151161171181191201211221231241251261271281291301311321331341351361371381391401411421431441451461471481491501511521531541551561571581591601611621631641651661671681691701711721731741751761771...</div></div></div></a><a class="pagination-related" href="/%E4%BD%BF%E7%94%A8shell%E8%84%9A%E6%9C%AC%E9%81%8D%E5%8E%86redis%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89kv%E5%AF%B9.html" title="shell 脚本遍历redis数据库"><img class="cover" src="https://images.pexels.com/photos/164041/pexels-photo-164041.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-03-14</div><div class="info-item-2">shell 脚本遍历redis数据库</div></div><div class="info-2"><div class="info-item-1">使用shell脚本遍历redis数据库中的所有kv对记录下如何使用shell通过redis-cli 命令来操作redis数据库，因为直接在命令行中输入 redis-cli command 的话command必须是单个单词，不能像是KEYS * 这种.  123456789101112#!&#x2F;bin&#x2F;bashfilename&#x3D;&#39;redis&#39;&#96;date +%Y-%m-%d_%H:%M&#96;work_path&#x3D;$(dirname &quot;$0&quot;) echo &quot;实例化redis数据文件为:$work_path&#x2F;$filename&quot;echo &quot;keys *&quot; | redis-cli &gt; key_db.txtecho &quot;将所有key保存到:$work_path&#x2F;key_db.txt&quot;for line in &#96;cat key_db.txt&#96;do        echo &quot;key:$line &quot; ...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">BraveY</div><div class="author-info-description">今日事，今日毕</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8YCSB-%E8%AF%84%E6%B5%8Bredis%E6%80%A7%E8%83%BD"><span class="toc-number">1.</span> <span class="toc-text">使用YCSB 评测redis性能</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85YCSB"><span class="toc-number">1.1.</span> <span class="toc-text">安装YCSB</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8YCSB"><span class="toc-number">1.2.</span> <span class="toc-text">使用YCSB</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">1.2.1.</span> <span class="toc-text">设置数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84DB-interface"><span class="toc-number">1.2.2.</span> <span class="toc-text">选择合适的DB interface</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84%E8%B4%9F%E8%BD%BD"><span class="toc-number">1.2.3.</span> <span class="toc-text">选择合适的负载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E5%AE%9A%E9%9C%80%E8%A6%81%E7%9A%84%E8%BF%90%E8%A1%8C%E5%8F%82%E6%95%B0"><span class="toc-number">1.2.4.</span> <span class="toc-text">指定需要的运行参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E8%B4%9F%E8%BD%BD"><span class="toc-number">1.2.5.</span> <span class="toc-text">加载负载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E8%B4%9F%E8%BD%BD"><span class="toc-number">1.2.6.</span> <span class="toc-text">运行负载</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.3.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"><img src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"/></a><div class="content"><a class="title" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略">闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略</a><time datetime="2026-03-07T02:00:00.000Z" title="发表于 2026-03-07 10:00:00">2026-03-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd"><img src="https://images.pexels.com/photos/417222/pexels-photo-417222.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记2——lookupd"/></a><div class="content"><a class="title" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd">NSQ学习笔记2——lookupd</a><time datetime="2023-03-12T02:14:41.000Z" title="发表于 2023-03-12 10:14:41">2023-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介"><img src="https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记1——简介"/></a><div class="content"><a class="title" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介">NSQ学习笔记1——简介</a><time datetime="2023-02-05T07:18:23.000Z" title="发表于 2023-02-05 15:18:23">2023-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记"><img src="https://images.pexels.com/photos/71104/utah-mountain-biking-bike-biking-71104.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C专家编程读书笔记"/></a><div class="content"><a class="title" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记">C专家编程读书笔记</a><time datetime="2021-03-18T04:59:02.000Z" title="发表于 2021-03-18 12:59:02">2021-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱"><img src="https://images.pexels.com/photos/1656687/pexels-photo-1656687.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C语言传递指针参数的陷阱"/></a><div class="content"><a class="title" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱">C语言传递指针参数的陷阱</a><time datetime="2020-12-12T13:39:57.000Z" title="发表于 2020-12-12 21:39:57">2020-12-12</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2020 - 2026 By BraveY</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const initValine = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyValine = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const valineConfig = {
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      visitor: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || window.location.pathname
+    }
+
+    new Valine(valineConfig)
+  }
+
+  const loadValine = async (el, path) => {
+    if (typeof Valine === 'function') {
+      initValine(el, path)
+    } else {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js')
+      initValine(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Valine' === 'Valine'
+      ? window.shuoshuoComment = { loadComment: loadValine }
+      : window.loadOtherComment = loadValine
+    return
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script></div><script async data-pjax src="/js/busuanzi.js"></script></div></body></html>

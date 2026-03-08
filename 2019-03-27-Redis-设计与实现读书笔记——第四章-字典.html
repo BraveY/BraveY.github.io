@@ -1,0 +1,355 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Redis 设计与实现读书笔记——第四章 字典 | BraveY</title><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Redis 设计与实现读书笔记——第四章 字典字典在Redis中应用很广泛，Redis的数据库就是用字典作为底层实现的，对数据库的增删改查操作也是构建在对字典的操作之上的。  简介作用：  数据库底层实现 哈希键底层实现 哈希键包含的键值对比较多，或者键值对中的元素都是比较长的字符串时，使用字..."><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Redis 设计与实现读书笔记——第四章 字典",
+  "url": "https://bravey.github.io/2019-03-27-Redis-%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E5%AD%97%E5%85%B8.html",
+  "image": "https://images.pexels.com/photos/814499/pexels-photo-814499.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+  "datePublished": "2019-03-27T02:34:14.000Z",
+  "dateModified": "2026-03-07T01:06:28.367Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "BraveY",
+      "url": "https://bravey.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/2019-03-27-Redis-%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E5%AD%97%E5%85%B8.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Redis 设计与实现读书笔记——第四章 字典',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 5.3.0"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/url(https:/res.cloudinary.com/bravey/image/upload/v1587809177/air-atmosphere-blue-blue-sky-314726.jpg));"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://images.pexels.com/photos/814499/pexels-photo-814499.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">BraveY</span></a><a class="nav-page-title" href="/"><span class="site-name">Redis 设计与实现读书笔记——第四章 字典</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Redis 设计与实现读书笔记——第四章 字典</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-03-27T02:34:14.000Z" title="发表于 2019-03-27 10:34:14">2019-03-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-07T01:06:28.367Z" title="更新于 2026-03-07 09:06:28">2026-03-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">3.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>12分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Redis-设计与实现读书笔记——第四章-字典"><a href="#Redis-设计与实现读书笔记——第四章-字典" class="headerlink" title="Redis 设计与实现读书笔记——第四章 字典"></a>Redis 设计与实现读书笔记——第四章 字典</h1><p>字典在Redis中应用很广泛，Redis的数据库就是用字典作为底层实现的，对数据库的增删改查操作也是构建在对字典的操作之上的。</p>
+<a id="more"></a>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>作用：</p>
+<ul>
+<li>数据库底层实现</li>
+<li>哈希键底层实现<ul>
+<li>哈希键包含的键值对比较多，或者键值对中的元素都是比较长的字符串时，使用字典来实现。</li>
+</ul>
+</li>
+<li>其他功能</li>
+</ul>
+<h2 id="4-1-字典的实现"><a href="#4-1-字典的实现" class="headerlink" title="4.1 字典的实现"></a>4.1 字典的实现</h2><p>字典使用哈希表实现，一个哈希表里面可以有多个哈希表节点，一个哈希表节点就保存了字典中的一个键值对。（python的dict也是使用哈希表实现的）。</p>
+<p>哈希的本质就是预留内存空间，将需要存储的元素计算索引值(通过哈希函数)来确定对应的存储位置。当需要访问的时候可以通过哈希函数直接获得对应的地址。（编译器将变量名与地址做了映射，变量名是地址的别名，哈希则是将键与地址做了映射（通过哈希函数），大大提高了访问的效率。访问任何元素都是O（1），感觉是两个层面的映射，有点相似的感觉）。</p>
+<h3 id="4-1-1-哈希表"><a href="#4-1-1-哈希表" class="headerlink" title="4.1.1 哈希表"></a>4.1.1 哈希表</h3><p>Redis使用的哈希表由dict.h/dictht 结构定义。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">dictht</span> &#123;</span></span><br><span class="line">    <span class="comment">//哈希表数组</span></span><br><span class="line">    dictEntry **table;</span><br><span class="line">    <span class="comment">// 哈希表大小</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> size;</span><br><span class="line">    <span class="comment">//哈希表大小掩码，用于计算索引值</span></span><br><span class="line">    <span class="comment">//总是等于size-1</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> sizemask;</span><br><span class="line">    <span class="comment">//该哈希表已有节点的数量</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> used;</span><br><span class="line">&#125; dictht;</span><br></pre></td></tr></table></figure>
+<p><code>typedef Oldname newname</code> 所以这里是<code>typedef struct dictht dictht</code> 将struct dictht 取了个别名dictht。</p>
+<p><code>dictEntry **table;</code> 书上解释的是table是数组，但是最直接的说法是table是一个指向（指向dictEntry类型的指针）的指针，是指向指针的指针。   </p>
+<p>数组获得内存是连续的，而指针不是，所以书中说是table数组，应该是分配内存的时候给指针分配了连续的内存，但是代码没找到。</p>
+<p>关于指针和数组的异同《C专家编程》一书有讲解（第四章、第九章、第十章）。</p>
+<ul>
+<li>主要的不同：指针存放的是地址，所以需要经过两次取地址的内容。（取指针的地址中的数据（变量的地址），取变量地址的数据）。而数组是直接存储数组的首元素的数据，所以只用一次取地址中的数据</li>
+<li>数组与指针相同<ul>
+<li>表达式中的数组名就是指针</li>
+<li>C语言把数组下标作为指针的偏移量。a是数组，a[6]就是首地址偏移6。b是指针，b[6]也是指针存储的地址向后偏移6.</li>
+<li>作为函数参数的数组名等同于指针。只是把首地址传入给了参数，并没有把数组所有的内存区域都传入。所以传入数组，就是传入指针。</li>
+</ul>
+</li>
+</ul>
+<p>sizemask和哈希值一起决定一个键应该被放到table数组的那个索引上面。</p>
+<p><img src="http://redisbook.com/_images/graphviz-bd3eecd927a4d8fc33b4a1c7f5957c52d67c5021.png" alt="一个空的哈希表"></p>
+<h3 id="4-1-2-哈希表节点"><a href="#4-1-2-哈希表节点" class="headerlink" title="4.1.2 哈希表节点"></a>4.1.2 哈希表节点</h3><p>使用dictEntry结构体表示节点，每一个dictEntry结构都保存着一个键值对。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">dictEntry</span> &#123;</span></span><br><span class="line">    <span class="comment">// 键</span></span><br><span class="line">    <span class="keyword">void</span> *key;	</span><br><span class="line">    <span class="comment">// 值</span></span><br><span class="line">    <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">        <span class="keyword">void</span> *val;</span><br><span class="line">        <span class="keyword">uint64_t</span> u64;</span><br><span class="line">        <span class="keyword">int64_t</span> s64;</span><br><span class="line">        <span class="keyword">double</span> d;</span><br><span class="line">    &#125; v;</span><br><span class="line">    <span class="comment">//指向下一个哈希表节点   </span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">dictEntry</span> *<span class="title">next</span>;</span></span><br><span class="line">&#125; dictEntry;</span><br></pre></td></tr></table></figure>
+<p>key指向键值对中的键，而v则保存键值对中的值，值可以是一个指针，或者uint64_t整数，或者有符号的int64_t整数,或者是double类型（double也占8byte无论32还是64位）。</p>
+<p><code>union</code> 是c中的共用体（联合体），和结构体非常类似。和结构体的区别是</p>
+<ul>
+<li>结构体的各个成员会占用不同的内存，互相之间没有影响；而共用体的所有成员占用同一段内存，修改一个成员会影响其余所有成员。</li>
+<li>结构体占用的内存大于等于所有成员占用的内存的总和（成员之间可能会存在缝隙），共用体占用的内存等于最长的成员占用的内存。共用体使用了内存覆盖技术，同一时刻只能保存一个成员的值，如果对新的成员赋值，就会把原来成员的值覆盖掉。 所以这里面v占用8byte内存，但是属性却可以有4中。</li>
+</ul>
+<p>next指针可以将多个哈希值相同的键值对链接在一起，用来解决哈希键冲突(索引相同)的问题。链式的方法。</p>
+<p><img src="http://redisbook.com/_images/graphviz-d2641d962325fd58bf15d9fffb4208f70251a999.png" alt=""></p>
+<h3 id="4-1-3-字典"><a href="#4-1-3-字典" class="headerlink" title="4.1.3 字典"></a>4.1.3 字典</h3><p>Redis中字典由dict.h/dict 结构体表示。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">dict</span> &#123;</span></span><br><span class="line">    <span class="comment">//类型特定函数</span></span><br><span class="line">    dictType *type;</span><br><span class="line">    <span class="comment">// 私有数据</span></span><br><span class="line">    <span class="keyword">void</span> *privdata;</span><br><span class="line">    <span class="comment">// 哈希表</span></span><br><span class="line">    dictht ht[<span class="number">2</span>];</span><br><span class="line">    <span class="comment">//rehash 索引</span></span><br><span class="line">    <span class="comment">//当rehash不在进行是值为-1。用来记录是否在rehash</span></span><br><span class="line">    <span class="keyword">long</span> rehashidx; <span class="comment">/* rehashing not in progress if rehashidx == -1 */</span></span><br><span class="line">    <span class="comment">//当前迭代的个数</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> iterators; <span class="comment">/* number of iterators currently running */</span></span><br><span class="line">&#125; dict;</span><br></pre></td></tr></table></figure>
+<p>type 和private属性是针对不同类型的键值对（redis支持5中数据类型），为创建多态字典而设置的。</p>
+<ul>
+<li>type指向dictType结构，dictType结构保存了一簇用于操作特定类型键值对的函数，Redis为不同用途的字典设置了不同的类型的特定函数。（多态的表现。）</li>
+<li>privadata属性保存了需要传给哪些类型特点函数的可选参数。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">dictType</span> &#123;</span></span><br><span class="line">    <span class="comment">// 计算哈希值的函数</span></span><br><span class="line">    <span class="keyword">uint64_t</span> (*hashFunction)(<span class="keyword">const</span> <span class="keyword">void</span> *key);</span><br><span class="line">    <span class="comment">// 复制键的函数</span></span><br><span class="line">    <span class="keyword">void</span> *(*keyDup)(<span class="keyword">void</span> *privdata, <span class="keyword">const</span> <span class="keyword">void</span> *key);</span><br><span class="line">    <span class="comment">// 复制值的函数</span></span><br><span class="line">    <span class="keyword">void</span> *(*valDup)(<span class="keyword">void</span> *privdata, <span class="keyword">const</span> <span class="keyword">void</span> *obj);</span><br><span class="line">    <span class="comment">// 对比键的函数</span></span><br><span class="line">    <span class="keyword">int</span> (*keyCompare)(<span class="keyword">void</span> *privdata, <span class="keyword">const</span> <span class="keyword">void</span> *key1, <span class="keyword">const</span> <span class="keyword">void</span> *key2);</span><br><span class="line">    <span class="comment">// 销毁键的函数</span></span><br><span class="line">    <span class="keyword">void</span> (*keyDestructor)(<span class="keyword">void</span> *privdata, <span class="keyword">void</span> *key);</span><br><span class="line">    <span class="comment">// 销毁值的函数</span></span><br><span class="line">    <span class="keyword">void</span> (*valDestructor)(<span class="keyword">void</span> *privdata, <span class="keyword">void</span> *obj);</span><br><span class="line">&#125; dictType;</span><br></pre></td></tr></table></figure>
+<p>ht是长度为2的数组，而数组的元素就是哈希表dictht。一般情况只会使用ht[0],ht[1]只会在ht[0]空间不够的时候进行rehash的时候使用。</p>
+<p>rehashidx 用来标识是否在 rehash，没有的话值为-1,有的话rehasidx用来记录rehash的进度。</p>
+<p><img src="http://redisbook.com/_images/graphviz-e73003b166b90094c8c4b7abbc8d59f691f91e27.png" alt=""></p>
+<h2 id="4-2-哈希算法"><a href="#4-2-哈希算法" class="headerlink" title="4.2 哈希算法"></a>4.2 哈希算法</h2><p>添加一个新的键值对的时候，</p>
+<pre><code> 1. 需要先根据键值使用hash函数计算哈希值
+    2. 哈希值和sizemask并运算求得索引值
+    3. 再根据索引值将包含键值对的哈希表节点放到哈希表数组table上的对应索引值上。
+</code></pre><p>Redis 计算哈希值和索引值的方法为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 使用字典设置的哈希函数，计算键 key 的哈希值</span><br><span class="line">hash &#x3D; dict-&gt;type-&gt;hashFunction(key);</span><br><span class="line"></span><br><span class="line"># 使用哈希表的 sizemask 属性和哈希值，计算出索引值</span><br><span class="line"># 根据情况不同， ht[x] 可以是 ht[0] 或者 ht[1]</span><br><span class="line">index &#x3D; hash &amp; dict-&gt;ht[x].sizemask;</span><br></pre></td></tr></table></figure>
+<p>哈希值用hashFunction计算，index用hash值和sizemask进行并操作。</p>
+<p>对应在源码中为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//dict.h 中：</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> dictHashKey(d, key) (d)-&gt;type-&gt;hashFunction(key) <span class="comment">//计算哈希值</span></span></span><br><span class="line"><span class="comment">//dict.c 中</span></span><br><span class="line">idx = hash &amp; d-&gt;ht[table].sizemask;</span><br><span class="line">h = dictHashKey(d, de-&gt;key) &amp; d-&gt;ht[<span class="number">1</span>].sizemask;</span><br></pre></td></tr></table></figure>
+<p>插入一个键值对<k0,v0>到字典中的过程为：</k0,v0></p>
+<p><img src="http://redisbook.com/_images/graphviz-ca9c88ba1713cb595c4e0e4a17ef2042b0008621.png" alt=""></p>
+<p>先使用语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hash &#x3D; dict-&gt;type-&gt;hashFunction(k0);</span><br></pre></td></tr></table></figure>
+<p>计算键 <code>k0</code> 的哈希值。</p>
+<p>假设计算得出的哈希值为 <code>8</code> ， 那么程序会继续使用语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index &#x3D; hash &amp; dict-&gt;ht[0].sizemask &#x3D; 8 &amp; 3 &#x3D; 0;</span><br></pre></td></tr></table></figure>
+<p>计算出键 <code>k0</code> 的索引值 <code>0</code> ， 这表示包含键值对 <code>k0</code> 和 <code>v0</code> 的节点应该被放置到哈希表数组的索引 <code>0</code> 位置上。</p>
+<p><img src="http://redisbook.com/_images/graphviz-2369cb08288f5e59548355042c4c40cc4339e339.png" alt=""></p>
+<p>当字典被用作数据库的底层实现， 或者哈希键的底层实现时， Redis 使用 MurmurHash2 算法来计算键的哈希值。算法的优点</p>
+<ul>
+<li>即使输入的键是有规律的， 算法仍能给出一个很好的随机分布性， 并且算法的计算速度也非常快。</li>
+</ul>
+<p>MurmurHash 算法目前的最新版本为 MurmurHash3 ， 而 Redis 使用的是 MurmurHash2 ， 关于 MurmurHash 算法的更多信息可以参考该算法的主页： <a target="_blank" rel="noopener" href="http://code.google.com/p/smhasher/">http://code.google.com/p/smhasher/</a> 。</p>
+<p>暂时没有找到hashFunction的源码。</p>
+<h3 id="4-3-键冲突"><a href="#4-3-键冲突" class="headerlink" title="4.3 键冲突"></a>4.3 键冲突</h3><p>两个以上的键分配到了同一个索引就产生了冲突。</p>
+<p>使用链地址法解决，相同索引上面的节点可以用next指针来链接，这样同一个索引就可以存放多个哈希表节点了。</p>
+<p>哈希表节点没有指向链表链尾的节点，所以不能迅速的知道哪个节点是尾节点，（只能通过遍历才能找到指向null的尾节点O(N)）,所以为了速度考虑总是将新节点插入到最前面（dictht-&gt;table指针指向的第一个节点就是最前面的节点。）</p>
+<p>直接使用书上的图：</p>
+<p>还未发生键冲突</p>
+<p><img src="http://redisbook.com/_images/graphviz-db40aa6d0f1265d74f1c1d12b8fa074c0bcda12a.png" alt=""></p>
+<p>键冲突发生后：新键值对<k2,v2> 插入到<k1,v1>前面。</k1,v1></k2,v2></p>
+<p><img src="http://redisbook.com/_images/graphviz-4b52dcf6eb0768750e1c15480be3326ca37e05b3.png" alt=""></p>
+<h2 id="4-4-rehash"><a href="#4-4-rehash" class="headerlink" title="4.4  rehash"></a>4.4  rehash</h2><p>哈希表保存的键值对会增多或者减少，需要让负载因子（负载因子(load factor)，它用来衡量哈希表的 <strong>空/满</strong> 程度，一定程度上也可以体现查询的效率）维持在合理的范围，所以哈希节点太多的时候需要扩容（不然冲突太多，降低效率），这些哈希表的空间动态扩容或者缩容通过rehash操作来实现。</p>
+<p>步骤为：</p>
+<ol>
+<li>为ht[1]分配空间<ol>
+<li>扩容时ht[1].size = 大于等于ht[0].used*2的第一个2^n。</li>
+<li>收缩时ht[1].size = 大于等于ht[0].used的第一个2^n。</li>
+</ol>
+</li>
+<li>迁移：将ht[0]上面的哈希节点重新计算哈希值与索引值并放到ht[1]哈希表上面。</li>
+<li>迁移完成后释放ht[0],把ht[1]设置成ht[0],并在ht[1]新创建一个空白哈希表，等待下一次rehash。</li>
+</ol>
+<p>注意：不管是扩容还是收缩，新分配的空间都会比原来用到的(used)大。设置ht[1]为ht[0] 的时候只需要简单的将原来ht[0]上面的指针指向ht[1]就好，但是需要把原来指向的哈希表的内存给释放掉。（指针是真的强，每次指针变换指向的地址的时候，都需要考虑下之前指向的地址是否还需要，不需要就要释放，不然会造成内存泄漏）。ht[1]则重新新建个哈希表结构体，然后把ht[1]的指针指过来就好了。</p>
+<p>rehash的过程图解参考书中的图讲的很详细。</p>
+<p><img src="http://redisbook.com/_images/graphviz-93608325578e8e45848938ef420115bf2227639e.png" alt=""></p>
+<p>假设程序要对图 4-8 所示字典的 <code>ht[0]</code> 进行扩展操作。</p>
+<ol>
+<li><code>ht[0].used</code> 当前的值为 <code>4</code> ， <code>4 * 2 = 8</code> ， 而 <code>8</code> （2^3）恰好是第一个大于等于 <code>4</code> 的 <code>2</code> 的 <code>n</code> 次方， 所以程序会将 <code>ht[1]</code> 哈希表的大小设置为 <code>8</code> 。图 4-9 展示了 <code>ht[1]</code> 在分配空间之后， 字典的样子：</li>
+</ol>
+<p><img src="http://redisbook.com/_images/graphviz-b68acb4d868ec7d79a44935ce08a159746ca58da.png" alt=""></p>
+<ol>
+<li>将 <code>ht[0]</code> 包含的四个键值对都 rehash 到 <code>ht[1]</code> ， 如图 4-10 所示。</li>
+</ol>
+<p><img src="http://redisbook.com/_images/graphviz-92dc47e4329eabae941cddfd727b736ef738e8cf.png" alt=""></p>
+<ol>
+<li>释放 <code>ht[0]</code> ，并将 <code>ht[1]</code> 设置为 <code>ht[0]</code> ，然后为 <code>ht[1]</code> 分配一个空白哈希表，如图 4-11 所示。</li>
+</ol>
+<p><img src="http://redisbook.com/_images/graphviz-fa28d986a72f1f48b83c7f959ea217b1f9527d3c.png" alt=""></p>
+<p>哈希表的扩展与收缩（源码还没找到）</p>
+<p>当以下条件中的任意一个被满足时， 程序会自动开始对哈希表执行扩展操作：</p>
+<ol>
+<li>服务器目前没有在执行 BGSAVE 命令或者 BGREWRITEAOF 命令， 并且哈希表的负载因子大于等于 <code>1</code> ；</li>
+<li>服务器目前正在执行 BGSAVE 命令或者 BGREWRITEAOF 命令， 并且哈希表的负载因子大于等于 <code>5</code> ；</li>
+</ol>
+<p>其中哈希表的负载因子可以通过公式得到。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 负载因子 &#x3D; 哈希表已保存节点数量 &#x2F; 哈希表大小</span><br><span class="line">load_factor &#x3D; ht[0].used &#x2F; ht[0].size</span><br></pre></td></tr></table></figure>
+<h2 id="4-5-渐进式rehash"><a href="#4-5-渐进式rehash" class="headerlink" title="4.5 渐进式rehash"></a>4.5 渐进式rehash</h2><p>考虑到redis数据库中存储的键值对很多的情况，如果一次性就rehash完，庞大的计算量可能会导致服务器性能急剧下降，甚至一段时间的停止服务，（经济学中的休克时疗法？）所以rehash这个过程需要渐进式的（软着陆）。</p>
+<p>步骤：</p>
+<ol>
+<li>为 <code>ht[1]</code> 分配空间， 让字典同时持有 <code>ht[0]</code> 和 <code>ht[1]</code> 两个哈希表。</li>
+<li>在dict中维持一个索引计数器变量 <code>rehashidx</code> ， 并将它的值设置为 <code>0</code> ， 表示 rehash 工作正式开始。</li>
+<li>在 rehash 进行期间， 每次对字典执行添加、删除、查找或者更新操作时， 程序除了执行指定的操作以外， 还会顺带将 <code>ht[0]</code> 哈希表在 <code>rehashidx</code> 索引上的所有键值对 rehash 到 <code>ht[1]</code> ， 当 rehash 工作完成之后， 程序将 <code>rehashidx</code> 属性的值增一。</li>
+<li>随着字典操作的不断执行， 最终在某个时间点上， <code>ht[0]</code> 的所有键值对都会被 rehash 至 <code>ht[1]</code> ， 这时程序将 <code>rehashidx</code> 属性的值设为 <code>-1</code> ， 表示 rehash 操作已完成。</li>
+</ol>
+<p>注意：</p>
+<ul>
+<li>rehashidx的范围是从-1到ht[0].size-1 ，也就是对应的哈希表的索引，不是之前理解的记录哈希节点的个数。</li>
+<li>迁移的过程不是拷贝，而是哈希表存储的哈希指针重新指向哈希节点的过程（指针对地址的操作）。</li>
+</ul>
+<p>rehash 键值对所需的计算工作均滩到对字典的每个添加、删除、查找和更新操作上， 从而避免了集中式 rehash 而带来的庞大计算量。</p>
+<p>过程图解依然copy自redis设计与实现的电子书。</p>
+<p><img src="http://redisbook.com/_images/graphviz-4c43eaf38cbca10d8d368a5144db6f3c69ab3d84.png" alt=""></p>
+<p><img src="http://redisbook.com/_images/graphviz-b91705b0d7a6c7fd5e37332a930534e0e136ae73.png" alt=""></p>
+<p><img src="http://redisbook.com/_images/graphviz-9e2996e6ca9665776062470cdac346e8fc255374.png" alt=""></p>
+<p><img src="http://redisbook.com/_images/graphviz-c871b5de1a7910aea237ca9dc86508b48da94769.png" alt=""></p>
+<p><img src="http://redisbook.com/_images/graphviz-3b31e4e08cc3e212f986039eb08ae77224cdeec9.png" alt=""></p>
+<p><img src="http://redisbook.com/_images/graphviz-86f810ac65c4e6ee58b17105dfeaa06973d8dd16.png" alt=""></p>
+<h3 id="渐进式rehash期间的哈希表操作"><a href="#渐进式rehash期间的哈希表操作" class="headerlink" title="渐进式rehash期间的哈希表操作"></a>渐进式rehash期间的哈希表操作</h3><p>增删改查在两个表上操作，但是添加的新键只添加到ht[1]上，确保ht[0]最终变成空表。</p>
+<h2 id="4-6-字典API"><a href="#4-6-字典API" class="headerlink" title="4.6 字典API"></a>4.6 字典API</h2><h2 id="疑惑"><a href="#疑惑" class="headerlink" title="疑惑"></a>疑惑</h2><ul>
+<li><p>为什么不直接用<code>dictEntry *table[]</code> 来表示，却要用指针？应该是指针更加灵活些？</p>
+<ul>
+<li>因为dict有两个哈希表，而其中有个哈希表ht[1] 是只有在rehash的时候才会使用的，因此使用指针的的话，在不需要的时候将table直接指向null就可以简单的完成释放空间的操作，如果用数组的话,在分配内存的时候，就必须要为两个dictht都分配size个byte的内存存储空间，当rehash的时候size会变化，结构体中的数组就需要重新分配内存空间，而结构体的内存是相邻连续的，所以这时候要变化空间，只能重新再给这个结构体分配空间，这样效率肯定就很低了。所以使用指针的原因就是rehash的时候数组的大小会变化，如果用数组来记录就很麻烦和效率低了。</li>
+<li>所以在dict中可以使用数组来存储dictht,因为ht这个数组是不会变化的。</li>
+</ul>
+</li>
+<li><p>既然在rehash过程中会有增删改查的操作，那么这些操作是在哪个哈希表上进行的呢？</p>
+<ul>
+<li>两个哈希表上面都会进行，但是增加的键值对会在ht[1] 上，不然ht[0]在减少的时候又新增键值对，不是在做无用之功吗。</li>
+</ul>
+</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="http://redisbook.com/preview/dict/hash_algorithm.html">http://redisbook.com/preview/dict/hash_algorithm.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/yangbodong22011/article/details/78467583">https://blog.csdn.net/yangbodong22011/article/details/78467583</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://bravey.github.io">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/2019-03-27-Redis-%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E5%AD%97%E5%85%B8.html">https://bravey.github.io/2019-03-27-Redis-%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E5%AD%97%E5%85%B8.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://bravey.github.io" target="_blank">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/redis/">redis</a><a class="post-meta__tags" href="/tags/dict/">dict</a></div><div class="post-share"><div class="social-share" data-image="https://images.pexels.com/photos/814499/pexels-photo-814499.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2019-03-29-Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%AC%AC8%E7%AB%A0-%E5%AF%B9%E8%B1%A1.html" title="Redis设计与实现读书笔记——第8章 对象"><img class="cover" src="https://images.pexels.com/photos/358383/pexels-photo-358383.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Redis设计与实现读书笔记——第8章 对象</div></div><div class="info-2"><div class="info-item-1">Redis设计与实现读书笔记——第8章 对象Redis 并没有直接使用sds、dict等数据结构来实现键值对数据库， 而是基于这些数据结构创建了一个对象系统， 这个系统包含字符串对象、列表对象、哈希对象、集合对象和有序集合对象这五种类型的对象， 每种对象都用到了至少一种前面所介绍的数据结构。  简介对象的好处：  根据对象的类型来判断是否可以执行给定的命令。 针对不同的使用场景， 为对象设置多种不同的数据结构实现， 从而优化对象在不同场景下的使用效率。  对象的特性：  基于引用计数技术的内存回收机制（和java的是否原理相似） 通过引用计数技术实现对象共享机制，多个键共享同一个对象来节约内存 带有访问时间记录信息，可以用来删除空转时长较大的键  8.1 对象的类型与编码Redis 使用对象来表示数据库中的键和值，创建一个新的键值对的时候，至少包含两个对象：1. 键对象 2. 值对象 对象都由一个 redisObject 结构表示，保存数据相关的属性 123456789101112131415typedef struct redisObject &#123;    // 对象类型...</div></div></div></a><a class="pagination-related" href="/2019-03-26-%E4%BD%BF%E7%94%A8Travis-CI%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2%E5%8D%9A%E5%AE%A2.html" title="使用Travis-CI自动部署博客"><img class="cover" src="https://images.pexels.com/photos/238622/pexels-photo-238622.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">使用Travis-CI自动部署博客</div></div><div class="info-2"><div class="info-item-1">使用Travis-CI自动部署博客因为在github上面存储的是编译好的html代码，不是hexo博客中的博客源文件，所以如果没有备份源文件的话，丢失了源文件（包括md,一堆配置文件）后就不能继续更新博客了，而且也不能多端部署Hexo。网上看到可以使用Travis-CI来自动部署，同时解决了博客源文件的备份问题。  新建hexo分支来保存源文件新建分支直接在对应的github.io项目上的branch 按钮处点击新建分支 hexo。 官方文档https://help.github.com/en/articles/setting-the-default-branch  12# 克隆项目到本地&gt; git clone https:&#x2F;&#x2F;github.com&#x2F;BraveY&#x2F;BraveY.github.io.git 设置默认分支参照官方文档设置https://help.github.com/en/articles/setting-the-default-branch 修改推送hexo分支现将原来的文件BraveY.github.io 修改为Bra...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2019-04-03-Redis%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E2%80%94%E2%80%94dict.html" title="Redis源码阅读——dict"><img class="cover" src="/img/post.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-04-03</div><div class="info-item-2">Redis源码阅读——dict</div></div><div class="info-2"><div class="info-item-1">Redis源码阅读——dict继续Redis 的源码阅读，进入dict这一章节。知识点讲解，见redis设计与实现的读书笔记dict这一章。  dict的创建还是和sds一样单独将dict模块给提取出来，参考博客是直接将server的main函数给修改了的。再阅读Makefile的时候发现了dict-benchmark 这个选项，make dict-benchmark 这个命令，可以编译出一个可执行文件dict-benchmark。  所以想着应该可以单独再把dict-benchmark给提取出来。 需要拷贝的文件 1dict.c ditc.h fmacros.h redisassert.h sdsaclloc.h sds.c sds.h siphash.c  需要做的修改 zmalloc zfree zcalloc 需要修改成使用malloc ，free, calloc 其中zcalloc在修改成calloc的时候需要在调用的时候多传入一个参数1,作为第一个参数，因为zcalloc 和calloc 的接口不一样。 还需要在redisassert.h 中对_serverAsser...</div></div></div></a><a class="pagination-related" href="/%E4%BD%BF%E7%94%A8YCSB%20%E8%AF%84%E6%B5%8Bredis%E6%80%A7%E8%83%BD.html" title="使用YCSB 评测redis性能"><img class="cover" src="/img/post.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-03-12</div><div class="info-item-2">使用YCSB 评测redis性能</div></div><div class="info-2"><div class="info-item-1">使用YCSB 评测redis性能YCSB是雅虎推出的可以评测许多主流数据库性能的基准测试，其中包括Redis。  安装YCSB 安装java和maven  机子已经有了java，所以只用安装maven Ubuntu安装命令为： sudo apt-get install maven    安装YCSB  123git clone http:&#x2F;&#x2F;github.com&#x2F;brianfrankcooper&#x2F;YCSB.gitcd YCSBmvn -pl com.yahoo.ycsb:redis-binding -am clean package 必须是gitclone的源码包才能执行mvn 命令。wget或者curl下来包是已经编译好了的无需执行mvn命令。  mvn -pl com.yahoo.ycsb:redis-binding -am clean package 报错： 123456789[INFO] Scanning for projects...[ERROR] [ERROR] Could not find the selected proje...</div></div></div></a><a class="pagination-related" href="/2019-03-20-Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="Redis设计与实现读书笔记——第二章SDS"><img class="cover" src="https://images.pexels.com/photos/417222/pexels-photo-417222.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-03-20</div><div class="info-item-2">Redis设计与实现读书笔记——第二章SDS</div></div><div class="info-2"><div class="info-item-1">Redis设计与实现读书笔记——第二章为了做Redis相关实验，在网上粗略看了Redis设计与实现的电子版，感觉收获很多，但是因为是旧版，所以买了第二版，重读第二次。  第二章 简单动态字符串简介 字符串值的键值对在底层都是由SDS实现的。 sds的功能： 存储字符串值 用作缓冲区 AOF模块缓冲区 客户端状态的输入缓冲区      2.1 SDS的定义文件：sds.h/sdshdr 结构体  书中的为3.0版本，4.0版本有较大改动。 version: redis-4.02  参考：https://www.cnblogs.com/chenpingzhao/p/7292182.html https://www.codesheep.cn/2018/08/09/Redis%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%B1%BB%E5%9E%8B%E5%86%85%E9%83%A8%E7%BC%96%E7%A0%81%E5%89%96%E6%9E%90/ 123456789101112131415161718192021222324252627282930313233t...</div></div></div></a><a class="pagination-related" href="/%E4%BD%BF%E7%94%A8shell%E8%84%9A%E6%9C%AC%E9%81%8D%E5%8E%86redis%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89kv%E5%AF%B9.html" title="shell 脚本遍历redis数据库"><img class="cover" src="https://images.pexels.com/photos/164041/pexels-photo-164041.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-03-14</div><div class="info-item-2">shell 脚本遍历redis数据库</div></div><div class="info-2"><div class="info-item-1">使用shell脚本遍历redis数据库中的所有kv对记录下如何使用shell通过redis-cli 命令来操作redis数据库，因为直接在命令行中输入 redis-cli command 的话command必须是单个单词，不能像是KEYS * 这种.  123456789101112#!&#x2F;bin&#x2F;bashfilename&#x3D;&#39;redis&#39;&#96;date +%Y-%m-%d_%H:%M&#96;work_path&#x3D;$(dirname &quot;$0&quot;) echo &quot;实例化redis数据文件为:$work_path&#x2F;$filename&quot;echo &quot;keys *&quot; | redis-cli &gt; key_db.txtecho &quot;将所有key保存到:$work_path&#x2F;key_db.txt&quot;for line in &#96;cat key_db.txt&#96;do        echo &quot;key:$line &quot; ...</div></div></div></a><a class="pagination-related" href="/2019-04-10-Redis%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E2%80%94%E2%80%94%E5%AD%97%E5%85%B8.html" title="Redis源码阅读——字典"><img class="cover" src="https://images.pexels.com/photos/933843/pexels-photo-933843.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-04-10</div><div class="info-item-2">Redis源码阅读——字典</div></div><div class="info-2"><div class="info-item-1">Redis源码阅读——字典字典是整个Redis实现的基础,之前把《Redis设计与实现》书上的理论知识看完了，开始阅读源码。  Rehash参考https://tech.meituan.com/2018/07/27/redis-rehash-practice-optimization.html https://luoming1224.github.io/2018/11/12/[redis%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0]redis%E6%B8%90%E8%BF%9B%E5%BC%8Frehash%E6%9C%BA%E5%88%B6/ </div></div></div></a><a class="pagination-related" href="/2019-03-29-Redis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%AC%AC8%E7%AB%A0-%E5%AF%B9%E8%B1%A1.html" title="Redis设计与实现读书笔记——第8章 对象"><img class="cover" src="https://images.pexels.com/photos/358383/pexels-photo-358383.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-03-29</div><div class="info-item-2">Redis设计与实现读书笔记——第8章 对象</div></div><div class="info-2"><div class="info-item-1">Redis设计与实现读书笔记——第8章 对象Redis 并没有直接使用sds、dict等数据结构来实现键值对数据库， 而是基于这些数据结构创建了一个对象系统， 这个系统包含字符串对象、列表对象、哈希对象、集合对象和有序集合对象这五种类型的对象， 每种对象都用到了至少一种前面所介绍的数据结构。  简介对象的好处：  根据对象的类型来判断是否可以执行给定的命令。 针对不同的使用场景， 为对象设置多种不同的数据结构实现， 从而优化对象在不同场景下的使用效率。  对象的特性：  基于引用计数技术的内存回收机制（和java的是否原理相似） 通过引用计数技术实现对象共享机制，多个键共享同一个对象来节约内存 带有访问时间记录信息，可以用来删除空转时长较大的键  8.1 对象的类型与编码Redis 使用对象来表示数据库中的键和值，创建一个新的键值对的时候，至少包含两个对象：1. 键对象 2. 值对象 对象都由一个 redisObject 结构表示，保存数据相关的属性 123456789101112131415typedef struct redisObject &#123;    // 对象类型...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">BraveY</div><div class="author-info-description">今日事，今日毕</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis-%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E5%AD%97%E5%85%B8"><span class="toc-number">1.</span> <span class="toc-text">Redis 设计与实现读书笔记——第四章 字典</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-%E5%AD%97%E5%85%B8%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.</span> <span class="toc-text">4.1 字典的实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-1-%E5%93%88%E5%B8%8C%E8%A1%A8"><span class="toc-number">1.2.1.</span> <span class="toc-text">4.1.1 哈希表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-2-%E5%93%88%E5%B8%8C%E8%A1%A8%E8%8A%82%E7%82%B9"><span class="toc-number">1.2.2.</span> <span class="toc-text">4.1.2 哈希表节点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-3-%E5%AD%97%E5%85%B8"><span class="toc-number">1.2.3.</span> <span class="toc-text">4.1.3 字典</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">4.2 哈希算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E9%94%AE%E5%86%B2%E7%AA%81"><span class="toc-number">1.3.1.</span> <span class="toc-text">4.3 键冲突</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-rehash"><span class="toc-number">1.4.</span> <span class="toc-text">4.4  rehash</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-5-%E6%B8%90%E8%BF%9B%E5%BC%8Frehash"><span class="toc-number">1.5.</span> <span class="toc-text">4.5 渐进式rehash</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%90%E8%BF%9B%E5%BC%8Frehash%E6%9C%9F%E9%97%B4%E7%9A%84%E5%93%88%E5%B8%8C%E8%A1%A8%E6%93%8D%E4%BD%9C"><span class="toc-number">1.5.1.</span> <span class="toc-text">渐进式rehash期间的哈希表操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-6-%E5%AD%97%E5%85%B8API"><span class="toc-number">1.6.</span> <span class="toc-text">4.6 字典API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%96%91%E6%83%91"><span class="toc-number">1.7.</span> <span class="toc-text">疑惑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.8.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"><img src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"/></a><div class="content"><a class="title" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略">闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略</a><time datetime="2026-03-07T02:00:00.000Z" title="发表于 2026-03-07 10:00:00">2026-03-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd"><img src="https://images.pexels.com/photos/417222/pexels-photo-417222.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记2——lookupd"/></a><div class="content"><a class="title" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd">NSQ学习笔记2——lookupd</a><time datetime="2023-03-12T02:14:41.000Z" title="发表于 2023-03-12 10:14:41">2023-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介"><img src="https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记1——简介"/></a><div class="content"><a class="title" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介">NSQ学习笔记1——简介</a><time datetime="2023-02-05T07:18:23.000Z" title="发表于 2023-02-05 15:18:23">2023-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记"><img src="https://images.pexels.com/photos/71104/utah-mountain-biking-bike-biking-71104.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C专家编程读书笔记"/></a><div class="content"><a class="title" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记">C专家编程读书笔记</a><time datetime="2021-03-18T04:59:02.000Z" title="发表于 2021-03-18 12:59:02">2021-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱"><img src="https://images.pexels.com/photos/1656687/pexels-photo-1656687.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C语言传递指针参数的陷阱"/></a><div class="content"><a class="title" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱">C语言传递指针参数的陷阱</a><time datetime="2020-12-12T13:39:57.000Z" title="发表于 2020-12-12 21:39:57">2020-12-12</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2020 - 2026 By BraveY</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const initValine = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyValine = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const valineConfig = {
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      visitor: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || window.location.pathname
+    }
+
+    new Valine(valineConfig)
+  }
+
+  const loadValine = async (el, path) => {
+    if (typeof Valine === 'function') {
+      initValine(el, path)
+    } else {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js')
+      initValine(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Valine' === 'Valine'
+      ? window.shuoshuoComment = { loadComment: loadValine }
+      : window.loadOtherComment = loadValine
+    return
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script></div><script async data-pjax src="/js/busuanzi.js"></script></div></body></html>

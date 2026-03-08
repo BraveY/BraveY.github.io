@@ -1,0 +1,341 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略 | BraveY</title><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="TL;DR不需要macmini，使用一个闲置笔记本改造的飞牛NAS，在上面部署本地安全可控龙虾的AI助手。通过使用docker运行nanobot，配合阿里云Coding Plan的模型订阅，同时走虚拟机的旁路由科学上网，从而低成本的实现All in one的龙虾部署。 openclaw部署方案..."><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略",
+  "url": "https://bravey.github.io/nanobot-fnnas-deployment-guide.html",
+  "image": "https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+  "datePublished": "2026-03-07T02:00:00.000Z",
+  "dateModified": "2026-03-07T02:10:59.932Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "BraveY",
+      "url": "https://bravey.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/nanobot-fnnas-deployment-guide.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 5.3.0"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/url(https:/res.cloudinary.com/bravey/image/upload/v1587809177/air-atmosphere-blue-blue-sky-314726.jpg));"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">BraveY</span></a><a class="nav-page-title" href="/"><span class="site-name">闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-03-07T02:00:00.000Z" title="发表于 2026-03-07 10:00:00">2026-03-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-07T02:10:59.932Z" title="更新于 2026-03-07 10:10:59">2026-03-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E6%95%99%E7%A8%8B/">技术教程</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><p>不需要macmini，使用一个闲置笔记本改造的飞牛NAS，在上面部署本地安全可控龙虾的AI助手。通过使用docker运行nanobot，配合阿里云Coding Plan的模型订阅，同时走虚拟机的旁路由科学上网，从而低成本的实现All in one的龙虾部署。</p>
+<h2 id="openclaw部署方案选型"><a href="#openclaw部署方案选型" class="headerlink" title="openclaw部署方案选型"></a>openclaw部署方案选型</h2><p>为了尝鲜爆火的openclaw， 从硬件、 软件和模型订阅来分析下选型。</p>
+<h3 id="硬件选型"><a href="#硬件选型" class="headerlink" title="硬件选型"></a>硬件选型</h3><p>硬件上选择主要是3个方案：</p>
+<ol>
+<li><p>购买mac mini单独部署。</p>
+<ol>
+<li><p>优点：体验应该是最好。</p>
+</li>
+<li><p>缺点：额外购买mac mini成本太高。 不适合垃圾佬。</p>
+</li>
+</ol>
+</li>
+<li><p>闲置笔记本改造</p>
+<ol>
+<li><p>优点：成本最低。 部署自己可控，硬件配置性能足够。</p>
+</li>
+<li><p>缺点：配置稍微麻烦。</p>
+</li>
+</ol>
+</li>
+<li><p>厂商云助手方案， 比如<a target="_blank" rel="noopener" href="https://www.aliyun.com/activity/ecs/clawdbot?userCode=6rucfacw">阿里云的分钟级别部署openclaw</a></p>
+<ol>
+<li><p>优点：配置最简单，成本中等。</p>
+</li>
+<li><p>缺点：掌控性较差，机器性能较差，内存配置比较小。</p>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="软件部署选型"><a href="#软件部署选型" class="headerlink" title="软件部署选型"></a>软件部署选型</h3><p>软件上则是是否需要考虑安全隔离， 因为大模型的幻觉可能导致误删重要文件或者数据。如果要安全隔离则是使用docker容器部署，或者虚拟机部署。</p>
+<p>docker容器部署的方案：</p>
+<ol>
+<li><p>优点：较强的隔离，AI助手无法方案操作到重要数据。快速配置和部署不需要手动安装各种环境依赖，性能损失少。</p>
+</li>
+<li><p>缺点：容器重建后，应用数据不存在，需要重新配置应用环境。（只重启不需要重新配置环境，同时挂载磁盘可以持久化重要数据）</p>
+</li>
+</ol>
+<p>虚拟机部署的方案：</p>
+<ol>
+<li><p>优点： 完全的隔离，不担心任何安全问题。</p>
+</li>
+<li><p>缺点： 性能损失较大。对硬件配置要求比较高。</p>
+</li>
+</ol>
+<h3 id="AI助手选型"><a href="#AI助手选型" class="headerlink" title="AI助手选型"></a>AI助手选型</h3><p>可以参考这个回答<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/2002042418774706034">openclaw之后又出现了nanobot，它好用吗？</a></p>
+<p>我这里选择nanobot是因为配置了一下openclaw的确步骤较多，稍微麻烦些。而nanobot非常精简，配置简单，4000行的代码方便学习和debug。对中文社区支持也比较好，默认支持钉钉作为channel，因为上班用钉钉所以选择这个。</p>
+<h3 id="模型订阅"><a href="#模型订阅" class="headerlink" title="模型订阅"></a>模型订阅</h3><p>模型订阅上只能选择订阅制，因为龙虾AI助手的token消耗量很大，所以使用订阅制成本才可控。至于用国内还是国外的模型则根据个人喜好进行了。国内厂商的模型订阅价格低，但是模型能力略差，不过基本也够用。</p>
+<p>我选择的是阿里云的Coding plan 。首月7.9非常划算，lite版本的量普通用户完全够用。可以用我的<a target="_blank" rel="noopener" href="https://www.aliyun.com/benefit/ai/aistar?userCode=6rucfacw&amp;clubBiz=subTask..12413312..10263">邀请链接</a>还能有10元优惠卷使用。</p>
+<h3 id="我的选择"><a href="#我的选择" class="headerlink" title="我的选择"></a>我的选择</h3><p>因为我之前已经有一个闲置笔记本部署的飞牛NAS，所以硬件选择使用闲置的笔记本来进行部署。同时因为NAS本来就是全天候开机的，所以天然适合部署这种AI助手。</p>
+<p>而软件部署方案上一开始打算使用虚拟机进行操作，但是飞牛NAS安装的虚拟机重启后就无法开机，折腾很久也没有搞好。 而且启动后发现CPU和内存占用比较大。宿主机CPU利用率30%起步，而内存更是基本上分配多少用多少，虚拟机分配的8G内存基本全部吃掉。所以体验很差，因此切换到docker来部署，体验很好， 非常快速。CPU基本不消耗，内存消耗也控制的不错。</p>
+<p><img src="https://picx.zhimg.com/80/v2-b59b228401954e6bcfc2f23046a55525_1440w.png?source=ccfced1a" alt=""></p>
+<h2 id="部署方案"><a href="#部署方案" class="headerlink" title="部署方案"></a>部署方案</h2><h3 id="飞牛NAS部署方案"><a href="#飞牛NAS部署方案" class="headerlink" title="飞牛NAS部署方案"></a>飞牛NAS部署方案</h3><p>笔记本的配置为4C8G的小新。使用网线直连的路由器，同时还有一个无线网卡。</p>
+<p><img src="https://picx.zhimg.com/80/v2-a484321ce74d09fdda0b7bedf19539ca_1440w.png?source=ccfced1a" alt=""></p>
+<p>具体的飞牛NAS的部署教程可以参考<a target="_blank" rel="noopener" href="https://help.fnnas.com/articles/v1/start/install-os.md">官方教程</a>，这里不赘述， 但是注意使用网线连接路由器来方便后面虚拟机部署旁路由。</p>
+<p>安装好飞牛NAS后， 我们需要安装飞牛应用中心的虚拟机和docker这两个应用。虚拟机用来安装旁路由做科学上网，docker用来部署nanobot。</p>
+<h3 id="旁路由部署"><a href="#旁路由部署" class="headerlink" title="旁路由部署"></a>旁路由部署</h3><p>因为龙虾相关的很多技能资源都是在外网，所以如果不能科学上网，用起来很难受。 Linux的Node 22安装都依赖外网，基本上不能科学上网就不能安装openclaw。</p>
+<p>我使用的是旁路由方案，相关知识可以参考<a target="_blank" rel="noopener" href="https://doc.istoreos.com/zh/guide/istoreos/practice/BypassRouter.html">如何更好地使用旁路由</a>。</p>
+<p>使用有线网卡所以可以路由器桥接后开启ovs，用虚拟机进行安装旁路由。具体使用虚拟机安装旁路由的教程可以参考<a target="_blank" rel="noopener" href="https://club.fnnas.com/forum.php?mod=viewthread&amp;tid=26481">飞牛iStoreOS旁路由虚拟机</a>。 跟着教程走来开启旁路由还是比较顺利的。</p>
+<p>iStoreOS安装好了之后可以通过<a target="_blank" rel="noopener" href="https://github.com/AUK9527/Are-u-ok">are u ok</a>来下载对应的科学上网组件。 注意安装后openclash是在左侧的服务栏选型中，我第一次安装找了好一会。</p>
+<p><img src="https://picx.zhimg.com/80/v2-bd5bf89b4187c6f021d06e8b6580987b_1440w.png?source=ccfced1a" alt=""></p>
+<p>科学上网配置好之后，家里相关需要科学上网的设备需要手动操作把wifi的ip设置从DHCP修改为静态分配，路由地址和DNS地址修改为旁路由的IP地址才行，不是自动生效的。如下是mac的wifi设置参考</p>
+<p><img src="https://picx.zhimg.com/80/v2-ac070e051cea9ca8ff9dba20f2808ffd_1440w.png?source=ccfced1a" alt=""></p>
+<h3 id="容器部署nanobot"><a href="#容器部署nanobot" class="headerlink" title="容器部署nanobot"></a>容器部署nanobot</h3><p>这部分网上没有比较好的飞牛NAS部署教程，而且需要设置docker使用指定无线网卡来科学上网，所以我详细写下：</p>
+<p><strong>容器配置初始化</strong></p>
+<p>docker 的镜像仓库中搜索smanx/nanobot这个镜像。飞牛的镜像仓库能够直接拉取，不需要科学上网。</p>
+<p><img src="https://pic1.zhimg.com/80/v2-2a01c84c636df7a63e6317d90610c8d2_1440w.png?source=ccfced1a" alt=""></p>
+<p>镜像下载后创建容器， 并挂载host的目录来持久化nanobot的配置。<br>直接点击下一步，这个容器只使用来初始化配置。</p>
+<p><img src="https://picx.zhimg.com/80/v2-f46dc885d2cd0d6c0e40d74957ca9ebd_1440w.png?source=ccfced1a" alt=""></p>
+<p>重要：将nas的一个文件夹路径配置为挂载到容器/root/.nanobot目录。<br>我将宿主机的目录/vol1/1000/Docker/Nanobot/.nanobot挂载到了/root/.nanobot</p>
+<p><img src="https://picx.zhimg.com/80/v2-058b27581e583b14fb2c499eb27cccc8_1440w.png?source=ccfced1a" alt=""></p>
+<p>环境变量中配置OPENAI兼容的模型厂商url</p>
+<p><img src="https://picx.zhimg.com/80/v2-f912ea9bcad811e67008b5b313bad99c_1440w.png?source=ccfced1a" alt=""></p>
+<p>剩余的网络选择默认的bridge即可， 没有额外需要设置的了，点击下一步，然后勾选创建后启动，点击启动就行。</p>
+<p><img src="https://pica.zhimg.com/80/v2-407e61cd5ce30fc4c446ad171093c250_1440w.png?source=ccfced1a" alt=""></p>
+<p>这样容器就会创建出来，并自动根据配置的环境变量来初始化配置启动nanobot。<br>可以查看运行日志是否配置完成，gateway是否启动成功。</p>
+<p><img src="https://pic1.zhimg.com/80/v2-64b1ff776d320f12eb564bca64026028_1440w.png?source=ccfced1a" alt=""></p>
+<p>这样创建出来的容器重启后会卡住，因为镜像里面的启动步骤主要是两个步骤：</p>
+<ol>
+<li>配置config.json<br> <code>nanobot onboard</code></li>
+<li>启动网关<br> <code>nanobot gateway</code></li>
+</ol>
+<p>因为我们的nanobot的工作目录/root/.nanobot是挂载到宿主机的，所以重启后对于已经存在配置，会要求交互式的选择是否覆盖已有的配置目录。因此重启后会一直卡在第一步骤，导致网关没有启动成功。</p>
+<p>上文首次创建并启动的容器，我们只是用来初始化/root/.nanobot这个工作目录的配置文件结构。当在宿主机文件中已经存在对应的相关目录后，就说明配置已经初始化完成了。</p>
+<p><img src="https://picx.zhimg.com/80/v2-95492a18db5cfa2b14ecdddfb1a82be3_1440w.png?source=ccfced1a" alt=""></p>
+<p>配置成功后，我们直接将容器关闭后执行删除， 后面改为使用docker compose来进行部署。</p>
+<p><strong>docker compose 部署</strong></p>
+<p>docker compose部署的好处是</p>
+<ol>
+<li>可以重置entrypoint 从而只执行nanobot gateway这个命令， 只启动网关。</li>
+<li>支持自动重启，保证服务的稳定性。</li>
+</ol>
+<p>在部署之前需要将笔记本的无线网卡打开，然后将网关地址和dns地址设置为上面的旁路由ip地址。这样子nas上的无线网卡的就能实现科学上网了。</p>
+<p><img src="https://picx.zhimg.com/80/v2-f8657481e49a039cca4885b2b9f9a00a_1440w.jpg?source=ccfced1a" alt=""></p>
+<p>接着我们需要创建一个容器网络，这个容器网络需要使用无线网卡作为出口，从而实现科学上网。具体设置教程可以参考这个<a target="_blank" rel="noopener" href="https://www.xiaozhuhouses.asia/article/jb45rscv/">Docker网络指定使用的网卡作为出流量 | 码上星辰的技术札记</a></p>
+<p>有了容器网络后，配置如下的docker compose yaml文件。其中mynet就是设置的容器网络。dns需要显示的设置为旁路由的DNS地址才能在容器中科学上网。（小龙虾安装后帮我排查出来的，不然依然无法科学上网）</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">nanobot:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">smanx/nanobot:latest</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">nanobot</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PUID=0</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PGID=0</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">TZ=Asia/Shanghai</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">NANOBOT_DEFAULT_MODEL=qwen3.5-plus</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">OPENAI_API_BASE=https://coding.dashscope.aliyuncs.com/v1</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">OPENAI_API_KEY=sk-sp-xxxxx</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/vol1/1000/Docker/Nanobot/.nanobot:/root/.nanobot</span></span><br><span class="line">    <span class="attr">entrypoint:</span> <span class="string">nanobot</span> <span class="string">gateway</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">18790</span><span class="string">:18790</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">mynet</span></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">mynet:</span></span><br><span class="line">    <span class="attr">external:</span> <span class="literal">true</span> </span><br><span class="line"><span class="attr">dns:</span>  <span class="comment"># 旁路由DNS</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">192.168</span><span class="number">.31</span><span class="number">.83</span></span><br></pre></td></tr></table></figure>
+<p>配置的操作页面如下：</p>
+<p><img src="https://picx.zhimg.com/80/v2-44f31b4350934fa648be7c4a9b286151_1440w.png?source=ccfced1a" alt=""></p>
+<p>如此容器相关的设置就完成了，点击构建并启动容器就可以复用宿主机上的nanobot配置文件了。<br>容器启动后可以去容器页面查看是否正常运行。</p>
+<h3 id="通道配置"><a href="#通道配置" class="headerlink" title="通道配置"></a>通道配置</h3><p>上面启动的nanobot没有配置对应的channel，只能在命令行里面手动对话。我们需要配置对应的通道，才能在聊天应用里面进行对话。</p>
+<p>我使用的是钉钉， 可以<a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/dingstart/build-dingtalk-ai-employees">参考官方教程</a>。大概的配置步骤如下：</p>
+<ul>
+<li>需要用个人账号去创建一个组织，</li>
+<li><p>在<a target="_blank" rel="noopener" href="https://open-dev.dingtalk.com/">开放平台</a>里面创建应用并配置对应的机器人。</p>
+<ul>
+<li><p>机器人的权限配置对应的允许单聊。</p>
+</li>
+<li><p>机器人的消息接收模式使用Stream模式</p>
+</li>
+</ul>
+</li>
+<li><p>发布应用。</p>
+<ul>
+<li>注意发布应用需要在最下面的版本管理与发布中点击创建新版本，这样才能顺利发布，钉钉才能搜索到机器人。</li>
+</ul>
+</li>
+<li><p>配置钉钉到nanobot    </p>
+<ul>
+<li>将钉钉机器人的id和秘钥填写到nanobot的配置文件中。下面的staffid可以先填写星号，如果后续发送失败了，再看日志里面具体的id是啥。</li>
+</ul>
+</li>
+<li><p>重启容器。</p>
+<ul>
+<li>配置好之后需要重启容器，配置才生效。</li>
+</ul>
+</li>
+<li><p>手机钉钉开始对话</p>
+<ul>
+<li>手机钉钉里面去搜索钉钉机器人，添加到群聊里面后，可以点击头像进行单聊。</li>
+</ul>
+</li>
+</ul>
+<p>这样我们的ai助手就算可以用了。</p>
+<p><img src="https://pica.zhimg.com/80/v2-c1317fe0ce33dd122830602f2978595c_1440w.jpg?source=ccfced1a" alt=""></p>
+<h2 id="技能推荐"><a href="#技能推荐" class="headerlink" title="技能推荐"></a>技能推荐</h2><p>因为配置了科学上网所以可以无缝使用clawdhub等外网技能资源。推荐下面三个：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/vercel-labs/agent-browser">agent-browser</a> 给agent用的浏览器。可以截图，点击浏览器等。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/anthropics/skills/tree/main/skills/skill-creator">skill-creator</a> 用来创建技能。</li>
+<li><a target="_blank" rel="noopener" href="https://www.tavily.com/">tavily</a> 用来做网页搜索的mcp，每个月1000次的免费额度。可以替换brave搜索。</li>
+</ul>
+<p>其他的技能就自己按需探索即可。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://bravey.github.io">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/nanobot-fnnas-deployment-guide.html">https://bravey.github.io/nanobot-fnnas-deployment-guide.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://bravey.github.io" target="_blank">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/NAS/">NAS</a><a class="post-meta__tags" href="/tags/Docker/">Docker</a><a class="post-meta__tags" href="/tags/nanobot/">nanobot</a><a class="post-meta__tags" href="/tags/AI/">AI</a><a class="post-meta__tags" href="/tags/%E9%A3%9E%E7%89%9B/">飞牛</a></div><div class="post-share"><div class="social-share" data-image="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd"><img class="cover" src="https://images.pexels.com/photos/417222/pexels-photo-417222.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">NSQ学习笔记2——lookupd</div></div><div class="info-2"><div class="info-item-1">在官方教程Demo中，首先需要启动的程序就是lookupd，因此首先从lookupd程序进行学习。loookupd的作用参见上篇简介文章，作为中间件将生产者与消费者解耦，通过lookupd进行节点发现，以及生产者和消费者的互相发现。 启动main函数的位置在 nsq/apps/nsqlookupd/main.go文件中。代码很简洁： 123456func main() &#123;	prg := &amp;program&#123;&#125;	if err := svc.Run(prg, syscall.SIGINT, syscall.SIGTERM); err != nil &#123;		logFatal(&quot;%s&quot;, err)	&#125;&#125; 这里面主要使用svc这个运行框架包来提供程序的启动和安全退出。使用svc这个启动框架监听SIGINT和SIGTERM这两个信号，通过安全退出来保证相关defer函数得以执行，以及关键日志能够被记录。如果不监听信号，kill -9这样的强制退出会使得程序的defer函数等不执行，没有退出日志也会使得后续排查...</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">BraveY</div><div class="author-info-description">今日事，今日毕</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#TL-DR"><span class="toc-number">1.</span> <span class="toc-text">TL;DR</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#openclaw%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88%E9%80%89%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">openclaw部署方案选型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E9%80%89%E5%9E%8B"><span class="toc-number">2.1.</span> <span class="toc-text">硬件选型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E9%83%A8%E7%BD%B2%E9%80%89%E5%9E%8B"><span class="toc-number">2.2.</span> <span class="toc-text">软件部署选型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AI%E5%8A%A9%E6%89%8B%E9%80%89%E5%9E%8B"><span class="toc-number">2.3.</span> <span class="toc-text">AI助手选型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%A2%E9%98%85"><span class="toc-number">2.4.</span> <span class="toc-text">模型订阅</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%91%E7%9A%84%E9%80%89%E6%8B%A9"><span class="toc-number">2.5.</span> <span class="toc-text">我的选择</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88"><span class="toc-number">3.</span> <span class="toc-text">部署方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A3%9E%E7%89%9BNAS%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88"><span class="toc-number">3.1.</span> <span class="toc-text">飞牛NAS部署方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%81%E8%B7%AF%E7%94%B1%E9%83%A8%E7%BD%B2"><span class="toc-number">3.2.</span> <span class="toc-text">旁路由部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%E9%83%A8%E7%BD%B2nanobot"><span class="toc-number">3.3.</span> <span class="toc-text">容器部署nanobot</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E9%81%93%E9%85%8D%E7%BD%AE"><span class="toc-number">3.4.</span> <span class="toc-text">通道配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%80%E8%83%BD%E6%8E%A8%E8%8D%90"><span class="toc-number">4.</span> <span class="toc-text">技能推荐</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"><img src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"/></a><div class="content"><a class="title" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略">闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略</a><time datetime="2026-03-07T02:00:00.000Z" title="发表于 2026-03-07 10:00:00">2026-03-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd"><img src="https://images.pexels.com/photos/417222/pexels-photo-417222.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记2——lookupd"/></a><div class="content"><a class="title" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd">NSQ学习笔记2——lookupd</a><time datetime="2023-03-12T02:14:41.000Z" title="发表于 2023-03-12 10:14:41">2023-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介"><img src="https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记1——简介"/></a><div class="content"><a class="title" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介">NSQ学习笔记1——简介</a><time datetime="2023-02-05T07:18:23.000Z" title="发表于 2023-02-05 15:18:23">2023-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记"><img src="https://images.pexels.com/photos/71104/utah-mountain-biking-bike-biking-71104.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C专家编程读书笔记"/></a><div class="content"><a class="title" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记">C专家编程读书笔记</a><time datetime="2021-03-18T04:59:02.000Z" title="发表于 2021-03-18 12:59:02">2021-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱"><img src="https://images.pexels.com/photos/1656687/pexels-photo-1656687.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C语言传递指针参数的陷阱"/></a><div class="content"><a class="title" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱">C语言传递指针参数的陷阱</a><time datetime="2020-12-12T13:39:57.000Z" title="发表于 2020-12-12 21:39:57">2020-12-12</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2020 - 2026 By BraveY</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const initValine = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyValine = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const valineConfig = {
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      visitor: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || window.location.pathname
+    }
+
+    new Valine(valineConfig)
+  }
+
+  const loadValine = async (el, path) => {
+    if (typeof Valine === 'function') {
+      initValine(el, path)
+    } else {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js')
+      initValine(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Valine' === 'Valine'
+      ? window.shuoshuoComment = { loadComment: loadValine }
+      : window.loadOtherComment = loadValine
+    return
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script></div><script async data-pjax src="/js/busuanzi.js"></script></div></body></html>

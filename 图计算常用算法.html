@@ -1,0 +1,392 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>图计算常用算法 | BraveY</title><meta name="author" content="BraveY"><meta name="copyright" content="BraveY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="图算法的典型操作关于一些常见图算法的调研与学习。  常用图算法PageRank 背景      既考虑入链数量，又考虑了网页质量因素，二者相结合 数量与权重的结合 算法与主题无关，因为PR值是根据图计算出来的   算法原理  基本思想 A有链接指向B，表明A认为B比A重要。A将自身权重分配一部..."><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "图计算常用算法",
+  "url": "https://bravey.github.io/%E5%9B%BE%E8%AE%A1%E7%AE%97%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95.html",
+  "image": "https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+  "datePublished": "2018-04-24T03:20:17.000Z",
+  "dateModified": "2026-03-07T01:06:28.375Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "BraveY",
+      "url": "https://bravey.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://res.cloudinary.com/bravey/image/upload/v1588158174/favicon.png"><link rel="canonical" href="https://bravey.github.io/%E5%9B%BE%E8%AE%A1%E7%AE%97%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '图计算常用算法',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 5.3.0"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/url(https:/res.cloudinary.com/bravey/image/upload/v1587809177/air-atmosphere-blue-blue-sky-314726.jpg));"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">BraveY</span></a><a class="nav-page-title" href="/"><span class="site-name">图计算常用算法</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">图计算常用算法</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2018-04-24T03:20:17.000Z" title="发表于 2018-04-24 11:20:17">2018-04-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-07T01:06:28.375Z" title="更新于 2026-03-07 09:06:28">2026-03-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/algorithm/">algorithm</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="图算法的典型操作"><a href="#图算法的典型操作" class="headerlink" title="图算法的典型操作"></a>图算法的典型操作</h1><p>关于一些常见图算法的调研与学习。</p>
+<a id="more"></a>
+<h2 id="常用图算法"><a href="#常用图算法" class="headerlink" title="常用图算法"></a>常用图算法</h2><h3 id="PageRank"><a href="#PageRank" class="headerlink" title="PageRank"></a>PageRank</h3><ol>
+<li><p>背景    </p>
+<ol>
+<li>既考虑入链数量，又考虑了网页质量因素，二者相结合 数量与权重的结合</li>
+<li>算法与主题无关，因为PR值是根据图计算出来的</li>
+</ol>
+</li>
+<li><p>算法原理</p>
+<ol>
+<li><p>基本思想</p>
+<p>A有链接指向B，表明A认为B比A重要。A将自身权重分配一部分给B。</p>
+<p>$W(B)=W(A)/N$   W(A) 是A的PR值，W(B)是A 分配的权重，N是A的出链数</p>
+</li>
+<li><p>PageRank公式修正</p>
+<p>存在出链为0的孤立网页，增加阻力系数q ，一般取q=0.85，其意义是用户有1-q的概率不点击此页面上面的所有链接。同时还有随机直接跳转的概率，如直接输入网址，点击书签等。完整公式如下：</p>
+<p><img src="/%E5%9B%BE%E8%AE%A1%E7%AE%97%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95.htm/data\ict\docs\page rank.png" alt=""></p>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="Connected-component"><a href="#Connected-component" class="headerlink" title="Connected component"></a>Connected component</h3><ol>
+<li>定义<ol>
+<li>连通分支：图中，某个子图的任意两点有边连接，而子图之间无边连接</li>
+<li>问题：cc是寻找连通分支的算法？？</li>
+</ol>
+</li>
+<li>通过BFS、DFS算法的便利就可以找到连通分支，每个白色节点开始的就是一个连通分支。</li>
+<li>常见算法<ol>
+<li>DFS<ol>
+<li>原理：访问某个顶点后只有当某个节点是叶结点后才会访问其余相邻节点。</li>
+<li>步骤：<ol>
+<li>选择一个结点作为起始结点，标记为灰色</li>
+<li>从该节点的邻居结点中选择一个结点，标记为灰色，继续这个操作</li>
+<li>当选中的结点时叶子结点时，将其涂黑并返回到上一个父节点。</li>
+<li>重复2,3直到所有结点都被访问。</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>BFS   （DFS，BFS不是图的遍历算法吗）。<ol>
+<li>原理：在进一步遍历中顶点之前，先访问当前结点的所有邻接结点。</li>
+<li>步骤：<ol>
+<li>选择一个顶点作为起始节点，放入队列，标记为灰色，其余标记为白色</li>
+<li>寻找队列首部结点的所有邻居节点，将其放入队列中并标记为灰色，将队列首部结点出队，并标记为黑色  </li>
+<li>重复2步骤，直到队列中的节点全部为空。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="SSSP-single-source-shortest-paths"><a href="#SSSP-single-source-shortest-paths" class="headerlink" title="SSSP (single-source shortest paths)"></a>SSSP (single-source shortest paths)</h3><ol>
+<li>单独的起点与目标点之间最短路径的计算。起点固定，寻找与其他所有结点之间的最短路径。包括单源单汇，单源多汇</li>
+<li>常见算法<ol>
+<li>Dijkstra<ol>
+<li>步骤<ol>
+<li>将所有顶点分成两个集合A、B，其中集合A表示已经求得从V0出发的最短路径的顶点集合，集合B为为待求解的顶点集合。初始时有A={V0}</li>
+<li>将集合A与集合B相连的边（A中的所有结点与B中所有的结点形成的边）按照从V0出发的最短权重和递增次序排序，取最短的边，将该条边在集合B中所对应的顶点加入到集合A中</li>
+<li>重复第二步，直至B为空集。</li>
+</ol>
+</li>
+<li>总结：<ol>
+<li>最短中的最短：每次迭代时比较的是当前状态下以V0为起点，A中顶点为中间点的到各顶点之间的最短路径权重，最后再选择在当前所有最短路径中路径最短的一个顶点加入A。也就是说每次加入A集合的点是最短路径中的最短。</li>
+<li>给定目标点，在每次迭代时，并不知道能否到达最后的目标点，所以把到所有结点的最短距离都算出来了。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="Betweenness-Centrality（中介中心性）"><a href="#Betweenness-Centrality（中介中心性）" class="headerlink" title="Betweenness Centrality（中介中心性）"></a>Betweenness Centrality（中介中心性）</h3><ol>
+<li><p>定义 ：中心性用来衡量节结点的重要性。Betweenness Centrality ：考虑的是该节点出现在其他两节点之间的最短路径上的比率。</p>
+</li>
+<li><p>思想：如果一个成员位于其他成员的多条最短路上，那么该成员就是核心成员，就具有较大的中介中心性。</p>
+</li>
+<li><p>步骤</p>
+<p>其中<img src="https://i2.wp.com/upload.wikimedia.org/math/b/b/7/bb79bd91213d03edf0c8fc04fbd51085.png" alt="\sigma_{st}">表示的是节点s和t之间的最短路径的数量，而<img src="https://i2.wp.com/upload.wikimedia.org/math/4/2/c/42c33f5f78864175f0d9c9af1c492f5d.png" alt="\sigma_{st}(v)">是最短路径中经过节点v的数量。</p>
+<ol>
+<li><p>计算各个点对之间最短路径的长度和条数，用于计算pair-dependencies: δst(v) =σst(v)/σst</p>
+<p><img src="http://static.oschina.net/uploads/img/201305/11121047_IQnh.jpg" alt="clip_image004"></p>
+</li>
+<li><p>对于每个节点，累积属于自己的pair-dependencies</p>
+</li>
+</ol>
+<p><img src="https://i2.wp.com/upload.wikimedia.org/math/4/c/c/4cc6eaa2dce9d504feeed5bd88b96d73.png" alt=""></p>
+</li>
+</ol>
+<h3 id="LBP算法-Local-Binary-Pattern-局部二值模式"><a href="#LBP算法-Local-Binary-Pattern-局部二值模式" class="headerlink" title="LBP算法(Local Binary Pattern, 局部二值模式)"></a>LBP算法(Local Binary Pattern, 局部二值模式)</h3><ol>
+<li><p>定义：LBP是一种用来描述图像局部纹理特征的算子。</p>
+<ol>
+<li>原始的LBP算子定义为在3*3的窗口内，以窗口中心像素为阈值，将相邻的8个像素的灰度值与其进行比较，若周围像素值大于中心像素值，则该像素点的位置被标记为1，否则为0</li>
+</ol>
+<p><img src="http://hi.csdn.net/attachment/201104/13/0_1302700245WllL.gif" alt="img"></p>
+</li>
+<li><p>作用是进行特征提取，而且，提取的特征是图像的纹理特征，并且，是局部的纹理特征.</p>
+</li>
+<li><p>改进版本</p>
+<ol>
+<li>原型LBP算子 </li>
+<li>LBP等价模式</li>
+</ol>
+</li>
+</ol>
+<h3 id="最小生成树"><a href="#最小生成树" class="headerlink" title="最小生成树"></a>最小生成树</h3><ol>
+<li>定义：无环连通图，图中所有结点均参与，所有边的权重加起来最小。</li>
+<li>算法<ol>
+<li>Prim算法  <ol>
+<li>步骤：设N=(V,{E})是连通网， TE是N上最小生成树中边的集合 <ol>
+<li>初始令U={u0},(u0V), TE=φ</li>
+<li>在所有uU,vV-U的边(u,v)E中，找一条代价最小<br>的边(u0,v0), 并保证不形成回路 </li>
+<li>将(u0,v0)并入集合TE，同时v0并入U </li>
+<li>重复上述操作直至U=V为止，则T=(V,{TE})为N的<br>最小生成树  </li>
+</ol>
+</li>
+<li>总结：每次迭代加入所有连通边中权值最小的。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="三角计数"><a href="#三角计数" class="headerlink" title="三角计数"></a>三角计数</h3><ol>
+<li>定义：寻找无向图中的所有三角形</li>
+<li>步骤<ol>
+<li>建立邻接表：<ol>
+<li>如果A-B &amp; A &lt; B，则将B加入A的邻接表 如果A-B &amp; B &lt; A，则将A加入B的邻接表  A&lt;B比较的是id</li>
+</ol>
+</li>
+<li>遍历每个节点，对于结点A，遍历A邻接表中的结点，如果邻接结点B,C两两之间存在边，则A、B、C三者之间存在三角形</li>
+</ol>
+</li>
+</ol>
+<h3 id="社区发现"><a href="#社区发现" class="headerlink" title="社区发现"></a>社区发现</h3><ol>
+<li><p>社区定义：同一社区内的节点与节点之间的连接很紧密，而社区与社区之间的连接比较稀疏。社区是一个子图</p>
+</li>
+<li><p>数学描述：<img src="https://img-blog.csdn.net/20130710080910046" alt=""></p>
+</li>
+<li><p>衡量标准：模块度</p>
+<ol>
+<li>计算公式</li>
+</ol>
+<p><img src="https://img-blog.csdn.net/20130710081032203" alt=""></p>
+</li>
+<li><p>常见算法</p>
+<ol>
+<li>GN算法<ol>
+<li>思想：在一个网络之中，通过社区内部的边的最短路径相对较少，而通过社区之间的边的最短路径的数目则相对较多。从社区内部走大概率会走很多条边。</li>
+<li>步骤<ol>
+<li>计算每一条边的边介数。边介数（betweenness）：网络中任意两个节点通过此边的最短路径的数目。</li>
+<li>删除边介数最大的边</li>
+<li>重复（1）（2），直到网络中的任一顶点作为一个社区为止。</li>
+</ol>
+</li>
+<li>缺陷<ol>
+<li>不知道最后会有多少个社区</li>
+<li>在计算边介数的时候可能会有很对重复计算最短路径的情况，时间复杂度太高</li>
+<li>GN算法不能判断算法终止位置</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>LPA算法（标签传播算法）<ol>
+<li>思路<ol>
+<li>自己是什么标签，由邻居决定。邻居中什么标签最多，则此结点是什么标签</li>
+</ol>
+</li>
+<li>步骤<ol>
+<li>为所有结点指定一个唯一的标签</li>
+<li>逐轮刷新所有结点的标签，直到达到收敛要求位置。刷新规则： 对于某一个节点，考察其所有邻居节点的标签，并进行统计，将出现个数最多的那个标签赋给当前节点。当个数最多的标签不唯一时，随机选一个。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="拓扑排序"><a href="#拓扑排序" class="headerlink" title="拓扑排序"></a>拓扑排序</h3><ol>
+<li>定义 ：<strong>拓扑排序（Topological Sorting）</strong>是一个<strong>有向无环图（DAG, Directed Acyclic Graph）</strong>的所有顶点的线性序列。且该序列必须满足下面两个条件：<ol>
+<li>每个顶点出现且只出现一次</li>
+<li>若存在一条从顶点 A 到顶点 B 的路径，那么在序列中顶点 A 出现在顶点 B 的前面</li>
+</ol>
+</li>
+<li>步骤<ol>
+<li>从 DAG 图中选择一个 没有前驱（即入度为0）的顶点并输出</li>
+<li>从图中删除该顶点和所有以它为起点的有向边</li>
+<li>重复 1 和 2 直到当前的 DAG 图为空或<strong>当前图中不存在无前驱的顶点为止</strong>。后一种情况说明有向图中必然存在环<br><img src="http://img.blog.csdn.net/20150507001759702" alt="img"></li>
+</ol>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://bravey.github.io">BraveY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://bravey.github.io/%E5%9B%BE%E8%AE%A1%E7%AE%97%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95.html">https://bravey.github.io/%E5%9B%BE%E8%AE%A1%E7%AE%97%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://bravey.github.io" target="_blank">BraveY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/graph/">graph</a></div><div class="post-share"><div class="social-share" data-image="https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/BigdataBench-deploy.html" title="BigdataBench deploy"><img class="cover" src="https://images.pexels.com/photos/531602/pexels-photo-531602.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">BigdataBench deploy</div></div><div class="info-2"><div class="info-item-1">Bigdatabench 4.0 MPI版本 安装 官网上面的指南BigDataBench User Manual有一些错误。 本机环境： ​    Centos 6.9 ​    gcc (GCC) 4.8.2 20140120 (Red Hat 4.8.2-15) ​    g++ (GCC) 4.8.2 20140120 (Red Hat 4.8.2-15) mpi的安装这部分网上资料很多，而Manual中有一点错误  需要保证c 编译器 如gcc c++ 编译器 如：g++  基础安装  从官网下载安装包解压   wget http://www.mpich.org/static/downloads/3.2.1/mpich-3.2.1.tar.gz  从官网下载安装包 tar -zxvf mpich-3.2.1.tar.gz  解压 cd mpich-3.2.1   配置安装目录   本机安装在mpich-install目录下   ./configure –prefix=/home/mpich-install 2&gt;&amp;1 | tee c.txt 手册中&amp;...</div></div></div></a><a class="pagination-related" href="/ceph%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3.html" title="ceph 部署文档"><img class="cover" src="https://images.pexels.com/photos/33545/sunrise-phu-quoc-island-ocean.jpg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">ceph 部署文档</div></div><div class="info-2"><div class="info-item-1">ceph 部署文档  1.配置所有节点创建ceph用户安装配置NTP systemctl enable ntp  ubuntu 14.04不可用，感觉已经安装过了，因此跳过。  配置hosts文件172.16.1.93 object1172.16.1.94 object2172.16.1.95 object3172.16.1.66 object4172.16.1.92 controller  2. 配置ssh服务器修改ssh的配置文件 Host controller        Hostname gd92        User cephuserHost object1        Hostname gd93        User cephuserHost object2        Hostname hw101        User cephuserHost object3        Hostname gd95        User cephuserHost object4        Hostname gd66        User cephuser 生成...</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://res.cloudinary.com/bravey/image/upload/v1588158174/avatar3.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">BraveY</div><div class="author-info-description">今日事，今日毕</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">95</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">19</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BraveY"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/BraveY" target="_blank" title=""><i class="fa fa-github"></i></a><a class="social-icon" href="mailto:kaiyongyang@gmail.com" target="_blank" title=""><i class="fa fa-envelope"></i></a><a class="social-icon" href="https://www.zhihu.com/people/yang-shan-zhi-14" target="_blank" title=""><i class="fa fa-rss"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_33620071" target="_blank" title=""><i class="fa fa-copyright"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%BE%E7%AE%97%E6%B3%95%E7%9A%84%E5%85%B8%E5%9E%8B%E6%93%8D%E4%BD%9C"><span class="toc-number">1.</span> <span class="toc-text">图算法的典型操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%9B%BE%E7%AE%97%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">常用图算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PageRank"><span class="toc-number">1.1.1.</span> <span class="toc-text">PageRank</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Connected-component"><span class="toc-number">1.1.2.</span> <span class="toc-text">Connected component</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSSP-single-source-shortest-paths"><span class="toc-number">1.1.3.</span> <span class="toc-text">SSSP (single-source shortest paths)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Betweenness-Centrality%EF%BC%88%E4%B8%AD%E4%BB%8B%E4%B8%AD%E5%BF%83%E6%80%A7%EF%BC%89"><span class="toc-number">1.1.4.</span> <span class="toc-text">Betweenness Centrality（中介中心性）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LBP%E7%AE%97%E6%B3%95-Local-Binary-Pattern-%E5%B1%80%E9%83%A8%E4%BA%8C%E5%80%BC%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.1.5.</span> <span class="toc-text">LBP算法(Local Binary Pattern, 局部二值模式)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91"><span class="toc-number">1.1.6.</span> <span class="toc-text">最小生成树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E8%A7%92%E8%AE%A1%E6%95%B0"><span class="toc-number">1.1.7.</span> <span class="toc-text">三角计数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BE%E5%8C%BA%E5%8F%91%E7%8E%B0"><span class="toc-number">1.1.8.</span> <span class="toc-text">社区发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F"><span class="toc-number">1.1.9.</span> <span class="toc-text">拓扑排序</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"><img src="https://images.pexels.com/photos/1005763/pexels-photo-1005763.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略"/></a><div class="content"><a class="title" href="/nanobot-fnnas-deployment-guide.html" title="闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略">闲置笔记本变身边AI助手：飞牛NAS + Docker + 旁路由部署nanobot全攻略</a><time datetime="2026-03-07T02:00:00.000Z" title="发表于 2026-03-07 10:00:00">2026-03-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd"><img src="https://images.pexels.com/photos/417222/pexels-photo-417222.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记2——lookupd"/></a><div class="content"><a class="title" href="/2023-03-12-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94lookupd.html" title="NSQ学习笔记2——lookupd">NSQ学习笔记2——lookupd</a><time datetime="2023-03-12T02:14:41.000Z" title="发表于 2023-03-12 10:14:41">2023-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介"><img src="https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NSQ学习笔记1——简介"/></a><div class="content"><a class="title" href="/2023-02-05-NSQ%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%AE%80%E4%BB%8B.html" title="NSQ学习笔记1——简介">NSQ学习笔记1——简介</a><time datetime="2023-02-05T07:18:23.000Z" title="发表于 2023-02-05 15:18:23">2023-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记"><img src="https://images.pexels.com/photos/71104/utah-mountain-biking-bike-biking-71104.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C专家编程读书笔记"/></a><div class="content"><a class="title" href="/2021-03-18-C%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" title="C专家编程读书笔记">C专家编程读书笔记</a><time datetime="2021-03-18T04:59:02.000Z" title="发表于 2021-03-18 12:59:02">2021-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱"><img src="https://images.pexels.com/photos/1656687/pexels-photo-1656687.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C语言传递指针参数的陷阱"/></a><div class="content"><a class="title" href="/2020-12-12-C%E8%AF%AD%E8%A8%80%E4%BC%A0%E9%80%92%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1.html" title="C语言传递指针参数的陷阱">C语言传递指针参数的陷阱</a><time datetime="2020-12-12T13:39:57.000Z" title="发表于 2020-12-12 21:39:57">2020-12-12</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2020 - 2026 By BraveY</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const initValine = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyValine = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const valineConfig = {
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      visitor: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || window.location.pathname
+    }
+
+    new Valine(valineConfig)
+  }
+
+  const loadValine = async (el, path) => {
+    if (typeof Valine === 'function') {
+      initValine(el, path)
+    } else {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js')
+      initValine(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Valine' === 'Valine'
+      ? window.shuoshuoComment = { loadComment: loadValine }
+      : window.loadOtherComment = loadValine
+    return
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script></div><script async data-pjax src="/js/busuanzi.js"></script></div></body></html>
